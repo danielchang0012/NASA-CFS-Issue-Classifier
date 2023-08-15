@@ -1,0 +1,3900 @@
+Title,Body,Labels,URL
+"Fix #45, Move cmds and utils into separate files","**Describe the contribution**
+- Fixes #45
+  - Moves the command and utility functions into their own separate source files.
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+
+Local testing confirms 100% of cFS suite tests passing (incl. Sample App tests) and coverage unaffected.
+
+Prior to changes:
+![Screenshot 2023-04-17 09 23 08](https://user-images.githubusercontent.com/9024662/232349151-649d4772-8610-49ff-8e98-a922aeb75b77.png)
+
+After changes:
+![Screenshot 2023-04-17 09 23 47](https://user-images.githubusercontent.com/9024662/232349147-26f0e1c9-a48c-4f6a-a948-a955b302897c.png)
+
+**Expected behavior changes**
+No change to behavior.
+The Sample App now more closely matches the recommended structure/style for cFS apps.
+
+**System(s) tested on**
+Debian GNU/Linux 11 (bullseye)
+Current main branch of cFS bundle.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/sample_app/pull/205
+sample_app Integration candidate: Caelum-rc4+dev45,"**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/PSP/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- PR #203. Addresses Issue #202
+
+**Testing performed**
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/667/checks)
+[PSP Checks](https://github.com/nasa/sample_app/pull/204/checks)
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 22.04
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey",,https://github.com/nasa/sample_app/pull/204
+"Fix #202, update cmake recipe","**Describe the contribution**
+Prefer target-scope properties over directory scope where applicable
+
+Fixes #202
+
+**Testing performed**
+Build and run tests, sanity check
+
+**Expected behavior changes**
+No impact
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/sample_app/pull/203
+Update cmake script to use current best practices,"**Is your feature request related to a problem? Please describe.**
+Build recipes should publish the module's include directories via the `INTERFACE_INCLUDE_DIRECTORIES` in property in cmake.  This is what CFE modules do, but some of the framework apps are still using directory-scope include directories (old way).
+
+Also, table names should match the app names they are associated with, unless there is a good reason not to.
+
+**Describe the solution you'd like**
+Change these to target-scope include directories (use `target_include_directories`, not `include_directories`)
+
+**Additional context**
+Notably this is important in order to be able to easily provide an alternative table content via the mission-provided files.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/sample_app/issues/202
+"Fix #141, Zero out global data structure during initialization","**Describe the contribution**
+- Fixes #141 
+  - Added a `memset` to zero out the global data structure at the beginning of the app's initialization.
+
+**Testing performed**
+GitHub CI actions passing successfully and local test confirms all tests passing and no change to coverage due to these changes.
+
+**Expected behavior changes**
+No change to behavior. The entire struct is now assured to start out initialized to zero.
+
+**System(s) tested on**
+Intel(R) Celeron(R) N4100 CPU @ 1.10GHz x86_64
+Debian GNU/Linux 11 (bullseye)
+Current main branch of cFS.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/sample_app/pull/201
+"Fix #199, Add test for missing branch in SAMPLE_APP_Process()","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #199
+  - Tests added to cover missing branch.
+    - The test calls `SAMPLE_APP_Process()` with a seeded failure from `CFE_TBL_ReleaseAddress()`.
+    - The desired branch flow is confirmed by checking for the expected 3 additional calls to `CFE_ES_WriteToSysLog()` (in this function, only this specific path would add 3 additional calls to `CFE_ES_WriteToSysLog()`).
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+Tested locally confirming extra branch covered now, increasing branch coverage slightly (from 37/41 to 38/41 branches) and line cover to 100%.
+
+Prior:
+![image](https://user-images.githubusercontent.com/9024662/223366676-92a0485a-ebe6-4424-8b17-9be98488e0bf.png)
+![Screenshot 2023-03-07 18 01 33](https://user-images.githubusercontent.com/9024662/223366843-59afd504-b8f4-4e38-8e7c-c1bff5ae96a0.png)
+
+With these changes:
+![Screenshot 2023-03-07 17 52 38](https://user-images.githubusercontent.com/9024662/223364492-9cd309f4-bbe0-4f5e-b20c-675481814bf1.png)
+![Screenshot 2023-03-07 17 54 39](https://user-images.githubusercontent.com/9024662/223364397-11f417ed-2f20-47c1-92d2-8448a13df77e.png)
+
+**Expected behavior changes**
+Tests now cover an additional branch.
+
+**System(s) tested on**
+Intel(R) Celeron(R) N4100 CPU @ 1.10GHz x86_64
+Debian GNU/Linux 11 (bullseye)
+Current main branch of cFS.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/sample_app/pull/200
+Missing test for one branch in SAMPLE_APP_Process(),"**Describe the bug**
+The tests for `SAMPLE_APP_Process()` are missing one of the branches - specifically, the branch where the call to `CFE_TBL_ReleaseAddress()` fails.
+
+**Code snips**
+![Screenshot 2023-03-07 18 01 33](https://user-images.githubusercontent.com/9024662/223363365-0708573f-eaa0-48db-aa1e-77dbfac01cc1.png)
+
+**Expected behavior**
+Tests should cover this branch - easy fix to add failing path.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/sample_app/issues/199
+"Fix #197, Refactor SAMPLE_APP_Init/Process to remove multiple returns","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #197 
+  - `SAMPLE_APP_Init()` and `SAMPLE_APP_Process()` were refactored to now have a single exit point.
+
+The Sample App now exhibits the preferred pattern of cFS more closely - encouraging new users to follow the same guidelines.
+
+A few spelling inconsistencies and spacing issues were rectified as well.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+Tested locally - coverage level unchanged by this PR (testing still misses 4 branches in sample_app as per the main branch).
+
+**Expected behavior changes**
+Behavior unchanged - failures during these 2 functions will fail subsequent checks of `== CFE_SUCCESS` and fall through to the exit point at the end of the function to return the relevant error code.
+
+**System(s) tested on**
+Intel(R) Celeron(R) N4100 CPU @ 1.10GHz x86_64
+Debian GNU/Linux 11 (bullseye)
+Current main branch of cFS.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/sample_app/pull/198
+Refactor SAMPLE_APP_Init and SAMPLE_APP_Process to remove multiple returns,"**Describe the bug**
+`SAMPLE_APP_Init()` and `SAMPLE_APP_Process()` use multiple returns to manage control flow.
+
+**Expected behavior**
+The Sample App should exhibit/encourage best practice (according to the cFS), of which multiple returns does not comply.
+Given that it is unnecessary in this case, would be worth refactoring to the recommended pattern with a single exit point from the function.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/sample_app/issues/197
+"Fix #148, Update add_cfe_tables APP_NAME parameter","**Describe the contribution**
+- Fixes #148
+  - Corrects first parameter of `add_cfe_tables` CMake function.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+Confirmed locally with start-up test and ground-system commands.
+
+**Expected behavior changes**
+No change to behavior with current implementation.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/sample_app/pull/196
+"Fix #194, Remove component-specific cFE header #includes","**Describe the contribution**
+- Fixes #194 
+  - Removes the component-specific cFE headers which are pulled in by the all-inclusive `cfe.h`.
+
+**Testing performed**
+Tested with local cFS Build + Run, confirmed successful start-up.
+
+**Expected behavior changes**
+None.
+
+**System(s) tested on**
+Intel(R) Celeron(R) N4100 CPU @ 1.10GHz x86_64
+Debian GNU/Linux 11 (bullseye)
+Current main of the cFS bundle.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/sample_app/pull/195
+Component-specific cFE headers not required (all are pulled in by cfe.h),"**Describe the bug**
+The component-specific cFE header files (`cfe_evs.h`, `cfe_sb.h` etc.) are all already pulled by the all-inclusive `cfe.h`.
+
+**Expected behavior**
+Remove unnecessary header `#include`'s.
+
+**Code snips**
+https://github.com/nasa/sample_app/blob/a410436f97e4ffdfffcc6a7eba806800f5d29671/fsw/src/sample_app.h#L28-L36
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/sample_app/issues/194
+"Fix #192, Moves interface definition files to inc","**Describe the contribution**
+- Fixes #192
+
+**Testing performed**
+Github Workflows
+
+**Expected behavior changes**
+No expected behavior change.
+
+**System(s) tested on**
+-Ubuntu 18.04
+
+**Additional context**
+Depends on https://github.com/nasa/ci_lab/pull/134
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+-Justin Figueroa, Vantage",CCB:Ignore,https://github.com/nasa/sample_app/pull/193
+"Move interface definition files to ""inc"" location","**Is your feature request related to a problem? Please describe.**
+The interface definition files of all open source apps currently exist in the ""src"" directory.
+
+**Describe the solution you'd like**
+Create an ""inc"" dir to go with the ""src"" dir.  Move the interface definitions into this location: ""_msg.h"", ""_msgdefs.h"", ""_tbldefs.h"", and ""_events.h"". Consider moving header files in both ""platform_inc"" and ""mission_inc"" to ""inc""
+
+**Describe alternatives you've considered**
+Leaving as is.
+
+**Additional context**
+N/A
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+",,https://github.com/nasa/sample_app/issues/192
+"Fix #78, Align use of Table/Tbl mnemonics","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #78
+Aligns use of Table/Tbl mnemonics in sample_app.
+The macros and function parameters that used 'table' have been converted to 'tbl'.
+I left the table struct (`SAMPLE_APP_Table_t`) as is for now, because this is the more common convention in cFS.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/sample_app/pull/191
+"Fix #147, Add check for success of CFE_TBL_Load() during Initialization","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #147 
+  - Adds check for success of `CFE_TBL_Load()`, if unsuccessful reports `""Error Loading Table...""` and returns early with error code returned from `CFE_TBL_Load()`.
+
+**Testing performed**
+Tested using same steps as @jphickey used in raising the issue (Start cFS without the sample app table file present in the /cf directory). Confirmed action of new code as per screenshot below:
+![Screenshot 2022-10-24 13 15 05](https://user-images.githubusercontent.com/9024662/197443839-2ef60760-4652-44e0-b3cd-74df182c98cb.png)
+
+**Expected behavior changes**
+Sample App will exit during initialization if return value of `CFE_TBL_Load()` is not `CFE_SUCCESS`.
+
+**System(s) tested on**
+Intel(R) Celeron(R) N4100 CPU @ 1.10GHz x86_64
+Debian GNU/Linux 11 (bullseye)
+cFE v7.0.0-rc4+dev197
+Sample App v1.3.0-rc4+dev35
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",CCB:Approved,https://github.com/nasa/sample_app/pull/190
+"Fix #188, Apply consistent Event ID names to common events","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #188 
+  - Consistent event IDs have been applied to the inconsistent cases to align them with a common Event ID naming convention.
+
+**Testing performed**
+Only GitHub CI actions.
+
+**Expected behavior changes**
+No impact on code behavior (no logic changes).
+Consistent Event ID names for the events which are common to all/most cFS components and apps will improve consistency and ease make code review/debugging easier.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/sample_app/pull/189
+Inconsistent Event ID naming,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/cFE/issues/2175
+After finding that there were 9 different Event IDs to indicate the same thing (Invalid Message ID) in https://github.com/nasa/CF/issues/262, I scrubbed the other common commands (e.g. Task Initialisation [INIT], NOOP, Reset Counters etc.) and found the same issue there - almost every component/app had their own variation of the Event ID name for the exact same event.
+
+**Expected behavior**
+Apply consistent Event ID names to the events which are common to all/most components and apps.
+
+**Code snips**
+Invalid Message ID:
+`CFE_EVS_ERR_MSGID_EID`
+`CFE_SB_BAD_MSGID_EID`
+`CFE_TIME_ID_ERR_EID`
+`CS_MID_ERR_EID`
+`TO_LAB_MSGID_ERR_EID`
+`SAMPLE_APP_INVALID_MSGID_ERR_EID`
+`BP_INVALID_MID_ERR_EID`
+`SCH_MD_ERR_EID`
+`CI_LAB_COMMAND_ERR_EID`
+
+Initialization:
+`CFE_TIME_INIT_EID`
+`CFE_TBL_INIT_INF_EID`
+`CFE_EVS_STARTUP_EID`
+`CF_EID_INF_INIT`
+`BP_INIT_APP_INFO_EID`
+`SCH_INITSTATS_INF_EID`
+`CI_LAB_STARTUP_INF_EID`
+
+NOOP:
+`CFE_TIME_NOOP_EID`
+`CFE_TBL_NOOP_INF_EID`
+`CFE_SB_CMD0_RCVD_EID`
+`CF_EID_INF_CMD_NOOP`
+`FM_NOOP_CMD_EID`
+`CI_LAB_COMMANDNOP_INF_EID`
+
+Reset Counters:
+`CFE_TIME_RESET_EID`
+`CFE_TBL_RESET_INF_EID`
+`CFE_EVS_RSTCNT_EID`
+`CFE_SB_CMD1_RCVD_EID`
+`CF_EID_INF_CMD_RESET`
+`SC_RESET_DEB_EID`
+`HS_RESET_DBG_EID`
+`FM_RESET_CMD_EID`
+`HK_RESET_CNTRS_CMD_EID`
+`MD_RESET_CNTRS_DBG_EID`
+`CI_LAB_COMMANDRST_INF_EID`
+
+etc.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/sample_app/issues/188
+"Fix #167, Rename CommandCode variable to FcnCode","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #167
+  - Rename the CommandCode variable in SAMPLE_APP_ProcessGroundCommand() to FcnCode to better align with the cFE API.
+
+**Testing performed**
+Standard cFS bundle tests all passed.
+Build/run cFS and test NOOP and other commands with the GroundSystem tool. All working fine.
+
+**Expected behavior changes**
+No impact on behavior.
+Improves code clarity and consistency in the lab apps.
+
+**System(s) tested on**
+Intel(R) Celeron(R) N4100 CPU @ 1.10GHz x86_64
+Debian GNU/Linux 11 (bullseye)
+cFE v7.0.0-rc4+dev197, OSAL v6.0.0-rc4+dev143, PSP v1.6.0-rc4+d
+Sample App v1.3.0-rc4+dev35
+CI Lab App v2.5.0-rc4+dev39
+TO Lab v2.5.0-rc4+dev31
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",CCB:Approved,https://github.com/nasa/sample_app/pull/187
+sample_app Integration candidate: Caelum-rc4+dev25,"**Contributor Info - All information REQUIRED for consideration of pull request**
+Full name and company/organization/center of all contributors (""Personal"" if individual work)
+- If NASA Civil Servant Employee or GSFC Contractor on SES II
+  - Address/email/phone and contract/task information (if applicable) must be on file
+- Else if Company
+  - **HAND SIGNED** Company CLA must be on file (once per release): [Company CLA](https://github.com/nasa/cFE/blob/master/docs/GSC_18128_Corp_CLA_form_1219.pdf)
+- Else if Individual
+  - **HAND SIGNED** Individual CLA must be on file (once per release): [Individual CLA](https://github.com/nasa/cFE/blob/master/docs/GSC_18128_Ind_CLA_form_1219.pdf)
+
+**Describe the contribution**
+- PR #185, Remove redundant comments
+- PR #183, Create CHANGELOG.md
+
+**Testing performed**
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/590/checks)
+[sample_app Checks](https://github.com/nasa/sample_app/pull/186/checks)
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt",,https://github.com/nasa/sample_app/pull/186
+"Fix #111, Remove redundant comments","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #111
+Removes redundant comments (incl. `/* end of function */`, `/* end if */`, function name in function header comments).
+Empty lines before the final closing brace of functions were removed as well, as they were triggering the CI checks.
+
+**Testing performed**
+None (comment changes only).
+
+**Expected behavior changes**
+No impact on behavior.
+These updates will reduce clutter and inconsistency in the code, improving readability.
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/sample_app/pull/185
+sample_app Integration candidate: Caelum-rc4+dev23,"**Contributor Info - All information REQUIRED for consideration of pull request**
+Full name and company/organization/center of all contributors (""Personal"" if individual work)
+- If NASA Civil Servant Employee or GSFC Contractor on SES II
+  - Address/email/phone and contract/task information (if applicable) must be on file
+- Else if Company
+  - **HAND SIGNED** Company CLA must be on file (once per release): [Company CLA](https://github.com/nasa/cFE/blob/master/docs/GSC_18128_Corp_CLA_form_1219.pdf)
+- Else if Individual
+  - **HAND SIGNED** Individual CLA must be on file (once per release): [Individual CLA](https://github.com/nasa/cFE/blob/master/docs/GSC_18128_Ind_CLA_form_1219.pdf)
+
+**Describe the contribution**
+- PR #177, Misaligned comments
+- PR #179, Remove unnecessary parentheses around return values.
+- PR #181, Remove 'return;' from last line of void functions.
+
+**Testing performed**
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/586/checks)
+[sample_app Checks](https://github.com/nasa/sample_app/pull/184/checks)
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@ArielSAdamsNASA
+@thnkslprpt",,https://github.com/nasa/sample_app/pull/184
+"Fix #182, Create CHANGELOG.md","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #182
+
+**Testing performed**
+None.
+
+**Expected behavior changes**
+Minimizes unnecessary clutter in README.md
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/sample_app/pull/183
+Use a changelog to keep track of changes instead of having them in the Readme,"Copy of https://github.com/nasa/osal/issues/552
+
+**Is your feature request related to a problem? Please describe.**
+The version history in the Readme file clutters useful information
+
+**Describe the solution you'd like**
+Move the ""version history"" from `Readme.md` to `CHANGELOG.md`
+
+**Requester Info**
+@thnkslprpt 
+",,https://github.com/nasa/sample_app/issues/182
+"Fix #180, Remove 'return;' from last line of void functions.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #180
+Removes all cases of redundant ""return;"" statements on the last line of void functions.
+
+**Testing performed**
+None, prior to submission.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/sample_app/pull/181
+"Remove ""return;"" from last line of void functions","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+""return;"" at last line in void function is redundant.
+Copy of https://github.com/nasa/cFE/issues/1540
+
+**Describe the solution you'd like**
+Remove
+
+**Reporter Info**
+@thnkslprpt ",,https://github.com/nasa/sample_app/issues/180
+"Fix #178, Remove unnecessary parentheses around return values.","**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #178 
+Removes parentheses in return statements in sample_app that return a single value/term.
+This is aligns these return statements with the predominant style of cFS.
+
+**Testing performed**
+None, prior to submission of the pull request.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/sample_app/pull/179
+Scrub use of () in return statements,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Unnecessary parentheses around return values in sample_app
+Copy of https://github.com/nasa/osal/issues/866
+
+**Reporter Info**
+@thnkslprpt ",,https://github.com/nasa/sample_app/issues/178
+"Fix #176, Misaligned comments","**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #176 - minor comment formatting issues.
+
+**Testing performed**
+None
+
+**Expected behavior changes**
+No impact on behavior.
+
+**System(s) tested on**
+n/a
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/sample_app/pull/177
+Minor comment formatting issue,"**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Noticed some minor comment formatting issues - trival stuff, but I didn't want to ignore it for no reason.
+Apparently introduced in re-org of commit ade058c3ca500e1779d5dda23772c9b5edaec268
+It's just a few out of place closing comment slashes:
+https://github.com/nasa/sample_app/blob/a4dd1ce1e2845da1709b9e84b045bb7efb51d557/fsw/src/sample_app.c#L286-L291
+
+**Expected behavior**
+Align comments for improved readability and consistency.
+
+**System(s) tested on**
+n/a
+
+**Reporter Info**
+@thnkslprpt 
+",,https://github.com/nasa/sample_app/issues/176
+"Fix #174, Remove registration of empty event filters","**Describe the contribution**
+- Fix #174
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just removes registration of empty filters
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/sample_app/pull/175
+Registration of events with 0x0000 filters isn't all that helpful,"**Is your feature request related to a problem? Please describe.**
+Registration of all events with `0x0000` filters just loads the system without actually filtering anything.  Also fills the event filter buffer for the app and likely drops some since default limit is 8.
+
+**Describe the solution you'd like**
+Remove zero entries from initialization and add a filter when/if needed (or operationally via command).
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/sample_app/issues/174
+"Fix #172, Update codeql workflow for reusable updates","**Describe the contribution**
+- Fix #172
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just fixes codeql workflow
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, CCB:FastTrack",https://github.com/nasa/sample_app/pull/173
+CodeQL Workflow Broken due to Name Change,"**Describe the bug**
+
+Merging https://github.com/nasa/cFS/pull/413 broke the components' CodeQL workflow as expected. 
+
+Need to update the CodeQL workflows to match the patterns implemented in https://github.com/nasa/cFE/pull/2035
+
+**To Reproduce**
+
+See failed workflows 
+- https://github.com/nasa/sample_app/actions/runs/2042726095
+
+**Expected behavior**
+
+Workflow executes
+
+**Code snips**
+None
+
+**System observed on:**
+GitHub Actions
+
+**Additional context**
+Use `uses: nasa/cFS/.github/workflows/codeql-reusable.yml@main`
+
+**Reporter Info**
+Ariel Adams, ASRC Federal ","good first issue, continuous-integration",https://github.com/nasa/sample_app/issues/172
+sample_app Integration candidate: Caelum-rc4+dev7,"**Describe the contribution**
+
+PR #169 
+- Fix #168, Update copyright header
+
+PR #170 
+- HOTFIX #163 Standardize version information
+
+
+**Testing performed**
+sample_app Checks <https://github.com/nasa/sample_app/pull/171/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/445/checks>
+
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 
+RTEMS
+
+**Additional context**
+Part of nasa/cFS#445
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper 
+@astrogeco ",,https://github.com/nasa/sample_app/pull/171
+"HOTFIX #163, Standardize versioning information","**Describe the contribution**
+
+Per conversation in CCB:2022-03-24 and in https://github.com/nasa/cFE/commit/e5be0612ad6bf9db09ddf640306a65292abce2d5#commitcomment-69358417
+
+Ensuring REVISION number is set to 99 and MISSION_REV = 0xFF
+
+**Testing performed**
+Text and documentation only
+
+**Expected behavior changes**
+No behavior change
+
+**System(s) tested on**
+n/a
+
+**Additional context**
+https://github.com/nasa/cFE/commit/e5be0612ad6bf9db09ddf640306a65292abce2d5#commitcomment-69358417
+
+**Third party code**
+none
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Gerardo E. Cruz-Ortiz, NASA
+",,https://github.com/nasa/sample_app/pull/170
+"Fix #168, Update copyright header","**Describe the contribution**
+- Fix #168
+
+**Testing performed**
+Documentation only, but built/ran unit tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: i5/wsl
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/sample_app/pull/169
+Apply latest copyright header,"**Is your feature request related to a problem? Please describe.**
+Updated copyright header
+
+**Describe the solution you'd like**
+Update
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",docs,https://github.com/nasa/sample_app/issues/168
+Recommend using FcnCode (instead of CommandCode) terminology in the code,"The current implementation of the sample app mixes terminology, [calling the field which identifies a command a `CommandCode`](https://github.com/nasa/sample_app/blob/bd4a5fe53c22246998b29eecf3cfa9c5c323f6cc/fsw/src/sample_app.c#L264)  whereas the CFE APIs call it a `FcnCode`.
+
+Since this app is the starting point for many people, it might make sense to use consistent terminology. Since the CFE APIs call it a `FcnCode`, it seems like the code should too.","enhancement, good first issue",https://github.com/nasa/sample_app/issues/167
+"Fix #164, Use preferred UT patterns","**Describe the contribution**
+- Fix #164 
+
+**Testing performed**
+Build/run unit tests, passed
+
+**Expected behavior changes**
+Slight change to UT output
+
+**System(s) tested on**
+ - Hardware: i5/Docker
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+Also updated UT guide in cFS/Unit Testing/Files (not public)
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/sample_app/pull/165
+Update to preferred unit test patterns,"**Is your feature request related to a problem? Please describe.**
+Uses lower level macros where generic output is preferred.
+
+**Describe the solution you'd like**
+Use macros with default outputs.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/sample_app/issues/164
+sample_app Integration candidate: Caelum-rc4+dev1,"**Describe the contribution**
+
+PR nasa#157 from jphickey/fix-156-messagetype-conv 
+
+- Fix nasa#156, Use CFE_MSG_PTR conversion macro
+
+
+**Testing performed**
+
+sample_app Checks <https://github.com/nasa/sample_app/pull/163/checks>
+cFS Bundle Checks <https://github.com/nasa/cFS/pull/390/checks>
+
+**Expected behavior changes**
+See PRs 
+
+**System(s) tested on**
+Ubuntu 18.04
+RTEMS 4.11
+RTEMS 5
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/390/>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey 
+",,https://github.com/nasa/sample_app/pull/163
+"Fix #161, Reuse CodeQL, Static Analysis, and Format Check","**Describe the contribution**
+Fixes #161 
+
+**Testing performed**
+sample_app CodeQL Reuse: https://github.com/ArielSAdamsNASA/sample_app/actions/runs/1392038866
+sample_app Format Check Reuse: https://github.com/ArielSAdamsNASA/sample_app/actions/runs/1392034282
+sample_app Static Analysis Reuse: https://github.com/ArielSAdamsNASA/sample_app/actions/runs/1392043293
+
+**Expected behavior changes**
+sample_app will reuse CodeQL, Static Analysis, and Format Checker that are held in cFS. These workflows will not work until nasa/cFS#386 is merged.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal",continuous-integration,https://github.com/nasa/sample_app/pull/162
+"Reuse CodeQL, Format Checker, and Static Analysis Workflows","**Is your feature request related to a problem? Please describe.**
+When needing to change workflows, one must create an issue and PR for each submodule. This feature would reduce duplication.
+
+**Describe the solution you'd like**
+To reuse workflows, the targeted workflow must include workflow_call and inputs as seen below. 
+```
+on:
+  push:
+  pull_request:
+  workflow_call:
+    inputs:
+      runs-on: 
+        description: Platform to execute on
+        type: string
+        default: ubuntu-latest
+```
+
+**Describe alternatives you've considered**
+Keep it as is. 
+
+**Additional context**
+Tested in OSAL, OSAL cFE CodeQL Reuse Build: https://github.com/ArielSAdamsNASA/osal/runs/4023159610?check_suite_focus=true
+Tested in OSAL, OSAL CodeQL Reuse Build: https://github.com/ArielSAdamsNASA/osal/actions/runs/1390702434
+cFS CodeQL Reuse: https://github.com/ArielSAdamsNASA/cFS-JSF-Rules/actions/runs/1390561827
+
+**Requester Info**
+Ariel Adams, ASRC Federal",continuous-integration,https://github.com/nasa/sample_app/issues/161
+"Workflows overly restrictive run, missing duplicate check, format job name incorrect, remove --quiet from cppcheck","**Is your feature request related to a problem? Please describe.**
+Branch restriction unnecessary:
+https://github.com/nasa/sample_app/blob/d009197df721af1f430d173584fa64a507a94a13/.github/workflows/codeql-build.yml#L3-L7
+
+Branch restriction unnecessary, missing duplicate check, incorrect job name:
+https://github.com/nasa/sample_app/blob/d009197df721af1f430d173584fa64a507a94a13/.github/workflows/format-check.yml#L4-L12
+
+Branch restriction unnecessary, missing duplicate check:
+https://github.com/nasa/sample_app/blob/d009197df721af1f430d173584fa64a507a94a13/.github/workflows/static-analysis.yml#L4-L12
+
+Remove `--quiet` flag to report files processed:
+https://github.com/nasa/sample_app/blob/d009197df721af1f430d173584fa64a507a94a13/.github/workflows/static-analysis.yml#L26
+
+**Describe the solution you'd like**
+Fix
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","duplicate, continuous-integration",https://github.com/nasa/sample_app/issues/160
+Return value of CFE_MSG_GetMsgId is not checked during ProcessCommandPacket or VerifyCmdLength,"**Describe the bug**
+CFE_MSG_GetMsgId returns a status value to indicate success or failure of the call, but neither of the usages in the sample app  check if it is successful nor do they state that the return value is ignored by design.
+
+**To Reproduce**
+N/A
+
+**Expected behavior**
+Sample app should either make use of the return value to verify success or should note the reason why this is not being done.
+
+**Code snips**
+https://github.com/nasa/sample_app/blob/d009197df721af1f430d173584fa64a507a94a13/fsw/src/sample_app.c#L235
+https://github.com/nasa/sample_app/blob/d009197df721af1f430d173584fa64a507a94a13/fsw/src/sample_app.c#L442
+
+**System observed on:**
+N/A
+
+**Reporter Info**
+Alan Gibson  NASA/GSFC 587
+",enhancement,https://github.com/nasa/sample_app/issues/159
+Overrun warning false alarm for CFE_MSG_Message_t ,"**Describe the bug**
+Overrunning struct type CFE_MSG_Message_t of 16 bytes by passing it to a function which accesses it at byte offset 19 using argument 20UL.
+
+**Expected behavior**
+Fix overrun
+
+**Code snips**
+https://github.com/nasa/sample_app/blob/d009197df721af1f430d173584fa64a507a94a13/fsw/src/sample_app.c#L166-L167
+
+**System observed on:**
+Coverity: https://scan.coverity.com/projects/arielsadamsnasa-cfs-jsf-rules?tab=overview
+
+**Reporter Info**
+Ariel Adams, ASRC Federal
+",enhancement,https://github.com/nasa/sample_app/issues/158
+"Fix #156, Use CFE_MSG_PTR conversion macro","**Describe the contribution**
+Updates conversions to CFE_Message_t to use the MSG macro
+This also uses consistent naming - TelemetryHeader rather than TlmHeader
+
+Fixes #156
+
+**Testing performed**
+Build and sanity check CFE, run all tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Ubuntu
+
+**Additional context**
+Depends on nasa/cfe#1966
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/sample_app/pull/157
+Update CFE_MSG_Message_t conversions to use CFE_MSG_PTR macro,"**Is your feature request related to a problem? Please describe.**
+In nasa/cfe#1966 introduces a `CFE_MSG_PTR` macro which converts a cmd/tlm header object to a `CFE_MSG_Message_t*` pointer, which is intended to be used rather than assuming a specific member name (e.g. `.Msg`).
+
+**Describe the solution you'd like**
+Use the macro instead of assuming `.Msg` member name.
+
+**Additional context**
+Required when using generated headers, as the member name may not be ""Msg"" or may be further encapsulated.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/sample_app/issues/156
+sample_app Integration candidate: 2021-09-21,"**Describe the contribution**
+
+PR #154 
+
+- Fix #153, apply CFE_SB_ValueToMsgId where required
+
+
+
+**Testing performed**
+cFS Bundle Checks <https://github.com/nasa/cFS/pull/359/checks>
+sample_app Checks <https://github.com/nasa/sample_app/pull/155/checks>
+
+**Expected behavior changes**
+See PR
+
+**System(s) tested on**
+Ubuntu
+RTEMS (qemu)
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/359
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey ",,https://github.com/nasa/sample_app/pull/155
+"Fix #153, apply CFE_SB_ValueToMsgId where required","**Describe the contribution**
+Whenever an integer value is used as a CFE_SB_MsgId_t, it should go through the explicit conversion using the supplied inline function.
+
+Fixes #153
+
+**Testing performed**
+Build and sanity check CFE
+
+**Expected behavior changes**
+Allows SAMPLE_APP to be built when CFE_SB_MsgId_t is an opaque/non-integer type.
+None with default config (where CFE_SB_MsgId_t is an integer type).
+
+**System(s) tested on**
+Ubuntu
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.",CCB:Approved,https://github.com/nasa/sample_app/pull/154
+Improve consistency in application of CFE_SB_MsgIdToValue/ValueToMsgId conversions,"**Is your feature request related to a problem? Please describe.**
+A `CFE_SB_MsgId_t` value, like other IDs, is supposed to be a unique type/opaque value that identifies a message within the SB application context.   Although it is currently implemented using an integer (`uint32` specifically) application should not assume this.  Instead, a set of macros and inline conversion functions (CFE_SB_MsgIdToValue and CFE_SB_ValueToMsgId) are provided for when the application needs to interpret the value as an integer for a valid purpose.
+
+**Describe the solution you'd like**
+Add conversions where they are currently missing
+
+**Additional context**
+See nasa/cfe#1945 for full info.  A separate issue+PR will be submitted for each framework app.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/sample_app/issues/153
+" Typos in documentation, print statements, and comments","**Is your feature request related to a problem? Please describe.**
+Found multiple typos throughout the codebase
+
+**Describe the solution you'd like**
+Correct grammar and spelling errors
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Created for #151 
+
+",,https://github.com/nasa/sample_app/issues/152
+"Fix #152, Correct typos in documentation, print statements, and comments","**Describe the contribution**
+
+- Fix #152
+
+Fixed a few minor typos in the _text_ of:
+- README.md
+- SECURITY.md
+  
+...and in the _comments_ of:
+- unit-test/CMakeLists.txt 
+  
+...and in an _assert error message_ string of:
+- unit-test/coveragetest/coveragetest_sample_app.c
+  
+**Testing performed**
+Only automated checks.
+
+**Expected behavior changes**
+None (minor Markdown doc, comments changes, and assert error string changes that do not interact with any max lengths etc.).
+
+**System(s) tested on**
+n/a
+
+**Additional context**
+n/a
+
+**Code contributions**
+n/a",community,https://github.com/nasa/sample_app/pull/151
+sample_app Integration candidate: 2021-06-22,"## Context
+
+Part of <https://github.com/nasa/cfs/issues/270>
+
+## Authors
+
+@ArielSAdamsNASA 
+
+## Description 
+
+### PR #149 
+Fix #146, Implement Coding Standard CodeQL
+
+",,https://github.com/nasa/sample_app/pull/150
+"Fix #146, Implement Coding Standard in CodeQL","**Describe the contribution**
+Fix #146 
+Added the duplicate jobs action to avoid duplicate jobs from running. Added a separate job for coding standard queries. Created two configuration files, one for default queries and security queries and another for jpl rules. Removed push on main branch so when users push code to their forked repos, the workflow runs. Added main branch to pull request, so CodeQL runs on pull request made in the main branch. This is the same logic used in the cFS bundle repo. 
+
+**Testing performed**
+Testing done on cFE forked repository, ArielSAdamsNASA/cFE which used the same files, but with different configuration paths.
+
+Jobs were failing when the entire path of the configuration file were not used. Have to use nasa/cFE/.github/codeql/config-name@branch-name. The branch must be included in the path. 
+
+The CodeQL analysis workflow will fail for this PR since it is calling for a configuration file in main the main branch. It will not work until the configuration files are merged into main. 
+
+In the screenshot is the same workflow as in this pull request, but the configuration path is changed to the forked repo and tested branch. 
+
+![image](https://user-images.githubusercontent.com/69638935/119024913-36fa2580-b969-11eb-9aac-ede0002804a0.png)
+
+**Expected behavior changes**
+There should be one job for security queries and one job for JPL and MISRA queries. 
+
+**Describe alternatives you've considered**
+Can allow all branches to run CodeQL for pull requests as seen in cFE and PSP instead of just the main branch like cFS. 
+
+**Third party code**
+Skip duplicate workflows license: https://github.com/fkirc/skip-duplicate-actions/blob/master/LICENSE
+
+CodeQL license: https://github.com/github/codeql-action/blob/main/LICENSE
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","CCB:Approved, continuous-integration",https://github.com/nasa/sample_app/pull/149
+First parameter to `add_cfe_tables` should be app name,"**Describe the bug**
+The `add_cfe_tables` function is declared as follows in arch_build.cmake:
+`function(add_cfe_tables APP_NAME TBL_SRC_FILES)`
+
+The first parameter was intended to be the application name that the table is associated with, but historically any string was accepted since the string just served to make a unique target name.
+
+**To Reproduce**
+Sample_app always passes the string `sampleAppTable` here.
+
+**Expected behavior**
+Should pass `sample_app` as first argument.
+
+**Code snips**
+https://github.com/nasa/sample_app/blob/1c32ed48ca358a3fdd55f1bdc9ae0dda61a4f4f7/CMakeLists.txt#L14
+
+**System observed on:**
+Ubuntu
+
+**Additional context**
+No major issue with the _current_ build system, but will may become an issue if/when nasa/cfe#1538 is implemented, and may also become an issue if directory-scope include directories are removed.
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+","good first issue, build-system",https://github.com/nasa/sample_app/issues/148
+Need to check the status of CFE_TBL_Load() call,"**Describe the bug**
+sample_app does not actually check the status returned by the call to `CFE_TBL_Load()`.  As a result, if the filename is wrong or missing, it is not obvious that the app has not initialized itself fully, because it still prints the ""SAMPLE App Initialized"" message as usual.
+
+**To Reproduce**
+Start CFE framework as normal but without the sample app table file present in the /cf directory.  The sample app still starts ""successfully"" as reported in the message but the table is not loaded.
+
+**Expected behavior**
+The app shouldn't report that it initialized if the table didn't load.
+
+**Code snips**
+The status is saved to a local variable here, but nothing is done with it:
+https://github.com/nasa/sample_app/blob/1c32ed48ca358a3fdd55f1bdc9ae0dda61a4f4f7/fsw/src/sample_app.c#L210-L220
+
+**System observed on:**
+Ubuntu 20.04 
+
+**Additional context**
+Surprising that this is not reported by static analysis, as it seems to be a case of variable assignment without use.
+
+Also worth noting that table services itself _does_ send an event about the failure to load the table, but it doesn't have much detail:
+`EVS Port1 66/1/CFE_TBL 53: SAMPLE_APP: Unable to open file (FileDescriptor=-1)`
+
+If OSAL debug is enabled (OSAL_CONFIG_DEBUG_PRINTF) then the user does get a message on the console, at least on Linux, with more detail (""No such file or directory"").
+ 
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+",enhancement,https://github.com/nasa/sample_app/issues/147
+Implement Coding Standard Rules in CodeQL,"**Is your feature request related to a problem? Please describe.**
+CodeQL does not use JPL rules, which is used in the upcoming coding standard. 
+
+**Describe the solution you'd like**
+Implement JPL rules for CodeQL. Continue using the security queries, but keep them separate from the JPL results. Can use two different workflows, one for the coding standard and one for the security queries. 
+
+**Describe alternatives you've considered**
+Might be able to use one workflow, as long as the results can be easily identified as a coding standard issue or security issue. 
+
+**Additional context**
+JPL queries are found here: https://github.com/github/codeql/tree/main/cpp/ql/src/JPL_C
+
+**Requester Info**
+Ariel Adams, ASRC Federal ",continuous-integration,https://github.com/nasa/sample_app/issues/146
+sample_app Integration candidate: 2021-03-30,"## Describe the contribution
+
+Fix #138, remove app registration
+Fix #142, scrub header guards 
+
+
+**Testing performed**
+sample_app checks <https://github.com/nasa/sample_app/pull/145/checks> 
+bundle checks <https://github.com/nasa/cFS/pull/227/checks>
+
+
+## Expected behavior changes
+
+
+### PR #139 
+
+Removes app registration call, `CFE_ES_RegisterApp()` since applications do not need to register themselves.
+
+### PR #143 
+
+Apply standard header guard on all header files by removing leading underscore. Convert file-scope block comments to doxygen format.
+
+## Additional Context
+Part of <https://github.com/nasa/cFS/pull/227>
+
+## Third party code
+None
+
+## Authors
+
+@jphickey ",,https://github.com/nasa/sample_app/pull/145
+"Fix #55, add timeout to SB receive","**Describe the contribution**
+Apps should not pend forever on software bus receive, because they should also periodically check `CFE_ES_RunLoop` even if no
+commands were received.
+
+Fixes #55 
+
+**Testing performed**
+Build and sanity check CFE, confirm sample_app runs correctly
+
+**Expected behavior changes**
+Sample App will check CFE_ES_Runloop() (and therefore respond to a request from ES) even if it does not get any message on the software bus.
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+As a ""best practice"" all apps should do something like this, instead of pending forever.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Ignore,https://github.com/nasa/sample_app/pull/144
+"Fix #142, scrub header guards","**Describe the contribution**
+Use a consistent header guard on all sample app header files.
+Also convert file-scope block comments to doxygen format.
+
+Fixes #142
+
+**Testing performed**
+Build and sanity check CFE
+
+**Expected behavior changes**
+None, just changes comments and ifdef guard strings
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/sample_app/pull/143
+Fix non-compliant header guards,"**Is your feature request related to a problem? Please describe.**
+Leading `_` is reserved
+
+**Describe the solution you'd like**
+Replace with pattern used in OSAL
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/sample_app/issues/142
+Should zero global data structure at initialization,"**Is your feature request related to a problem? Please describe.**
+Fragile initialization touches individual elements, no memset 0
+
+**Describe the solution you'd like**
+memset the global to zero, only initialize non-zero elements
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/sample_app/issues/141
+Add generate_config_includefile pattern for perfids and msgids,"**Is your feature request related to a problem? Please describe.**
+Currently just includes the local mission_inc/platform_inc directories.  Really these are examples/defaults, and should be easily overridden from the target defs.
+
+**Describe the solution you'd like**
+Use generate_config_includefile (example: https://github.com/nasa/cFE/blob/98bc15851ebbca83b01947520232ca0cf67a30cf/modules/msg/mission_build.cmake#L19-L22)
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/sample_app/issues/140
+"Fix #138, remove app registration","**Describe the contribution**
+It is not necessary for applications to register themselves, this is all done automatically.
+
+Fixes #138
+
+**Testing performed**
+Build and sanity check, run unit tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Needs to be merged with nasa/cfe#1250
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:FastTrack,https://github.com/nasa/sample_app/pull/139
+Remove references to CFE_ES_RegisterApp,"**Is your feature request related to a problem? Please describe.**
+As part of nasa/osal#853 and nasa/cfe#1215 the registration APIs are getting fully deprecated and removed.  Applications no longer need to call OS_TaskRegister, CFE_ES_RegisterApp, or CFE_ES_RegisterChildTask.
+
+**Describe the solution you'd like**
+Remove references to these functions.
+
+**Additional context**
+Will be required with nasa/osal#853 and nasa/cfe#1215
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/sample_app/issues/138
+sample_app Integration candidate: 2021-03-23,"## Describe the contribution
+Fix #133, convert from <> to "" for local includes
+Fix #135, Added a contributing guide that links to the main cFS contributing guide.
+Fix #131, add context to the values for MsgIDs 
+
+## Testing performed
+See <https://github.com/nasa/cFS/pull/223/checks>
+
+## Expected behavior changes
+
+### PR #134 
+Replaces `<>` with `""` in local includes
+
+### PR #136 
+Adds `CONTRIBUTIING.md` that links to the main cFS contributing guide.
+
+### PR #132 
+Adds a description for the requirements of command and telemetry Message IDs to explain why the Msg IDs have those requirements in documentation.
+
+## Additional context
+Part of <https://github.com/nasa/cFS/pull/223>
+
+## Third party code
+None
+
+
+## Authors
+
+@zanzaben
+@skliper 
+@ArielSAdamsNASA ",,https://github.com/nasa/sample_app/pull/137
+"Fix #135, Add Contributing Guide","**Describe the contribution**
+Fix #135
+Added a contributing guide that links to the main cFS contributing guide. 
+
+**Expected behavior changes**
+Users should be able to view the contributing guide contents easily from the sample_app repo. 
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","CCB:FastTrack, docs",https://github.com/nasa/sample_app/pull/136
+Add Contributing Guide,"**Is your feature request related to a problem? Please describe.**
+Add a contributing guide for the sample_app repo. 
+
+**Describe the solution you'd like**
+Create a contributing guide markdown file. In the guide, add a link to the cFS contributing guide. 
+
+**Requester Info**
+Ariel Adams, ASRC Federal",docs,https://github.com/nasa/sample_app/issues/135
+"Fix #133, Use quotes for local includes","**Describe the contribution**
+Fix #133 - convert from `<>` to `""` for local includes
+
+**Testing performed**
+Build/run unit tests, passed
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:FastTrack,https://github.com/nasa/sample_app/pull/134
+"Scrub for include <> vs """" use (<> should be system only)","**Is your feature request related to a problem? Please describe.**
+<> used on non-system header includes.  Example:
+https://github.com/nasa/sample_app/blob/0faa72a9b4eff8167865e8bde1f5b5a817b7c4ee/unit-test/coveragetest/sample_app_coveragetest_common.h#L35-L42
+
+**Describe the solution you'd like**
+Full scrub/fix
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/sample_app/issues/133
+"Fix #131, add context to the values for MsgIDs","**Describe the contribution**
+Fixes #131
+Add description for the requirements of command and telemetry Message Ids 
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+part of nasa/cfe#590
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Alex Campbell GSFC",,https://github.com/nasa/sample_app/pull/132
+Explain Msg ID values,"**Is your feature request related to a problem? Please describe.**
+Message Id's seem like they can be anything but in the sample app cmd and tlm need to be formatted to 0x18xx and 0x08xx.
+
+**Describe the solution you'd like**
+Add some info to better explain why the Msg IDs have those requirements. 
+
+**Additional context**
+Part of https://github.com/nasa/cFE/issues/590
+
+**Requester Info**
+Alex Campbell GSFC
+",,https://github.com/nasa/sample_app/issues/131
+sample_app Integration candidate: 2021-03-05,"**Describe the contribution**
+PR #129 
+PR #127
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey @ArielSAdamsNASA ",,https://github.com/nasa/sample_app/pull/130
+"Fix #128, Add Testing Tools to the Security Policy","**Describe the contribution**
+Fix #128 
+Updated the Security Policy to include the type of testing done for sample_app or the cFS bundle under a new section titled ""Testing"". Provided a disclaimer that under the Apache license, liability is not provided. 
+
+Added that security reports should be emailed. 
+
+**Expected behavior changes**
+Users should now be aware of the type of testing sample_app or the cFS bundle undergoes. 
+
+**Additional context**
+References: 
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/phpMussel/phpMussel/security/policy
+https://github.com/timberio/vector/security/policy
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal 
+","CCB:FastTrack, docs",https://github.com/nasa/sample_app/pull/129
+Add Testing Tools to the Security Policy ,"**Is your feature request related to a problem? Please describe.**
+Users are unaware of how cFS/sample_app is tested. By providing this information, transparency is provided to the community which promotes trust. 
+
+**Describe the solution you'd like**
+The security policy should inform users what tools are being used to test cFS/sample_app while being cautious of liability issues. To do so, we can state explicitly that our software does not provide liability under the Apache license. The security policy should inform users that they may view the LGTM results. The policy would state that the alerts from LGTM may not be accurate, since they cannot be dismissed.  
+
+Add that security report should be emailed. 
+
+**Additional context**
+References: https://github.com/thanos-io/thanos/security/policy
+
+**Requester Info**
+Ariel Adams, ASRC Federal 
+",docs,https://github.com/nasa/sample_app/issues/128
+"Fix #126, simplify build to use wrappers and interface libs","**Describe the contribution**
+Use the wrapper functions now provided by CFE to simplify the build recipe and work with interface libraries
+
+Fixes #126
+
+**Testing performed**
+Build and run CFE unit tests
+
+**Expected behavior changes**
+Unit test targets are named a little differently when using the wrapper functions, but transparent if running via ctest.  The filename is different if running manually though.
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Requires nasa/cfe#1207 and must be merged before nasa/cfe#1203 to avoid breaking UT
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:FastTrack,https://github.com/nasa/sample_app/pull/127
+Update build to work with interface libraries,"**Is your feature request related to a problem? Please describe.**
+As part of nasa/cfe#972 and PR nasa/cfe#1203 the directory structure of CFE is changing.  The sample_app build script was directly referencing certain CFE paths that will need an update after this merge.
+
+**Describe the solution you'd like**
+Utilize additional wrapper functions and interface libraries to facilitate the path change and avoid issues in the future.
+
+**Additional context**
+See also nasa/cfe#1207 to add wrapper functions that will help with the unit test aspect
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/sample_app/issues/126
+"Fix #124, Add CodeQL analysis to workflow","**Describe the contribution**
+Fix #124 - adds CodeQL analysis
+
+Differences from bundle - just builds sample_app, has timeout
+
+**Testing performed**
+Ran on fork
+
+**Expected behavior changes**
+Adds Code QL analysis on push to main and pull requests (to main)
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:FastTrack, continuous-integration",https://github.com/nasa/sample_app/pull/125
+Add CodeQL analysis to workflow,"**Is your feature request related to a problem? Please describe.**
+CodeQL analysis not implemented in submodules
+
+**Describe the solution you'd like**
+Add so alerts are generated on pull requests to submodules
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+CodeQL is run at the bundle (nasa/cFS) level, but link to code in submodules doesn't work.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, security, continuous-integration",https://github.com/nasa/sample_app/issues/124
+"Fix #122, Add static analysis and format check","**Describe the contribution**
+Fix #122 - adds static analysis and format check into github workflow, includes badges in readme
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+Basic CI works again
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:FastTrack, continuous-integration",https://github.com/nasa/sample_app/pull/123
+CI updates - add static analysis and format in workflow,"**Is your feature request related to a problem? Please describe.**
+Travis-CI not transitioned to github actions
+
+**Describe the solution you'd like**
+Transition CI
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/sample_app/issues/122
+sample_app Integration candidate: 2021-01-19,"**Describe the contribution**
+Fix #101, Correct CFE_TBL_GetAddress return code check
+Fix #115, Refactor UT_ClearForceFail to UT_ClearDefaultReturnValue
+Fix #118, Create Security Policy
+
+**Testing performed**
+See https://github.com/nasa/cFS/pull/177/checks
+
+**Expected behavior changes**
+
+PR #119 - Documentation: Add `Security.md` with instructions on reporting vulnerabilities
+
+PR #117 - Resolves bug where success code was reported as an error for `CFE_TBL_GetAddress`.
+
+PR #116 - Rename `UT_ClearForceFail` as `UT_ClearDefaultValue` given change from <https://github.com/nasa/osal/issues/724>
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/177/
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@ArielSAdamsNASA 
+@zanzaben 
+@skliper ",,https://github.com/nasa/sample_app/pull/121
+Removed comments.,,"invalid, CCB:PendingCLA",https://github.com/nasa/sample_app/pull/120
+"Fix #118, Create Security Policy","**Describe the contribution**
+Fix #118 
+Created a draft of a security policy markdown file for sample_app. The purpose of a security policy is to inform users on how to submit bugs or vulnerabilities. It is ideal to include a section for supported versions.
+
+**Additional context**
+Optional sections that may be included:
+
+- What to expect security-wise such as what type of testing is done
+- Address privacy concerns
+- Supported versions
+- License
+- Known vulnerabilities
+
+References to Public Security Policies:
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/minhealthnz/nzcovidtracer-app/security/policy
+https://github.com/odoo/odoo/security/policy
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","CCB:FastTrack, docs, security",https://github.com/nasa/sample_app/pull/119
+Implement a Security Policy,"**Describe the bug**
+Create a security policy for users on how to report security vulnerabilities.
+
+**Expected behavior**
+The security policy should instruct users on how to report security vulnerabilities and provide them additional contact information for questions and concerns.
+
+**Additional context**
+Additional sections that may be included:
+- What to expect security-wise such as what type of testing is done
+- Address privacy concerns
+- Supported versions
+- License
+- Known vulnerabilities
+
+References to Public Security Policies:
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/minhealthnz/nzcovidtracer-app/security/policy
+https://github.com/odoo/odoo/security/policy
+
+**Reporter Info**
+Ariel Adams, ASRC Federal","docs, security",https://github.com/nasa/sample_app/issues/118
+"Fix #101, Correct CFE_TBL_GetAddress return code check","**Describe the contribution**
+Fix #101 - only status < CFE_SUCCESS is an error since CFE_TBL_GetAddress has multiple ""success"" codes
+
+**Testing performed**
+Built, ran, sent sample app process command to confirm it works
+
+**Expected behavior changes**
+Resolves bug where success code was reported as an error
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:FastTrack,https://github.com/nasa/sample_app/pull/117
+"Fix #115, Refactor UT_ClearForceFail to UT_ClearDefaultReturnValue","**Describe the contribution**
+Fixes #115  
+Rename UT_ClearForceFail to UT_ClearDefaultValue
+
+**Testing performed**
+Build and run unit test
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Dependant on nasa/osal#725
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Alex Campbell GSFC
+","dependency, refactor",https://github.com/nasa/sample_app/pull/116
+Change UT_ClearForceFail to UT_ClearDefaultReturnValue,"**Is your feature request related to a problem? Please describe.**
+UT_ClearForceFail was refactored to UT_ClearDefaultReturnValue for nasa/osal#724. It needs to have its name changed here as well.
+
+**Additional context**
+Part of nasa/osal#724
+
+**Requester Info**
+Alex Campbell GSFC",refactor,https://github.com/nasa/sample_app/issues/115
+sample_app Integration Candidate: 2020-12-08,"**Describe the contribution**
+
+Fix #110, Apply message alignment pattern
+
+**Testing performed**
+See <https://github.com/nasa/cFS/pull/160/checks>
+
+**Expected behavior changes**
+
+PR #112 -  Aligns messages according to changes in cFE <https://github.com/nasa/cFE/issues/1009>. Uses the ""raw"" message cmd/tlm types in definition
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/160>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper ",,https://github.com/nasa/sample_app/pull/114
+sample_app Integration Candidate: 2020-11-24,"**Describe the contribution**
+Fix #106, Refactor UT_SetForceFail to UT_SetDefaultReturnValue
+
+**Testing performed**
+ See events for ""github actions test"" at https://github.com/astrogeco/cFS/actions
+
+**Expected behavior changes**
+
+PR #107-   Rename `UT_SetForceFail` to `UT_SetDefaultReturnValue` since some functions that retain more than 1 value are not necessarily failing
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/158>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@zanzaben ",,https://github.com/nasa/sample_app/pull/113
+"Fix #110, Apply message alignment pattern","**Describe the contribution**
+Fix #110 
+
+- Replace CFE_SB_RcvMsg with CFE_SB_ReceiveBuffer
+- Use CFE_SB_Buffer_t for receiving and casting to command types
+- Use CFE_MSG_CommandHeader_t and CFE_MSG_TelemetryHeader_t in
+  command and telemetry type definitions
+- Use CFE_SB_TransmitMsg to copy the command and telemetry
+  into a CFE_SB_Buffer_t and send it where needed
+- Avoids need to create send buffers within the app (or union
+  the packet types with CFE_SB_Buffer_t)
+- Eliminates references to CFE_SB_CmdHdr_t and CFE_SB_TlmHdr_t
+  that formerly enforced alignment since these had potential
+  to change the actual packet sizes
+- No need to cast to CFE_MSG_Message_t anywhere since it's
+  available in the CFE_SB_Buffer_t union
+- Replaced CFE_MSG_Size_t with size_t
+
+**Testing performed**
+Bundle CI, unit tests, spot checked cmd/tlm
+
+**Expected behavior changes**
+None, pattern applied only
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: bundle (integration-candidate) + nasa/cFE#1015, and this commit
+
+**Additional context**
+Depends on nasa/cFE#1015
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, dependency",https://github.com/nasa/sample_app/pull/112
+Remove function names from comments (where not useful),"**Is your feature request related to a problem? Please describe.**
+Function names in comments (end of function comment, function header comment) historically have been poorly maintained.
+
+Example:
+https://github.com/nasa/sample_app/blob/0d11d9e7b1edf339c33870340524916f81a5dd95/fsw/src/sample_app.c#L393
+https://github.com/nasa/sample_app/blob/0d11d9e7b1edf339c33870340524916f81a5dd95/fsw/src/sample_app.c#L425
+
+**Describe the solution you'd like**
+Remove redundant information (these end of function comments and name from the header).
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, good first issue",https://github.com/nasa/sample_app/issues/111
+Update for suggested alignment enforcement pattern (nasa/cFE#1009),"**Is your feature request related to a problem? Please describe.**
+See nasa/cFE#1009, inconsistent pattern
+
+**Describe the solution you'd like**
+Match suggestion in nasa/cFE#1009, use the ""raw"" message cmd/tlm types in definition.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+nasa/cFE#1009
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, dependency",https://github.com/nasa/sample_app/issues/110
+"Fix #105, Remove non-portable OS_PACK","**Describe the contribution**
+Fix #105  - removes OS_PACK (not portable)
+
+**Testing performed**
+Didn't confirm offsets, but checked size before and after and there was no change (16).  cFS-GroundSystem doesn't display the message, but passed unit tests and ran a few commands through the system.
+
+**Expected behavior changes**
+No impact, but removes undesirable pattern
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+Will update other patterns to match #1009 in a separate commit/PR.
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:FastTrack,https://github.com/nasa/sample_app/pull/109
+Integration Candidate: 2020-11-10,"**Describe the contribution**
+
+Fix #103, Use MSG APIs
+Fix #105, Remove non-portable OS_PACK
+
+**Testing performed**
+Bundle CI on astrogeco: https://travis-ci.com/github/astrogeco/cFS/builds/201769124
+
+**Expected behavior changes**
+
+PR #104 -  Replaces deprecated SB API's with MSG
+
+PR #109 - No impact, removes undesirable pattern use of `OS_PACK`
+
+
+**System(s) tested on**
+
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/156
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper 
+",,https://github.com/nasa/sample_app/pull/108
+"Fix #106, Refactor UT_SetForceFail to UT_SetDefaultReturnValue","Describe the contribution
+Fixes #106 by changing UT_SetForceFail to UT_SetDefaultReturnValue
+
+Testing performed
+Build and run unit test
+
+Expected behavior changes
+No impact to behavior
+
+System(s) tested on
+Ubuntu 20.04
+
+Additional context
+Dependant on nasa/osal#646
+
+Contributor Info - All information REQUIRED for consideration of pull request
+Alex Campbell - NASA/GSFC",dependency,https://github.com/nasa/sample_app/pull/107
+Refactor UT_SetForceFail,"Describe the bug
+UT_SetForceFail was refactored to UT_SetDefaultReturnValue for https://github.com/nasa/osal/issues/559. It needs to have its name changed here as well.
+
+Expected behavior
+Change UT_SetForceFail  to UT_SetDefaultReturnValue 
+
+Additional context
+Part of https://github.com/nasa/osal/issues/559
+
+Reporter Info
+Alex Campbell","enhancement, dependency",https://github.com/nasa/sample_app/issues/106
+Remove use of OS_PACK,"**Is your feature request related to a problem? Please describe.**
+OS_PACK shouldn't be used.
+
+**Describe the solution you'd like**
+Remove it.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+nasa/osal#644
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",bug,https://github.com/nasa/sample_app/issues/105
+"Fix #103, Use MSG APIs","**Describe the contribution**
+Replaces deprecated SB API's with MSG
+Fix #103
+
+**Testing performed**
+Built and ran, enabled telemetry, checked noops
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+nasa/cFE#777
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/sample_app/pull/104
+Remove dependencies on deprecated SB APIs,"**Is your feature request related to a problem? Please describe.**
+SB APIs deprecated in nasa/cFE#777
+
+**Describe the solution you'd like**
+Update to use MSG module.
+
+**Describe alternatives you've considered**
+None.
+
+**Additional context**
+None.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/sample_app/issues/103
+Integration Candidate: 2020-11-03,"**Describe the contribution**
+Fix #77, Standardize to SAMPLE_APP_ namespace prefix
+
+**Testing performed**
+See framework-bundle CI: <https://github.com/nasa/cFS/pull/154/checks>
+
+**Expected behavior changes**
+
+PR #100 - No behavior changes. All identifiers now use the prefix `SAMPLE_APP_`. Changes the name of the main function from SAMPLE_AppMain to SAMPLE_APP_Main which affects the CFE startup script.
+
+**System(s) tested on**
+Ubuntu CI
+
+**Additional context**
+https://github.com/nasa/cFS/pull/154
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey 
+",,https://github.com/nasa/sample_app/pull/102
+Not correctly checking return code of CFE_TBL_GetAddress,"**Describe the bug**
+The `CFE_TBL_GetAddress()` routine is one of the APIs that have multiple ""success"" codes.  Although the intent/hope is to deprecate this (see nasa/cfe#483) - the current implementation still returns values other than `CFE_SUCCESS`.  In particular the first time it is called after loading, one gets `CFE_TBL_INFO_UPDATED`.
+
+**To Reproduce**
+Run CFE with sample app and issue the ""Process"" command (2) and observe one gets an ""error"" message e.g.:
+
+    1980-012-14:03:57.00062 Sample App: Fail to get table address: 0x4c00000e
+
+But that error code is actually a ""success"" response.  If the same command is repeated, it works OK because it returns `CFE_SUCCESS` this time.
+
+A bigger issue, however, is that the address acquired from the first invocation is not released.
+
+**Expected behavior**
+Should get address and release address correctly.
+
+**System observed on:**
+Ubuntu 20.04
+
+**Additional context**
+This is an **excellent** example of why multiple success responses are a bad idea.  It is really a bug in the CFE_TBL API -- we didn't as if a table was updated, we only asked to get its pointer.  If TBL services gives back a buffer pointer as requested, the response should be `CFE_SUCCESS`.  The unnecessary over-complexity of the TBL API definitely causes usability problems.
+
+But in the meantime one can change the check from `status == CFE_SUCCESS` to `status < CFE_SUCCESS` and it should resolve the resource leak issue here.
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+",bug,https://github.com/nasa/sample_app/issues/101
+"Fix #77, Standardize to SAMPLE_APP_ namespace prefix","**Describe the contribution**
+
+Replace inconsistent SAMPLE_ and SAMPLE_App name prefixes, now all identifers should start with SAMPLE_APP_.
+
+Fixes #77 
+
+**Testing performed**
+Build and sanity test CFE
+Run all unit tests
+
+**Expected behavior changes**
+No impact to behavior, but this also changes the name of the main function from SAMPLE_AppMain to SAMPLE_APP_Main which affects the CFE startup script.
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Noticed a bug in the process of this name change - the `PipeName` field was hardcoded at 16 bytes, and this change (adding 4 chars) made the name too long, which overran the buffer.  Furthermore it was set with `strcpy()`, not `strncpy()` - so it clobbered the next field.
+
+This has also been fixed in this PR - changed to use `CFE_MISSION_MAX_API_LEN` and `strncpy()`.
+
+This also requires a corresponding update in SAMPLE_LIB as well as CFE startup script to fix the entry point names.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.",dependency,https://github.com/nasa/sample_app/pull/100
+"Fix #97, check only format string in UT event test","**Describe the contribution**
+For example ""SendEvent"" tests in sample_app, do not pass the test string through `vsnprintf()` to get a fully rendered output. Instead test only that the format string matches.  This is my recommended approach.
+
+Note that the ""fully-rendered"" output is affected my many external variables and is not necessarily going to be consistent.  The most recent example is in #87/#94 which is the reason for this change, but it also can be affected by things totally outside of CFE like the user's locale settings in the OS.
+
+Fixes #97 
+
+**Testing performed**
+Build and run sample_app unit tests
+
+**Expected behavior changes**
+Fixes current failure in integration candidate 2020-09-15.
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","enhancement, CCB:FastTrack",https://github.com/nasa/sample_app/pull/99
+Integration Candidate: 2020-09-16,"**Describe the contribution**
+Fix #87 
+Fix #95 
+Fix #97 
+
+**Testing performed**
+Bundle CI - https://github.com/nasa/cFS/pull/140/checks
+
+**Expected behavior changes**
+PR #94 - Unit test MID string format now 32bit
+
+PR #96 - Installs unit test to target directory
+
+PR #99 - Checks only format string in UT event test
+
+**System(s) tested on**
+Ubuntu - CI
+
+**Additional context**
+ https://github.com/nasa/cFS/pull/140
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman, NASA-GSFC
+",,https://github.com/nasa/sample_app/pull/98
+"String checks in UT should check only the spec/format string, not the fully rendered text.","**Describe the bug**
+As the comment in the code suggests, the ""fully-rendered"" text is really a derived output that depends on a lot of external factors.  It isn't a direct output of the unit under test.
+
+As an example, the unit test is currently getting thrashed around due to a message ID check due to the fact that there is no specific text that is always ""correct"" here.  
+
+It broke when updated to 32 bit (#87), attempted to fix in #94, which only broke the original case (v1 header).
+
+**To Reproduce**
+Run unit test using v1 (16-bit) message IDs.
+**Currently failing in the integration-candidate branch**
+
+**Expected behavior**
+Tests should pass.
+
+**System observed on:**
+Ubuntu 20.04 and Travis-CI (current integration candidate).
+
+**Additional context**
+Recommendation is to only check the SPEC STRING (`0x%x`) which will be the same regardless of what the ""invalid msgid"" value actually is.  That's all that really matters.
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+",bug,https://github.com/nasa/sample_app/issues/97
+"Fix #95, Install unit test to target directory","**Describe the contribution**
+Fix #95, Install unit test to target directory
+
+**Testing performed**
+Make unit tests, install, observe they install in correct directory
+
+**Expected behavior changes**
+Correct install directory
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None.
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","bug, CCB:FastTrack",https://github.com/nasa/sample_app/pull/96
+Coverage test not installed in correct directory,"**Describe the bug**
+Coverage test not installed in correct directory - see nasa/cfe#881
+
+**To Reproduce**
+Make unit tests, make install, observe unit test in build directory.
+
+**Expected behavior**
+Should go in target directory (build/exe/cpu1 for sample config)
+
+**Code snips**
+https://github.com/nasa/sample_app/blob/9ff605ed1b738c6a2eabd75cf05aeed163cc5940/unit-test/CMakeLists.txt#L70
+
+**System observed on:**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: bundle main
+
+**Additional context**
+None
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC","bug, build-system",https://github.com/nasa/sample_app/issues/95
+"Fix #87, Unit test MID string format now 32bit","**Describe the contribution**
+Fix #87 
+With nasa/cfe#880, the format is now consistently 32 bit, fixed event string check to match.
+
+**Testing performed**
+Built unit tests with nasa/cfe#880, now passes
+
+**Expected behavior changes**
+Unit test pass
+
+**System(s) tested on**
+ - Hardware: cFS Dev server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + nasa/cfe#880 + this commit
+
+**Additional context**
+None.
+
+**Third party code**
+None.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","bug, CCB:FastTrack",https://github.com/nasa/sample_app/pull/94
+Integration Candidate: 2020-08-26,"**Describe the contribution**
+Fix #37 
+Fix #89 
+
+**Testing performed**
+Bundle CI - https://github.com/nasa/cFS/pull/134/checks
+
+**Expected behavior changes**
+PR #92 - Applies standard coding style.
+
+PR #90 - Removes test code call of CFE_SB_InitMsg and sets the API/stub buffers directly.
+
+**System(s) tested on**
+Ubuntu - CI
+
+**Additional context**
+https://github.com/nasa/cFS/pull/134
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman, NASA-GSFC
+Gerardo E. Cruz-Ortiz, NASA-GSFC",,https://github.com/nasa/sample_app/pull/93
+"Fix #37, Apply style","**Describe the contribution**
+Fix #37 - applies standard coding style
+
+Ran 
+```
+find . -name ""*.[ch]"" -exec clang-format -i --style=file  {} +
+```
+**Testing performed**
+CI only, whitespace.
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+CI
+
+**Additional context**
+Redoing https://github.com/nasa/sample_app/pull/88 which was accidentally merged and fixing to avoid conflicts
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman, NASA-GSFC
+Gerardo E. Cruz-Ortiz, NASA-GSFC",CCB:Approved,https://github.com/nasa/sample_app/pull/92
+"Fix #37, Apply style","**Describe the contribution**
+Fix #37 - applies standard coding style
+
+**Testing performed**
+CI only, whitespace.
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+CI
+
+**Additional context**
+Redoing https://github.com/nasa/sample_app/pull/88 which was accidentally merged
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",duplicate,https://github.com/nasa/sample_app/pull/91
+"Fix #89, Remove CFE_SB_InitMsg use in coverage test","**Describe the contribution**
+Fix #89 - removes test code call of CFE_SB_InitMsg and sets the API/stub buffers directly.
+
+**Testing performed**
+Built and ran tests, passed - Depends on nasa/cFE#834
+
+**Expected behavior changes**
+None, just improved test.
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: bundle main (+cfe/osal main) + nasa/cFE#834 and this commit
+
+**Additional context**
+nasa/cFE#834
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:Approved",https://github.com/nasa/sample_app/pull/90
+Sample tests should not use CFE_SB_InitMsg stub to initialize a message,"**Describe the bug**
+CFE_SB_InitMsg is used in coveragetest_sample_app.c to initialize a message so that the CFE_SB_SendMsg stub has a valid message to use.  This is not proper form. A unit test should not be calling a stub to provide this setup.  Stubs are to be used by production code in place of the actual calls in order for a unit test to isolate the code under test, they should not be used as utility functions for the unit tests.
+
+**To Reproduce**
+See Code snips.
+
+**Expected behavior**
+Provide a ut_assert utility that has the functionality to create a cFS message for use by a unit test.
+
+**Code snips**
+https://github.com/nasa/sample_app/blob/c1348d6fcb7f911396c9928a1779ddad6fe0c339/unit-test/coveragetest/coveragetest_sample_app.c#L414-L417
+
+**System observed on:**
+RHEL 7.6
+
+**Additional context**
+This is related to a cFE issue.  If the CFE_SB_SendMsg stub worked as described in there, most situations where this is used would not even be required (just verifying the message pointer instead of the actual message itself).
+https://github.com/nasa/cFE/issues/818
+
+**Reporter Info**
+Alan Gibson NASA GSFC/587
+",invalid,https://github.com/nasa/sample_app/issues/89
+"Fix #37, Apply style","**Describe the contribution**
+Fix #37 - applies standard coding style
+
+**Testing performed**
+CI only, whitespace.
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:Approved, CCB:FastTrack",https://github.com/nasa/sample_app/pull/88
+Unit test fails when VER_2 headers are used,"**Describe the bug**
+Event test strings are different when the MsgId size changes, but test looks for explict message:
+https://github.com/nasa/sample_app/blob/c1348d6fcb7f911396c9928a1779ddad6fe0c339/fsw/src/sample_app.c#L274-L277
+
+https://github.com/nasa/sample_app/blob/c1348d6fcb7f911396c9928a1779ddad6fe0c339/unit-test/coveragetest/coveragetest_sample_app.c#L290
+
+https://github.com/nasa/sample_app/blob/c1348d6fcb7f911396c9928a1779ddad6fe0c339/unit-test/coveragetest/coveragetest_sample_app.c#L549
+
+!VER_2 = `0xffff`, VER_2 =`0xffffffff` (or capitalized based on the format string)
+
+**To Reproduce**
+Set MESSAGE_FORMAT_IS_CCSDS_VER_2, build and run unit tests.
+
+**Expected behavior**
+Unit tests should pass with either configuration
+
+**Code snips**
+See above.
+
+**System observed on:**
+ - Hardware: cFS Dev VM
+ - OS: Ubuntu 18.04
+ - Versions: main bundle
+
+**Additional context**
+None
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC",bug,https://github.com/nasa/sample_app/issues/87
+"Close #80, Add build number and baseline","**Describe the contribution**
+Close #80
+
+**Testing performed**
+Built bundle and confirmed SAMPLE_APP reports development version.
+
+**Expected behavior changes**
+Version report now uses the version string. See excerpt from cfs log:
+
+```
+EVS Port1 42/1/SAMPLE_APP 1: SAMPLE App Initialized Sample App Development Build v1.1.0+dev64 Last Official Release: v1.1.0
+```
+
+**System(s) tested on**
+Ubuntu Docker on Mac OS X
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Gerardo E. Cruz-Ortiz, NASA-GSFC",CCB:FastTrack,https://github.com/nasa/sample_app/pull/86
+Integration candidate 2020-07-29,"**Describe the contribution**
+Fix #81 
+Close #80
+
+**Testing performed**
+Bundle CI - https://github.com/nasa/cFS/pull/119/checks
+
+**Expected behavior changes**
+
+PR #82 - Install unit test as part of cmake recipe. Sample app test runner now shows up in expected install directory
+PR #86 - Add build number and baseline to version report
+
+**System(s) tested on**
+Ubuntu CI
+
+**Additional context**
+Part of nasa/cfs#119
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman, NASA-GSFC
+Gerardo E. Cruz-Ortiz, NASA-GSFC",,https://github.com/nasa/sample_app/pull/85
+CMakeLists.txt not C++ friendly,"**Describe the bug**
+This might be out of scope of this project but when baselining off of sample_app to make other apps I have been able to write C++ code and extern ""C"" functions to run in the sample_app.c main file (or equivalent). Now that the CMakeLists.txt file does not have the ""aux_source_directory(fsw/src APP_SRC_FILES)"" and ""add_cfe_app(sample_app APP_SRC_FILES)"" lines, the C++ externed functions are not linked by the cmake build system. By explicitly saying ""add_cfe_app(sample_app fsw/src/sample_app.c)"" the link command won't pick up the necessary C++ symbols.  
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Create a C++ file in app src directory and make a function called ""extern ""C"" void test() { printf(""test\n"") }""
+2. Forward declare this test function in sample_app.c at the top by writing ""void test()"" 
+3. Add ""CXX"" to the project() line in CMakeLists.txt
+4. Call test() in sample_app.c somewhere where you know it will be called (init or main run loop) 
+5. Build and run on target 
+
+**Expected behavior**
+Target should have an error similar to ""undefined symbol"" when dynamically loading/linking the sample_app during cFS startup/initialization 
+
+**System observed on:**
+ - Linux Ubuntu 18.04, Intel i7 VxWorks 7 target
+ - OS: Ubuntu 18.04 and VxWorks 7
+
+**Reporter Info**
+Joe Mahoney - LTA Research
+",question,https://github.com/nasa/sample_app/issues/84
+"Fix #81, Install unit test","**Describe the contribution**
+Fix #81 
+ - Install unit test as part of cmake recipe
+
+**Testing performed**
+Normal build with ENABLE_UNIT_TESTS=true, with make install, and ran sample app unit test from install dir (passed)
+
+**Expected behavior changes**
+Sample app test runner now shows up in expected  install dir
+
+**System(s) tested on**
+ - Hardware: cFS Dev VM
+ - OS: Ubuntu 18.04
+ - Versions: current bundle development branch
+
+**Additional context**
+None.
+
+**Third party code**
+None.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:Approved, CCB:FastTrack",https://github.com/nasa/sample_app/pull/82
+Add Build name and Build number to version.h,"**Is your feature request related to a problem? Please describe.**
+Need a better way to describe versions during development
+
+**Describe the solution you'd like**
+Add Build name and Build number to version.h
+As discussed, we will add a a build name string and a continuously incrementing build number to `version.h`
+
+**Additional context**
+See notes from CCB: <https://github.com/nasa/cFS/wiki/Community-CCB-Agenda:-July-01-2020>
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz, NASA-GSFC
+",enhancement,https://github.com/nasa/sample_app/issues/80
+coverage tests are actually coverage + functional tests,"**Is your feature request related to a problem? Please describe.**
+The current ""coverage"" tests are much like the unit tests in other cFS repositories, where stubs are configured to cause errors and the return values and events are checked. This is, in my opinion, intermixing functional and coverage testing. Changing the type of event generated for an error condition will not affect coverage, but will require changing the unit test code which would fail, given that it was expecting the previous error condition.
+
+For example, instead of:
+```
+UT_SetDeferredRetcode(UT_KEY(CFE_SB_Subscribe), 2, CFE_SB_BAD_ARGUMENT);
+UT_TEST_FUNCTION_RC(SAMPLE_AppInit(), CFE_SB_BAD_ARGUMENT);
+UtAssert_True(UT_GetStubCount(UT_KEY(CFE_ES_WriteToSysLog)) == 4, ""CFE_ES_WriteToSysLog() called"");
+```
+
+it could be written more simply as:
+```
+UT_SetDeferredRetcode(UT_KEY(CFE_SB_Subscribe), 2, CFE_SB_BAD_ARGUMENT);
+SAMPLE_AppInit();
+```
+
+No need to check return or events.
+
+**Describe alternatives you've considered**
+One option would be to keep it as it is, but I suggest renaming it back to (more ambiguous) unit tests. Or split the code into true coverage tests (which would exercise every path) and functional tests (which would focus on nominal operation and significant error handling).
+
+**Requester Info**
+Christopher.D.Knight@nasa.gov",invalid,https://github.com/nasa/sample_app/issues/79
+Inconsistent use of TBL vs TABLE,"**Describe the bug**
+It seems we use TBL and TABLE interchangeably. For example 
+
+```
+  status = CFE_TBL_Register(&SAMPLE_AppData.TblHandles[0],
+                              ""SampleAppTable"",
+                              sizeof(SAMPLE_APP_Table_t),
+                              CFE_TBL_OPT_DEFAULT,
+                              SAMPLE_TblValidationFunc);
+```
+
+has both uses. 
+
+**To Reproduce**
+Search the sample_app directory for uses of *TBL* and *TABLE* both upper and lower case combinations exist.
+
+**Expected behavior**
+A single mnemonic for tables. TBL seems to be the default used in cFS.
+
+**Reporter Info**
+Gerardo E. Cruz-Ortiz, NASA-GSFC
+",enhancement,https://github.com/nasa/sample_app/issues/78
+"Rename files, functions, and variables to match APPNAME_* pattern","**Describe the bug**
+PR #73 shed light on inconsistencies in naming conventions. There are multiple items named SAMPLE_itemname as opposed to SAMPLE_APP_itemname.
+
+**To Reproduce**
+One relevant example is `SAMPLE_TblValidationFunc` in `sample_app.c:226`
+
+**Expected behavior**
+All item names should use the prefix `SAMPLE_APP` as opposed to `SAMPLE`. In the example above the correct name should then be `SAMPLE_APP_TblValidationFunc`.
+
+
+**System observed on:**
+Source Code
+
+**Reporter Info**
+Gerardo E. Cruz-Ortiz, NASA-GSFC
+","bug, breaking",https://github.com/nasa/sample_app/issues/77
+Integration Candidate: 2020-06-10,"**Describe the contribution**
+Fix #70 
+
+**Testing performed**
+Bundle CI: https://github.com/nasa/cFS/pull/102/checks
+
+**Expected behavior changes**
+PR #73 -  move the table to fsw/tables and renames ""sample_table"" to ""sample_app_table"".
+
+**System(s) tested on**
+Ubuntu:Bionic
+
+**Additional context**
+Part of nasa/cfs#102
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Christopher D. Knight, NASA-ARC
+Gerardo E. Cruz-Ortiz, NASA-GSFC",,https://github.com/nasa/sample_app/pull/76
+Add reference to skeleton_app in sample_app README,"**Is your feature request related to a problem? Please describe.**
+The sample_app README should have a reference to the skeleton_app.
+
+**Describe the solution you'd like**
+Add the reference.
+
+**Describe alternatives you've considered**
+N/A
+
+**Additional context**
+N/A
+
+**Requester Info**
+Jandlyn Bentley, NASA GSFC
+",duplicate,https://github.com/nasa/sample_app/issues/75
+Test command message should use CFE_SB_CmdHdr_t,"**Is your feature request related to a problem? Please describe.**
+TestMsg uses CFE_SB_Msg_t, where it should use CFE_SB_CmdHdr_t for a zero parameter command
+
+**Describe the solution you'd like**
+Switch to CFE_SB_CmdHdr_t
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Allows the changes being worked in nasa/cfe#726
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",invalid,https://github.com/nasa/sample_app/issues/74
+"Fix #70, Reorg the table file","**Describe the contribution**
+Fix #70 - move the table to fsw/tables and renames ""sample_table"" to ""sample_app_table"".
+
+**Testing performed**
+Built and run.
+
+**System(s) tested on**
+Debian 10.3
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Christopher.D.Knight@nasa.gov","enhancement, CCB:Approved",https://github.com/nasa/sample_app/pull/73
+should sample_app be writing to syslog?,"**Is your feature request related to a problem? Please describe.**
+I thought that, generally, apps should be generating events on errors, not writing to syslog. However, if you look at, say SAMPLE_AppInit(), it writes to syslog for a number of error conditions.
+
+**Describe the solution you'd like**
+Re-write to generate events.
+
+**Requester Info**
+Christopher.D.Knight@nasa.gov",question,https://github.com/nasa/sample_app/issues/72
+Integration Candidate: 2020-05-27,"**Describe the contribution**
+
+Fix #66
+Fix #68 
+
+**Testing performed**
+https://github.com/nasa/cFS/pull/96/checks
+
+**Expected behavior changes**
+
+PR #67 - Test cases now compare an expected event string with a string derived from the spec string and arguments that were output by the unit under test.
+
+PR #69 - Replace references to `ccsds.h` types with the `cfe_sb.h`-provided type. 
+
+**System(s) tested on**
+Ubuntu:Bionic
+
+**Additional context**
+Part of nasa/cFS#96
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+ Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/sample_app/pull/71
+sample_table.c -- relocate?,"**Is your feature request related to a problem? Please describe.**
+Tables are a component of applications that are expected to be customized by the user. The cFS build process supports this customization (for example, by creating `sample_defs/tables/cpu1_sample_table.c`). Currently `sample_table.c` is in `fsw/src` but everything else in `fsw/src` is not expected to be customized by the user.
+
+I consider sample_app to be the ""style template"" for applications, so this should be clear not just for users of the sample_app but for folks who model their code on sample_app.
+
+**Describe the solution you'd like**
+I would like to see a clearer indication that `sample_table.c` is expected to be customized--whether it be relocated to a different folder (`fsw/tables`?) or possibly rename it to `sample_table.c.sample`?
+
+**Requester Info**
+Christopher.D.Knight@nasa.gov",question,https://github.com/nasa/sample_app/issues/70
+"Fix #68, remove references to CCSDS types","**Describe the contribution**
+Replace references to `ccsds.h` types with the `cfe_sb.h`-provided type. 
+
+Fixes #68
+
+**Testing performed**
+Build and sanity check CFE, run all unit tests
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","enhancement, CCB:Approved, CCB:FastTrack",https://github.com/nasa/sample_app/pull/69
+"Remove references to ""CCSDS"" structures","**Is your feature request related to a problem? Please describe.**
+Applications should NOT refer to the ""CCSDS"" data types and macros, as there should be no assumption of a particular message framing type at this level.
+
+**Describe the solution you'd like**
+Use the abstract types provided in `cfe_sb.h` rather than directly using `ccsds.h` types.
+
+**Additional context**
+Related to nasa/cfe#554
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/sample_app/issues/68
+"Fix #66, Add extended context information to event hook","**Describe the contribution**
+Add a string validation to the sample event hook as an example of how to use the context information supplied to the hook to perform this type of validation.
+
+Fixes #66 
+
+**Testing performed**
+Execute unit tests and confirm correct operation. all passing.
+
+**Expected behavior changes**
+Test cases now compare an expected event string with a string derived from the spec string and arguments that were output by the unit under test.
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Depends on prerequisites/related tickets:
+- nasa/osal#479
+- nasa/cfe#603
+
+These are necessary to pass the full CFE_EVS_SendEvent context through to the hook function.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","enhancement, CCB:Approved",https://github.com/nasa/sample_app/pull/67
+Provide example of extended context arguments in unit test,"**Is your feature request related to a problem? Please describe.**
+Unit test stubs are being updated to pass-through a more complete context information, currently for EVS events such that the full spec string and argument set can be checked/manipulated.
+
+**Describe the solution you'd like**
+Sample unit tests should include an example of how to obtain the context arguments in a hook function.
+
+**Additional context**
+See nasa/cfe#603
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+","enhancement, unit-test",https://github.com/nasa/sample_app/issues/66
+"Fix #45, Refactor code to fit suggested app model","**Describe the contribution**
+This is #58, resubmitted for fixes:
+Addresses ticket #45. Specifically adds new sample_app_cmds.c/.h and sample_app_utils.c/.h files, moves functions out of sample_app.c into the new cmds and utils files. Updates unit tests.
+This change makes sample_app a better reference application - structure more closely matches other apps.
+
+Fix #45
+
+**Testing performed**
+TBD
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: [e.g. PC, SP0, MCP750]
+ - OS: [e.g. Ubuntu 18.04, RTEMS 4.11, VxWorks 6.9]
+ - Versions: [e.g. cFE 6.6, OSAL 4.2, PSP 1.3 for mcp750, any related apps or tools]
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC (resubmit)
+Elizabeth Timmons/NASA (implemented)","enhancement, CCB:Ignore",https://github.com/nasa/sample_app/pull/65
+"SAMPLE_ReportHousekeeping fails, likely due to nasa/cfe#674","**Describe the bug**
+UT failure, likely related to nasa/cfe#674:
+```
+[BEGIN] 05 SAMPLE_ReportHousekeeping
+[ FAIL] 05.001 coveragetest_sample_app.c:391 - HkTelemetryMsg.Payload.CommandCounter (0) == 22
+[ FAIL] 05.002 coveragetest_sample_app.c:395 - HkTelemetryMsg.Payload.CommandErrorCounter (0) == 11
+[ PASS] 05.003 coveragetest_sample_app.c:401 - CFE_TBL_Manage() called
+[  END] 05 SAMPLE_ReportHousekeeping TOTAL::3     PASS::1     FAIL::2      MIR::0      TSF::0      N/A::0
+```
+
+**To Reproduce**
+Build and run unit tests at bundle level with nasa/cfe#674 included
+
+**Expected behavior**
+Tests pass
+
+**Code snips**
+N/A
+
+**System observed on:**
+ - Hardware: cFS Dev Server 3
+ - OS: Ubuntu 18.04
+ - Versions Bundle with nasa/cfe#674 included
+
+**Additional context**
+N/A
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC",bug,https://github.com/nasa/sample_app/issues/64
+Sample app test doesn't end up in exe dir after make install,"**Describe the bug**
+sample_app-sample_app-testrunner doesn't get ""installed""
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. make SIMULATION=native ENABLE_UNIT_TEST=true prep; make; make install
+2. ls build/exe/cpu1
+3. find /. -name ""sample_app_sample_app-testrunner""
+
+**Expected behavior**
+Install should move all tests to install directory
+
+**Code snips**
+N/A
+
+**System observed on:**
+ - Hardware: cFS Dev 3
+ - OS: Ubuntu 18.04
+ - Versions: observed in refactored IC at skliper/ic-20200511-jh
+
+**Additional context**
+N/A
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC","bug, build-system",https://github.com/nasa/sample_app/issues/81
+Integration Candidate COMBINED 2020-04-29 and 2020-05-06,"**Describe the contribution**
+Integration Candidate COMBINED 2020-04-29 and 2020-05-06
+
+Fix #53,
+Fix #60, 
+Fix #64 
+
+
+**Testing performed**
+See PRs
+Bundle CI - https://travis-ci.com/github/nasa/cFS/builds/165726730
+
+**Expected behavior changes**
+
+PR #54 - Applies the CFE_SB_MsgIdToValue() and CFE_SB_ValueToMsgId() routines where compatibility with an integer MsgId is necessary - syslog prints, events, compile-time MID #define values.
+
+PR #61 - No more format conversion error in RTEMS build
+
+
+**System(s) tested on**
+See PRs
+
+**Additional context**
+Part of nasa/cfs#83
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Elizabeth Timmons, NASA-GSFC
+Jacob Hageman, NASA-GSFC
+Joseph Hickey, Vantage Systems, Inc.",,https://github.com/nasa/sample_app/pull/63
+sample_defs/tables source files won't compile without table header file include,"**Describe the bug**
+If we want to put all tables source files in global *_defs directory in a tables dir inside *_defs they need to be able to access *_table.h which would be in the respective app's src directory. 
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Create directory in sample_defs called ""tables""
+2. Move sample_table.c into sample_defs/tables directory
+3. Build cFS (make SIMULATION=native prep, make) 
+4. Build will fail because sample_table.c can't find sample_table.h 
+
+**Expected behavior**
+Need to be able to provide includes to sample_defs/tables. As a ""hack"" I add a ""include_directories(fsw/src)"" in CMakeLists.txt in apps/sample_app which allows sample_table.c to compile from sample_defs/tables. 
+
+**System observed on:**
+- Linux Ubuntu 18.04 LTS 
+- Native linux cFS build
+- Versions cFE 6.7.14, OSAL 5.0.13, PSP 1.4.10
+
+**Reporter Info**
+Joe Mahoney - LTA Research",,https://github.com/nasa/sample_app/issues/83
+Integration Candidate: 2020-04-22,"**Describe the contribution**
+Fixes #56 
+
+**Testing performed**
+Bundle CI- https://github.com/nasa/cFS/pull/74/checks?check_run_id=637311464
+
+**Expected behavior changes**
+PR #57 -  Coverage data from `make lcov` includes the sample_app code
+
+**System(s) tested on**
+See PRs
+CI - Ubuntu:Bionic
+
+**Additional context**
+Part of nasa/cfs#74
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+ Joseph Hickey, Vantage Systems, Inc.",,https://github.com/nasa/sample_app/pull/62
+"Fix #60, incorrect conversion specifier","**Describe the contribution**
+Corrects a format mismatch warning on some platforms.
+
+Fixes #60 
+
+**Testing performed**
+Build for i686-rtems4.11 and confirm warning is fixed
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+i686-rtems4.11 cross build
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.",CCB:Approved,https://github.com/nasa/sample_app/pull/61
+Format conversion error in coverage test,"**Describe the bug**
+When compiling the coverage test on RTEMS, a format conversion error is triggered:
+
+```
+/home/joe/code/cfecfs/github/apps/sample_app/unit-test/coveragetest/coveragetest_sample_app.c:152:5: error: format '%d' expects argument of type 'int', but argument 6 has type 'uint32' [-Werror=format=]
+     UtAssert_True(SAMPLE_AppData.RunStatus == CFE_ES_RunStatus_APP_ERROR,
+     ^
+cc1: all warnings being treated as errors
+```
+
+**To Reproduce**
+Build with ENABLE_UNIT_TESTS=TRUE for i686-rtems4.11 platform
+
+**Expected behavior**
+Should build clean
+
+**System observed on:**
+i686-rtems4.11 cross build
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+",bug,https://github.com/nasa/sample_app/issues/60
+"Fix #50, Reference skeleton_app in ReadMe","**Describe the contribution**
+Adds a doc update with a link to https://github.com/nasa/skeleton_app
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Christopher.D.Knight@nasa.gov","CCB:Approved, CCB:FastTrack, docs",https://github.com/nasa/sample_app/pull/59
+"Fix #45, Refactor to implement command and utility functions in separate files","**Describe the contribution**
+Addresses ticket #45.  Specifically adds new sample_app_cmds.c/.h and sample_app_utils.c/.h files, moves functions out of sample_app.c into the new cmds and utils files. Updates unit tests.
+This change makes sample_app a better reference application - structure more closely matches other apps.
+
+**Testing performed**
+Steps taken to test the contribution:
+1. App compiles
+2. App unit tests complete successfully
+
+**Expected behavior changes**
+No change to sample app behavior.  Minor changes to unit test behavior (more test cases). 
+
+**System(s) tested on**
+ - Hardware: PC
+ - OS: Ubuntu 16.04
+ - Versions: cFE 6.7.12
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Elizabeth Timmons/NASA
+","invalid, CCB:Approved, conflict",https://github.com/nasa/sample_app/pull/58
+"Fix #56, Update coverage compile/link flag options","**Describe the contribution**
+
+OSAL now sets these as UT_COVERAGE_COMPILE_FLAGS, UT_COVERAGE_LINK_FLAGS.
+Building and linking the UT executable needs a corresponding update.
+
+Fixes #56 
+
+**Testing performed**
+Build with `ENABLE_UNIT_TESTS=TRUE` and confirm that all unit tests are building
+
+**Expected behavior changes**
+Coverage data (`make lcov`) now includes the sample_app code again
+
+**System(s) tested on**
+Ubuntu 18.04 LTS 64 bit
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","bug, CCB:Approved",https://github.com/nasa/sample_app/pull/57
+Unit tests need to link with UT_COVERAGE_COMPILE_FLAGS/UT_COVERAGE_LINK_FLAGS,"**Is your feature request related to a problem? Please describe.**
+nasa/osal#404 cleans up the compiler flag management, and as part of this it exports two variables, UT_COVERAGE_COMPILE_FLAGS and UT_COVERAGE_LINK_FLAGS, rather than a single UT_C_FLAGS value.
+
+**Describe the solution you'd like**
+The unit tests need to use these variables, not UT_C_FLAGS.
+
+**Additional context**
+Needs to be included with the nasa/osal#404 merge.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/sample_app/issues/56
+Apps should not pend forever on software bus,"The SAMPLE_APP, which is supposed to exemplify the current best practices, shouldn't be pending forever on a software bus message as it does here:
+
+https://github.com/nasa/sample_app/blob/b95629216ae8cda3b86332f81bb515743fedcede/fsw/src/sample_app.c#L85-L87
+
+The problem with pending forever is that the app also needs to perform an orderly exit if a restart/reload/delete command is sent to ES, which is checked by `CFE_ES_RunLoop()`.  If an app is pending forever for software bus messages but none are sent, then the shutdown request will remain pending indefinitely.
+",enhancement,https://github.com/nasa/sample_app/issues/55
+"Fix #53, Opaque CFE_SB_MsgId_t values","**Describe the contribution**
+Apply the `CFE_SB_MsgIdToValue()` and `CFE_SB_ValueToMsgId()` routines where compatibility with an integer MsgId is necessary - syslog prints, events, compile-time MID `#define` values.
+
+Fixes #53 
+
+**Testing performed**
+Unit test
+Execute CFE and sanity-check normal operation - send commands to app using `cmdUtil` and confirm commands are processed normally.
+
+**Expected behavior changes**
+No impact to behavior.
+
+**System(s) tested on**
+Ubuntu 18.04 LTS, 64-bit
+
+**Additional context**
+In future versions of CFE SB the MsgId type might not be a simple integer, so this is one step in the direction of avoiding this assumption in apps.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.",CCB:Approved,https://github.com/nasa/sample_app/pull/54
+App should treat CFE_SB_MsgId_t values as opaque,"**Is your feature request related to a problem? Please describe.**
+For compatibility going forward, code should not assume that `CFE_SB_MsgId_t` is an integer.
+
+**Describe the solution you'd like**
+When dealing with an integer, such as when printing in events/messages or for backward compatibility with MID `#define`'s, the code may use `CFE_SB_ValueToMsgId()` and `CFE_SB_MsgIdToValue()` conversion routines.  
+
+**Additional context**
+Architecturally, the `CFE_SB_MsgId_t` is supposed to be an opaque/abstract value that identifies an endpoint on the software bus routing domain.  The specific meaning of integer values is already different in an ""extended header"" (CCSDS v2) build vs. the standard header build.  Therefore apps should never make assumptions regarding the specific integer values, and all introspection of `CFE_SB_MsgId_t` values should be through the CFE SB API only.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/sample_app/issues/53
+Integration Candidate 2020-03-25,"**Describe the contribution**
+Fixes #19 
+
+**Testing performed**
+See PR #48 
+Bundle CI - [Pass](https://travis-ci.com/github/nasa/cfs/builds/158274344)
+
+**Expected behavior changes**
+ Add CFE_TBL_ReleaseAddress after access of table data
+
+**System(s) tested on**
+Bundle CI - Ubuntu: Bionic
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+ Anh Van - NASA/GSFC
+Gerardo E. Cruz-Ortiz - NASA/GSFC",,https://github.com/nasa/sample_app/pull/52
+fix for #50 - skeleton version of sample_app,"**Describe the contribution**
+This is the skeleton version of the sample_app, I developed this as a ""pull request"" for comparison purposes. I am *NOT* asking that this be pulled into the mainline as-is, either I can create a new app repository for ""skeleton_app"" or I can put all of this into a subfolder or branch in github.com/nasa/sample_app.
+
+**Testing performed**
+Built and ran. Does nothing but loads and reports loaded in log.
+
+**Expected behavior changes**
+Provides a simplified version of sample_app without the event registration and without the table or sample_lib integration.
+
+**System(s) tested on**
+Debian Linux VM
+
+**Additional context**
+Also wondering if I should pull the perfmon code, as this is not *required* for an app.
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Christopher.D.Knight@nasa.gov",invalid,https://github.com/nasa/sample_app/pull/51
+skeleton app,"**Is your feature request related to a problem? Please describe.**
+sample_app is great for showing a variety of capabilities that cFS provides to an application, but folks will likely come to sample_app thinking it's a good starting place for them to develop their new apps. I suggest we also have a ""skeleton_app"" either as a separate GIT repository (and referenced in the sample_app docs) or contained in the sample_app folder.
+
+**Describe the solution you'd like**
+a skeleton_app which has the barest of minimums to make it a valid cFS application.
+
+**Additional context**
+Add any other context about the feature request here.
+
+**Requester Info**
+Christopher.D.Knight@nasa.gov",docs,https://github.com/nasa/sample_app/issues/50
+Integration Candidate 2020-03-18,"**Describe the contribution**
+Fix #8 and #41 
+
+**Testing performed**
+See PR #26 and #42 
+Bundle CI, see https://github.com/nasa/cFS/pull/58
+
+**Expected behavior changes**
+PR #26, Adds a complete example unit test to the Sample Application.
+PR #42, sample_table.c is no longer included within the link of sample_app.so.
+
+
+**System(s) tested on**
+CI Ubuntu:Bionic
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+Gerardo E. Cruz-Ortiz, NASA-GSFC",,https://github.com/nasa/sample_app/pull/49
+"Fix #19, release table address","**Describe the contribution**
+Fix issue #19, Release table after use. 
+
+**Testing performed**
+Steps taken to test the contribution:
+1.Build 
+2. Run CFS
+3. Run Groundsystem
+4. Send ""Process_App_Process_CC""
+5. Verify output/Everything works 
+
+**System(s) tested on**
+ - Ubuntu 18.04
+ - GroundSystem 2.0.9.0a, cFS 6.7
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Anh Van, NASA Goddard
+",CCB:Approved,https://github.com/nasa/sample_app/pull/48
+IC 20200304,"**Describe the contribution**
+Integration Candidate 20200304
+
+Fixes #38 and #40
+
+See PR #43 for more details
+
+
+**Testing performed**
+CI and Raspbian
+
+**Expected behavior changes**
+#38 - Builds in Raspbian OS
+#40 - Consistent naming conventions
+
+
+**System(s) tested on**
+
+**Additional context**
+See PR #43 for more details
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+Gerardo E. Cruz-Ortiz - NASA/GSFC
+",,https://github.com/nasa/sample_app/pull/47
+Suggest adding a child task to sample_app,"**Is your feature request related to a problem? Please describe.**
+Not related to a problem.  
+
+**Describe the solution you'd like**
+A simple child task could be added to sample_app to demonstrate how a child task is created.  If sample_app is intended to be a fully featured example/template, child tasks are a key thing that is not represented in the sample. 
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Elizabeth Timmons - NASA/GSFC
+",enhancement,https://github.com/nasa/sample_app/issues/46
+"Suggest refactoring sample_app to more closely match ""real"" apps.","**Is your feature request related to a problem? Please describe.**
+This ticket is not related to a problem.  This is a feature request to reorganize the sample app to more closely match ""real"" apps (namely the GSFC open source apps).  This would increase sample_app's value as a template.  In addition to providing a more realistic example, the organization of functions into files has implications for unit testing.
+
+**Describe the solution you'd like**
+1. Move command functions into a separate sample_app_cmds.c file.  
+2. Move utility functions into a separate sample_app_utils.c file
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Elizabeth Timmons - NASA/GSFC
+",enhancement,https://github.com/nasa/sample_app/issues/45
+IC - 20200226,"Describe the contribution
+Fix #35 
+
+Testing performed
+Steps taken to test the contribution:
+
+    Current CI passes
+    Test 4 in Enhanced CI in https://github.com/nasa/cFS/pull/40
+
+Expected behavior changes
+#35 -  Clean build when OMIT_DEPRECATED = true
+
+System(s) tested on
+    CI: Ubuntu 18.04
+
+Additional context
+N/A
+
+Third party code
+N/A
+
+Contributor Info - All information REQUIRED for consideration of pull request
+Gerardo E. Cruz-Ortiz - NASA/GSFC",CCB:Approved,https://github.com/nasa/sample_app/pull/44
+General SAMPLE App cleanup,"**Describe the contribution**
+
+Fixes #38
+Fixes #40
+
+Applies a consistent naming convention for all symbols in SAMPLE App to be consistent with the published CFE naming convention and other CFE/CFS modules.
+
+**Testing performed**
+Build code with `SIMULATION=native ENABLE_UNIT_TESTS=TRUE` and confirm that code builds without error or warnings.  Also build on Raspberry Pi and confirm the cast align warnings are gone.
+
+Execute CFE and confirm nominal operation - all apps load and respond to basic commands as expected.
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+Ubuntu 18.04 LTS, 64 bit
+Raspberry Pi 3B+
+
+**Additional context**
+This single pull requests addresses multiple issues because they cannot be parallelized without introducing conflicts (the latter depends on the former).  The fixes are kept as separate commits for review purposes.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.","CCB:Approved, CCB:FastTrack",https://github.com/nasa/sample_app/pull/43
+"Fix #41, Do not use aux_source_directory in sample build script","**Describe the contribution**
+
+Fix #41
+
+Do not use `aux_source_directory` in the build script, but rather list out each file explicitly.  In particular this avoids incorrectly including the `sample_table.c` file in the app build.
+
+**Testing performed**
+Build software with `SIMULATION=native ENABLE_UNIT_TESTS=TRUE` and confirm that `sample_table.c` is no longer included within the link of `sample_app.so`.  
+
+Execute CFE and confirm basic normal operation
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+Ubuntu 18.04 LTS 64-bit
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/sample_app/pull/42
+Avoid using aux_source_directory,"**Is your feature request related to a problem? Please describe.**
+The example build script should __not__ use `aux_source_directory()` as it is not well defined/controlled behavior - it depends on files that existed at the time ""prep"" was run.
+
+**Describe the solution you'd like**
+`CMakeLists.txt` should list the app source files explicitly.  This is recommended CMake practice for most normal build cases.
+
+**Additional context**
+This is a prime example of why `aux_source_directory()` is discouraged, because in this case it incorrectly pulled in the ""sample_table.c"" source file into the app binary.  This is incorrect; the table file is built separately by the table generator script.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+","bug, build-system",https://github.com/nasa/sample_app/issues/41
+Consistent naming in SAMPLE APP,"**Is your feature request related to a problem? Please describe.**
+To adhere to the patterns established in other modules, the SAMPLE app should employ a consistent pattern to its local variables and functions.  There is currently a mixture of different styles.
+
+**Describe the solution you'd like**
+- All global scope items should start with `SAMPLE_` (not `Sample_` or otherwise)
+- All runtime data should be inside a global struct (already is for the most part)
+- Members of the global struct do _NOT_ use the `SAMPLE_` prefix (name is already qualified/namespace protected).
+- Command handling functions should match the name of the command
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/sample_app/issues/40
+"sample_app should have a clearly-defined ""publish telemetry"" function","**Is your feature request related to a problem? Please describe.**
+I'd venture most folks who look at the sample_app code are looking to read some data from a sensor/instrument and publish the telemetry onto the software bus. The current code does not make it clear where such code would go...I'd venture it'd go in ""ProcessCC()""? In fact, the only call to CFE_SB_SendMsg() is in ReportHousekeeping() function.
+
+**Describe the solution you'd like**
+The Sample App demonstrates reading from a table and calling a library, perhaps a call to a library function that iterates through an array (provided by a table) of values and publishes the next one on each command received?
+
+Needless to say, a big comment block stating ""add your code here"" would be appropriate. The ProcessCC() function really has no documentation in the comments as to what it does.
+
+**Describe alternatives you've considered**
+I think some folks on the CCB consider the sample app to *not* be a skeleton for a real application. If that is the intent, it should be made more clear in the sample_app.c file and the README.md, and it would be appropriate to have a separate skeleton app for folks to start developing from. (In fact, such a skeleton would be a nice source for developers to fork from, and any major framework changes could be made in the skeleton and folks would see the change when they fetch from their upstreams.)
+
+**Additional context**
+Add any other context about the feature request here.
+
+**Requester Info**
+Christopher.D.Knight@nasa.gov",enhancement,https://github.com/nasa/sample_app/issues/39
+fails to build under Raspbian - alignment of pointers,"**Describe the bug**
+Trying to build under Raspbian, sample_app fails with ""cast increases required alignment of target type"" errors.
+
+```
+/home/pi/cFS/apps/sample_app/fsw/src/sample_app.c:365:25: error: cast increases required alignment of target type [-Werror=cast-align]
+     CFE_SB_TimeStampMsg((CFE_SB_Msg_t *) &Sample_AppData.SAMPLE_HkTelemetryPkt);
+                         ^
+/home/pi/cFS/apps/sample_app/fsw/src/sample_app.c:366:20: error: cast increases required alignment of target type [-Werror=cast-align]
+     CFE_SB_SendMsg((CFE_SB_Msg_t *) &Sample_AppData.SAMPLE_HkTelemetryPkt);
+```
+
+**To Reproduce**
+Build on Raspbian.
+
+**Expected behavior**
+Should not cause warnings/errors.
+
+**Code snips**
+
+**System observed on:**
+Raspberry Pi Zero W
+
+**Additional context**
+Add any other context about the problem here.
+
+**Reporter Info**
+Christopher.D.Knight@nasa.gov",bug,https://github.com/nasa/sample_app/issues/38
+Apply code style,"**Is your feature request related to a problem? Please describe.**
+Inconstant style
+
+**Describe the solution you'd like**
+See https://github.com/nasa/ci_lab/pull/30 and https://github.com/nasa/ci_lab/pull/28
+
+**Describe alternatives you've considered**
+N/A
+
+**Additional context**
+N/A
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, good first issue",https://github.com/nasa/sample_app/issues/37
+"Fix #35, Build fails with deprecated cFE/OSAL elements removed","Describe the contribution
+Fixes #35, Build fails with deprecated cFE/OSAL elements removed
+
+Testing performed
+Nominal build process:
+
+    make distclean
+    make prep
+    make
+    make install
+    followed by building with OMIT_DEPRECATED = true
+    make distclean
+    make OMIT_DEPRECATED=true prep
+    make
+    make install
+
+Confirmed clean build in both cases.
+
+Expected behavior changes
+Clean build when OMIT_DEPRECATED = true
+
+System(s) tested on
+Oracle VM VirtualBox
+OS: ubuntu-18.04.3
+Versions: cFE 6.7.5.0, OSAL 5.0.5.0, PSP 1.4.3.0
+
+Additional context
+There is a total of three pull requests to address issue_35:
+nasa/to_lab
+nasa/sample_app
+nasa/sch_lab
+
+All three are intended to be delivered together.
+
+Contributor Info
+Dan Knutsen
+GSFC/NASA
+",CCB:Approved,https://github.com/nasa/sample_app/pull/36
+Build fails with deprecated cFE/OSAL elements removed,"**Describe the bug**
+Build fails on 7 undeclared errors:
+[Errors.txt](https://github.com/nasa/sample_app/files/4036322/Errors.txt)
+
+**To Reproduce**
+make OMIT_DEPRECATED=true prep (requires https://github.com/nasa/cFE/pull/457)
+
+**Expected behavior**
+Clean build
+
+**System observed on:**
+ - cFS Dev Server 2
+ - OS: Ubuntu 18.04
+ - Versions: mostly 6.7 (+ commit above)
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC",bug,https://github.com/nasa/sample_app/issues/35
+Integration Candidate 20191230,"**Describe the contribution**
+Fix #23, Fix #25, Fix #28, Fix #30
+
+**Testing performed**
+1. Checked out all IC 20191230 branches
+1. Built and ran cFS unit tests and OSAL coverage (vxworks and shared)
+   1. All passed (although osal_timer_UT occasionally still fails due to a test issue)
+1. Make cmdUtils where cFS-GroundSystem expects it
+   1. cd tools/cFS-GroundSystem/Subsystems/cmdUtil
+   1. make
+1. Started Ground system
+   1. python3 GroundSystem.py
+1. Enabled commands to 127.0.0.1
+1. Confirmed telemetry packets received
+1. Sent ES and TIME noop commands, confirmed noop message from cFS on Port 1
+1. Sent ES power on reset and observed cFS exit
+
+**Expected behavior changes**
+See related pull requests
+
+**System(s) tested on**
+ - cFS Dev Server 2
+ - OS: Ubuntu 18.04
+ - Versions: ic-20191230 branches
+
+**Additional context**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/sample_app/pull/34
+Fix 32 - Release Updates,"**Describe the contribution**
+Fix #32
+ - Updated README
+ - removed custom license document
+ - added standard Apache 2.0
+ - Updated copyright release version cFE 6.6 -> 6.7
+
+**Testing performed**
+1. Standard build, unit test and execute
+
+**Expected behavior changes**
+ - No impact to behavior
+
+**System(s) tested on:**
+ - Hardware: cFS Dev Server 2
+ - OS: Ubuntu 18.04
+ - Versions: cFE 6.7.0 related versions and OSAL 5.0.0
+
+**Contributor Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/sample_app/pull/33
+Release 1.1.0 prep,"**Is your feature request related to a problem? Please describe.**
+Updates for release:
+- Updated README
+- removed custom license document
+- added standard Apache 2.0
+- Updated copyright release version cFE 6.6 -> 6.7
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/sample_app/issues/32
+Avoid compile warnings due to printf format,"**Describe the contribution**
+
+Fix #30
+
+When using printf-style format conversions one must generally cast the argument to the intended type, as it does not happen implicitly with variable-argument functions.
+
+In particular the existing code worked on the default (native) build but generated warnings when building on RTEMS for a 32-bit x86 target.
+
+**Testing performed**
+Build for i686 RTEMS and x86-64 (native) and ensure no warnings on either platform
+
+**Expected behavior changes**
+None.
+
+**System(s) tested on:**
+Ubuntu 18.04 LTS 64-bit build machine, and i686-rtems4.11 cross target.
+
+**Contributor Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",CCB:Approved,https://github.com/nasa/sample_app/pull/31
+Compiler warning on RTEMS,"**Describe the bug**
+When compiling on RTEMS this application now has multiple warnings:
+
+```
+/home/joe/code/cfecfs/github/apps/sample_app/fsw/src/sample_app.c: In function 'SAMPLE_AppInit':
+/home/joe/code/cfecfs/github/apps/sample_app/fsw/src/sample_app.c:166:30: error: format '%X' expects argument of type 'unsigned int', but argument 2 has type 'int32' [-Werror=format=]
+                              status);
+                              ^
+/home/joe/code/cfecfs/github/apps/sample_app/fsw/src/sample_app.c:187:30: error: format '%X' expects argument of type 'unsigned int', but argument 2 has type 'int32' [-Werror=format=]
+                              status);
+                              ^
+/home/joe/code/cfecfs/github/apps/sample_app/fsw/src/sample_app.c:199:30: error: format '%X' expects argument of type 'unsigned int', but argument 2 has type 'int32' [-Werror=format=]
+                              status);
+                              ^
+/home/joe/code/cfecfs/github/apps/sample_app/fsw/src/sample_app.c:211:30: error: format '%X' expects argument of type 'unsigned int', but argument 2 has type 'int32' [-Werror=format=]
+                              status);
+                              ^
+/home/joe/code/cfecfs/github/apps/sample_app/fsw/src/sample_app.c:226:9: error: format '%X' expects argument of type 'unsigned int', but argument 2 has type 'int32' [-Werror=format=]
+         CFE_ES_WriteToSysLog(""Sample App: Error Registering \
+         ^
+/home/joe/code/cfecfs/github/apps/sample_app/fsw/src/sample_app.c: In function 'SAMPLE_GetCrc':
+/home/joe/code/cfecfs/github/apps/sample_app/fsw/src/sample_app.c:535:9: error: format '%X' expects argument of type 'unsigned int', but argument 2 has type 'uint32' [-Werror=format=]
+         CFE_ES_WriteToSysLog(""Sample App: CRC: 0x%08X\n\n"", Crc);
+         ^
+```
+
+**To Reproduce**
+Build on RTEMS per the readme/howto and with `-Wall -Werror` switches
+
+**Expected behavior**
+Should build clean
+
+**System observed on:**
+Ubuntu 18.04 (build host) when cross compiling for RTEMS 4.11
+
+**Additional context**
+Appears the problem calls were introduced in #1 
+
+As a rule of thumb, whenever ""printf"" style conversions are used in conjunction with the fixed-width types (int32, uint32, etc) these need an explicit cast because the actual type definitions vary by platform.
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+","bug, build-system",https://github.com/nasa/sample_app/issues/30
+Fix #28: Check return of CFE_TBL_GetAddress,"**Describe the contribution**
+
+Fix #28.
+
+The code must not dereference the pointer unless the call returned CFE_SUCCESS, otherwise the pointer is not valid.
+
+**Testing performed**
+Execute CFE under simulation, send ProcessCC command and ensure no change to nominal behavior
+
+**Expected behavior changes**
+No change in the nominal case, where the command operates normally and the table address is valid.
+
+The SAMPLE_ProcessCC function now does not dereference the table pointer in case the CFE_TBL_GetAddress function fails, which is confirmed in the unit test.
+
+**System(s) tested on:**
+Ubuntu 18.04 LTS, 64-bit
+
+**Contributor Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",CCB:Approved,https://github.com/nasa/sample_app/pull/29
+SAMPLE_ProcessCC needs to check return code of CFE_TBL_GetAddress call,"**Describe the bug**
+The `SAMPLE_ProcessCC` example calls `CFE_TBL_GetAddress()` and then immediately proceeds to dereference the pointer, without checking its return code.
+
+**To Reproduce**
+This is primarily evident in unit test, where the `CFE_TBL_GetAddress()` call can be forced to fail.  It outputs a NULL pointer in this case and subsequently segfaults.
+
+**Expected behavior**
+The `SAMPLE_ProcessCC()` should not attempt to dereference the pointer output of `CFE_TBL_GetAddress()` unless that function actually returns CFE_SUCCESS
+
+**System observed on:**
+Ubuntu 18.04 LTS 64-bit (when running UT)
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/sample_app/issues/28
+Reverse command and error counts,"**Describe the contribution**
+
+Fix #25
+Telemetry values were being copied to the telemetry packet backwards.  Trivial fix.
+
+**Testing performed**
+Build code using SIMULATION=native and default config.  Send a command to SAMPLE_APP and verify that the command counter, not the error counter, has incremented in the telemetry packet.
+
+**Expected behavior changes**
+The command and error counters are correct, not reversed
+
+**System(s) tested on:**
+Ubuntu 18.04 LTS, 64 bit
+
+**Contributor Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+",CCB:Approved,https://github.com/nasa/sample_app/pull/27
+"Fix #8, Add sample app tests","**Describe the contribution**
+Fixes #8
+
+Adds a complete example unit test to the Sample Application.  Uses the UT assert framework with common stubs provided by CFE and other modules.
+
+Obtains 100% line coverage on the current app implementation.
+
+**Testing performed**
+Build with SIMULATION=native ENABLE_UNIT_TESTS=TRUE
+
+Execute the unit tests per ""make test"" and confirm correct output
+Execute ""make lcov"" to collect coverage statistics
+Verified that the Sample application is included in results and achieves 100% line coverage.
+
+**Expected behavior changes**
+No changes to FSW.
+
+**System(s) tested on:**
+Ubuntu 18.04 LTS 64 bit
+
+**Additional context**
+There is a bug in the application implementation, described in #25.  The unit tests actually will fail until this is fixed.
+
+**Contributor Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",enhancement,https://github.com/nasa/sample_app/pull/26
+Sample App has error counter and command counter reversed,"**Describe the bug**
+The SAMPLE_ReportHousekeeping function reports the error count and command count values reversed.
+
+**To Reproduce**
+Send a NOOP command, then report housekeeping, and see that the error count is in place of the the command count.
+
+**Expected behavior**
+The error count and command count should not be reversed.
+
+**Code snips**
+
+Inside `SAMPLE_ReportHousekeeping()`, it has:
+
+```
+    Sample_AppData.SAMPLE_HkTelemetryPkt.sample_command_error_count = Sample_AppData.CmdCounter;
+    Sample_AppData.SAMPLE_HkTelemetryPkt.sample_command_count = Sample_AppData.ErrCounter;
+```
+
+**System observed on:**
+Ubuntu 18.04 LTS 64-bit
+
+**Additional context**
+Actually discovered this when writing the unit test for the ReportHousekeeping function (#8), and the test case failed because the counters were backwards.
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+","bug, good first issue",https://github.com/nasa/sample_app/issues/25
+Invoke SAMPLE_Function as part of Process command,"**Describe the contribution**
+Fix #23
+
+Adds a call to the `SAMPLE_Function()` provided by sample_lib as part of the example command processing.
+
+This is to demonstrate two things:
+- For FSW, it shows that runtime linking is working as expected, not just for functions provided in the core/base (e.g. CFE,OSAL,PSP) but also for dynamically loaded libraries
+- For unit test, it provides a use-case for linking with stubs provided by an external library
+
+**Testing performed**
+Build with ENABLE_UNIT_TESTS=TRUE, both with SIMULATION=native and for a 32-bit raspberry pi target.
+Execute CFE code, and confirm that everything starts normally.  SAMPLE_LIB is loaded first, and SAMPLE_APP is loaded next and no runtime linking issues are reported.
+
+Log snippet:
+```
+1980-012-14:03:20.25133 ES Startup: Loading shared library: /cf/sample_lib.so
+SAMPLE Lib Initialized.  Version 1.1.0.0
+1980-012-14:03:20.25164 ES Startup: Loading file: /cf/sample_app.so, APP: SAMPLE_APP
+1980-012-14:03:20.25176 ES Startup: SAMPLE_APP loaded and created
+EVS Port1 42/1/SAMPLE_APP 1: SAMPLE App Initialized. Version 1.1.1.0
+```
+
+Send the ""PROCESS_CC` command and confirm that the function is invoked from SAMPLE_LIB:
+```
+1980-012-14:03:22.10319 Sample App: Table Value 1: 1  Value 2: 2
+1980-012-14:03:22.10321 Sample App: CRC: 0xFFFF9C00
+SAMPLE_Function called, buffer='SAMPLE DATA'
+```
+
+**Expected behavior changes**
+The PROCESS_CC command now makes a call into the sample library.
+
+**System(s) tested on:**
+Ubuntu 18.04 LTS 64-bit
+
+**Contributor Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",CCB:Approved,https://github.com/nasa/sample_app/pull/24
+"The ""sample_app"" should call into ""sample_lib""","**Is your feature request related to a problem? Please describe.**
+The sample_app only calls CFE functions; it does not call any OSAL, PSP, or additional library functions like a real app might do.
+
+This makes a difference for Unit Testing.  The framework should contain a useful example of UT for apps and libs (related to #21) and the example would be more useful if it called something other than CFE.
+
+**Describe the solution you'd like**
+The sample_app should invoke the `SAMPLE_Function` as provided in the example `sample_lib` library.
+
+**Describe alternatives you've considered**
+N/A
+
+**Additional context**
+This change would demonstrate two things:
+
+- demonstrate at runtime that the dynamic linking worked correctly for the libraries (i.e. an app can successfully call into a lib like it is supposed to)
+- demonstrate linking to the stubs provided by the library for unit testing
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/sample_app/issues/23
+"Fix #21, How to guide for setting up cmake for coverage-test","**Describe the contribution**
+How to guide for minimum needed to setup cmake for coverage-test
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Create CMakeLists.
+2. cmake .
+3. make 
+4. make test
+5. Test ran with assert successfully 
+
+**Contributor Info**
+Anh Van, NASA Goddard
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",duplicate,https://github.com/nasa/sample_app/pull/22
+"""How to"" guide for setting up cmake for coverage test","**Is your feature request related to a problem? Please describe.**
+Guide for minimum setup needed for coverage test. 
+
+**Requester Info**
+Anh Van, NASA Goddard
+",duplicate,https://github.com/nasa/sample_app/issues/21
+Integration Candidate 20191115,"**Describe the contribution**
+Fixes #17
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Checked out bundle with ic-20191115 branches 
+1. make ENABLE_UNIT_TESTS=TRUE SIMULATION=native prep
+1. make
+1. make install
+1. make test
+Built without warnings, all tests passed except osal_timer_UT (nominal result on linux)
+executed cfe, successful startup with no warnings
+
+Confirmed passed CI (with cppcheck enforced!)
+
+**Expected behavior changes**
+No functional changes, removed duplicate table definition.
+
+**System(s) tested on:**
+ - cFS dev server
+ - OS: Ubuntu 16.04
+ - Versions: bundle ic-20191115 branch
+
+**Additional context**
+None
+
+**Contributor Info**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/sample_app/pull/20
+Sample app needs to release table to allow management,"**Describe the bug**
+Table not released after use
+
+**To Reproduce**
+Didn't test it, but likely won't be able to load a new table after sending the SAMPLE_ProcessCC command.
+
+**Expected behavior**
+Add CFE_TBL_ReleaseAddress after access of table data
+
+**Code snips**
+https://github.com/nasa/sample_app/blob/92311e71371d60d60bdde47734d8f013c065c374/fsw/src/sample_app.c#L433-L442
+
+**Version observed on:**
+ - Versions: current bundle
+
+**Additional context**
+None
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC","bug, good first issue",https://github.com/nasa/sample_app/issues/19
+Fix #17: Add table header file,"**Describe the contribution**
+Fixes #17
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Nominal checkout and build of bundle with this change
+1. Ran code and sent sample app process command code to verify table worked
+```
+1980-012-14:07:16.00040 Sample App: Table Value 1: 1  Value 2: 2
+1980-012-14:07:16.00042 Sample App: CRC: 0x00004940
+```
+
+**Expected behavior changes**
+ - No impact to behavior
+
+**System(s) tested on:**
+ - Hardware: cFS Dev server (VM)
+ - OS: Ubuntu 16.04
+ - Versions: master bundle w/ this change
+
+**Additional context**
+None
+
+**Contributor Info**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/sample_app/pull/18
+Table type should be defined once in table header file,"**Is your feature request related to a problem? Please describe.**
+SampleTable_t is defined in both sample_app_msg.h and sample_table.c
+
+**Describe the solution you'd like**
+Define sample_table.h, and include where needed.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",bug,https://github.com/nasa/sample_app/issues/17
+Simplify table path in CMakeList.txt,"**Is your feature request related to a problem? Please describe.**
+fsw/src is ignored in:
+
+https://github.com/nasa/sample_app/blob/92311e71371d60d60bdde47734d8f013c065c374/CMakeLists.txt#L13
+
+**Describe the solution you'd like**
+Remove path, since it implies a specific file, when the build system actually searches the *_defs first for a matching file.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+See the guide in elf2cfetbl
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",invalid,https://github.com/nasa/sample_app/issues/16
+Integration Candidate 20191001,"**Describe the contribution**
+Covers the following changes:
+- #14 - Match dev guide, add table and CRC (FASTTRACKED)
+- HOTFIX: add table to CMakeLists.txt
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Followed standard build/run steps with permissive mode on cFS development server
+
+**Expected behavior changes**
+Now uses cFE table services and reports CRC
+
+**System(s) tested on:**
+ - cFS development server 
+ - Ubuntu 16.04.6 LTS, 4.4.0-164-generic
+ - Versions: ic-20191001 bundle (all ic-20191001 branches)
+
+**Additional context**
+NA
+
+**Contributor Info**
+Jacob Hageman - NASA/GSFC
+
+**Community contributors**
+CLA on file",CCB:Approved,https://github.com/nasa/sample_app/pull/15
+"Fix #1, Update to dev guide, add table, add CRC output","**Describe the contribution**
+Updated to dev. guide, added sample table, added CRC output
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Build 
+2. Send Ground Command
+3. Verify Results
+
+```
+EVS Port1 42/1/SAMPLE_APP 3: SAMPLE: NOOP command
+EVS Port1 42/1/SAMPLE_APP 4: SAMPLE: RESET command
+1980-012-14:03:25.00026 Sample App: Table Value 1: 1  Value 2: 2
+1980-012-14:03:25.00161 Sample App: CRC = 0xFFFF9C00
+```
+
+output from tblCRCTool:
+
+```
+Table File Name:            ../../exe/cpu1/cf/sample_table.tbl
+Table Size:                 4 Bytes
+Expected TS Validation CRC: 0xFFFF9C00
+```
+
+**Expected behavior changes**
+no impact to behavior
+
+**System(s) tested on:**
+ - Hardware
+ - OS: Ubuntu 18.04.03
+ - Versions CFS 6.7
+
+**Contributor Info**
+Anh Van, NASA Goddard
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",,https://github.com/nasa/sample_app/pull/14
+"Fix #1, update sample app to developer guide","**Describe the contribution**
+Updated sample app to follow developer's guide. Added sample table. 
+
+**Testing performed**
+1. Build cFS
+2. Run GroundSystems
+3. Verify 3 commands:
+```
+EVS Port1 42/1/SAMPLE_APP 3: SAMPLE: NOOP command
+EVS Port1 42/1/SAMPLE_APP 4: SAMPLE: RESET command
+1980-012-14:03:33.00046 Sample App: Table Value 1: 1 Value 2: 2
+```
+
+**Expected behavior changes**
+no impact to behavior
+
+**System(s) tested on:**
+ - Hardware
+ - OS: Ubuntu 18.04.03
+ - cFE 6.6, GroundSystem 12.0.09a
+
+**Contributor Info**
+Anh Van. NASA Goddard
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",invalid,https://github.com/nasa/sample_app/pull/13
+Added auto build capabilities using Travis-CI,"**Describe the contribution**
+Auto build capabilities added using Travis-CI
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Verified auto build performed when new code is pushed to Github
+
+**Expected behavior changes**
+ - Auto build will be performed whenever new code is pushed to GitHub
+ 
+**System(s) tested on:**
+ - GitHub - Linux Xenial distribution
+
+**Additional context**
+A branch, specified by environment variables in the buildvars.sh file, will be checked out and this application will be build in the context of that cFS tree 
+
+**Contributor Info**
+Travis Wheatley - Emergent Space Technologies
+
+**Community contributors**
+Work performed for NASA ""Task 3015""",duplicate,https://github.com/nasa/sample_app/pull/12
+Integration Candidate 20190906,"**Describe the contribution**
+Merge of CCB 20190904 approved commits.
+Fixes #3, fixes #4, fixes #6 
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Setup and build per README instructions (no build warnings observed)
+2. Start up cfe with sample_app included by default and observed:
+```
+1980-012-14:03:20.25184 ES Startup: Loading file: /cf/sample_app.so, APP: SAMPLE_APP
+1980-012-14:03:20.25198 ES Startup: SAMPLE_APP loaded and created
+EVS Port1 42/1/SAMPLE_APP 4: SAMPLE: RESET command
+EVS Port1 42/1/SAMPLE_APP 1: SAMPLE App Initialized. Version 1.0.0.0
+```
+2. Sent tlm_enable command, verified HK packet telmetry reception, sent ES processor reset ('1') to exit cFE 
+
+**Expected behavior changes**
+A clear and concise description of how this contribution will change behavior and level of impact.
+ - Performance ID updated but no behavior updates
+
+**System(s) tested on:**
+ - cFS development server
+ - OS: Ubuntu/Linux 4.4.0-146-generic
+ - Versions: bundle rc-6.7.0
+
+**Additional context**
+None
+
+**Contributor Info**
+Jacob Hageman/NASA-GSFC
+
+**Community contributors**
+CLA on file.
+",,https://github.com/nasa/sample_app/pull/11
+"Fix #4, Remove Classic Build",Remove for_build folder.,CCB:Approved,https://github.com/nasa/sample_app/pull/10
+"Fix #3, Remove MKS flags",Removed MKS flag for sample_app,CCB:Approved,https://github.com/nasa/sample_app/pull/9
+Add unit test example,"The sample app should include an example of how to use the ut_assert, and link/build/run.","enhancement, unit-test",https://github.com/nasa/sample_app/issues/8
+"Replace deprecated cfe refs, #6","Fixes #6 
+
+Submitted by @skliper , CLA on file
+
+Testing:
+- make ENABLE_UNIT_TESTS=TRUE SIMULATION=native prep
+- Built on linux with -DCFE_OMIT_DEPRECATED_6_6 with no build errors
+- make test passed (except osal_timer_UT which occasionally fails on linux)
+- cFS executes and loads apps with no issues","enhancement, CCB:Approved",https://github.com/nasa/sample_app/pull/7
+Remove dependencies on deprecated cFE elements,"With:
+`cfe/CMakeLists.txt:add_definitions(""-D_ENHANCED_BUILD_ -DCFE_OMIT_DEPRECATED_6_6"")`
+build errors:
+```
+/home/jhageman/cFS/cFS-dev/apps/sample_app/fsw/src/sample_app.c: In function ‘SAMPLE_AppMain’:
+/home/jhageman/cFS/cFS-dev/apps/sample_app/fsw/src/sample_app.c:62:24: error: ‘CFE_ES_APP_RUN’ undeclared (first use in this function)
+     uint32 RunStatus = CFE_ES_APP_RUN;
+                        ^
+/home/jhageman/cFS/cFS-dev/apps/sample_app/fsw/src/sample_app.c:62:24: note: each undeclared identifier is reported only once for each function it appears in
+/home/jhageman/cFS/cFS-dev/apps/sample_app/fsw/src/sample_app.c: In function ‘SAMPLE_AppInit’:
+/home/jhageman/cFS/cFS-dev/apps/sample_app/fsw/src/sample_app.c:108:22: error:  CFE_EVS_BINARY_FILTER’ undeclared (first use in this function)
+                      CFE_EVS_BINARY_FILTER);
+                      ^
+/home/jhageman/cFS/cFS-dev/apps/sample_app/fsw/src/sample_app.c:124:48: error:  CFE_EVS_INFORMATION’ undeclared (first use in this function)
+     CFE_EVS_SendEvent (SAMPLE_STARTUP_INF_EID, CFE_EVS_INFORMATION,
+                                                ^
+/home/jhageman/cFS/cFS-dev/apps/sample_app/fsw/src/sample_app.c: In function ‘SAMPLE_ProcessCommandPacket’:
+/home/jhageman/cFS/cFS-dev/apps/sample_app/fsw/src/sample_app.c:159:54: error:  CFE_EVS_ERROR’ undeclared (first use in this function)
+             CFE_EVS_SendEvent(SAMPLE_COMMAND_ERR_EID,CFE_EVS_ERROR,
+                                                      ^
+/home/jhageman/cFS/cFS-dev/apps/sample_app/fsw/src/sample_app.c: In function ‘SAMPLE_ProcessGroundCommand’:
+/home/jhageman/cFS/cFS-dev/apps/sample_app/fsw/src/sample_app.c:185:57: error:  CFE_EVS_INFORMATION’ undeclared (first use in this function)
+             CFE_EVS_SendEvent(SAMPLE_COMMANDNOP_INF_EID,CFE_EVS_INFORMATION,
+                                                         ^
+/home/jhageman/cFS/cFS-dev/apps/sample_app/fsw/src/sample_app.c: In function ‘SAMPLE_ResetCounters’:
+/home/jhageman/cFS/cFS-dev/apps/sample_app/fsw/src/sample_app.c:232:50: error:  CFE_EVS_INFORMATION’ undeclared (first use in this function)
+     CFE_EVS_SendEvent(SAMPLE_COMMANDRST_INF_EID, CFE_EVS_INFORMATION,
+                                                  ^
+/home/jhageman/cFS/cFS-dev/apps/sample_app/fsw/src/sample_app.c: In function ‘SAMPLE_VerifyCmdLength’:
+/home/jhageman/cFS/cFS-dev/apps/sample_app/fsw/src/sample_app.c:257:47: error:  CFE_EVS_ERROR’ undeclared (first use in this function)
+         CFE_EVS_SendEvent(SAMPLE_LEN_ERR_EID, CFE_EVS_ERROR,
+```",enhancement,https://github.com/nasa/sample_app/issues/6
+Enhanced version numbering,"Use CI_LAB_VERSION from cfecfs_version_info.h if available and report on NOOP and startup (along with classic version numbering""
+
+Classic version numbering can then just be updated on release, vs for every commit.","enhancement, good first issue",https://github.com/nasa/sample_app/issues/5
+Remove classic build support,Only supporting cmake build going forward.,"enhancement, good first issue",https://github.com/nasa/sample_app/issues/4
+Remove old MKS flags from comments,"$Id, $Date, $Revision, $Log, etc all no longer useful and slightly misleading since they don't get updated.","enhancement, good first issue",https://github.com/nasa/sample_app/issues/3
+systematic naming convention?,"Can all the The Core Flight System (cFS) repositories follow a systematic naming convention with cFs-<name>?
+
+Just 'sample_app' seems to pollute the namespace. Thank you.",question,https://github.com/nasa/sample_app/issues/2
+Sample App should be Consistent with App Developer's Guide,"Originated by Dave (135 on babelfish)
+
+The sample_app provided with the cFE is not consistent with the example app documented in the Application Developer's Guide. The App Developer's Guide should documented recommended styles and practices. Similarly the sample_app should implement them. I don't think Sample App needs to cover all of the potential app features like Critical Data Stores, Child Tasks, etc. Just the basics to get someone started.",enhancement,https://github.com/nasa/sample_app/issues/1

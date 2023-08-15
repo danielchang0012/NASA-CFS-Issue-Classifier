@@ -1,0 +1,3142 @@
+Title,Body,Labels,URL
+"Fix #157, Move function prototypes to header file","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #157
+  - Moves the function prototypes that were in `to_lab_app.c` over to the header file
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+Local testing with full cFS suite confirms app performance unaffected.
+
+**Expected behavior changes**
+No change to behavior.
+Makes the file content more consistent with the rest of cFS.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/to_lab/pull/158
+Function prototypes can be moved out of `to_lab_app.c`,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+These prototypes can/should be moved out of `to_lab_app.c` into the header file, along with the global data struct definition.
+
+**Code snips**
+https://github.com/nasa/to_lab/blob/81d85da6c3ef5b3b3109f70918f7c4f9cf3c8677/fsw/src/to_lab_app.c#L35-L72
+
+**Expected behavior**
+Consistent content of implementation/header files across cFS.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/to_lab/issues/157
+"Fix #155, Convert `int32` return codes and variables to `CFE_Status_t`","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #155
+  - `int32` return codes converted over to `CFE_Status_t`
+  - a few `int32` `status`/`return` variables holding cFE return codes converted to `CFE_Status_t`
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+Local testing with full cFS suite passing all tests and showing not change to coverage.
+
+**Expected behavior changes**
+No change to behavior.
+`CFE_Status_t` is more expressive and improves consistency with cFE/cFS.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/to_lab/pull/156
+to_lab `int32` return codes and variables should be converted to `CFE_Status_t`,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+to_lab has a few return codes (as well as local `status`/`return` variables which hold CFE return codes) that can be easily converted over to the `CFE_Status_t` typedef.
+
+**Expected behavior**
+Use the more expressive `CFE_Status_t` and improve consistency with cFS.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/to_lab/issues/155
+to_lab Integration candidate: Caelum-rc4+dev46,"**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/PSP/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- PR #153. Addresses Issue #152
+
+**Testing performed**
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/668/checks)
+[PSP Checks](https://github.com/nasa/to_lab/pull/154/checks)
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 22.04
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey",,https://github.com/nasa/to_lab/pull/154
+"Fix #152, adjust subscription table based on apps present","**Describe the contribution**
+Create an inclusion preprocessor macro for each app referred to in the subscription table, and only include that line if the app is present in the current configuration.
+
+In particular, do not assume that sample_app will always be there.
+
+Fixes #152
+
+**Testing performed**
+Build TO_LAB without SAMPLE_APP and confirm successful
+
+**Expected behavior changes**
+Presence of other apps is not assumed/hardcoded in the subscription table
+
+**System(s) tested on**
+Debian
+
+**Additional context**
+This should fix workflow errors where apps are built with TO_LAB but without SAMPLE_APP.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/to_lab/pull/153
+Default/Example table assumes presence of other apps,"**Describe the bug**
+The default value for the TO_LAB subscription table directly refers to `ci_lab` and `sample_app` Msg IDs, assuming these apps will be present.  This is fine for a user who is cloning the http://github.com/nasa/cFS bundle repo, because it includes these submodules.  But in other cases if these other apps are not present, the table fails to build.
+
+This issue is now detected at configuration (CMake) time, if there is a reference to the include directories of a target that does not exist in this configuration.
+
+**To Reproduce**
+Notably, this change from compile to config time caused an unintended side effect- workflows for the other CFS apps seem to do this - it clones the CFS but modifies the `targets.cmake` configuration in such a way that it no longer includes the `sample_app`.
+
+**Expected behavior**
+Should not assume/require that `sample_app` will always be part of the config.
+
+**Code snips**
+Problematic assumption is here in the table:
+https://github.com/nasa/to_lab/blob/41516d4f567e96b1ef885c84ef74c88f2e3f912c/fsw/tables/to_lab_sub.c#L52
+
+**System observed on:**
+Github workflow (see https://github.com/nasa/LC/actions/runs/4681105860/jobs/8293280167)
+
+**Additional context**
+This assumption is also true for CI_LAB and SCH_LAB, but these lab apps are still included in the workflow runs, so it doesn't cause an error at this time.  With the way that the CFS app workflow runs, it effectively replaces `sample_app` with the app under test, while leaving the rest of the default bundle config alone, hence why an assumption of  `sample_app` being present is more of an issue than the others.
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/to_lab/issues/152
+to_lab Integration candidate: Caelum-rc4+dev45,"**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/PSP/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- PR #150. Addresses Issue #149
+
+**Testing performed**
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/667/checks)
+[PSP Checks](https://github.com/nasa/to_lab/pull/151/checks)
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 22.04
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey",,https://github.com/nasa/to_lab/pull/151
+"Fix #149, update cmake recipe","**Describe the contribution**
+Prefer target-scope properties over directory scope where applicable
+
+Fixes #149
+
+**Testing performed**
+Build and run, sanity check
+
+**Expected behavior changes**
+No impact
+
+**System(s) tested on**
+Debian 
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/to_lab/pull/150
+Update cmake script to use current best practices,"**Is your feature request related to a problem? Please describe.**
+Build recipes should publish the module's include directories via the `INTERFACE_INCLUDE_DIRECTORIES` in property in cmake.  This is what CFE modules do, but some of the framework apps are still using directory-scope include directories (old way).
+
+Also, table names should match the app names they are associated with, unless there is a good reason not to.
+
+**Describe the solution you'd like**
+Change these to target-scope include directories (use `target_include_directories`, not `include_directories`)
+
+**Additional context**
+Notably this is important in order to be able to easily provide an alternative table content via the mission-provided files.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/to_lab/issues/149
+"Fix #147, Add check for failure of `CFE_EVS_Register()` during initialization","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #147
+  - Adds checks for failure during call to `CFE_EVS_Register()` in the initialization sequence.
+
+Recommend refactoring `TO_LAB_init()` in future to avoid the need for these early returns.
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+Local tests confirm builds and run fine, and cFS tests all passing.
+
+**Expected behavior changes**
+Use will be informed of failure of `CFE_EVS_Register()` rather than it failing silently.
+
+**System(s) tested on**
+Debian GNU/Linux 11 (bullseye)
+Current main branch of cFS bundle.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/to_lab/pull/148
+No notification of failure of `CFE_EVS_Register()` in `TO_LAB_init()`,"**Describe the bug**
+to_lab currently has no notification of a failure of `CFE_EVS_Register()` in `TO_LAB_init()`
+
+**Code snips**
+https://github.com/nasa/to_lab/blob/7ca124c7e9d4a4086714525e3db2869a7da059b1/fsw/src/to_lab_app.c#L146-L156
+
+**Expected behavior**
+Add `CFE_ES_WriteToSysLog()` to inform the user of failure to register with EVS.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/to_lab/issues/147
+"Fix #145, Refactor mutually exclusive logic in if, else if block","**Describe the contribution**
+- Fixes #145 
+  - Simplified `if`/`else if` block.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+No change to logic.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/to_lab/pull/146
+Refactor mutually exclusive if in TO_LAB_init(),"**Describe the bug**
+Mutually exclusive logic in this `if`, `else if`, and also no final `else` clause which I believe is frowned upon in the coding guidelines.
+
+**Code snips**
+https://github.com/nasa/to_lab/blob/7ca124c7e9d4a4086714525e3db2869a7da059b1/fsw/src/to_lab_app.c#L203-L215
+
+**Expected behavior**
+Refactor into a simpler `if`, `else` block.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/to_lab/issues/145
+"HotFix #142, correct errors with whitespace application","**Describe the contribution**
+Corrects errors from PR 142 where return and break appear to have been inadvertently removed
+
+**Testing performed**
+Run all tests
+
+**Expected behavior changes**
+Fixes regression from previous PR
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/to_lab/pull/144
+to_lab Integration candidate: Caelum-rc4+dev33,"**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFE/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- PR #142. Addresses Issue #141
+
+**Testing performed**
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/634/checks)
+[to_lab Checks](https://github.com/nasa/to_lab/pull/143/checks)
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@chillfig",,https://github.com/nasa/to_lab/pull/143
+"Fix #141, Adds format changes in to_lab_app.c","**Describe the contribution**
+- Fixes #141
+
+**Testing performed**
+clang
+
+**Expected behavior changes**
+Passing format check
+
+**System(s) tested on**
+- Ubuntu 18.04
+
+**Additional context**
+N/A
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, Vantage
+","CCB:Approved, continuous-integration",https://github.com/nasa/to_lab/pull/142
+Failing format check in to_lab_app.c,"**Describe the bug**
+Failing format check workflow
+
+**To Reproduce**
+View in actions tab: https://github.com/nasa/to_lab/actions/runs/3162027602/jobs/5148244101
+
+**Expected behavior**
+Passing format check workflow
+
+**Code snips**
+If applicable, add references to the software.
+
+**System observed on:**
+Github workflow
+
+**Additional context**
+Introduced at c5be117d03594bc72f9d0db14620c2f49aece604
+
+**Reporter Info**
+Justin Figueroa, Vantage Systems
+",,https://github.com/nasa/to_lab/issues/141
+"Fix #139, Moves interface definition files to inc","**Describe the contribution**
+- Fixes #139 
+
+**Testing performed**
+Github Workflows
+
+**Expected behavior changes**
+No expected behavior change.
+
+**System(s) tested on**
+-Ubuntu 18.04
+
+**Additional context**
+Depends on https://github.com/nasa/ci_lab/pull/134
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+-Justin Figueroa, Vantage
+",CCB:Ignore,https://github.com/nasa/to_lab/pull/140
+"Move interface definition files to ""inc"" location","**Is your feature request related to a problem? Please describe.**
+The interface definition files of all open source apps currently exist in the ""src"" directory.
+
+**Describe the solution you'd like**
+Create an ""inc"" dir to go with the ""src"" dir.  Move the interface definitions into this location: ""_msg.h"", ""_msgdefs.h"", ""_tbldefs.h"", and ""_events.h"". Consider moving header files in both ""platform_inc"" and ""mission_inc"" to ""inc""
+
+**Describe alternatives you've considered**
+Leaving as is.
+
+**Additional context**
+N/A
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+",,https://github.com/nasa/to_lab/issues/139
+"Fix #137, Reduce length of string_variable[] initializer string","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #137
+Reduced the length of the initializer-string for `string_variable[]` so as to avoid potential overflow due to automatic addition of the terminating null character by the compiler.
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+
+**Expected behavior changes**
+No impact on code behavior.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/to_lab/pull/138
+string_variable[] initializer-string is too long,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+`string_variable[]` in `TO_LAB_SendDataTypes()` is initialized with a 10-character-long string literal:
+https://github.com/nasa/to_lab/blob/9e2ad8cccafaad6d09902213971344d9e277e9f9/fsw/src/to_lab_app.c#L381
+However, the compiler will add on a terminating null character `\0` as an additional (11th) character.
+`string_variable` is later used as an array (not a string) where it is fine, obviously, to utilize all 10 of the array elements.
+Nevertheless, it is still not ideal to have the array declared with a string literal that is too long (including the automatically added terminating null character) for its container.
+
+**Expected behavior**
+`char  string_variable[10] = ""ABCDEFGHI"";`
+
+Alternative would be to just leave it uninitialized...
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/to_lab/issues/137
+"Fix #135, Add version information to NOOP event","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #135 
+  - Version information added in to NOOP event.
+
+**Testing performed**
+Run/Build and confirmed NOOP command event reporting as expected.
+![Screenshot 2022-10-22 21 00 58](https://user-images.githubusercontent.com/9024662/197336144-9bcf6440-8486-4740-8d7d-2d525d2ea21f.png)
+
+**Expected behavior changes**
+Adds version information to NOOP command to align with the other cFS components/apps.
+
+**System(s) tested on**
+Intel(R) Celeron(R) N4100 CPU @ 1.10GHz x86_64
+Debian GNU/Linux 11 (bullseye)
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",CCB:Approved,https://github.com/nasa/to_lab/pull/136
+Report version when responding to NoOp Comand to match Sample App template,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/ci_lab/issues/52 for to_lab
+to_lab does not report version information with NOOP event
+
+**Expected behavior**
+Report version info along with NOOP command as do the other cFS components/apps.
+
+**Code snips**
+https://github.com/nasa/to_lab/blob/9e2ad8cccafaad6d09902213971344d9e277e9f9/fsw/src/to_lab_app.c#L354-L359
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/to_lab/issues/135
+"Fix #133, Apply consistent Event ID names to common events","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #133 
+  - Consistent event IDs have been applied to the inconsistent cases to align them with a common Event ID naming convention.
+
+**Testing performed**
+Only GitHub CI actions.
+
+**Expected behavior changes**
+No impact on code behavior (no logic changes).
+Consistent Event ID names for the events which are common to all/most cFS components and apps will improve consistency and ease make code review/debugging easier.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/to_lab/pull/134
+Inconsistent Event ID naming,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/cFE/issues/2175
+After finding that there were 9 different Event IDs to indicate the same thing (Invalid Message ID) in https://github.com/nasa/CF/issues/262, I scrubbed the other common commands (e.g. Task Initialisation [INIT], NOOP, Reset Counters etc.) and found the same issue there - almost every component/app had their own variation of the Event ID name for the exact same event.
+
+**Expected behavior**
+Apply consistent Event ID names to the events which are common to all/most components and apps.
+
+**Code snips**
+Invalid Message ID:
+`CFE_EVS_ERR_MSGID_EID`
+`CFE_SB_BAD_MSGID_EID`
+`CFE_TIME_ID_ERR_EID`
+`CS_MID_ERR_EID`
+`TO_LAB_MSGID_ERR_EID`
+`SAMPLE_APP_INVALID_MSGID_ERR_EID`
+`BP_INVALID_MID_ERR_EID`
+`SCH_MD_ERR_EID`
+`CI_LAB_COMMAND_ERR_EID`
+
+Initialization:
+`CFE_TIME_INIT_EID`
+`CFE_TBL_INIT_INF_EID`
+`CFE_EVS_STARTUP_EID`
+`CF_EID_INF_INIT`
+`BP_INIT_APP_INFO_EID`
+`SCH_INITSTATS_INF_EID`
+`CI_LAB_STARTUP_INF_EID`
+
+NOOP:
+`CFE_TIME_NOOP_EID`
+`CFE_TBL_NOOP_INF_EID`
+`CFE_SB_CMD0_RCVD_EID`
+`CF_EID_INF_CMD_NOOP`
+`FM_NOOP_CMD_EID`
+`CI_LAB_COMMANDNOP_INF_EID`
+
+Reset Counters:
+`CFE_TIME_RESET_EID`
+`CFE_TBL_RESET_INF_EID`
+`CFE_EVS_RSTCNT_EID`
+`CFE_SB_CMD1_RCVD_EID`
+`CF_EID_INF_CMD_RESET`
+`SC_RESET_DEB_EID`
+`HS_RESET_DBG_EID`
+`FM_RESET_CMD_EID`
+`HK_RESET_CNTRS_CMD_EID`
+`MD_RESET_CNTRS_DBG_EID`
+`CI_LAB_COMMANDRST_INF_EID`
+
+etc.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/to_lab/issues/133
+"Fix #131, Rename CommandCode variable to FcnCode","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #131
+  - Rename the `CommandCode` variable in `TO_LAB_exec_local_command()` to `FcnCode` to better align with the cFE API.
+
+**Testing performed**
+Standard cFS bundle tests all passed.
+Build/run cFS and test NOOP and other commands with the GroundSystem tool. All working fine.
+
+**Expected behavior changes**
+No impact on behavior.
+Improves code clarity and consistency in the lab apps.
+
+**System(s) tested on**
+Intel(R) Celeron(R) N4100 CPU @ 1.10GHz x86_64
+Debian GNU/Linux 11 (bullseye)
+cFE v7.0.0-rc4+dev197, OSAL v6.0.0-rc4+dev143, PSP v1.6.0-rc4+d
+Sample App v1.3.0-rc4+dev35
+CI Lab App v2.5.0-rc4+dev39
+TO Lab v2.5.0-rc4+dev31
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",CCB:Approved,https://github.com/nasa/to_lab/pull/132
+Recommend using FcnCode (instead of CommandCode) terminology in the code,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/sample_app/issues/167
+
+**Expected behavior**
+Rename the `CommandCode` variable in `TO_LAB_exec_local_command()` to `FcnCode` to better align with the cFE API.
+
+**Code snips**
+https://github.com/nasa/to_lab/blob/9e2ad8cccafaad6d09902213971344d9e277e9f9/fsw/src/to_lab_app.c#L305-L309
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/to_lab/issues/131
+to_lab Integration candidate: Caelum-rc4+dev25,"**Describe the contribution**
+
+PR #127
+- Fix #73, Remove unused PktSize variable.
+
+PR #126
+- Fix #67, Standardize naming of TO_LAB functions/macros etc.
+
+PR #129
+- Fix #128, Create CHANGELOG.md
+
+**Testing performed**
+to_lab Checks <https://github.com/nasa/to_lab/pull/130/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/pull/590/checks>
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt",,https://github.com/nasa/to_lab/pull/130
+"Fix #128, Create CHANGELOG.md","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #128
+
+**Testing performed**
+None.
+
+**Expected behavior changes**
+Minimizes unnecessary clutter in README.md
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/to_lab/pull/129
+Use a changelog to keep track of changes instead of having them in the Readme,"Copy of https://github.com/nasa/osal/issues/552
+
+**Is your feature request related to a problem? Please describe.**
+The version history in the Readme file clutters useful information
+
+**Describe the solution you'd like**
+Move the ""version history"" from `Readme.md` to `CHANGELOG.md`
+
+**Requester Info**
+@thnkslprpt 
+",,https://github.com/nasa/to_lab/issues/128
+"Fix #73, Remove unused PktSize variable.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #73
+Removes the unused PktSize variable from the TO_LAB_AddPacket_Payload_t struct.
+
+**Testing performed**
+None, prior to submission.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/to_lab/pull/127
+"Fix #67, Standardize naming of TO_LAB functions/macros etc.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #67
+Standardize naming of TO_LAB functions/macros to match predominant cFS style.
+Also requires changes to [cfe startup script](https://github.com/nasa/cFE/pull/2158) and [GroundSystem](https://github.com/nasa/cFS-GroundSystem/pull/224)
+
+**Testing performed**
+None so far.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**System(s) tested on**
+n/a
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/to_lab/pull/126
+to_lab Integration candidate: Caelum-rc4+dev12,"**Describe the contribution**
+
+PR #124
+- Fix #123, update cmake_minimum_required
+
+**Testing performed**
+to_lab Checks <https://github.com/nasa/to_lab/pull/125/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/pull/523/checks>
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey",,https://github.com/nasa/to_lab/pull/125
+"Fix #123, update cmake_minimum_required","**Describe the contribution**
+Fixes the warning that support for old versions will be removed
+The build does not actually expect such an old version
+
+Fixes #123
+
+**Testing performed**
+Build using cmake 3.20
+
+**Expected behavior changes**
+No deprecation warning
+
+**System(s) tested on**
+RHEL 8
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/to_lab/pull/124
+Update cmake mimimum required to something more recent,"**Is your feature request related to a problem? Please describe.**
+The `cmake_minimum_required` command currently lists a very old version.  In fact some of the CFE/CFS build scripts assume at least version 3.5 to support things like target-specific includes and flags.
+
+Notably, when using a recent version of cmake (e.g. 3.20) this generates a warning that says:
+
+```
+CMake Deprecation Warning at /home/jphickey/code/cfecfs/dtn/apps/to_lab/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 2.8.12 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value or use a ...<max> suffix to tell
+  CMake that the project does not need compatibility with older versions.
+```
+
+**Describe the solution you'd like**
+Update the cmake_minimum_version to 3.5 (this would match CFE)
+
+**Describe alternatives you've considered**
+Disable warning?
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/to_lab/issues/123
+"Fix #121, Remove registration of empty EVS filters","**Describe the contribution**
+- Fix #121
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just removes empty filter registration
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/to_lab/pull/122
+Registration of events with 0x0000 filters isn't all that helpful,"**Is your feature request related to a problem? Please describe.**
+Registration of all events with `0x0000` filters just loads the system without actually filtering anything.  Also fills the event filter buffer for the app and likely drops some since default limit is 8.
+
+**Describe the solution you'd like**
+Remove zero entries from initialization and add a filter when/if needed (or operationally via command).
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/to_lab/issues/121
+"Fix #115, Update codeql workflow for reusable updates","**Describe the contribution**
+- Fix #115
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just fixes workflow
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, CCB:FastTrack",https://github.com/nasa/to_lab/pull/120
+to_lab Integration candidate: Caelum-rc4+dev7,"**Describe the contribution**
+
+PR #117
+- Fix #116, Update copyright header
+
+PR #118 
+- HOTFIX #112, Standardize Version Information
+
+
+**Testing performed**
+to_lab Checks <https://github.com/nasa/to_lab/pull/119/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/445/checks>
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 
+RTEMS
+
+**Additional context**
+Part of nasa/cFS#445
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper 
+@astrogeco ",,https://github.com/nasa/to_lab/pull/119
+"HOTFIX #112, Standardize Version Information","**Describe the contribution**
+
+Per conversation in CCB:2022-03-24 and in https://github.com/nasa/cFE/commit/e5be0612ad6bf9db09ddf640306a65292abce2d5#commitcomment-69358417
+
+Ensuring REVISION number is set to 99 and MISSION_REV = 0xFF
+
+**Testing performed**
+Text and documentation only
+
+**Expected behavior changes**
+No behavior change
+
+**System(s) tested on**
+n/a
+
+**Additional context**
+https://github.com/nasa/cFE/commit/e5be0612ad6bf9db09ddf640306a65292abce2d5#commitcomment-69358417
+
+**Third party code**
+none
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Gerardo E. Cruz-Ortiz, NASA
+",,https://github.com/nasa/to_lab/pull/118
+"Fix#116, Update copyright header","**Describe the contribution**
+- Fix #116
+
+**Testing performed**
+Documentation only, but built/ran unit tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: i5/wsl
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/to_lab/pull/117
+Apply latest copyright header,"**Is your feature request related to a problem? Please describe.**
+Updated copyright header
+
+**Describe the solution you'd like**
+Update
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",docs,https://github.com/nasa/to_lab/issues/116
+CodeQL Workflow Broken due to Name Change,"**Describe the bug**
+
+Merging https://github.com/nasa/cFE/pull/2035 broke the components' CodeQL workflow as expected. 
+
+Need to update the codeQL workflows to match the patterns implemented in https://github.com/nasa/cFE/pull/2035
+
+**To Reproduce**
+
+See failed workflows 
+- https://github.com/nasa/to_lab/actions/workflows/codeql-build.yml
+
+**Expected behavior**
+
+Workflow executes
+
+**Code snips**
+None
+
+**System observed on:**
+GitHub Actions
+
+**Additional context**
+None
+
+**Reporter Info**
+Gerardo E. Cruz-Ortiz NASA",continuous-integration,https://github.com/nasa/to_lab/issues/115
+"Fix #113, Apply header guard standard","**Describe the contribution**
+- Fix #113
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/to_lab/pull/114
+Apply header guard standard formatting,"**Is your feature request related to a problem? Please describe.**
+Nonstandard guard used
+
+**Describe the solution you'd like**
+Apply standard
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/to_lab/issues/113
+to_lab Integration Candidate: Caelum+dev1,"**Describe the contribution**
+
+PR #107 from jphickey/fix-106-messagetype-conv
+
+- Fix #106, Use CFE_MSG_PTR conversion macro
+
+
+**Testing performed**
+
+to_lab Checks <https://github.com/nasa/to_lab/pull/112/checks>
+cFS Bundle Checks <https://github.com/nasa/cFS/pull/390/checks>
+
+**Expected behavior changes**
+See PRs 
+
+**System(s) tested on**
+Ubuntu 18.04
+RTEMS 4.11
+RTEMS 5
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/390/>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey ",,https://github.com/nasa/to_lab/pull/112
+"Fix #110, Reuse CodeQL, Static Analysis, and Format Check","**Describe the contribution**
+Fixes #110 
+
+**Testing performed**
+to_lab CodeQL Reuse: https://github.com/ArielSAdamsNASA/to_lab/actions/runs/1392169265
+to_lab Format Check Reuse: https://github.com/ArielSAdamsNASA/to_lab/actions/runs/1392169267
+to_lab Static Analysis Reuse: https://github.com/ArielSAdamsNASA/to_lab/actions/runs/1392169261
+
+**Expected behavior changes**
+to_lab will reuse CodeQL, Static Analysis, and Format Checker that are held in cFS. These workflows will not work until nasa/cFS#386 is merged.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal",continuous-integration,https://github.com/nasa/to_lab/pull/111
+"Reuse CodeQL, Format Checker, and Static Analysis Workflows","**Is your feature request related to a problem? Please describe.**
+When needing to change workflows, one must create an issue and PR for each submodule. This feature would reduce duplication.
+
+**Describe the solution you'd like**
+To reuse workflows, the targeted workflow must include workflow_call and inputs as seen below. 
+```
+on:
+  push:
+  pull_request:
+  workflow_call:
+    inputs:
+      runs-on: 
+        description: Platform to execute on
+        type: string
+        default: ubuntu-latest
+```
+
+**Describe alternatives you've considered**
+Keep it as is. 
+
+**Additional context**
+Tested in OSAL, OSAL cFE CodeQL Reuse Build: https://github.com/ArielSAdamsNASA/osal/runs/4023159610?check_suite_focus=true
+Tested in OSAL, OSAL CodeQL Reuse Build: https://github.com/ArielSAdamsNASA/osal/actions/runs/1390702434
+cFS CodeQL Reuse: https://github.com/ArielSAdamsNASA/cFS-JSF-Rules/actions/runs/1390561827
+
+**Requester Info**
+Ariel Adams, ASRC Federal",continuous-integration,https://github.com/nasa/to_lab/issues/110
+"Workflows overly restrictive run, missing duplicate check, format job name incorrect, remove --quiet from cppcheck","**Is your feature request related to a problem? Please describe.**
+Branch restriction unnecessary:
+https://github.com/nasa/to_lab/blob/0c6d816301ca943b2257c47c9af8695c2b47fa9f/.github/workflows/codeql-build.yml#L3-L7
+
+Branch restriction unnecessary, missing duplicate check, incorrect job name:
+https://github.com/nasa/to_lab/blob/0c6d816301ca943b2257c47c9af8695c2b47fa9f/.github/workflows/format-check.yml#L4-L12
+
+Branch restriction unnecessary, missing duplicate check:
+https://github.com/nasa/to_lab/blob/0c6d816301ca943b2257c47c9af8695c2b47fa9f/.github/workflows/static-analysis.yml#L4-L12
+
+Remove `--quiet` flag to report files processed:
+https://github.com/nasa/to_lab/blob/0c6d816301ca943b2257c47c9af8695c2b47fa9f/.github/workflows/static-analysis.yml#L26
+
+**Describe the solution you'd like**
+Fix
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","duplicate, continuous-integration",https://github.com/nasa/to_lab/issues/109
+Overrun warning false alarms in to_lab_app.c,"**Describe the bug**
+Out-of-bounds access (OVERRUN) in to_lab_app.c
+
+**Expected behavior**
+Fix overruns
+
+**Code snips**
+Overrunning struct type CFE_MSG_Message_t of 16 bytes by passing it to a function which accesses it at byte offset 19 using argument 20UL.
+https://github.com/nasa/to_lab/blob/0c6d816301ca943b2257c47c9af8695c2b47fa9f/fsw/src/to_lab_app.c#L168-L169
+
+Overrunning struct type CFE_MSG_Message_t of 16 bytes by passing it to a function which accesses it at byte offset 79 using argument 80UL.
+https://github.com/nasa/to_lab/blob/0c6d816301ca943b2257c47c9af8695c2b47fa9f/fsw/src/to_lab_app.c#L399-L400
+
+Overrunning array PipeName of 16 bytes by passing it to a function which accesses it at byte offset 19.
+https://github.com/nasa/to_lab/blob/0c6d816301ca943b2257c47c9af8695c2b47fa9f/fsw/src/to_lab_app.c#L199
+
+Overrunning array ToTlmPipeName of 16 bytes by passing it to a function which accesses it at byte offset 19.
+https://github.com/nasa/to_lab/blob/0c6d816301ca943b2257c47c9af8695c2b47fa9f/fsw/src/to_lab_app.c#L210
+
+**System observed on:**
+Coverity: https://scan.coverity.com/projects/arielsadamsnasa-cfs-jsf-rules?tab=overview
+
+**Reporter Info**
+Ariel Adams, ASRC Federal
+",enhancement,https://github.com/nasa/to_lab/issues/108
+"Fix #106, Use CFE_MSG_PTR conversion macro","**Describe the contribution**
+Updates conversions to CFE_Message_t to use the MSG macro
+This also uses consistent naming - TelemetryHeader rather than TlmHeader
+
+Fixes #106
+
+**Testing performed**
+Build and sanity check CFE, run all tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Ubuntu
+
+**Additional context**
+Depends on nasa/cfe#1966
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/to_lab/pull/107
+Update CFE_MSG_Message_t conversions to use CFE_MSG_PTR macro,"**Is your feature request related to a problem? Please describe.**
+In nasa/cfe#1966 introduces a `CFE_MSG_PTR` macro which converts a cmd/tlm header object to a `CFE_MSG_Message_t*` pointer, which is intended to be used rather than assuming a specific member name (e.g. `.Msg`).
+
+**Describe the solution you'd like**
+Use the macro instead of assuming `.Msg` member name.
+
+**Additional context**
+Required when using generated headers, as the member name may not be ""Msg"" or may be further encapsulated.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/to_lab/issues/106
+to_lab Integration candidate: 2021-09-21,"**Describe the contribution**
+
+PR #104
+- Fix #103, apply CFE_SB_ValueToMsgId where required
+
+**Testing performed**
+
+cFS Bundle Checks <https://github.com/nasa/cFS/pull/359/checks>
+to_lab Checks <https://github.com/nasa/to_lab/pull/105/checks> 
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu
+RTEMS (qemu)
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/359
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey ",,https://github.com/nasa/to_lab/pull/105
+"Fix #103, apply CFE_SB_ValueToMsgId where required","**Describe the contribution**
+Whenever an integer value is used as a CFE_SB_MsgId_t, it should go through the explicit conversion using the supplied inline function.
+
+This also corrects another type mismatch/inconsistency regarding TO_UNUSED check.
+
+Fixes #103
+
+**Testing performed**
+Build and sanity check CFE
+
+**Expected behavior changes**
+Allows TO_LAB to be built when CFE_SB_MsgId_t is an opaque/non-integer type.
+None with default config (where CFE_SB_MsgId_t is an integer type).
+
+**System(s) tested on**
+Ubuntu
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.",CCB:Approved,https://github.com/nasa/to_lab/pull/104
+Improve consistency in application of CFE_SB_MsgIdToValue/ValueToMsgId conversions,"**Is your feature request related to a problem? Please describe.**
+A `CFE_SB_MsgId_t` value, like other IDs, is supposed to be a unique type/opaque value that identifies a message within the SB application context.   Although it is currently implemented using an integer (`uint32` specifically) application should not assume this.  Instead, a set of macros and inline conversion functions (CFE_SB_MsgIdToValue and CFE_SB_ValueToMsgId) are provided for when the application needs to interpret the value as an integer for a valid purpose.
+
+**Describe the solution you'd like**
+Add conversions where they are currently missing
+
+**Additional context**
+See nasa/cfe#1945 for full info.  A separate issue+PR will be submitted for each framework app.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/to_lab/issues/103
+" Typos in documentation, event message, and comments","**Is your feature request related to a problem? Please describe.**
+Found multiple typos throughout the codebase
+
+**Describe the solution you'd like**
+Correct grammar and spelling errors
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Retroactive issue for #101 
+",,https://github.com/nasa/to_lab/issues/102
+"Fix #102, Correct typos in .md, comments and event error message","**Describe the contribution**
+
+- Fix #102
+
+Fixed a few minor typos in the _text_ of:
+- README.md
+- SECURITY.md
+  
+...and in the _comments_ of:
+- fsw/src/to_lab_msg.h
+  
+...and in an _event error message_ string of:
+- fsw/src/to_lab_app.c
+  
+**Testing performed**
+Only automated checks.
+
+**Expected behavior changes**
+None (minor Markdown doc, comments changes, and event error string changes that do not interact with any max lengths etc.).
+
+**System(s) tested on**
+n/a
+
+**Additional context**
+n/a
+
+**Code contributions**
+n/a",community,https://github.com/nasa/to_lab/pull/101
+to_lab Integration candidate: 2021-06-22,"## Context
+
+Part of https://github.com/nasa/cfs/issues/270
+
+## Authors
+
+@ArielSAdamsNASA 
+
+## Description
+
+
+### PR #99
+
+Fix #98, Implement Coding Standard CodeQL
+
+
+",,https://github.com/nasa/to_lab/pull/100
+"Fix #98, Implement Coding Standard in CodeQL","**Describe the contribution**
+Fix #98 
+Added the duplicate jobs action to avoid duplicate jobs from running. Added a separate job for coding standard queries. Created two configuration files, one for default queries and security queries and another for jpl rules. Removed push on main branch so when users push code to their forked repos, the workflow runs. Added main branch to pull request, so CodeQL runs on pull request made in the main branch. This is the same logic used in the cFS bundle repo. 
+
+**Testing performed**
+Testing done on cFE forked repository, ArielSAdamsNASA/cFE which used the same files, but with different configuration paths.
+
+Jobs were failing when the entire path of the configuration file were not used. Have to use nasa/cFE/.github/codeql/config-name@branch-name. The branch must be included in the path. 
+
+The CodeQL analysis workflow will fail for this PR since it is calling for a configuration file in main the main branch. It will not work until the configuration files are merged into main. 
+
+In the screenshot is the same workflow as in this pull request, but the configuration path is changed to the forked repo and tested branch. 
+
+![image](https://user-images.githubusercontent.com/69638935/119024913-36fa2580-b969-11eb-9aac-ede0002804a0.png)
+
+**Expected behavior changes**
+There should be one job for security queries and one job for JPL and MISRA queries. 
+
+**Describe alternatives you've considered**
+Can allow all branches to run CodeQL for pull requests as seen in cFE and PSP instead of just the main branch like cFS. 
+
+**Third party code**
+Skip duplicate workflows license: https://github.com/fkirc/skip-duplicate-actions/blob/master/LICENSE
+
+CodeQL license: https://github.com/github/codeql-action/blob/main/LICENSE
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","CCB:Approved, continuous-integration",https://github.com/nasa/to_lab/pull/99
+Implement Coding Standard Rules in CodeQL,"**Is your feature request related to a problem? Please describe.**
+CodeQL does not use JPL rules, which is used in the upcoming coding standard. 
+
+**Describe the solution you'd like**
+Implement JPL rules for CodeQL. Continue using the security queries, but keep them separate from the JPL results. Can use two different workflows, one for the coding standard and one for the security queries. 
+
+**Describe alternatives you've considered**
+Might be able to use one workflow, as long as the results can be easily identified as a coding standard issue or security issue. 
+
+**Additional context**
+JPL queries are found here: https://github.com/github/codeql/tree/main/cpp/ql/src/JPL_C
+
+**Requester Info**
+Ariel Adams, ASRC Federal ",continuous-integration,https://github.com/nasa/to_lab/issues/98
+to_lab Integration candidate: 2021-03-30,"## Describe the contribution
+
+Fix #95, remove app registration 
+
+## Testing 
+to_lab checks <https://github.com/nasa/to_lab/pull/97/checks>
+bundle checks <https://github.com/nasa/cFS/pull/227/checks>
+
+## Expected behavior changes
+
+### PR #95
+Removes app registration call, `CFE_ES_RegisterApp()` since applications do not need to register themselves.
+
+## Additional context
+Part of <https://github.com/nasa/cFS/pull/227>
+
+## Third party code
+None
+
+## Authors
+@jphickey 
+",,https://github.com/nasa/to_lab/pull/97
+"Fix #95, remove app registration","**Describe the contribution**
+It is not necessary for applications to register themselves, this is all done automatically.
+
+Fixes #95
+
+**Testing performed**
+Build and sanity check, run unit tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Needs to be merged with nasa/cfe#1250
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:FastTrack,https://github.com/nasa/to_lab/pull/96
+Remove references to CFE_ES_RegisterApp,"**Is your feature request related to a problem? Please describe.**
+As part of nasa/osal#853 and nasa/cfe#1215 the registration APIs are getting fully deprecated and removed.  Applications no longer need to call OS_TaskRegister, CFE_ES_RegisterApp, or CFE_ES_RegisterChildTask.
+
+**Describe the solution you'd like**
+Remove references to these functions.
+
+**Additional context**
+Will be required with nasa/osal#853 and nasa/cfe#1215
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/to_lab/issues/95
+"Fix #93, Add Contributing Guide","**Describe the contribution**
+Fix #93
+Added a contributing guide that links to the main cFS contributing guide. 
+
+**Expected behavior changes**
+Users should be able to view the contributing guide contents easily from the to_lab repo. 
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","CCB:FastTrack, docs",https://github.com/nasa/to_lab/pull/94
+Add Contributing Guide,"**Is your feature request related to a problem? Please describe.**
+Add a contributing guide for the to_lab repo. 
+
+**Describe the solution you'd like**
+Create a contributing guide markdown file. In the guide, add a link to the cFS contributing guide. 
+
+**Requester Info**
+Ariel Adams, ASRC Federal
+",docs,https://github.com/nasa/to_lab/issues/93
+ HOTFIX Integration candidate: 2021-03-12,"**Describe the contribution**
+Bump to v2.4.0-rc1+dev41",,https://github.com/nasa/to_lab/pull/92
+"Fix #90, Use cfe.h header file","**Describe the contribution**
+Replaces individual includes with the all-inclusive ""cfe.h"" header.
+
+Fixes #90
+
+**Testing performed**
+Build and sanity check CFE along with reorg in nasa/cfe#1203
+
+**Expected behavior changes**
+Fixes dependency on `cfe_msg_api.h`
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Required for nasa/cfe#1203
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:FastTrack,https://github.com/nasa/to_lab/pull/91
+"Applications should use all-inclusive ""cfe.h"" header","**Is your feature request related to a problem? Please describe.**
+The CFE documentation recommends that applications use the supplied `cfe.h` header which in turn provides all CFE core, PSP, and OSAL APIs as well as mission config.
+
+Because some header names are getting changed in nasa/cfe#1203, including the headers individually becomes a problem.  
+
+**Describe the solution you'd like**
+Change to using the `cfe.h` all-inclusive header, which makes ci_lab work with the new directory structure, and should avoid future issues, and it matches what the documentation recommends.
+
+**Describe alternatives you've considered**
+Change `cfe_msg_api.h` -> `cfe_msg.h`
+
+**Additional context**
+Needed for nasa/cfe#1203
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/to_lab/issues/90
+Integration candidate: 2021-03-05,"**Describe the contribution**
+PR #88 
+PR #86
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+See PR #86 
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@ArielSAdamsNASA @jphickey ",,https://github.com/nasa/to_lab/pull/89
+"Fix #87, Add Testing Tools to the Security Policy","**Describe the contribution**
+Fix #87
+Updated the Security Policy to include the type of testing done for to_lab or the cFS bundle under a new section titled ""Testing"". Provided a disclaimer that under the Apache license, liability is not provided. 
+
+Added that security reports should be emailed. 
+
+**Expected behavior changes**
+Users should now be aware of the type of testing to_lab or the cFS bundle undergoes. 
+
+**Additional context**
+References: 
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/phpMussel/phpMussel/security/policy
+https://github.com/timberio/vector/security/policy
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal 
+","CCB:FastTrack, docs",https://github.com/nasa/to_lab/pull/88
+Add Testing Tools to the Security Policy ,"**Is your feature request related to a problem? Please describe.**
+Users are unaware of how cFS/to_lab is tested. By providing this information, transparency is provided to the community which promotes trust. 
+
+**Describe the solution you'd like**
+The security policy should inform users what tools are being used to test cFS/to_lab while being cautious of liability issues. To do so, we can state explicitly that our software does not provide liability under the Apache license. The security policy should inform users that they may view the LGTM results. The policy would state that the alerts from LGTM may not be accurate, since they cannot be dismissed.  
+
+Add that security report should be emailed. 
+
+**Additional context**
+References: https://github.com/thanos-io/thanos/security/policy
+
+**Requester Info**
+Ariel Adams, ASRC Federal 
+",docs,https://github.com/nasa/to_lab/issues/87
+"Fix #85, remove numeric pipe ID from event string","**Describe the contribution**
+Remove the numeric pipe ID from the event string, which solves the problem when strict types are used and the value isn't a simple integer.
+
+Fixes #85
+
+**Testing performed**
+Build with strict resource ID types, confirm printf format specifier mismatch error in #85 is gone.
+
+**Expected behavior changes**
+No more compiler error.
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:FastTrack,https://github.com/nasa/to_lab/pull/86
+Fix Pipe ID printf to be strict type-safe compatible,"**Is your feature request related to a problem? Please describe.**
+The `CFE_SB_PipeId_t` type is not a simple/plain integer if strict types are enabled.  This trips up a printf statement in TO_LAB here where it tries to print the `TO_LAB_Global.Tlm_pipe` value:
+
+```
+/home/joe/code/cfecfs/github/apps/to_lab/fsw/src/to_lab_app.c:507:77: error: format ‘%d’ expects argument of type ‘int’, but argument 6 has type ‘CFE_SB_PipeId_t’ [-Werror=format=]
+  507 |                           ""L%d TO Can't Unsubscribe to Stream 0x%x on pipe %d, status %i"", __LINE__,
+      |                                                                            ~^
+      |                                                                             |
+      |                                                                             int
+  508 |                           (unsigned int)CFE_SB_MsgIdToValue(pCmd->Stream), TO_LAB_Global.Tlm_pipe, (int)status);
+      |                                                                            ~~~~~~~~~~~~~~~~~~~~~~
+      |                                                                                         |
+      |                                                                                         CFE_SB_PipeId_t
+```
+
+**Describe the solution you'd like**
+Use the `CFE_RESOURCEID_TO_ULONG()` macro to get the simple value, and use `%lu` conversion specifier in printf.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/to_lab/issues/85
+to_lab Integration candidate: 2021-02-02,"**Describe the contribution**
+Fix #68, Remove end of function comments
+Fix #80, Add static analysis and format check
+Fix #82, Add CodeQL analysis to workflow
+
+
+**Testing performed**
+See <https://github.com/nasa/cfs/pull/182/checks>
+
+**Expected behavior changes**
+PR #76 - Removes end-of-function comments in `to_lab_app.c`
+PR #81 - Adds static analysis and code format check to continuous integration workflow. Updates workflow status badges in ReadMe
+PR #83 - Adds CodeQL analysis to continuous integration workflow
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of <https://github.com/nasa/cfs/pull/182>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper 
+@martintc
+",,https://github.com/nasa/to_lab/pull/84
+"Fix #82, Add CodeQL analysis to workflow","**Describe the contribution**
+Fix #82 - adds CodeQL analysis
+
+Differences from bundle - just builds to_lab, has timeout
+
+**Testing performed**
+Ran on fork
+
+**Expected behavior changes**
+Adds Code QL analysis on push to main and pull requests (to main)
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:FastTrack, continuous-integration",https://github.com/nasa/to_lab/pull/83
+Add CodeQL analysis to workflow,"**Is your feature request related to a problem? Please describe.**
+CodeQL analysis not implemented in submodules
+
+**Describe the solution you'd like**
+Add so alerts are generated on pull requests to submodules
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+CodeQL is run at the bundle (nasa/cFS) level, but link to code in submodules doesn't work.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, security, continuous-integration",https://github.com/nasa/to_lab/issues/82
+"Fix #80, Add static analysis and format check","**Describe the contribution**
+Fix #80 - adds static analysis and format check into github workflow, includes badges in readme
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+Basic CI works again
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:FastTrack,https://github.com/nasa/to_lab/pull/81
+CI updates - add static analysis and format in workflow,"**Is your feature request related to a problem? Please describe.**
+Travis-CI not transitioned to github actions
+
+**Describe the solution you'd like**
+Transition CI
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","enhancement, continuous-integration",https://github.com/nasa/to_lab/issues/80
+to_lab Integration candidate: 2021-01-19,"**Describe the contribution**
+
+Fix #77, Create Security Policy
+
+**Testing performed**
+See https://github.com/nasa/cFS/pull/177/checks
+
+**Expected behavior changes**
+PR #78 - Documentation: Add `Security.md` with instructions on reporting vulnerabilities
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/177
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@ArielSAdamsNASA ",,https://github.com/nasa/to_lab/pull/79
+"Fix #77, Create Security Policy","**Describe the contribution**
+Fix #77 
+Created a draft of a security policy markdown file for to_lab. The purpose of a security policy is to inform users on how to submit bugs or vulnerabilities. It is ideal to include a section for supported versions.
+
+**Additional context**
+Optional sections that may be included:
+
+- What to expect security-wise such as what type of testing is done
+- Address privacy concerns
+- Supported versions
+- License
+- Known vulnerabilities
+
+References to Public Security Policies:
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/minhealthnz/nzcovidtracer-app/security/policy
+https://github.com/odoo/odoo/security/policy
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","CCB:FastTrack, docs, security",https://github.com/nasa/to_lab/pull/78
+Implement a Security Policy ,"**Describe the bug**
+Create a security policy for users on how to report security vulnerabilities.
+
+**Expected behavior**
+The security policy should instruct users on how to report security vulnerabilities and provide them additional contact information for questions and concerns.
+
+**Additional context**
+Additional sections that may be included:
+- What to expect security-wise such as what type of testing is done
+- Address privacy concerns
+- Supported versions
+- License
+- Known vulnerabilities
+
+References to Public Security Policies:
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/minhealthnz/nzcovidtracer-app/security/policy
+https://github.com/odoo/odoo/security/policy
+
+**Reporter Info**
+Ariel Adams, ASRC Federal","docs, security",https://github.com/nasa/to_lab/issues/77
+"Fix #68, Remove end of function comments","**Describe the contribution**
+Removed end of function comments in to_lab_app.c as per issue #68 
+
+**Testing performed**
+No test as all that was removed was comments and no functional code.
+
+**Expected behavior changes**
+No expected behavior changes
+
+**System(s) tested on**
+
+**Additional context**
+
+
+**Third party code**
+none
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Todd Martin, Personal
+","CCB:FastTrack, community",https://github.com/nasa/to_lab/pull/76
+to_lab Integration Candidate: 2020-12-22,"**Describe the contribution**
+
+Fix #71, Remove all only from telemetry pipe
+
+**Testing performed**
+See <https://github.com/nasa/cFS/pull/162/checks>
+
+**Expected behavior changes**
+
+PR #74 - TO remains commandable after a remove all subscriptions command; the command now only removes all subscriptions to the Tlm_pipe
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/162>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper ",,https://github.com/nasa/to_lab/pull/75
+"Fix #71, Remove all only from telemetry pipe","**Describe the contribution**
+Fix #71 - updated remove all to only remove Tlm_pipe subscriptions
+
+Remove all was also removing subscriptions
+from the command pipe, which leaves TO
+inoperable.  The remove all command now
+just removes all subscriptions to the Tlm_pipe
+
+**Testing performed**
+Native build, sent remove all subscriptions cmd and confirmed, sent to noop multiple times and confirmed receipt
+
+**Expected behavior changes**
+TO remains commandable after a remove all subscriptions command
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+TO should mark empty slots with invalid MSGID, and not try to unsubscribe them - #72
+TO should remove PktSize from packet add command (unused) - #73
+GroundSystem add packet command definition needs update (Stream -> MsgId, should accept hex msgid, fix contents since they don't map correctly) - nasa/cFS-GroundSystem#141
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/to_lab/pull/74
+Remove PktSize from add packet command,"**Is your feature request related to a problem? Please describe.**
+PktSize is unused
+
+**Describe the solution you'd like**
+Remove from command
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Observed in testing #71 
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/to_lab/issues/73
+"Mark empty slots with invalid msgid, and don't try to unsubscribe all on them","**Is your feature request related to a problem? Please describe.**
+Unsubscribe all currently loops through the entire table unsubscribing, including the MSGID 0x0's (which is a valid MSGID).  This causes numerous errors:
+```
+EVS Port1 66/1/CFE_SB 12: Unsubscribe Err:No subs for Msg 0x0 on TO_LAB_TLM_PIPE,app TO_LAB_APP
+```
+
+**Describe the solution you'd like**
+Mark as invalid, skip invalid
+
+**Describe alternatives you've considered**
+Keep a count
+
+**Additional context**
+Observed in fixing #71
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/to_lab/issues/72
+Remove All Packet command causes to_lab to break,"**Describe the bug**
+Sending the TO_REMOVE_ALL_PKT command to to_lab causes to_lab to unsubscribe from its own Message ID. 
+This means that to_lab will no longer respond to any commands and has to be restarted for it to function properly again. We ran into this problem at NASA Ames and figured that it was not intended behavior.
+
+When testing for this bug be aware that it can be semi obscured by the fact that any commands for TO_LAB already on the Software Bus will still be processed by TO_Lab. This means that whether or not commands to TO_LAB sent after a TO_REMOVE_ALL_PKT command succeed is highly timing dependent. 
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Send TO_REMOVE_PKT command to TO_LAB
+2. Send any other command to TO_LAB
+3. Observe that the command has no effect
+
+**Expected behavior**
+You should not be able to send TO_LAB a command that puts it into a non functional state
+
+**Code snips**
+//This line in to_lab_app.c line 543 is the source of the problem
+status = CFE_SB_Unsubscribe(TO_LAB_CMD_MID, TO_LAB_Global.Cmd_pipe);
+
+**System observed on:**
+This bug is independent of the environment cfs is run in
+
+**Reporter Info**
+James Roach - NASA Research Scientist 
+james.h.roach@nasa.gov
+",bug,https://github.com/nasa/to_lab/issues/71
+to_lab Integration Candidate: 2020-12-08,"**Describe the contribution**
+Fix #66, Implement message alignment pattern
+
+**Testing performed**
+See <https://github.com/nasa/cFS/pull/160/checks>
+
+**Expected behavior changes**
+
+PR #69 -  Aligns messages according to changes in cFE <https://github.com/nasa/cFE/issues/1009>. Uses the ""raw"" message cmd/tlm types in definition
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/160>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper",,https://github.com/nasa/to_lab/pull/70
+"Fix #66, Implement message alignment pattern","**Describe the contribution**
+Fix #66
+- Replace CFE_SB_RcvMsg with CFE_SB_ReceiveBuffer
+- Use CFE_SB_Buffer_t for receiving and casting to command types
+- Use CFE_MSG_CommandHeader_t and CFE_MSG_TelemetryHeader_t in
+  command and telemetry type definitions
+- Use CFE_SB_TransmitMsg to copy the command and telemetry
+  into a CFE_SB_Buffer_t and send it where needed
+- Avoids need to create send buffers within the app (or union
+  the packet types with CFE_SB_Buffer_t)
+- Eliminates references to CFE_SB_CmdHdr_t and CFE_SB_TlmHdr_t
+  that formerly enforced alignment since these had potential
+  to change the actual packet sizes
+- No need to cast to CFE_MSG_Message_t anywhere since it's
+  available in the CFE_SB_Buffer_t union
+- Replaced CFE_MSG_Size_t with size_t
+
+**Testing performed**
+Bundle CI, unit tests, spot checked cmd/tlm
+
+**Expected behavior changes**
+None, applied pattern
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle integration-candidate + nasa/cFE#1015 + this commit
+
+**Additional context**
+Depends on nasa/cFE#1015
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",dependency,https://github.com/nasa/to_lab/pull/69
+Remove obsolete comments,"**Is your feature request related to a problem? Please describe.**
+End of function comments historically poorly maintained, so not really worth keeping around.  Name of a function in comments also frequently gets out of date.
+
+Example of differences (needs full scrub):
+https://github.com/nasa/to_lab/blob/c20250e6fc7ab51cbd9f82329a25be31193cd6a3/fsw/src/to_lab_app.c#L476
+https://github.com/nasa/to_lab/blob/c20250e6fc7ab51cbd9f82329a25be31193cd6a3/fsw/src/to_lab_app.c#L493
+
+**Describe the solution you'd like**
+Remove obsolete comments
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, good first issue, docs",https://github.com/nasa/to_lab/issues/68
+Apply standard naming convention (TO_LAB...),"**Is your feature request related to a problem? Please describe.**
+https://github.com/nasa/to_lab/blob/c20250e6fc7ab51cbd9f82329a25be31193cd6a3/fsw/src/to_lab_app.c#L62
+https://github.com/nasa/to_lab/blob/c20250e6fc7ab51cbd9f82329a25be31193cd6a3/fsw/src/to_lab_app.c#L94
+https://github.com/nasa/to_lab/blob/c20250e6fc7ab51cbd9f82329a25be31193cd6a3/fsw/src/to_lab_app.c#L133
+
+**Describe the solution you'd like**
+Apply standard pattern (TO_LAB...)
+
+**Describe alternatives you've considered**
+None.
+
+**Additional context**
+Requires update to entry point in startup script (nasa/cFE)
+
+**Requester Info**
+Jacob Hageman","enhancement, good first issue",https://github.com/nasa/to_lab/issues/67
+Update for suggested alignment enforcement pattern (nasa/cFE#1009),"**Is your feature request related to a problem? Please describe.**
+See nasa/cFE#1009, inconsistent pattern
+
+**Describe the solution you'd like**
+Match suggestion in nasa/cFE#1009, use the ""raw"" message cmd/tlm types in definition.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+nasa/cFE#1009
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/to_lab/issues/66
+Integration Candidate: 2020-11-10,"**Describe the contribution**
+Fix #63, Use MSG APIs
+
+
+**Testing performed**
+Bundle CI on astrogeco: https://travis-ci.com/github/astrogeco/cFS/builds/201769124
+
+**Expected behavior changes**
+
+PR #64 -  Replaces deprecated SB API's with MSG
+
+**System(s) tested on**
+Ubuntu CI
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/156>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper 
+",,https://github.com/nasa/to_lab/pull/65
+"Fix #63, Use MSG APIs","**Describe the contribution**
+Replaces deprecated SB API's with MSG
+Fix #63
+
+**Testing performed**
+Built and ran, enabled telemetry, checked noops
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+nasa/cFE#777
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/to_lab/pull/64
+Remove dependencies on deprecated SB APIs,"**Is your feature request related to a problem? Please describe.**
+SB APIs deprecated in nasa/cFE#777
+
+**Describe the solution you'd like**
+Update to use MSG module.
+
+**Describe alternatives you've considered**
+None.
+
+**Additional context**
+None.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/to_lab/issues/63
+Integration candidate 2020-10-13,"**Describe the contribution**
+Fix #60 
+
+**Testing performed**
+See Bundle PR - https://github.com/nasa/cFS/pull/147/checks
+
+**Expected behavior changes**
+
+PR #61 -  Update the TLMsockid field to be osal_id_t instead of uint32
+
+**System(s) tested on**
+Ubuntu CI
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/147>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey ",,https://github.com/nasa/to_lab/pull/62
+"Fix #60, Update TO to use osal_id_t","**Describe the contribution**
+Update the TLMsockid field to be `osal_id_t` instead of `uint32`
+
+Fixes #60 
+
+**Testing performed**
+Build and sanity test CFE
+
+**Expected behavior changes**
+None.
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+This makes it consistent with other modules
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/to_lab/pull/61
+Update TO_LAB to use osal_id_t typedef,"**Is your feature request related to a problem? Please describe.**
+TO_LAB is using `uint32` type to hold its OSAL socket ID.
+
+**Describe the solution you'd like**
+Should use the `osal_id_t` typedef instead.
+
+**Additional context**
+Part of ongoing effort to update all framework code to use the typedef for OSAL IDs.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.",enhancement,https://github.com/nasa/to_lab/issues/60
+Integration Candidate: 2020-08-26,"**Describe the contribution**
+Fix #56 
+
+**Testing performed**
+Bundle CI - https://github.com/nasa/cFS/pull/134/checks
+
+**Expected behavior changes**
+PR #57 - Adds header guard to` to_lab_sub_table.h`
+
+**System(s) tested on**
+Ubuntu - CI
+
+**Additional context**
+https://github.com/nasa/cFS/pull/134
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman, NASA-GSFC
+",,https://github.com/nasa/to_lab/pull/59
+Integration Candidate: 2020-08-19,"Fix #54 
+
+**Testing performed**
+Bundle CI - https://github.com/nasa/cFS/pull/130/checks
+
+**Expected behavior changes**
+PR #55 - Remove reference to deprecated `CFE_ES_SHELL_TLM_MID`.
+
+**System(s) tested on**
+Ubuntu - CI
+
+**Additional context**
+nasa/cFS#130
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.",,https://github.com/nasa/to_lab/pull/58
+"Fix #56, Add header guard to to_lab_sub_table.h","**Describe the contribution**
+Fix #56 - add header guard to to_lab_sub_table.h
+
+**Testing performed**
+Build and run - no issues
+
+**Expected behavior changes**
+No impact to behavior, good design practice
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: bundle main (+ cfe/osal main) + this change
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:FastTrack",https://github.com/nasa/to_lab/pull/57
+LGTM warning - no header guard in to_lab_sub_table.h,"**Is your feature request related to a problem? Please describe.**
+Missing header guard in to_lab_sub_table.h
+
+**Describe the solution you'd like**
+Add header guard
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",bug,https://github.com/nasa/to_lab/issues/56
+"Fix #54, remove reference to CFE_ES_SHELL_TLM","**Describe the contribution**
+Remove reference to deprecated message ID.
+
+Fixes #54 
+
+**Testing performed**
+Build and run, sanity check CFE, confirm TO LAB loads and runs OK.
+
+**Expected behavior changes**
+No longer subscribes to `CFE_ES_SHELL_TLM_MID` (to be removed in next CFE)
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Already was inside the `OMIT_DEPRECATED` conditional compile - just removing entirely.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.",CCB:Approved,https://github.com/nasa/to_lab/pull/55
+Remove deprecated symbol reference,"**Is your feature request related to a problem? Please describe.**
+The TO_LAB app references the CFE_ES_SHELL_TLM which is deprecated and scheduled to be removed in the next release
+
+**Describe the solution you'd like**
+Remove this code
+
+**Additional context**
+This is currently within an OMIT_DEPRECATED conditional block - but in general modules shouldn't refer to deprecated items in other modules at all.
+
+This is a prerequisite to nasa/cFE#815
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/to_lab/issues/54
+Integration Candidate 2020-07-29,"**Describe the contribution**
+Fix #47 
+Fix #50 
+Close #49
+
+**Testing performed**
+Bundle CI - https://github.com/nasa/cFS/pull/119/checks
+
+**Expected behavior changes**
+PR #48 -  Corrects return value of TO_LAB_init() to be int32 not int.
+
+PR #51 - Fixes bug where an unset address values caused subscriptions to MsgId 0 over 200 times. Added a TO_UNUSED entry at the end of the subscription list and a break in the subscription loop when TO_UNUSED found. No more subscriptions on the unused table slots (no MsgId 0 subscriptions).
+
+PR #52 -  Add build number and baseline
+
+**System(s) tested on**
+Ubuntu
+
+**Additional context**
+Part of nasa/cfs#119
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman, NASA-GSFC
+Gerardo E. Cruz-Ortiz, NASA-GSFC
+Christopher D. Knight, NASA-ARC",,https://github.com/nasa/to_lab/pull/53
+"Close #49, Add build number and baseline to version file","**Describe the contribution**
+Close #49
+
+**Testing performed**
+Built bundle and confirmed TO_LAB reports development version.
+
+**Expected behavior changes**
+Version report now uses the version string. See excerpt from cfs log:
+
+```
+EVS Port1 42/1/TO_LAB_APP 1: TO Lab Initialized. TO Lab Development Build v2.3.0+dev43, Last Official Release: v2.3.0, Awaiting enable command.
+```
+
+**System(s) tested on**
+Ubuntu Docker on Mac OS X
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Gerardo E. Cruz-Ortiz, NASA-GSFC",CCB:FastTrack,https://github.com/nasa/to_lab/pull/52
+"Fix #50, Mark end of valid MsgId subscriptions","**Describe the contribution**
+Fix #50 
+
+- Added a TO_UNUSED entry at the end of the subscription list
+- Added break in subscription loop when TO_UNUSED found
+
+**Testing performed**
+Normal run, confirmed no 0x0 duplicate subscription message, confirmed nominal hk telemetry still works with GroundSystem
+
+**Expected behavior changes**
+No more subscriptions on the unused table slots (no MsgId 0 subscriptions).
+
+**System(s) tested on**
+ - Hardware: cFS Dev 3
+ - OS: Ubuntu 18.04
+ - Versions: bundle
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","bug, CCB:FastTrack",https://github.com/nasa/to_lab/pull/51
+Subscribes to MsgId 0x0 256-actual_msgids times,"**Describe the bug**
+Loops through the entire table of subscriptions and subscribes, any unset values in the table are 0 so subscribes to MsgId 0 over 200 times.
+
+Shows up multiple times on startup:
+`EVS Port1 42/1/CFE_SB 7: Duplicate Subscription,MsgId 0x0 on TO_LAB_TLM_PIPE pipe,app TO_LAB_APP`
+
+**To Reproduce**
+Any normal run.
+
+**Expected behavior**
+Only subscribe to requested message IDs.
+
+**Code snips**
+https://github.com/nasa/to_lab/blob/5adf513cb0211d51e25278258fd2dd9b64d5459a/fsw/src/to_lab_app.c#L227-L238
+
+**System observed on:**
+ - Hardware: cFS Dev 3
+ - OS: Ubuntu 18.04
+ - Versions: current bundle
+
+**Additional context**
+Likely due to subscription table conversion to a cFS table.
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC",bug,https://github.com/nasa/to_lab/issues/50
+Add Build name and Build number to version.h,"**Is your feature request related to a problem? Please describe.**
+Need a better way to describe versions during development
+
+**Describe the solution you'd like**
+Add Build name and Build number to version.h
+As discussed, we will add a a build name string and a continuously incrementing build number to `version.h`
+
+**Additional context**
+See notes from CCB: <https://github.com/nasa/cFS/wiki/Community-CCB-Agenda:-July-01-2020>
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz, NASA-GSFC
+",enhancement,https://github.com/nasa/to_lab/issues/49
+fix #47 - correct return type for TO_LAB_init(),"**Describe the contribution**
+Fixes #47 
+Corrects return value of TO_LAB_init() to be int32 not int.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Christopher.D.Knight@nasa.gov",CCB:FastTrack,https://github.com/nasa/to_lab/pull/48
+Previous PR #45 broke some platforms due to type mismatch,"**Describe the bug**
+A recent change in pull request #45 changed  the `TO_LAB_init` function prototype to return an `int32` type here:
+https://github.com/nasa/to_lab/blob/7e7dc4b5e10386ce533fdf890d7e2805cdece38c/fsw/src/to_lab_app.c#L83
+
+However the function is actually defined later here:
+https://github.com/nasa/to_lab/blob/7e7dc4b5e10386ce533fdf890d7e2805cdece38c/fsw/src/to_lab_app.c#L158
+
+This results in error if `int` and `int32` are not actually the same type.
+
+**To Reproduce**
+Build on any platform where `int` and `int32` are not the same type (e.g. 32 bit RTEMS, for example).
+
+**Expected behavior**
+Declaration should match definition, and it should build cleanly.
+
+**System observed on:**
+RTEMS 4.11.3 (cross)
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+",bug,https://github.com/nasa/to_lab/issues/47
+Integration Candidate: 2020-06-10,"**Describe the contribution**
+Fix #32 - make the TO table a proper table
+
+**Testing performed**
+Bundle CI - https://github.com/nasa/cFS/pull/102/checks
+
+**Expected behavior changes**
+PR #45 -  Makes the TO table (""TO_LAB_Subs"") into a CFE_TBL-managed table.
+
+**System(s) tested on**
+Ubuntu:Bionic
+
+**Additional context**
+Part of nasa/cfs#102
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Christopher D. Knight - NASA-ARC",,https://github.com/nasa/to_lab/pull/46
+"Fix #32, Make the TO table a proper table","**Describe the contribution**
+Makes the TO table (""TO_LAB_Subs"") into a CFE_TBL-managed table.
+
+**Testing performed**
+Built and run.
+
+**System(s) tested on**
+Debian 10.3
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Christopher.D.Knight@nasa.gov","enhancement, CCB:Approved",https://github.com/nasa/to_lab/pull/45
+Integration Candidate: 2020-05-27,"**Describe the contribution**
+
+Fix #41
+
+**Testing performed**
+https://github.com/nasa/cFS/pull/96/checks
+
+**Expected behavior changes**
+PR #42 - Replace references to `ccsds.h` types with the `cfe_sb.h`-provided type. 
+
+**System(s) tested on**
+Ubuntu:Bionic
+
+**Additional context**
+Part of nasa/cFS#96
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+ Joseph Hickey, Vantage Systems, Inc.",,https://github.com/nasa/to_lab/pull/44
+Integration Candidate: 2020-05-20,"**Describe the contribution**
+Fix #20 
+
+**Testing performed**
+See PR #40 
+Bundle CI - https://travis-ci.com/github/nasa/cFS/builds/168822512
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Ubuntu:Bionic
+
+**Additional Context**
+Part of nasa/cFS#91
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman, NASA-GSFC",,https://github.com/nasa/to_lab/pull/43
+"Fix #41, remove dependencies on CCSDS types","**Describe the contribution**
+Replace references to `ccsds.h` types with the `cfe_sb.h`-provided type. 
+
+Fixes #41
+
+**Testing performed**
+Build and sanity check CFE, run all unit tests
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","enhancement, CCB:FastTrack",https://github.com/nasa/to_lab/pull/42
+"Remove references to ""CCSDS"" structures","**Is your feature request related to a problem? Please describe.**
+Applications should NOT refer to the ""CCSDS"" data types and macros, as there should be no assumption of a particular message framing type at this level.
+
+**Describe the solution you'd like**
+Use the abstract types provided in `cfe_sb.h` rather than directly using `ccsds.h` types.
+
+**Additional context**
+Related to nasa/cfe#554
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",bug,https://github.com/nasa/to_lab/issues/41
+"Fix #20, Apply standard code style","**Describe the contribution**
+Whitespace changes only.
+Fix #20 
+
+**Testing performed**
+CI - https://travis-ci.com/github/skliper/cFS/builds/167637651
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: CI
+ - OS: Ubuntu 18.04
+ - Versions: Bundle w/ all whitespace change commits
+
+**Additional context**
+Note - not enforcing, just a single cleanup since there's no pending activity in this repo.
+NOTE - Applied on top of IC... just last commit is the subject of this change
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:FastTrack",https://github.com/nasa/to_lab/pull/40
+Integration Candidate 2020-05-13,"**Describe the contribution**
+Fix #36
+
+
+**Testing performed**
+Bundle CI - https://travis-ci.com/github/nasa/cFS/builds/167639047
+
+**Expected behavior changes**
+PR #37 -  Configure the maximum depth supported by OSAL, rather than a hard coded 64.
+
+**System(s) tested on**
+
+**Additional context**
+See PRs for additional testing information and detailed changes
+Part of nasa/cFS#87
+
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+ Joseph Hickey, Vantage Systems, Inc.",,https://github.com/nasa/to_lab/pull/39
+Integration Candidate COMBINED 2020-04-29 and 2020-05-06,"**Describe the contribution**
+Fixes #28, #30, and #34
+
+**Testing performed**
+See PRs
+Bundle CI - https://travis-ci.com/github/nasa/cFS/builds/165726730
+
+**Expected behavior changes**
+PR #29 - Apply the CFE_SB_MsgIdToValue() and CFE_SB_ValueToMsgId() routines where compatibility with an integer MsgId is necessary - syslog prints, events, compile-time MID #define values.
+
+PR #31 -  Changes to documentation only; no code impact
+PR #35 -  Deprecates shell tlm subscription
+
+**System(s) tested on**
+See PRs
+
+**Additional context**
+Part of nasa/cfs#83
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+Leor Bleier, NASA-GSFC
+Jacob Hageman, NASA-GSFC
+
+",,https://github.com/nasa/to_lab/pull/38
+"Fix #36, Use OS_MAX_QUEUE_DEPTH rather than 64.","**Describe the contribution**
+Configure the maximum depth supported by OSAL, rather than a hard coded 64.
+
+Fixes #36 
+
+**Testing performed**
+Build with default config.  Confirm normal operation of TO_LAB on system with max queue depth set to 50.
+
+**Expected behavior changes**
+None, except on systems where supported queue depth is less than 64.
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/to_lab/pull/37
+Hardcoded queue depth of 64,"**Describe the bug**
+TO_LAB creates a queue depth of 64, which is beyond the limit of some queue implementations.
+
+**To Reproduce**
+Run TO_LAB on a system that does not allow a queue depth of 64.
+
+**Expected behavior**
+Should not hard code a large queue depth that could be beyond the implementation limit.
+
+**Code snips**
+https://github.com/nasa/to_lab/blob/545710c3eb9c3b63821b7cc41489f69da2bb2c30/fsw/src/to_lab_app.c#L179
+
+**System observed on:**
+Ubuntu 20.04, after enabling max depth enforcement in OSAL.
+
+**Additional context**
+If the goal is to create a deep queue, then use OS_MAX_QUEUE_DEPTH.
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+",bug,https://github.com/nasa/to_lab/issues/36
+"Fix #34, Deprecate shell tlm subscription","**Describe the contribution**
+Fix #34 
+Deprecates shell tlm subscription
+
+**Testing performed**
+Just build and unit test per nasa/cfe#645
+
+**Expected behavior changes**
+No shell output telemetry
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server 3
+ - OS: Ubuntu 18.04
+ - Versions: See nasa/cFE#645
+
+**Additional context**
+See nasa/cFE#643
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:Approved, deprecate",https://github.com/nasa/to_lab/pull/35
+Deprecate reference to deprecated output to shell tlm pkt,"**Is your feature request related to a problem? Please describe.**
+Output to shell deprecated from framework, see nasa/cfe#645
+
+**Describe the solution you'd like**
+Deprecate here.
+
+**Describe alternatives you've considered**
+Could just remove, trying to play nicely though.
+
+**Additional context**
+nasa/cFE#643 may add back in telemetry depending on follow-on discussion.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",deprecate,https://github.com/nasa/to_lab/issues/34
+TO_LAB App only receiving NOOP commands,"**Describe the bug**
+After updating to the most recent cFS packages (git pull) and recursively updating the submodules, all commands from GroundSystem.py to TO_LAB are being interpreted as NOOPS. First saw this with requesting output enabled but then verified that all commands are being seen as NOOPS. Outputs of git pull are below capturing 
+
+GroundSystem.py Output:
+Host: 127.0.0.1
+Port: 1234
+Pkt ID: 0x1880
+sending data to '127.0.0.1' (IP : 127.0.0.1); port 1234
+Data to send:
+0x18 0x80 0xC0 0x00 0x00 0x01 0x00 0x06 
+
+CFE Output
+EVS Port1 42/1/CFE_TIME 21: Stop FLYWHEEL
+EVS Port1 42/1/TO_LAB_APP 18: No-op command
+
+Same command with previous build yields the below and telemetry beings to flow.
+EVS Port1 42/1/CFE_TIME 21: Stop FLYWHEEL
+EVS Port1 42/1/TO_LAB_APP 3: TO telemetry output enabled for IP 
+
+
+
+**To Reproduce**
+git pull to latest and run both cFE and GroundSystem.py
+
+**Expected behavior**
+Expected a TO_OUTPUT_ENABLE 
+
+**Code snips**
+allen@akum-home-lt:~/repos/cFS/missionxyz$ git pull
+remote: Enumerating objects: 22, done.
+remote: Counting objects: 100% (22/22), done.
+remote: Compressing objects: 100% (11/11), done.
+remote: Total 65 (delta 12), reused 20 (delta 11), pack-reused 43
+Unpacking objects: 100% (65/65), done.
+From https://github.com/nasa/cFS
+   69e18e5..788b8d6  master                -> origin/master
+ * [new branch]      gh-pages              -> origin/gh-pages
+ * [new branch]      integration-candidate -> origin/integration-candidate
+Fetching submodule apps/ci_lab
+From https://github.com/nasa/ci_lab
+ * [new branch]      integration-candidate -> origin/integration-candidate
+   3ad9a10..fe9e3ef  master                -> origin/master
+Fetching submodule apps/sample_app
+From https://github.com/nasa/sample_app
+ * [new branch]      integration-candidate -> origin/integration-candidate
+   1f84f20..b956292  master                -> origin/master
+Fetching submodule apps/sample_lib
+From https://github.com/nasa/sample_lib
+ * [new branch]      integration-candidate -> origin/integration-candidate
+   f499730..33efec3  master                -> origin/master
+Fetching submodule cfe
+From https://github.com/nasa/cFE
+ * [new branch]      integration-candidate -> origin/integration-candidate
+   d6d944c..60a5f65  master                -> origin/master
+Fetching submodule osal
+From https://github.com/nasa/osal
+ * [new branch]      integration-candidate -> origin/integration-candidate
+   2284a6f..7d9c4c8  master                -> origin/master
+Fetching submodule psp
+From https://github.com/nasa/PSP
+ * [new branch]      integration-candidate -> origin/integration-candidate
+   621abba..12e2607  master                -> origin/master
+Fetching submodule tools/cFS-GroundSystem
+From https://github.com/nasa/cFS-GroundSystem
+ * [new branch]      integration-candidate -> origin/integration-candidate
+   c982339..9d4b155  master                -> origin/master
+Updating 69e18e5..788b8d6
+Fast-forward
+ .lgtm.yml              |  31 ++++++++++++++++---------------
+ .travis.yml            | 100 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------
+ README.md              |  10 ++++------
+ apps/ci_lab            |   2 +-
+ apps/sample_app        |   2 +-
+ apps/sample_lib        |   2 +-
+ cfe                    |   2 +-
+ osal                   |   2 +-
+ psp                    |   2 +-
+ tools/cFS-GroundSystem |   2 +-
+ 10 files changed, 120 insertions(+), 35 deletions(-)
+
+
+**System observed on:**
+ - Docker build
+ - OS: Ubuntu
+
+
+**Additional context**
+N/A
+
+**Reporter Info**
+Allen Kummer - Self
+",question,https://github.com/nasa/to_lab/issues/33
+Data instantiated in to_lab_sub_table.h is a standards violation,"**Is your feature request related to a problem? Please describe.**
+Headers define, c code instantiates per coding standard
+
+**Describe the solution you'd like**
+Move and change to a c file.  Also confuses ""table"" concept, since this isn't a real table.  Maybe make it one?
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",bug,https://github.com/nasa/to_lab/issues/32
+"Fix #30, Resolve doxygen warning","**Describe the contribution**
+Fix #30 
+Resolve doxygen warnings
+
+**Testing performed**
+Steps taken to test the contribution:
+
+1. Corrected line(s) that generated warnings
+2. Rebuilt documentation with `make doc`
+3. Observed no warnings generated
+4. Viewed relevant page(s) to verify correctness
+
+**Expected behavior changes**
+Changes to documentation only; no code impact
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Leor Bleier, NASA\GSFC
+","CCB:Approved, docs",https://github.com/nasa/to_lab/pull/31
+Fix doxygen warnings,"**Describe the bug**
+Doxygen warnings are generated when building the documentation
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. From cFS/ do `make doc`
+2. Observe the warnings generated in `cFS/build/doc/warnings.log`
+
+**Expected behavior**
+No warnings should be generated
+
+**Reporter Info**
+Leor Bleier, GSFC\582
+",,https://github.com/nasa/to_lab/issues/30
+"Fix #28, Opaque CFE_SB_MsgId_t values","**Describe the contribution**
+Apply the `CFE_SB_MsgIdToValue()` and `CFE_SB_ValueToMsgId()` routines where compatibility with an integer MsgId is necessary - syslog prints, events, compile-time MID `#define` values.
+
+Fixes #28 
+
+**Testing performed**
+Unit test
+Execute CFE and sanity-check normal operation - send commands to app using `cmdUtil` and confirm commands are processed normally.
+
+**Expected behavior changes**
+No impact to behavior.
+
+**System(s) tested on**
+Ubuntu 18.04 LTS, 64-bit
+
+**Additional context**
+In future versions of CFE SB the MsgId type might not be a simple integer, so this is one step in the direction of avoiding this assumption in apps.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.","CCB:Approved, conflicts",https://github.com/nasa/to_lab/pull/29
+App should treat CFE_SB_MsgId_t values as opaque,"**Is your feature request related to a problem? Please describe.**
+For compatibility going forward, code should not assume that `CFE_SB_MsgId_t` is an integer.
+
+**Describe the solution you'd like**
+When dealing with an integer, such as when printing in events/messages or for backward compatibility with MID `#define`'s, the code may use `CFE_SB_ValueToMsgId()` and `CFE_SB_MsgIdToValue()` conversion routines.  
+
+**Additional context**
+Architecturally, the `CFE_SB_MsgId_t` is supposed to be an opaque/abstract value that identifies an endpoint on the software bus routing domain.  The specific meaning of integer values is already different in an ""extended header"" (CCSDS v2) build vs. the standard header build.  Therefore apps should never make assumptions regarding the specific integer values, and all introspection of `CFE_SB_MsgId_t` values should be through the CFE SB API only.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/to_lab/issues/28
+IC 20200304,"**Describe the contribution**
+Integration candidate 20200304
+
+Fixes #15, #22, and #23 
+
+See PR #24 for more details.
+
+**Testing performed**
+CI Testing only
+
+**Expected behavior changes**
+#15 - Use OSAL socket API instead of BSD Sockets
+#22 - Global namespace to isolate variables
+#23 - Follow cFE naming convention document
+
+**System(s) tested on**
+Ubuntu
+
+**Additional context**
+See PR #24 for more details.
+
+**Third party code**
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+Gerardo E. Cruz-Ortiz NASA/GSFC",,https://github.com/nasa/to_lab/pull/27
+IC - 20200226,"Describe the contribution
+Fix #25 
+
+Testing performed
+Steps taken to test the contribution:
+
+    Current CI passes
+    Test 4 in Enhanced CI in https://github.com/nasa/cFS/pull/40
+
+Expected behavior changes
+#25 -  Clean build when OMIT_DEPRECATED = true
+
+System(s) tested on
+    CI: Ubuntu 18.04
+
+Additional context
+N/A
+
+Third party code
+N/A
+
+Contributor Info - All information REQUIRED for consideration of pull request
+Gerardo E. Cruz-Ortiz - NASA/GSFC",CCB:Approved,https://github.com/nasa/to_lab/pull/26
+Build fails with deprecated cFE/OSAL elements removed #35,"Describe the bug
+Build fails on 7 undeclared errors:
+Errors.txt
+
+To Reproduce
+make OMIT_DEPRECATED=true prep (requires nasa/cFE#457)
+
+Expected behavior
+Clean build
+
+System observed on:
+
+    cFS Dev Server 2
+    OS: Ubuntu 18.04
+    Versions: mostly 6.7 (+ commit above)
+
+Reporter Info
+Jacob Hageman - NASA/GSFC
+",,https://github.com/nasa/to_lab/issues/25
+Multiple cleanup items for TO_LAB,"**Describe the contribution**
+Cleans up multiple aspects of the TO_LAB implementation. Details Below.
+
+Fixes #15
+Fixes #22
+Fixes #23
+
+These change sets are submitted as a single pull request, as they have inter-dependencies between them and will trigger conflicts if presented individually. This pull request still contains each fix as an individual commit, so each one can be independently reviewed.
+
+For #15 / commit 17180f06: Change TO_LAB to use the OSAL socket API rather than calling BSD sockets functions directly.
+
+For #23 / commit d041045: This creates a TO_LAB_Global namespace to isolate these global variables from other modules and prevent collision
+
+For #22 / commit a66df71: Follow the naming conventions in the CFE naming convention document and follow message processing patterns from other modules
+
+**Testing performed**
+Build for native for both debug/release builds, with unit tests enabled. Confirmed normal operation of TO_LAB using the Python cFS_GroundSystem tool to enable telemetry output and verify that telemetry is being received as normal.
+
+**Expected behavior changes**
+No impact to behavior.
+
+**System(s) tested on**
+Ubuntu 18.04 LTS, 64 bit
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.","CCB:Approved, CCB:FastTrack",https://github.com/nasa/to_lab/pull/24
+TO_LAB should put all global variables into a global structure,"**Is your feature request related to a problem? Please describe.**
+TO_LAB has several ""bare"" global variables, which are not namespace-qualified.  These should all be put into a global structure, similar to the way other modules isolate their global varables.
+
+**Describe the solution you'd like**
+Implement a `TO_LAB_Global` data structure to isolate these values from the global namespace.
+
+**Additional context**
+Note that global variables in shared objects are by default put into a ""common"" section which can have weird effects on namespace clashes.  This is why it is important to put them into a struct (which in this case is basically a namespace isolation mechanism).
+
+**Requester Info**
+Joseph Hickey, Vantage Systems Inc.
+",,https://github.com/nasa/to_lab/issues/23
+TO_LAB should better follow cmd/tlm patterns in other modules,"**Is your feature request related to a problem? Please describe.**
+The TO_LAB implementation currently does not adhere to the command/telemetry processing patterns established in CFE core and other modules.
+
+**Describe the solution you'd like**
+- Each command handler should be its own function with its own distinct structure type that is passed in to it
+- Housekeeping should put its payload into a separate sub-structure called ""Payload""
+- Telemetry/Command naming conventions documented in CFE should be adhered to
+
+**Additional context**
+Part of the reason for some of these patterns is they help future-proof the code and also help avoid issues like #21.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems Inc.
+",,https://github.com/nasa/to_lab/issues/22
+fails to build on Raspbian,"**Describe the bug**
+Building to_lab under Raspbian (a Debian variant for Raspberry Pi SBC's) fails due to alignment issues.
+
+```
+/home/pi/cFS/apps/to_lab/fsw/src/to_lab_app.c:408:25: error: cast increases required alignment of target type [-Werror=cast-align]
+     CFE_SB_TimeStampMsg((CFE_SB_Msg_t *) &to_hk_status);
+                         ^
+/home/pi/cFS/apps/to_lab/fsw/src/to_lab_app.c:409:20: error: cast increases required alignment of target type [-Werror=cast-align]
+     CFE_SB_SendMsg((CFE_SB_Msg_t *)&to_hk_status);
+                    ^
+```
+
+**To Reproduce**
+Build on Raspbian.
+
+**Expected behavior**
+No compiler errors.
+
+**Code snips**
+If applicable, add references to the software.
+
+**System observed on:**
+Raspberry Pi Zero W
+
+**Additional context**
+Add any other context about the problem here.
+
+**Reporter Info**
+Christopher.D.Knight@nasa.gov",,https://github.com/nasa/to_lab/issues/21
+Apply standard code style,"**Is your feature request related to a problem? Please describe.**
+Inconstant style
+
+**Describe the solution you'd like**
+See https://github.com/nasa/ci_lab/pull/30 and https://github.com/nasa/ci_lab/pull/28
+
+**Describe alternatives you've considered**
+N/A
+
+**Additional context**
+N/A
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, good first issue",https://github.com/nasa/to_lab/issues/20
+"Fix #25, Build fails with deprecated cFE/OSAL elements removed","**Describe the contribution**
+Fixes #35, Build fails with deprecated cFE/OSAL elements removed
+
+**Testing performed**
+Nominal build process: 
+ - make distclean
+ - make prep
+ - make
+ - make install
+followed by building with OMIT_DEPRECATED = true
+ - make distclean
+ - make OMIT_DEPRECATED=true prep 
+ - make
+ - make install
+
+Confirmed clean build in both cases.
+
+**Expected behavior changes**
+Clean build when OMIT_DEPRECATED = true
+
+**System(s) tested on**
+Oracle VM VirtualBox
+OS: ubuntu-18.04.3
+Versions: cFE 6.7.5.0, OSAL 5.0.5.0, PSP 1.4.3.0
+
+**Additional context**
+There is a total of three pull requests to address issue_35:
+nasa/to_lab
+nasa/sample_app
+nasa/sch_lab
+
+All three are intended to be delivered together.
+
+**Contributor Info**
+Dan Knutsen
+GSFC/NASA",CCB:Approved,https://github.com/nasa/to_lab/pull/19
+recommended lgtm issues,"Recommended lgtm issues:
+
+to_lab_app.c
+```
+
+switch (CFE_SB_RcvMsg(&MsgPtr, TO_Cmd_pipe, CFE_SB_POLL))
+--
+257 | {
+258 | case CFE_SUCCESS:
+259 |  
+260 | MsgId = CFE_SB_GetMsgId(MsgPtr);
+261 | /* For SB return statuses that imply a message: process it. */
+262 | switch (MsgId)
+263 | {
+264 | case TO_LAB_CMD_MID:
+265 | TO_exec_local_command(MsgPtr);
+266 | break;
+267 |  
+268 | case TO_LAB_SEND_HK_MID:
+269 | TO_output_status();
+270 | break;
+271 |  
+272 | default:
+273 | CFE_EVS_SendEvent(TO_MSGID_ERR_EID,CFE_EVS_EventType_ERROR,
+274 | ""L%d TO: Invalid Msg ID Rcvd 0x%x"",__LINE__,MsgId);
+275 | break;
+276 | }
+277 | break;
+278 | default:
+279 | /* Exit command processing loop if no message received. */
+280 | return;
+281 | }
+  | This switch statement should either handle more cases, or be rewritten as an if statement.
+
+
+line 56:
+Struct struct <unnamed> has 17 fields; we suggest refactoring to 15 fields or fewer - see 2 Values.
+group of 15 fields here
+group of 2 fields here
+```
+
+**Requester Info**
+Anh Van, NASA Goddard
+",,https://github.com/nasa/to_lab/issues/18
+"Fix #16, Release Prep","**Describe the contribution**
+Fix #12
+ - Updated README
+ - removed custom license document
+ - Updated copyright release version cFE 6.6 -> 6.7
+
+**Testing performed**
+1. Standard build, unit test and execute
+
+**Expected behavior changes**
+ - No impact to behavior
+
+**System(s) tested on:**
+ - Hardware: cFS Dev Server 2
+ - OS: Ubuntu 18.04
+ - Versions: cFE 6.7.0 related versions and OSAL 5.0.0
+
+**Contributor Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/to_lab/pull/17
+Release Prep,"**Is your feature request related to a problem? Please describe.**
+Updates for release:
+- Updated README
+- removed custom license document
+- Updated copyright release version cFE 6.6 -> 6.7
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/to_lab/issues/16
+Update to use OSAL socket API,"Is your feature request related to a problem? Please describe.
+Currently uses cFE supplied network_includes.h and not the abstracted OSAL calls
+
+Describe the solution you'd like
+Update to use OSAL
+
+Describe alternatives you've considered
+None
+
+Additional context
+See osapi-os-net.h and/or OSAL API.
+
+Requester Info
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/to_lab/issues/15
+Added auto build capabilities using Travis-CI,"**Describe the contribution**
+Auto build capabilities added using Travis-CI
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Verified auto build performed when new code is pushed to Github
+
+**Expected behavior changes**
+ - Auto build will be performed whenever new code is pushed to GitHub
+ 
+**System(s) tested on:**
+ - GitHub - Linux Xenial distribution
+
+**Additional context**
+A branch, specified by environment variables in the buildvars.sh file, will be checked out and this application will be build in the context of that cFS tree 
+
+**Contributor Info**
+Travis Wheatley - Emergent Space Technologies
+
+**Community contributors**
+Work performed for NASA ""Task 3015""",duplicate,https://github.com/nasa/to_lab/pull/14
+Integration Candidate 20190906,"**Describe the contribution**
+Merge of CCB 20190904 approved commits.
+Fixes #1, fixes #3, fixes #4, fixes #5, fixes #7
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Setup and build per README instructions (no build warnings observed)
+2. Start up cfe with to_lab included by default and observed:
+```
+1980-012-14:03:20.25266 ES Startup: Loading file: /cf/to_lab.so, APP: TO_LAB_APP
+1980-012-14:03:20.25292 ES Startup: TO_LAB_APP loaded and created
+EVS Port1 42/1/TO_LAB_APP 1: TO Lab Initialized. Version 2.2.0.0 Awaiting enable command.
+```
+3. Sent tlm_enable command and observed:
+```
+EVS Port1 42/1/TO_LAB_APP 3: TO telemetry output enabled for IP 127.0.0.1
+```
+4. verified HK packet telmetry reception, sent ES processor reset ('1') to exit cFE 
+
+**Expected behavior changes**
+A clear and concise description of how this contribution will change behavior and level of impact.
+ - Updated performance ID but no behavior updates
+
+**System(s) tested on:**
+ - cFS development server
+ - OS: Ubuntu/Linux 4.4.0-146-generic
+ - Versions: bundle rc-6.7.0
+
+**Additional context**
+None
+
+**Contributor Info**
+Jacob Hageman/NASA-GSFC
+
+**Community contributors**
+CLA on file.
+",,https://github.com/nasa/to_lab/pull/13
+"Fix #1, Change Perfid","changed to 34, 35",CCB:Approved,https://github.com/nasa/to_lab/pull/12
+"Fix #3, TO_subsciption_t typo","Changes in 
+1) to_lab_sub_table.h: line 56,72
+2) to_lab_app.c: line 213,491
+3) to_lab_msh.h: line 103
+
+",CCB:Approved,https://github.com/nasa/to_lab/pull/11
+"Fix #5, Remove Classic Build",remove for_build folder.,CCB:Approved,https://github.com/nasa/to_lab/pull/10
+"Fix #4, Remove MKS flags",Remove MKS flags,CCB:Approved,https://github.com/nasa/to_lab/pull/9
+"Replace deprecated cfe refs, #7","Fixes #7
+
+Submitted by @skliper , CLA on file
+
+Testing:
+- make ENABLE_UNIT_TESTS=TRUE SIMULATION=native prep
+- Built on linux with -DCFE_OMIT_DEPRECATED_6_6 with no build errors","enhancement, CCB:Approved",https://github.com/nasa/to_lab/pull/8
+Remove dependencies on deprecated cFE elements,"With:
+`cfe/CMakeLists.txt:add_definitions(""-D_ENHANCED_BUILD_ -DCFE_OMIT_DEPRECATED_6_6"")`
+build errors:
+```
+n file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:80:0:
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/platform_inc/to_lab_sub_table.h:81:14: error: ‘CFE_EVS_EVENT_MSG_MID’ undeclared here (not in a function)
+             {CFE_EVS_EVENT_MSG_MID, {0,0},  32},
+              ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c: In function ‘TO_Lab_AppMain’:
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:120:40: error: ‘CFE_ES_APP_RUN’ undeclared (first use in this function)
+    uint32                  RunStatus = CFE_ES_APP_RUN;
+                                        ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:120:40: note: each undeclared identifier is reported only once for each function it appears in
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:120:40: warning: initialization makes integer from pointer without a cast [-Wint-conversion]
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c: In function ‘TO_init’:
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:187:22: error: ‘CFE_EVS_BINARY_FILTER’ undeclared (first use in this function)
+                      CFE_EVS_BINARY_FILTER);
+                      ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:187:22: warning: passing argument 3 of ‘CFE_EVS_Register’ makes integer from pointer without a cast [-Wint-conversion]
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:162:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_Register (void                 *Filters,           /* Pointer to
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:203:47: error: ‘CFE_EVS_ERROR’ undeclared (first use in this function)
+        CFE_EVS_SendEvent(TO_CRCMDPIPE_ERR_EID,CFE_EVS_ERROR, ""L%d TO Can't crea
+                                               ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:203:47: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:209:45: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+        CFE_EVS_SendEvent(TO_TLMPIPE_ERR_EID,CFE_EVS_ERROR, ""L%d TO Can't create
+                                             ^
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:222:51: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+            CFE_EVS_SendEvent(TO_SUBSCRIBE_ERR_EID,CFE_EVS_ERROR,""L%d TO Can't s
+                                                   ^
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:231:41: error: ‘CFE_EVS_INFORMATION’ undeclared (first use in this function)
+     CFE_EVS_SendEvent (TO_INIT_INF_EID, CFE_EVS_INFORMATION,
+                                         ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:231:41: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c: In function ‘TO_StartSending’:
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:251:44: error: ‘CFE_EVS_INFORMATION’ undeclared (first use in this function)
+     CFE_EVS_SendEvent(TO_TLMOUTENA_INF_EID,CFE_EVS_INFORMATION,""TO telemetry ou
+                                            ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:251:44: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c: In function ‘TO_process_commands’:
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:289:59: error: ‘CFE_EVS_ERROR’ undeclared (first use in this function)
+                        CFE_EVS_SendEvent(TO_MSGID_ERR_EID,CFE_EVS_ERROR, ""L%d T
+                                                           ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:289:59: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c: In function ‘TO_exec_local_command’:
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:314:47: error: ‘CFE_EVS_INFORMATION’ undeclared (first use in this function)
+             CFE_EVS_SendEvent(TO_NOOP_INF_EID,CFE_EVS_INFORMATION, ""No-op comma
+                                               ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:314:47: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:344:49: error: ‘CFE_EVS_ERROR’ undeclared (first use in this function)
+             CFE_EVS_SendEvent(TO_FNCODE_ERR_EID,CFE_EVS_ERROR, ""L%d TO: Invalid
+                                                 ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:344:49: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c: In function ‘TO_openTLM’:
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:433:50: error: ‘CFE_EVS_ERROR’ undeclared (first use in this function)
+        CFE_EVS_SendEvent(TO_TLMOUTSOCKET_ERR_EID,CFE_EVS_ERROR, ""L%d, TO TLM so
+                                                  ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:433:50: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c: In function ‘TO_AddPkt’:
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:454:44: error: ‘CFE_EVS_ERROR’ undeclared (first use in this function)
+        CFE_EVS_SendEvent(TO_ADDPKT_ERR_EID,CFE_EVS_ERROR, ""L%d TO Can't subscri
+                                            ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:454:44: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:457:44: error: ‘CFE_EVS_INFORMATION’ undeclared (first use in this function)
+        CFE_EVS_SendEvent(TO_ADDPKT_INF_EID,CFE_EVS_INFORMATION, ""L%d TO AddPkt
+                                            ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:457:44: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c: In function ‘TO_RemovePkt’:
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:475:47: error: ‘CFE_EVS_ERROR’ undeclared (first use in this function)
+        CFE_EVS_SendEvent(TO_REMOVEPKT_ERR_EID,CFE_EVS_ERROR,""L%d TO Can't Unsub
+                                               ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:475:47: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:478:47: error: ‘CFE_EVS_INFORMATION’ undeclared (first use in this function)
+        CFE_EVS_SendEvent(TO_REMOVEPKT_INF_EID,CFE_EVS_INFORMATION,""L%d TO Remov
+                                               ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:478:47: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c: In function ‘TO_RemoveAllPkt’:
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:498:57: error: ‘CFE_EVS_ERROR’ undeclared (first use in this function)
+              CFE_EVS_SendEvent(TO_REMOVEALLPTKS_ERR_EID,CFE_EVS_ERROR, ""L%d TO
+                                                         ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:498:57: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:506:49: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+        CFE_EVS_SendEvent(TO_REMOVECMDTO_ERR_EID,CFE_EVS_ERROR, ""L%d TO Can't Un
+                                                 ^
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:511:48: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+        CFE_EVS_SendEvent(TO_REMOVEHKTO_ERR_EID,CFE_EVS_ERROR, ""L%d TO Can't Uns
+                                                ^
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:514:48: error: ‘CFE_EVS_INFORMATION’ undeclared (first use in this function)
+     CFE_EVS_SendEvent(TO_REMOVEALLPKTS_INF_EID,CFE_EVS_INFORMATION, ""L%d TO Uns
+                                                ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:514:48: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+       ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c: In function ‘TO_forward_telemetry’:
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:556:54: error: ‘CFE_EVS_ERROR’ undeclared (first use in this function)
+              CFE_EVS_SendEvent(TO_TLMOUTSTOP_ERR_EID,CFE_EVS_ERROR,
+                                                      ^
+/home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:556:54: warning: passing argument 2 of ‘CFE_EVS_SendEvent’ makes integer from pointer without a cast [-Wint-conversion]
+In file included from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.h:49:0,
+                 from /home/jhageman/cFS/cFS-dev/apps/to_lab/fsw/src/to_lab_app.c:50:
+/home/jhageman/cFS/cFS-dev/cfe/fsw/cfe-core/src/inc/cfe_evs.h:233:7: note: expected ‘uint16 {aka short unsigned int}’ but argument is of type ‘TO_subsciption_t * {aka struct <anonymous> *}’
+ int32 CFE_EVS_SendEvent (uint16 EventID,
+ ```",enhancement,https://github.com/nasa/to_lab/issues/7
+Enhanced version reporting,"Use CI_LAB_VERSION from cfecfs_version_info.h if available and report on NOOP and startup (along with classic version numbering)
+
+Classic version numbering can then just be updated on release, vs for every commit.",enhancement,https://github.com/nasa/to_lab/issues/6
+Remove classic build support,Only supporting cmake build going forward,"enhancement, good first issue",https://github.com/nasa/to_lab/issues/5
+Remove MKS flags from comments,"$Id, $Date, $Revision, $Log, etc all no longer useful and slightly misleading since they don't get updated.","enhancement, good first issue",https://github.com/nasa/to_lab/issues/4
+TO_subsciption_t typo,"Originated by kseywald (130 on babelfish):
+
+It looks like ""to_subsciption"" ought to be ""to_subscription"". The typo occurs in the following locations:
+apps/to_lab/fsw/platform_inc/to_lab_sub_table.h:38:static TO_subsciption_t TO_SubTable[] =
+apps/to_lab/fsw/platform_inc/to_lab_sub_table.h:57: /* cFE Core subsciptions */
+apps/to_lab/fsw/src/to_lab_app.c:194: for (i=0; (i < (sizeof(TO_SubTable)/sizeof(TO_subsciption_t))); i++)
+apps/to_lab/fsw/src/to_lab_app.c:472: for (i=0; (i < (sizeof(TO_SubTable)/sizeof(TO_subsciption_t))); i++)
+apps/to_lab/fsw/src/to_lab_msg.h:84: } TO_subsciption_t;","bug, good first issue",https://github.com/nasa/to_lab/issues/3
+Split out to_lab platform config from app header,"Originated by abrown4 (60 on babelfish):
+
+The platform-specific config (that I need to change for a deployment) is in the to_lab_app.h, and thus common to all to_lab builds. However, I want to build and deploy multiple cfs instances, each with a to_lab. [It _is_ simple and handy.]
+
+Propose moving the platform-specific info into to_lab_platform_cfg.h, like the other apps.",enhancement,https://github.com/nasa/to_lab/issues/2
+Confirm valid PERF_ID use,"Originated by abrown4 (69 on babelfish):
+
+cFE reserves 0-31 perf-ids. Need to confirm ci_lab does not use these.",bug,https://github.com/nasa/to_lab/issues/1

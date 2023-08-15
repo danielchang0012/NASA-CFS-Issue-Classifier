@@ -1,0 +1,1707 @@
+Title,Body,Labels,URL
+sample_lib Integration candidate: Caelum-rc4+dev30,"**Describe the contribution**
+
+PR #89
+- PR #92. Addresses Issue #91
+
+**Testing performed**
+sample_lib Checks <https://github.com/nasa/sample_lib/pull/93/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/620/checks>
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper",,https://github.com/nasa/sample_lib/pull/93
+"Fix #91, Add newline at end of sample_lib.c","**Describe the contribution**
+- Fix #91 
+- Removes a stray swap file
+
+**Testing performed**
+CI, also built w/ clang and it resolves the warning
+
+**Expected behavior changes**
+No clang warning, no impact for gnu compilers
+
+**System(s) tested on**
+CI and w/ Clang 10
+
+**Additional context**
+Related to:
+- nasa/cFE#2120
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/sample_lib/pull/92
+Missing newline at end of sample_lib.c,"**Is your feature request related to a problem? Please describe.**
+Clang throws an error about the missing newline at the end of sample_lib.c
+
+**Describe the solution you'd like**
+Add a new line, they are pretty cheap these days.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/sample_lib/issues/91
+sample_lib Integration candidate: Caelum-rc4+dev25,"**Describe the contribution**
+
+PR #89
+- Fix #88, Remove redundant comments
+
+PR #86
+- Fix #85, Create CHANGELOG.md
+
+
+**Testing performed**
+sample_lib Checks <https://github.com/nasa/sample_lib/pull/90/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/590/checks>
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt",,https://github.com/nasa/sample_lib/pull/90
+"Fix #88, Remove redundant comments","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #88
+Removes redundant comments (incl. `/* end of function */`, `/* end if */`, function name in function header comments).
+Empty lines before the final closing brace of functions were removed as well, as they were triggering the CI checks.
+
+**Testing performed**
+None (comment changes only).
+
+**Expected behavior changes**
+No impact on behavior.
+These updates will reduce clutter and inconsistency in the code, improving readability.
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/sample_lib/pull/89
+"Redundant comments (/* end of function */, /* end if */ etc.)","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/to_lab/issues/68 and https://github.com/nasa/sample_app/issues/111
+There are quite a few redundant comments in the code, such as:
+- `/* end of function */`-type comments
+- `/* end if */`-type comments
+- function header comments which include the function name
+
+**Expected behavior**
+Remove redundant comments to reduce clutter and inconsistency in the code, and improve readability.
+
+**Reporter Info**
+@thnkslprpt ",,https://github.com/nasa/sample_lib/issues/88
+sample_lib Integration candidate: Caelum-rc4+dev23,"**Describe the contribution**
+
+PR #84
+- Fix #83, Remove unnecessary parentheses around return values.
+
+
+**Testing performed**
+sample_lib Checks <https://github.com/nasa/sample_lib/pull/87/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/586/checks>
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt",,https://github.com/nasa/sample_lib/pull/87
+"Fix #85, Create CHANGELOG.md","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #85
+
+**Testing performed**
+None.
+
+**Expected behavior changes**
+Minimizes unnecessary clutter in README.md
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/sample_lib/pull/86
+Use a changelog to keep track of changes instead of having them in the Readme,"Copy of https://github.com/nasa/osal/issues/552
+
+**Is your feature request related to a problem? Please describe.**
+The version history in the Readme file clutters useful information
+
+**Describe the solution you'd like**
+Move the ""version history"" from `Readme.md` to `CHANGELOG.md`
+
+**Requester Info**
+@thnkslprpt 
+",,https://github.com/nasa/sample_lib/issues/85
+"Fix #83, Remove unnecessary parentheses around return values.","**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #83 
+Removes parentheses in return statements in sample_lib that return a single value/term.
+This is aligns these return statements with the predominant style of cFS.
+
+**Testing performed**
+None, prior to submission of the pull request.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/sample_lib/pull/84
+Scrub use of () in return statements,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Unnecessary parentheses around return values in sample_lib
+Copy of https://github.com/nasa/osal/issues/866
+
+**Reporter Info**
+@thnkslprpt ",,https://github.com/nasa/sample_lib/issues/83
+"Fix #81, Codeql workflow name update","**Describe the contribution**
+- Fix #81
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+Just fixes workflow
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, CCB:FastTrack",https://github.com/nasa/sample_lib/pull/82
+CodeQL Workflow Broken due to Name Change,"**Describe the bug**
+
+Merging https://github.com/nasa/cFS/pull/413 broke the components' CodeQL workflow as expected. 
+
+Need to update the CodeQL workflows to match the patterns implemented in https://github.com/nasa/cFE/pull/2035
+
+**To Reproduce**
+
+See failed workflows 
+- https://github.com/nasa/sample_lib/actions/runs/2042727397
+
+**Expected behavior**
+
+Workflow executes
+
+**Code snips**
+None
+
+**System observed on:**
+GitHub Actions
+
+**Additional context**
+Use `uses: nasa/cFS/.github/workflows/codeql-reusable.yml@main`
+
+**Reporter Info**
+Ariel Adams, ASRC Federal ","good first issue, continuous-integration",https://github.com/nasa/sample_lib/issues/81
+sample_lib Integration candidate: Caelum-rc4+dev7,"**Describe the contribution**
+
+PR #78  
+- Fix #77, Update copyright header
+
+PR #79  
+- HOTFIX #73, Standardize Version Information
+
+
+**Testing performed**
+sample_lib Checks <https://github.com/nasa/sample_lib/pull/80/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/445/checks>
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 
+RTEMS
+
+**Additional context**
+Part of nasa/cFS#445
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper 
+@astrogeco ",,https://github.com/nasa/sample_lib/pull/80
+"HOTFIX #73, Standardize version information","**Describe the contribution**
+
+Per conversation in CCB:2022-03-24 and in https://github.com/nasa/cFE/commit/e5be0612ad6bf9db09ddf640306a65292abce2d5#commitcomment-69358417
+
+Ensuring REVISION number is set to 99 and MISSION_REV = 0xFF
+
+**Testing performed**
+Text and documentation only
+
+**Expected behavior changes**
+No behavior change
+
+**System(s) tested on**
+n/a
+
+**Additional context**
+https://github.com/nasa/cFE/commit/e5be0612ad6bf9db09ddf640306a65292abce2d5#commitcomment-69358417
+
+**Third party code**
+none
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Gerardo E. Cruz-Ortiz, NASA
+",,https://github.com/nasa/sample_lib/pull/79
+"Fix #77, Update copyright header","**Describe the contribution**
+- Fix #77
+
+**Testing performed**
+Documentation only, but built/ran unit tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: i5/wsl
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/sample_lib/pull/78
+Apply latest copyright header,"**Is your feature request related to a problem? Please describe.**
+Updated copyright header
+
+**Describe the solution you'd like**
+Update
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",docs,https://github.com/nasa/sample_lib/issues/77
+"Fix #75, Remove explicit filename doxygen comments","**Describe the contribution**
+- Fix #75 
+
+**Testing performed**
+Make doc, observe no filename warnings
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: i5/wsl
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/sample_lib/pull/76
+Remove explicit file name references in doxygen file comments to avoid warnings,"**Is your feature request related to a problem? Please describe.**
+File comment without a filename implies the comments apply to the current file.  Adding the file name makes doxygen try to match that file.  The issue is there's multiple files with the same name, so doxygen gets confused unless you add full path.  Really it's just overhead since the point is to comment the current file.
+
+Sample warning if you `make doc` from the bundle:
+```
+/home/jhageman/cFS/cFS-GitHub/osal/src/os/posix/src/os-impl-binsem.c:22: warning: the name `os-impl-binsem.c' supplied as the second argument in the \file statement matches the following input files:
+   /home/jhageman/cFS/cFS-GitHub/osal/src/os/posix/src/os-impl-binsem.c
+   /home/jhageman/cFS/cFS-GitHub/osal/src/os/rtems/src/os-impl-binsem.c
+   /home/jhageman/cFS/cFS-GitHub/osal/src/os/vxworks/src/os-impl-binsem.c
+Please use a more specific name by including a (larger) part of the path!
+```
+
+**Describe the solution you'd like**
+Easiest to just remove the name since for every case the comment applies to the current file
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",docs,https://github.com/nasa/sample_lib/issues/75
+"Fix #58, Apply header guard standard","**Describe the contribution**
+- Fix #58
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/sample_lib/pull/74
+Update Build Baseline to cFS-Caelum-rc4,"**Describe the contribution**
+
+Update baseline to cFS-Caleum-rc4: v1.3.0-rc4
+Update mission rev to use 0xFF for development version
+
+**Testing performed**
+
+- sample_lib Checks <https://github.com/nasa/sample_lib/pull/73/checks>
+- cFS Bundle Checks <https://github.com/nasa/cFS/pull/390/checks>
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/390>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@astrogeco",,https://github.com/nasa/sample_lib/pull/73
+"Fix #71, Reuse CodeQL, Static Analysis, and Format Check","**Describe the contribution**
+Fixes #71 
+
+**Testing performed**
+sample_lib CodeQL Reuse: https://github.com/ArielSAdamsNASA/sample_lib/actions/runs/1395965372
+sample_lib Format Check: https://github.com/ArielSAdamsNASA/sample_lib/actions/runs/1395965376
+sample_lib Static Analysis Reuse: https://github.com/ArielSAdamsNASA/sample_lib/actions/runs/1395965375
+
+**Expected behavior changes**
+sample_lib will reuse CodeQL, Static Analysis, and Format Checker that are held in cFS. These workflows will not work until nasa/cFS#386 is merged.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal",continuous-integration,https://github.com/nasa/sample_lib/pull/72
+"Reuse CodeQL, Format Checker, and Static Analysis Workflows","**Is your feature request related to a problem? Please describe.**
+When needing to change workflows, one must create an issue and PR for each submodule. This feature would reduce duplication.
+
+**Describe the solution you'd like**
+To reuse workflows, the targeted workflow must include workflow_call and inputs as seen below. 
+```
+on:
+  push:
+  pull_request:
+  workflow_call:
+    inputs:
+      runs-on: 
+        description: Platform to execute on
+        type: string
+        default: ubuntu-latest
+```
+
+**Describe alternatives you've considered**
+Keep it as is. 
+
+**Additional context**
+Tested in OSAL, OSAL cFE CodeQL Reuse Build: https://github.com/ArielSAdamsNASA/osal/runs/4023159610?check_suite_focus=true
+Tested in OSAL, OSAL CodeQL Reuse Build: https://github.com/ArielSAdamsNASA/osal/actions/runs/1390702434
+cFS CodeQL Reuse: https://github.com/ArielSAdamsNASA/cFS-JSF-Rules/actions/runs/1390561827
+
+**Requester Info**
+Ariel Adams, ASRC Federal",continuous-integration,https://github.com/nasa/sample_lib/issues/71
+"Static analysis workflow missing duplicate check, restricting to main push, remove --quiet","**Is your feature request related to a problem? Please describe.**
+Missing duplicate check, overly restrictive to main push:
+https://github.com/nasa/sample_lib/blob/b500b024b951516e618dcb115f0b8b572df1ed45/.github/workflows/static-analysis.yml#L4-L12
+
+also should remove `--quiet` flag so files processed will be listed:
+https://github.com/nasa/sample_lib/blob/b500b024b951516e618dcb115f0b8b572df1ed45/.github/workflows/static-analysis.yml#L26
+
+**Describe the solution you'd like**
+Fix
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","duplicate, continuous-integration",https://github.com/nasa/sample_lib/issues/70
+"Format check workflow missing duplicate check, restricting to main push, job name doesn't match","**Is your feature request related to a problem? Please describe.**
+Missing duplicate check, restricting to main, and named wrong:
+https://github.com/nasa/sample_lib/blob/b500b024b951516e618dcb115f0b8b572df1ed45/.github/workflows/format-check.yml#L4-L12
+
+**Describe the solution you'd like**
+Fix
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","duplicate, continuous-integration",https://github.com/nasa/sample_lib/issues/69
+"Fix #67, Remove CodeQL workflow PR branch restriction","**Describe the contribution**
+- Fix #67 
+
+Removes main branch restriction on pull requests.
+
+**Testing performed**
+None
+
+**Expected behavior changes**
+Runs on all PR's
+
+**System(s) tested on**
+None
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",duplicate,https://github.com/nasa/sample_lib/pull/68
+CodeQL analysis workflow restricted to pull request main branch,"**Is your feature request related to a problem? Please describe.**
+Overly restrictive on pull requests here:
+https://github.com/nasa/sample_lib/blob/b500b024b951516e618dcb115f0b8b572df1ed45/.github/workflows/codeql-build.yml#L5-L7
+
+**Describe the solution you'd like**
+Remove branch restriction
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","duplicate, continuous-integration",https://github.com/nasa/sample_lib/issues/67
+" Typos in documentation, print statements, and comments ","**Is your feature request related to a problem? Please describe.**
+Found multiple typos throughout the codebase
+
+**Describe the solution you'd like**
+Correct grammar and spelling errors
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Retroactive issue for #65 ",,https://github.com/nasa/sample_lib/issues/66
+"Fix #66, Correct minor markdown and comment typos","**Describe the contribution**
+
+- Fix #66
+
+Fixed a few minor typos in the text of SECURITY.md, and in the comments of:
+- unit-test/CMakeLists.txt
+- libc_string_stubs.c 
+
+**Testing performed**
+None (non-executable code).
+
+**Expected behavior changes**
+None (minor Markdown doc and comments changes only).
+
+**System(s) tested on**
+n/a
+
+**Additional context**
+n/a
+
+**Code contributions**
+n/a","docs, community",https://github.com/nasa/sample_lib/pull/65
+sample_lib Integration candidate: 2021-06-22,"## Context
+
+Part of <https://github.com/nasa/cfs/issues/270>
+
+## Author
+
+@ArielSAdamsNASA 
+
+## Description 
+
+### PR #63
+
+Fix #62, Implement Coding Standard CodeQL
+
+
+
+
+
+
+
+
+
+
+",,https://github.com/nasa/sample_lib/pull/64
+"Fix #62, Implement Coding Standard CodeQL","**Describe the contribution**
+Fix #62
+Added the duplicate jobs action to avoid duplicate jobs from running. Added a separate job for coding standard queries. Created two configuration files, one for default queries and security queries and another for jpl rules. Removed push on main branch so when users push code to their forked repos, the workflow runs. Added main branch to pull request, so CodeQL runs on pull request made in the main branch. This is the same logic used in the cFS bundle repo. 
+
+**Testing performed**
+Testing done on cFE forked repository, ArielSAdamsNASA/cFE which used the same files, but with different configuration paths.
+
+Jobs were failing when the entire path of the configuration file were not used. Have to use nasa/cFE/.github/codeql/config-name@branch-name. The branch must be included in the path. 
+
+The CodeQL analysis workflow will fail for this PR since it is calling for a configuration file in main the main branch. It will not work until the configuration files are merged into main. 
+
+In the screenshot is the same workflow as in this pull request, but the configuration path is changed to the forked repo and tested branch. 
+
+![image](https://user-images.githubusercontent.com/69638935/119024913-36fa2580-b969-11eb-9aac-ede0002804a0.png)
+
+**Expected behavior changes**
+There should be one job for security queries and one job for JPL and MISRA queries. 
+
+**Describe alternatives you've considered**
+Can allow all branches to run CodeQL for pull requests as seen in cFE and PSP instead of just the main branch like cFS. 
+
+**Third party code**
+Skip duplicate workflows license: https://github.com/fkirc/skip-duplicate-actions/blob/master/LICENSE
+
+CodeQL license: https://github.com/github/codeql-action/blob/main/LICENSE
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","CCB:Approved, continuous-integration",https://github.com/nasa/sample_lib/pull/63
+Implement Coding Standard Rules in CodeQ,"**Is your feature request related to a problem? Please describe.**
+CodeQL does not use JPL rules, which is used in the upcoming coding standard. 
+
+**Describe the solution you'd like**
+Implement JPL rules for CodeQL. Continue using the security queries, but keep them separate from the JPL results. Can use two different workflows, one for the coding standard and one for the security queries. 
+
+**Describe alternatives you've considered**
+Might be able to use one workflow, as long as the results can be easily identified as a coding standard issue or security issue. 
+
+**Additional context**
+JPL queries are found here: https://github.com/github/codeql/tree/main/cpp/ql/src/JPL_C
+
+**Requester Info**
+Ariel Adams, ASRC Federal ",continuous-integration,https://github.com/nasa/sample_lib/issues/62
+sample_lib Integration candidate: 2021-04-27,"## Description 
+
+### PR #60 
+
+Fix #59, replace direct ref to ArgPtr with macro 
+
+The UT_Hook_GetArgValueByName macro provided by UT assert is the preferred way to get an argument in the current version. Reading the pointer directly is not advised as it depends on how the stub was actually implemented, whereas the macro should produce consistent results.
+
+Hook will continue to work even if stub implementation changes.
+
+
+Using macro is more readable, more future proof, and reflects current best practice for UT assert hooks.
+
+
+## Context
+
+Part of <https://github.com/nasa/cfs/pull/250>
+
+## Testing
+
+sample_lib Tests <https://github.com/nasa/sample_lib/pull/61/checks>
+cFS Bundle Tests <https://github.com/nasa/cfs/issues/250/checks>
+
+
+## Authors
+
+@jphickey ",,https://github.com/nasa/sample_lib/pull/61
+"Fix #59, replace direct ref to ArgPtr with macro","**Describe the contribution**
+The UT_Hook_GetArgValueByName macro provided by UT assert is the preferred way to get an argument in the current version.  Reading the pointer directly is not advised as it depends on how the stub was actually implemented, whereas the macro should produce consistent results.
+
+Fixes #59
+
+**Testing performed**
+Build and run all unit tests, confirm sample_lib test works
+
+**Expected behavior changes**
+Hook will continue to work even if stub implementation changes.
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Using macro is more readable, more future proof, and reflects current best practice for UT assert hooks.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/sample_lib/pull/60
+Replace direct ref to UT assert structure with macro,"**Describe the bug**
+A test in sample_lib is directly referencing the `ArgPtr` member inside the `Context` object from the hook call.  Since the time this was initially implemented, the Ut Assert framework has improved, and now offers a `UT_Hook_GetArgValueByName` macro get this value. 
+
+Directly referencing the value is not a good design and is likely to break as Ut Assert continues to evolve.
+
+**Expected behavior**
+This should be updated to use the preferred macro, `UT_Hook_GetArgValueByName`, which is more future-proof and reflects current best practice/recommendations for new tests.
+
+**Code snips**
+https://github.com/nasa/sample_lib/blob/1b9eea342bba38b3d81de1ee9d966acf5854130d/unit-test/coveragetest/coveragetest_sample_lib.c#L79
+
+**System observed on:**
+Ubuntu 20.04
+
+**Additional context**
+The specific thing pointed to by `ArgPtr` depends on how the stub was implemented, and the macro abstracts this detail to give a consistent result to the caller.  This is why it is important to use the macro.
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+",,https://github.com/nasa/sample_lib/issues/59
+Fix non-compliant header guards,"**Is your feature request related to a problem? Please describe.**
+Leading `_` is reserved:
+https://github.com/nasa/sample_lib/blob/b500b024b951516e618dcb115f0b8b572df1ed45/fsw/public_inc/sample_lib.h#L27-L28
+https://github.com/nasa/sample_lib/blob/b500b024b951516e618dcb115f0b8b572df1ed45/fsw/public_inc/sample_lib.h#L76
+https://github.com/nasa/sample_lib/blob/b500b024b951516e618dcb115f0b8b572df1ed45/fsw/src/sample_lib_internal.h#L29-L30
+https://github.com/nasa/sample_lib/blob/b500b024b951516e618dcb115f0b8b572df1ed45/fsw/src/sample_lib_internal.h#L55
+
+**Describe the solution you'd like**
+Match cFS standard pattern:
+https://github.com/nasa/sample_lib/blob/b500b024b951516e618dcb115f0b8b572df1ed45/fsw/src/sample_lib_version.h#L30-L31
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","enhancement, good first issue",https://github.com/nasa/sample_lib/issues/58
+Add a functional test example,"**Is your feature request related to a problem? Please describe.**
+APIs should have functional tests that verify implementation within operational context (full stack, not stubs).  Coverage tests can not fully exercise intended functionality since they utilize stubs.
+
+**Describe the solution you'd like**
+Add example use of the cFE Functional test framework
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/sample_lib/issues/57
+Add input and output parameters to SAMPLE_LIB_Function to show more advanced generic stubs/hooks,"**Is your feature request related to a problem? Please describe.**
+SAMPLE_LIB_Function takes no parameters, so can't show example of registering them and using a hook.
+
+**Describe the solution you'd like**
+Add parameters (both pass by value and reference), update stubs to use suggested pattern:
+`UT_Stub_RegisterContextGenericArg(UT_KEY(SAMPLE_LIB_Function), param);`
+
+Follow on add a hook (likely from sample_app), register and show use of `UT_Hook_GetArgValueByName`.
+
+**Describe alternatives you've considered**
+There are plenty of implementations in core already, but hard to tell what the ""gold standard"" is.  Need to trade complexity/simplicity though...
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/sample_lib/issues/56
+sample_lib Integration candidate: 2021-03-23,"## Describe the contribution
+Fix #51, Use "" for local includes
+Fix #52, Added a contributing guide that links to the main cFS contributing guide.
+
+## Testing performed
+See https://github.com/nasa/cFS/pull/223/checks
+
+## Expected behavior changes
+
+### PR #54 
+Replace `<>` with `""` for local includes
+
+### PR #53 
+Adds `CONTRIBUTING.md` that links to the main cFS contributing guide.
+
+
+**System(s) tested on**
+ - Hardware: [e.g. PC, SP0, MCP750]
+ - OS: [e.g. Ubuntu 18.04, RTEMS 4.11, VxWorks 6.9]
+ - Versions: [e.g. cFE 6.6, OSAL 4.2, PSP 1.3 for mcp750, any related apps or tools]
+
+## Additional context
+Part of https://github.com/nasa/cFS/pull/223
+
+## Third party code**
+None
+
+## Authors
+@ArielSAdamsNASA 
+@skliper ",,https://github.com/nasa/sample_lib/pull/55
+"Fix #51, Use quotes for local includes","**Describe the contribution**
+Fix #51 - uses `""` for local includes
+
+**Testing performed**
+Build/run unit tests, passed
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None
+
+**Third party code**
+Jacob Hageman - NASA/GSFC
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Full name and company/organization/center of all contributors (""Personal"" if individual work)
+- If NASA Civil Servant Employee or GSFC Contractor on SES II
+  - Address/email/phone and contract/task information (if applicable) must be on file
+- Else if Company
+  - **HAND SIGNED** Company CLA must be on file (once per release): [Company CLA](https://github.com/nasa/cFE/blob/master/docs/GSC_18128_Corp_CLA_form_1219.pdf)
+- Else if Individual
+  - **HAND SIGNED** Individual CLA must be on file (once per release): [Individual CLA](https://github.com/nasa/cFE/blob/master/docs/GSC_18128_Ind_CLA_form_1219.pdf)
+",CCB:FastTrack,https://github.com/nasa/sample_lib/pull/54
+"Fix #52, Add Contributing Guide","**Describe the contribution**
+Fix #52 
+Added a contributing guide that links to the main cFS contributing guide. 
+
+**Expected behavior changes**
+Users should be able to view the contributing guide contents easily from the sample_lib repo. 
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","docs, CCB:FastTrack",https://github.com/nasa/sample_lib/pull/53
+Add Contributing Guide,"**Is your feature request related to a problem? Please describe.**
+Add a contributing guide for the sample_lib repo. 
+
+**Describe the solution you'd like**
+Create a contributing guide markdown file. In the guide, add a link to the cFS contributing guide. 
+
+**Requester Info**
+Ariel Adams, ASRC Federal
+",docs,https://github.com/nasa/sample_lib/issues/52
+"Scrub for include <> vs """" use (<> should be system only)","**Is your feature request related to a problem? Please describe.**
+<> used on non-system header includes.  Example:
+https://github.com/nasa/sample_lib/blob/5ded3815644e4d7366ce390526c5e9e222b28fdb/fsw/src/sample_lib_internal.h#L33
+
+**Describe the solution you'd like**
+Full scrub/fix
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/sample_lib/issues/51
+sample_lib Integration candidate: 2021-03-05,"**Describe the contribution**
+PR #47
+PR #49
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@ArielSAdamsNASA @jphickey ",,https://github.com/nasa/sample_lib/pull/50
+"Fix #48, Add Testing Tools to the Security Policy","**Describe the contribution**
+Fix #48
+Updated the Security Policy to include the type of testing done for sample_lib or the cFS bundle under a new section titled ""Testing"". Provided a disclaimer that under the Apache license, liability is not provided. 
+
+Added that security reports should be emailed. 
+
+**Expected behavior changes**
+Users should now be aware of the type of testing sample_lib or the cFS bundle undergoes. 
+
+**Additional context**
+References: 
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/phpMussel/phpMussel/security/policy
+https://github.com/timberio/vector/security/policy
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal 
+","docs, CCB:FastTrack",https://github.com/nasa/sample_lib/pull/49
+Add Testing Tools to the Security Policy,"**Is your feature request related to a problem? Please describe.**
+Users are unaware of how cFS/sample_lib is tested. By providing this information, transparency is provided to the community which promotes trust. 
+
+**Describe the solution you'd like**
+The security policy should inform users what tools are being used to test cFS/sample_lib while being cautious of liability issues. To do so, we can state explicitly that our software does not provide liability under the Apache license. The security policy should inform users that they may view the LGTM results. The policy would state that the alerts from LGTM may not be accurate, since they cannot be dismissed.  
+
+Add that security report should be emailed. 
+
+**Additional context**
+References: https://github.com/thanos-io/thanos/security/policy
+
+**Requester Info**
+Ariel Adams, ASRC Federal 
+",docs,https://github.com/nasa/sample_lib/issues/48
+"Fix #46, simplify build to use wrappers and interface libs","**Describe the contribution**
+Use the wrapper functions now provided by CFE to simplify the
+build recipe and work with interface libraries
+
+Fixes #46
+
+**Testing performed**
+Build and run CFE unit tests
+
+**Expected behavior changes**
+Unit test targets are named a little differently when using the wrapper functions, but transparent if running via ctest.  The filename is different if running manually though.
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Requires nasa/cfe#1207 and must be merged before nasa/cfe#1203 to avoid breaking UT
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:FastTrack,https://github.com/nasa/sample_lib/pull/47
+Update build to work with interface libraries,"**Is your feature request related to a problem? Please describe.**
+As part of nasa/cfe#972 and PR nasa/cfe#1203 the directory structure of CFE is changing.  The sample_lib build script was directly referencing certain CFE paths that will need an update after this merge.
+
+**Describe the solution you'd like**
+Utilize additional wrapper functions and interface libraries to facilitate the path change and avoid issues in the future.
+
+**Additional context**
+See also nasa/cfe#1207 to add wrapper functions that will help with the unit test aspect
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/sample_lib/issues/46
+"Fix #44, Add CodeQL analysis to workflow","**Describe the contribution**
+Fix #44 - adds CodeQL analysis
+
+Differences from bundle - just builds sample_lib, has timeout
+
+**Testing performed**
+Ran on fork
+
+**Expected behavior changes**
+Adds Code QL analysis on push to main and pull requests (to main)
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:FastTrack, continuous-integration",https://github.com/nasa/sample_lib/pull/45
+Add CodeQL analysis to workflow,"**Is your feature request related to a problem? Please describe.**
+CodeQL analysis not implemented in submodules
+
+**Describe the solution you'd like**
+Add so alerts are generated on pull requests to submodules
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+CodeQL is run at the bundle (nasa/cFS) level, but link to code in submodules doesn't work.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, security, continuous-integration",https://github.com/nasa/sample_lib/issues/44
+"Fix #42, Add static analysis and format check","**Describe the contribution**
+Fix #42 - adds static analysis and format check into github workflow, includes badges in readme
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+Basic CI works again
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:FastTrack, continuous-integration",https://github.com/nasa/sample_lib/pull/43
+CI updates - add static analysis and format in workflow,"**Is your feature request related to a problem? Please describe.**
+Travis-CI not transitioned to github actions
+
+**Describe the solution you'd like**
+Transition CI
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, continuous-integration",https://github.com/nasa/sample_lib/issues/42
+sample_lib Integration candidate: 2021-01-19,"**Describe the contribution**
+Fix #39, Create Security Policy
+
+**Testing performed**
+See https://github.com/nasa/cFS/pull/177/checks
+
+**Expected behavior changes**
+PR #40- Documentation: Add `Security.md` with instructions on reporting vulnerabilities
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/177
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@ArielSAdamsNASA ",,https://github.com/nasa/sample_lib/pull/41
+"Fix #39, Create Security Policy","**Describe the contribution**
+Fix #39 
+Created a draft of a security policy markdown file for sample_lib. The purpose of a security policy is to inform users on how to submit bugs or vulnerabilities. It is ideal to include a section for supported versions.
+
+**Additional context**
+Optional sections that may be included:
+
+- What to expect security-wise such as what type of testing is done
+- Address privacy concerns
+- Supported versions
+- License
+- Known vulnerabilities
+
+References to Public Security Policies:
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/minhealthnz/nzcovidtracer-app/security/policy
+https://github.com/odoo/odoo/security/policy
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","docs, CCB:FastTrack, security",https://github.com/nasa/sample_lib/pull/40
+Implement a Security Policy,"**Describe the bug**
+Create a security policy for users on how to report security vulnerabilities.
+
+**Expected behavior**
+The security policy should instruct users on how to report security vulnerabilities and provide them additional contact information for questions and concerns.
+
+**Additional context**
+Additional sections that may be included:
+- What to expect security-wise such as what type of testing is done
+- Address privacy concerns
+- Supported versions
+- License
+- Known vulnerabilities
+
+References to Public Security Policies:
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/minhealthnz/nzcovidtracer-app/security/policy
+https://github.com/odoo/odoo/security/policy
+
+**Reporter Info**
+Ariel Adams, ASRC Federal","docs, security",https://github.com/nasa/sample_lib/issues/39
+sample_lib Integration Candidate: 2020-11-24,"**Describe the contribution**
+Fix #36, Refactor UT_SetForceFail to UT_SetDefaultReturnValue
+
+**Testing performed**
+See events for ""github actions test"" at <https://github.com/astrogeco/cFS/actions>
+
+**Expected behavior changes**
+PR #37 - Rename `UT_SetForceFail` to `UT_SetDefaultReturnValue` since some functions that retain more than 1 value are not necessarily failing
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/158>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@zanzaben ",,https://github.com/nasa/sample_lib/pull/38
+"Fix #36, Refactor UT_SetForceFail to UT_SetDefaultReturnValue","Describe the contribution
+Fixes #36 by changing UT_SetForceFail to UT_SetDefaultReturnValue
+
+Testing performed
+Build and run unit test
+
+Expected behavior changes
+No impact to behavior
+
+System(s) tested on
+Ubuntu 20.04
+
+Additional context
+Dependant on nasa/osal#646
+
+Contributor Info - All information REQUIRED for consideration of pull request
+Alex Campbell - NASA/GSFC",dependency,https://github.com/nasa/sample_lib/pull/37
+Refactor UT_SetForceFail,"Describe the bug
+UT_SetForceFail was refactored to UT_SetDefaultReturnValue for https://github.com/nasa/osal/issues/559. It needs to have its name changed here as well.
+
+Expected behavior
+Change UT_SetForceFail  to UT_SetDefaultReturnValue 
+
+Additional context
+Part of https://github.com/nasa/osal/issues/559
+
+Reporter Info
+Alex Campbell","enhancement, dependency, deprecate",https://github.com/nasa/sample_lib/issues/36
+Integration Candidate: 2020-11-03,"**Describe the contribution**
+Fix #33, Standardize to SAMPLE_LIB_ namespace prefix
+
+**Testing performed**
+See framework-bundle CI: https://github.com/nasa/cFS/pull/154/checks
+
+**Expected behavior changes**
+
+PR #34 -  No behavior changes. All identifiers now use the prefix `SAMPLE_LIB_`. Changes the name of the init function from SAMPLE_LibInit to SAMPLE_LIB_Init which affects the CFE startup script.
+
+**System(s) tested on**
+Ubuntu CI 
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/154
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey ",,https://github.com/nasa/sample_lib/pull/35
+"Fix #33, Standardize to SAMPLE_LIB_ namespace prefix","**Describe the contribution**
+Replace inconsistent SAMPLE_ And SAMPLE_Lib prefixes, now all identifiers should start with SAMPLE_LIB_.
+
+Fixes #33 
+
+**Testing performed**
+Build and sanity test CFE
+Run all unit tests
+
+**Expected behavior changes**
+No impact to behavior, but this also changes the name of the init function from `SAMPLE_LibInit` to `SAMPLE_LIB_Init` which affects the CFE startup script.
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Needs to be merged with nasa/sample_app#100
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",dependency,https://github.com/nasa/sample_lib/pull/34
+"Rename files, functions, and variables to match LIBNAME_* pattern","**Is your feature request related to a problem? Please describe.**
+Naming convention in SAMPLE_LIB is not entirely consistent - some names start with `SAMPLE_Lib`, others just `SAMPLE_`.
+
+**Describe the solution you'd like**
+All variables, functions, and other identifiers should use a `SAMPLE_LIB_` prefix.
+
+**Describe alternatives you've considered**
+A clear and concise description of any alternative solutions or features you've considered.
+
+**Additional context**
+See nasa/sample_app#77.  When fixing that, noted some issues in here too.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+","bug, breaking",https://github.com/nasa/sample_lib/issues/33
+Integration Candidate: 2020-09-16,"**Describe the contribution**
+Fix #30 
+
+**Testing performed**
+Bundle CI - https://github.com/nasa/cFS/pull/140/checks
+
+**Expected behavior changes**
+PR #31 - Installs unit test to target directory.
+
+**System(s) tested on**
+Ubuntu - CI
+
+**Additional context**
+ https://github.com/nasa/cFS/pull/140
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman, NASA-GSFC
+
+",,https://github.com/nasa/sample_lib/pull/32
+"Fix #30, Install unit test to target directory","**Describe the contribution**
+Fix #30, Install unit test to target directory
+
+**Testing performed**
+Make unit tests, install, observe they install in correct directory
+
+**Expected behavior changes**
+Correct install directory
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None.
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","bug, CCB:FastTrack",https://github.com/nasa/sample_lib/pull/31
+Coverage test not installed in correct directory,"**Describe the bug**
+Coverage test not installed in correct directory - see nasa/cfe#881
+
+**To Reproduce**
+Make unit tests, make install, observe unit test in build directory.
+
+**Expected behavior**
+Should go in target directory (build/exe/cpu1 for sample config)
+
+**Code snips**
+https://github.com/nasa/sample_lib/blob/ce70d3d90943abeeac1ece23e6cf4bae1b217d4b/unit-test/CMakeLists.txt#L95
+
+**System observed on:**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: bundle main
+
+**Additional context**
+None
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC","bug, build-system",https://github.com/nasa/sample_lib/issues/30
+"Close #25, Add build number and baseline to version file","**Describe the contribution**
+Close #25 
+
+**Testing performed**
+Build with bundle
+
+**Expected behavior changes**
+Version report now shows development build number
+```
+1980-012-14:06:58.26153 ES Startup: Loading shared library: /cf/sample_lib.so
+SAMPLE Lib Initialized. Sample Lib Development Build v1.1.0+dev26, Last Official Release: v1.1.0
+```
+
+**System(s) tested on**
+Ubuntu on Docker on OSX
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Gerardo E. Cruz-Ortiz, NASA-GSFC",CCB:FastTrack,https://github.com/nasa/sample_lib/pull/29
+Integration Candidate 2020-07-29,"**Describe the contribution**
+Fix #26
+Close #25
+
+**Testing performed**
+Bundle CI - https://github.com/nasa/cFS/pull/119/checks
+
+**Expected behavior changes**
+
+PR #27 - Install unit test as part of cmake recipe. Sample lib test runner now shows up in expected install directory
+
+PR #29 - Add development build number and baseline to version reporting
+
+**System(s) tested on**
+Ubuntu
+
+**Additional context**
+Part of nasa/cfs#119
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman, NASA-GSFC
+Gerardo E. Cruz-Ortiz, NASA-GSFC",,https://github.com/nasa/sample_lib/pull/28
+"Fix #26, Install unit test","**Describe the contribution**
+Fix #26
+ - Install unit test as part of cmake recipe
+
+**Testing performed**
+Normal build with ENABLE_UNIT_TESTS=true, with make install, and ran sample lib unit test from install dir (passed)
+
+**Expected behavior changes**
+Sample lib test runner now shows up in expected  install dir
+
+**System(s) tested on**
+ - Hardware: cFS Dev VM
+ - OS: Ubuntu 18.04
+ - Versions: current bundle development branch
+
+**Additional context**
+None.
+
+**Third party code**
+None.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:Approved, CCB:FastTrack",https://github.com/nasa/sample_lib/pull/27
+Unit test doesn't get installed,"**Is your feature request related to a problem? Please describe.**
+Missing unit test from install directory
+
+**Describe the solution you'd like**
+Install
+
+**Describe alternatives you've considered**
+N/A
+
+**Additional context**
+Same as nasa/sample_app#81
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","bug, build-system",https://github.com/nasa/sample_lib/issues/26
+Add Build name and Build number to version.h,"**Is your feature request related to a problem? Please describe.**
+Need a better way to describe versions during development
+
+**Describe the solution you'd like**
+Add Build name and Build number to version.h
+As discussed, we will add a a build name string and a continuously incrementing build number to `version.h`
+
+**Additional context**
+See notes from CCB: <https://github.com/nasa/cFS/wiki/Community-CCB-Agenda:-July-01-2020>
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz, NASA-GSFC
+",enhancement,https://github.com/nasa/sample_lib/issues/25
+Integration Candidate: 2020-05-20,"**Describe the contribution**
+Fix #15 
+
+**Testing performed**
+See PR #23 
+Bundle CI - https://travis-ci.com/github/nasa/cFS/builds/168822512
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Ubuntu:Bionic
+
+**Additional Context**
+Part of nasa/cFS#91
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman, NASA-GSFC",,https://github.com/nasa/sample_lib/pull/24
+"Fix #15, Apply standard style","**Describe the contribution**
+Whitespace changes only.
+Fix #15 
+
+**Testing performed**
+CI - https://travis-ci.com/github/skliper/cFS/builds/167637651
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: CI
+ - OS: Ubuntu 18.04
+ - Versions: Bundle w/ all whitespace change commits
+
+**Additional context**
+Note - not enforcing, just a single cleanup since there's no pending activity in this repo.
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:FastTrack",https://github.com/nasa/sample_lib/pull/23
+Integration Candidate: 2020-04-22,"**Describe the contribution**
+
+Fixes #19
+
+**Testing performed**
+See PRs
+Bundle CI - https://github.com/nasa/cFS/pull/74/checks?check_run_id=637311464
+
+**Expected behavior changes**
+PR #20 - Coverage data `make lcov` includes the sample_lib code
+
+**System(s) tested on**
+See PRs
+Bundle CI - Ubuntu:Bionic
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/74
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.",,https://github.com/nasa/sample_lib/pull/22
+Integration Candidate 2020-04-15,"**Describe the contribution**
+Fixes #17
+
+**Testing performed**
+See PRs
+Bundle CI - https://travis-ci.com/github/nasa/cFS/builds/162280689
+
+**Expected behavior changes**
+PR #18 - No doxygen warnings should be generated
+
+**System(s) tested on**
+See PRs
+Bundle CI - Ubuntu:Bionic
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/70
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Leor Bleir, NASA-GSFC
+",,https://github.com/nasa/sample_lib/pull/21
+"Fix #19, Update coverage compile/link flag options","**Describe the contribution**
+
+OSAL now sets these as UT_COVERAGE_COMPILE_FLAGS, UT_COVERAGE_LINK_FLAGS.
+Building and linking the UT executable needs a corresponding update.
+
+Fixes #19 
+
+**Testing performed**
+Build with `ENABLE_UNIT_TESTS=TRUE` and confirm that all unit tests are building
+
+**Expected behavior changes**
+Coverage data (`make lcov`) now includes the sample_lib code again
+
+**System(s) tested on**
+Ubuntu 18.04 LTS 64 bit
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","bug, CCB:Approved",https://github.com/nasa/sample_lib/pull/20
+Unit tests need to link with UT_COVERAGE_COMPILE_FLAGS/UT_COVERAGE_LINK_FLAGS,"**Is your feature request related to a problem? Please describe.**
+nasa/osal#404 cleans up the compiler flag management, and as part of this it exports two variables, UT_COVERAGE_COMPILE_FLAGS and UT_COVERAGE_LINK_FLAGS, rather than a single UT_C_FLAGS value.
+
+**Describe the solution you'd like**
+The unit tests need to use these variables, not UT_C_FLAGS.
+
+**Additional context**
+Needs to be included with the nasa/osal#404 merge.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+","bug, build-system, unit-test",https://github.com/nasa/sample_lib/issues/19
+"Fix #17, Fix Doxygen Warnings","**Describe the contribution**
+Fixes #17 to resolve doxygen warnings
+
+**Testing performed**
+Steps taken to test the contribution:
+
+1. Corrected lines that generated warnings
+2. Rebuilt documentation with `make doc`
+3. Observed no warnings generated
+4. Viewed relevant page(s) to verify correctness
+
+**Expected behavior changes**
+Changes to documentation only; no code impact
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Leor Bleier, NASA\GSFC
+","CCB:Approved, docs, CCB:FastTrack",https://github.com/nasa/sample_lib/pull/18
+Fix doxygen warnings,"**Describe the bug**
+Warnings are generated when building the documentation.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Do `make doc` from the cFS directory
+2. Observe the warnings in `cFS/build/doc/warnings.log`
+
+**Expected behavior**
+No warnings should be generated
+
+**Reporter Info**
+Leor Bleier GSFC\582
+","bug, docs",https://github.com/nasa/sample_lib/issues/17
+Integration Candidate 2020-03-18,"**Describe the contribution**
+Fix #9  
+
+**Testing performed**
+Bundle Testing on CI see https://github.com/nasa/cFS/pull/58
+
+**Expected behavior changes**
+See PR #11 
+
+**System(s) tested on**
+CI Ubuntu:Bionic
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+Gerardo E. Cruz-Ortiz, NASA-GSFC",,https://github.com/nasa/sample_lib/pull/16
+Apply standard code style,"**Is your feature request related to a problem? Please describe.**
+Inconstant style
+
+**Describe the solution you'd like**
+See https://github.com/nasa/ci_lab/pull/30 and https://github.com/nasa/ci_lab/pull/28
+
+**Describe alternatives you've considered**
+N/A
+
+**Additional context**
+N/A
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, good first issue",https://github.com/nasa/sample_lib/issues/15
+Integration Candidate 20191230,"**Describe the contribution**
+Fix #8
+
+**Testing performed**
+1. Checked out all IC 20191230 branches
+1. Built and ran cFS unit tests and OSAL coverage (vxworks and shared)
+   1. All passed (although osal_timer_UT occasionally still fails due to a test issue)
+1. Make cmdUtils where cFS-GroundSystem expects it
+   1. cd tools/cFS-GroundSystem/Subsystems/cmdUtil
+   1. make
+1. Started Ground system
+   1. python3 GroundSystem.py
+1. Enabled commands to 127.0.0.1
+1. Confirmed telemetry packets received
+1. Sent ES and TIME noop commands, confirmed noop message from cFS on Port 1
+1. Sent ES power on reset and observed cFS exit
+
+**Expected behavior changes**
+See related pull requests
+
+**System(s) tested on**
+ - cFS Dev Server 2
+ - OS: Ubuntu 18.04
+ - Versions: ic-20191230 branches
+
+**Additional context**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/sample_lib/pull/14
+"Fix #12, Release prep","**Describe the contribution**
+Fix #12
+ - Updated README
+ - removed custom license document
+ - added standard Apache 2.0
+ - Updated copyright release version cFE 6.6 -> 6.7
+
+**Testing performed**
+1. Standard build, unit test and execute
+
+**Expected behavior changes**
+ - No impact to behavior
+
+**System(s) tested on:**
+ - Hardware: cFS Dev Server 2
+ - OS: Ubuntu 18.04
+ - Versions: cFE 6.7.0 related versions and OSAL 5.0.0
+
+**Contributor Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/sample_lib/pull/13
+Release 1.1.0 Prep,"**Is your feature request related to a problem? Please describe.**
+Updates for release:
+- Updated README
+- removed custom license document
+- Updated copyright release version cFE 6.6 -> 6.7
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/sample_lib/issues/12
+"Fix #9, Unit test for SAMPLE lib","**Describe the contribution**
+Fixes #9
+
+Implements a coverage test for sample_lib code as well as a stub library to facilitate unit test of external code that calls functions within sample_lib.
+
+**Testing performed**
+Build with SIMULATION=native ENABLE_UNIT_TESTS=TRUE
+Confirm normal CFE operation is unaffected
+Confirm unit tests all pass, including new test of ""sample_lib""
+Confirm ""lcov"" report now includes sample_lib, and coverage is 100%
+
+**Expected behavior changes**
+This adds a new test for ""sample_lib"" which is part of the make test target, and the line coverage reports now include sample_lib.
+
+**System(s) tested on:**
+Ubuntu 18.04 LTS 64-bit
+
+**Additional context**
+The coverage test cases are written assuming that previous pull request #10 is already merged.  That is, they exercise/test the logic that was added in this.  Therefore this commit is a child of the commit for the previous pull request.
+
+**Contributor Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+","enhancement, CCB:Approved",https://github.com/nasa/sample_lib/pull/11
+Add logic to sample_lib for UT,"**Describe the contribution**
+Fix #8
+
+In order to make a useful library unit test example, the sample_lib itself needs to perform some more interesting work.
+
+In particular it needs at least one external function call on which a code path decision is made, such that the example UT code will have more than one code path to demonstrate.
+
+Additionally, the library should have some internal ""global"" structure (like real libs would) that contains its state, that the UT can also test/query.
+
+Both objectives can be accomplished with a small string buffer that gets populated with a `strncpy()` call during init, and printed with the ""process"" command.
+
+Other minor updates for correctness:
+- The entry point (`SAMPLE_LibInit`) is not really a ""private"" function.  It is called from ES when starting up.  As such it should be considered part of the public API.  This moves the prototype to the public API and corrects the comments so it is _not_ labeled as a private function.  Note this is also relevant for unit tests, because the UT will invoke the entry point too.
+- Corrects a missing newline on the OS_printf during startup.  This was a long-standing pet peeve.
+
+
+**Testing performed**
+Built code using SIMULATION=native ENABLE_UNIT_TESTS=TRUE 
+Confirmed no build issues, execute CFE and confirm that SAMPLE_Lib starts up as normal.
+Force a call to the ""SAMPLE_Function()"" API and confirm that the printf now includes the buffer contents, as such:
+
+`SAMPLE_Function called, buffer='SAMPLE DATA'`
+
+**Expected behavior changes**
+No changes of substance.  Added display of the buffer contents to the OS_printf.
+
+**System(s) tested on:**
+Ubuntu 18.04 LTS 64-bit
+
+**Contributor Info**
+Joseph Hickey, Vantage Systems. Inc.
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",CCB:Approved,https://github.com/nasa/sample_lib/pull/10
+Add unit test example for sample_lib,"**Is your feature request related to a problem? Please describe.**
+The SAMPLE library does not implement any unit test.  Actual CFE libraries would typically need to do this. 
+
+**Describe the solution you'd like**
+A unit test should be implemented to provide a template for implementing a library unit test (code coverage) using the current framework.
+
+**Additional context**
+The unit test for an application (e.g. in sample_app, as in nasa/sample_app#21) is slightly different, as the application typically would not need to expose stubs but a library would.  Therefore both sample_app and sample_lib should implement unit tests.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/sample_lib/issues/9
+Add at least one conditional for unit testing,"**Is your feature request related to a problem? Please describe.**
+In the process of providing useful examples for unit testing, the sample lib should contain
+at least one ""if"" statement to demonstrate how the alternate paths can be exercised in UT.
+
+**Describe the solution you'd like**
+Add a call to a simple C library function during `SAMPLE_LibInit`, and have an alternate return code (not CFE_SUCCESS) as based off the result.  Unit test can then force the alternate path to execute.
+
+**Describe alternatives you've considered**
+N/A
+
+**Additional context**
+This will add considerable value to the UT examples
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/sample_lib/issues/8
+Added auto build capabilities using Travis-CI,"**Describe the contribution**
+Auto build capabilities added using Travis-CI
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Verified auto build performed when new code is pushed to Github
+
+**Expected behavior changes**
+ - Auto build will be performed whenever new code is pushed to GitHub
+ 
+**System(s) tested on:**
+ - GitHub - Linux Xenial distribution
+
+**Additional context**
+A branch, specified by environment variables in the buildvars.sh file, will be checked out and this application will be build in the context of that cFS tree 
+
+**Contributor Info**
+Travis Wheatley - Emergent Space Technologies
+
+**Community contributors**
+Work performed for NASA ""Task 3015""",duplicate,https://github.com/nasa/sample_lib/pull/7
+Integration Candidate 20190906,"**Describe the contribution**
+Merge of CCB 20190904 approved commits.
+Fixes #1, fixes #2
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Setup and build per README instructions (no build warnings observed)
+2. Start up cfe with sample_lib included by default and observed:
+```
+1980-012-14:03:20.25149 ES Startup: Loading shared library: /cf/sample_lib.so
+SAMPLE Lib Initialized.  Version 1.0.0.0
+1980-012-14:03:20.25184 ES Startup: Loading file: /cf/sample_app.so, APP: SAMPLE_APP
+1980-012-14:03:20.25198 ES Startup: SAMPLE_APP loaded and created
+EVS Port1 42/1/SAMPLE_APP 4: SAMPLE: RESET command
+EVS Port1 42/1/SAMPLE_APP 1: SAMPLE App Initialized. Version 1.0.0.0
+```
+2. Sent tlm_enable command, verified HK packet telmetry reception, sent ES processor reset ('1') to exit cFE 
+
+**Expected behavior changes**
+A clear and concise description of how this contribution will change behavior and level of impact.
+ - No behavior updates
+
+**System(s) tested on:**
+ - cFS development server
+ - OS: Ubuntu/Linux 4.4.0-146-generic
+ - Versions: bundle rc-6.7.0
+
+**Additional context**
+None
+
+**Contributor Info**
+Jacob Hageman/NASA-GSFC
+
+**Community contributors**
+CLA on file.
+",,https://github.com/nasa/sample_lib/pull/6
+"Fix #2, Remove Classic Build",remove for_build folder. ,CCB:Approved,https://github.com/nasa/sample_lib/pull/5
+"Fix #1, Remove MKS flags",Remove MKS flags,CCB:Approved,https://github.com/nasa/sample_lib/pull/4
+Enhanced version reporting,"Use CI_LAB_VERSION from cfecfs_version_info.h if available and report on NOOP and startup (along with classic version numbering)
+
+Classic version numbering can then just be updated on release, vs for every commit.",enhancement,https://github.com/nasa/sample_lib/issues/3
+Remove classic build support,Only supporting cmake build going forward.,"enhancement, good first issue",https://github.com/nasa/sample_lib/issues/2
+Remove old MKS flags from comments,"$Id, $Date, $Revision, $Log, etc all no longer useful and slightly misleading since they don't get updated.","enhancement, good first issue",https://github.com/nasa/sample_lib/issues/1

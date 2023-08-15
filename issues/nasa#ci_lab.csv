@@ -1,0 +1,2423 @@
+Title,Body,Labels,URL
+"Fix #140, Move function prototypes to header file","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #140
+  - Moves the function prototypes that were in `ci_lab_app.c` over to the header file
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+Local testing with full cFS suite confirms app performance unaffected.
+
+**Expected behavior changes**
+No change to behavior.
+Makes the file content more consistent with the rest of cFS.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/ci_lab/pull/141
+Function prototypes can be moved out of `ci_lab_app.c`,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+These prototypes can/should be moved out of `ci_lab_app.c` into the header file, along with the global data struct definition.
+
+**Code snips**
+https://github.com/nasa/ci_lab/blob/6fef38e47b8963c29142ecf13b38e47f107a2f9f/fsw/src/ci_lab_app.c#L39-L65
+
+**Expected behavior**
+Consistent content of implementation/header files across cFS.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/ci_lab/issues/140
+"Fix #138, Convert `int32` return codes and variables to `CFE_Status_t`","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #138
+  - `int32` return codes converted over to `CFE_Status_t`
+  - a couple of `int32` `status`/`return` variables holding cFE return codes converted to `CFE_Status_t`
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+Local testing with full cFS suite passing all tests and showing not change to coverage.
+
+**Expected behavior changes**
+No change to behavior.
+`CFE_Status_t` is more expressive and improves consistency with cFE/cFS.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/ci_lab/pull/139
+ci_lab `int32` return codes and variables should be converted to `CFE_Status_t`,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+ci_lab has a few return codes (as well as local `status`/`return` variables which hold CFE return codes) that can be easily converted over to the `CFE_Status_t` typedef.
+
+**Expected behavior**
+Use the more expressive `CFE_Status_t` and improve consistency with cFS.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/ci_lab/issues/138
+ci_lab Integration candidate: Caelum-rc4+dev45,"**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/PSP/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- PR #136. Addresses Issue #135
+
+**Testing performed**
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/667/checks)
+[PSP Checks](https://github.com/nasa/ci_lab/pull/137/checks)
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 22.04
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey",,https://github.com/nasa/ci_lab/pull/137
+"Fix #135, update cmake recipe","**Describe the contribution**
+Prefer target-scope properties over directory scope where applicable
+
+Fixes #135
+
+**Testing performed**
+Build and run tests, sanity check
+
+**Expected behavior changes**
+No impact
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/ci_lab/pull/136
+Update cmake script to use current best practices,"**Is your feature request related to a problem? Please describe.**
+Build recipes should publish the module's include directories via the `INTERFACE_INCLUDE_DIRECTORIES` in property in cmake.  This is what CFE modules do, but some of the framework apps are still using directory-scope include directories (old way).
+
+Also, table names should match the app names they are associated with, unless there is a good reason not to.
+
+**Describe the solution you'd like**
+Change these to target-scope include directories (use `target_include_directories`, not `include_directories`)
+
+**Additional context**
+Notably this is important in order to be able to easily provide an alternative table content via the mission-provided files.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/ci_lab/issues/135
+"Fix #133, Moves interface definition files to inc","**Describe the contribution**
+- Fixes #133
+
+**Testing performed**
+make install
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+-Ubuntu 18.04
+
+**Additional context**
+Depends on similar pull request in [sch_lab](https://github.com/nasa/sch_lab).
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+-Justin Figueroa, Vantage
+",CCB:Ignore,https://github.com/nasa/ci_lab/pull/134
+Moves interface definition to inc,"**Is your feature request related to a problem? Please describe.**
+The interface definition files of all open source apps currently exist in the ""src"" directory.
+
+**Describe the solution you'd like**
+Create an ""inc"" dir to go with the ""src"" dir.  Move the interface definitions into this location: ""_msg.h"", ""_msgdefs.h"", ""_tbldefs.h"", and ""_events.h"". Consider moving header files in both ""platform_inc"" and ""mission_inc"" to ""inc""
+
+**Describe alternatives you've considered**
+Leaving as is.
+
+**Additional context**
+N/A
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+",,https://github.com/nasa/ci_lab/issues/133
+"Fix #96, Check returns from CFE calls during init","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #96 
+  - Returns from `CFE_EVS_Register()`, `CFE_SB_CreatePipe()`,  and `CFE_SB_Subscribe()` during CI_LAB initialization sequence that are `!= CFE_SUCCESS` will now generate an EVS event reporting the error.
+  - Also added new Event IDs for these error events.
+
+**Testing performed**
+Build + Run cFS locally to confirm CI_LAB still running fine with these changes.
+![Screenshot 2022-11-08 11 13 53](https://user-images.githubusercontent.com/9024662/200450955-4c9f0885-f607-4936-a477-ed7826f41213.png)
+Also ran with inverse for each event (checking if `status == CFE_SUCCESS`) to confirm structure and format of events is fine - they are shown here:
+![Screenshot 2023-03-21 08 53 55](https://user-images.githubusercontent.com/9024662/226484963-852ebcc2-9b19-4d39-819e-d23ddf827ff0.png)
+
+**Expected behavior changes**
+Program logic not changed, but new events reports will now be generated for failures generated by these CFE calls.
+
+**System(s) tested on**
+Intel(R) Celeron(R) N4100 CPU @ 1.10GHz x86_64
+Debian GNU/Linux 11 (bullseye)
+Current main branch cFS bundle.
+
+**Contributor Info**
+Avi @thnkslprpt",,https://github.com/nasa/ci_lab/pull/132
+"Fix #52, Add version information to NOOP event","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #52 
+  - Version information added in to NOOP event.
+
+**Testing performed**
+Run/Build and confirmed NOOP command event reporting as expected.
+![Screenshot 2022-10-22 21 00 58](https://user-images.githubusercontent.com/9024662/197336158-b507480a-0cc2-4a51-b8c1-6b1813c0ede8.png)
+
+**Expected behavior changes**
+Adds version information to NOOP command to align with the other cFS components/apps.
+
+**System(s) tested on**
+Intel(R) Celeron(R) N4100 CPU @ 1.10GHz x86_64
+Debian GNU/Linux 11 (bullseye)
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/ci_lab/pull/131
+"Fix #129, Apply consistent Event ID names to common events","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #129
+  - Consistent event IDs have been applied to the inconsistent cases to align them with a common Event ID naming convention.
+
+**Testing performed**
+Only GitHub CI actions.
+
+**Expected behavior changes**
+No impact on code behavior (no logic changes).
+Consistent Event ID names for the events which are common to all/most cFS components and apps will improve consistency and ease make code review/debugging easier.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/ci_lab/pull/130
+Inconsistent Event ID naming,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/cFE/issues/2175
+After finding that there were 9 different Event IDs to indicate the same thing (Invalid Message ID) in https://github.com/nasa/CF/issues/262, I scrubbed the other common commands (e.g. Task Initialisation [INIT], NOOP, Reset Counters etc.) and found the same issue there - almost every component/app had their own variation of the Event ID name for the exact same event.
+
+**Expected behavior**
+Apply consistent Event ID names to the events which are common to all/most components and apps.
+
+**Code snips**
+Invalid Message ID:
+`CFE_EVS_ERR_MSGID_EID`
+`CFE_SB_BAD_MSGID_EID`
+`CFE_TIME_ID_ERR_EID`
+`CS_MID_ERR_EID`
+`TO_LAB_MSGID_ERR_EID`
+`SAMPLE_APP_INVALID_MSGID_ERR_EID`
+`BP_INVALID_MID_ERR_EID`
+`SCH_MD_ERR_EID`
+`CI_LAB_COMMAND_ERR_EID`
+
+Initialization:
+`CFE_TIME_INIT_EID`
+`CFE_TBL_INIT_INF_EID`
+`CFE_EVS_STARTUP_EID`
+`CF_EID_INF_INIT`
+`BP_INIT_APP_INFO_EID`
+`SCH_INITSTATS_INF_EID`
+`CI_LAB_STARTUP_INF_EID`
+
+NOOP:
+`CFE_TIME_NOOP_EID`
+`CFE_TBL_NOOP_INF_EID`
+`CFE_SB_CMD0_RCVD_EID`
+`CF_EID_INF_CMD_NOOP`
+`FM_NOOP_CMD_EID`
+`CI_LAB_COMMANDNOP_INF_EID`
+
+Reset Counters:
+`CFE_TIME_RESET_EID`
+`CFE_TBL_RESET_INF_EID`
+`CFE_EVS_RSTCNT_EID`
+`CFE_SB_CMD1_RCVD_EID`
+`CF_EID_INF_CMD_RESET`
+`SC_RESET_DEB_EID`
+`HS_RESET_DBG_EID`
+`FM_RESET_CMD_EID`
+`HK_RESET_CNTRS_CMD_EID`
+`MD_RESET_CNTRS_DBG_EID`
+`CI_LAB_COMMANDRST_INF_EID`
+
+etc.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/ci_lab/issues/129
+"Fix #127, Rename CommandCode variable to FcnCode","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #127 
+  - Rename the `CommandCode` variable in `CI_LAB_ProcessGroundCommand()` to `FcnCode` to better align with the cFE API.
+
+**Testing performed**
+Standard cFS bundle tests all passed.
+Build/run cFS and test NOOP and other commands with the GroundSystem tool. All working fine.
+
+**Expected behavior changes**
+No impact on behavior.
+Improves code clarity and consistency in the lab apps.
+
+**System(s) tested on**
+Intel(R) Celeron(R) N4100 CPU @ 1.10GHz x86_64
+Debian GNU/Linux 11 (bullseye)
+cFE v7.0.0-rc4+dev197, OSAL v6.0.0-rc4+dev143, PSP v1.6.0-rc4+d
+Sample App v1.3.0-rc4+dev35
+CI Lab App v2.5.0-rc4+dev39
+TO Lab v2.5.0-rc4+dev31
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",CCB:Approved,https://github.com/nasa/ci_lab/pull/128
+Recommend using FcnCode (instead of CommandCode) terminology in the code,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/sample_app/issues/167
+
+**Expected behavior**
+Rename the `CommandCode` variable in `CI_LAB_ProcessGroundCommand()` to `FcnCode` to better align with the cFE API.
+
+**Code snips**
+https://github.com/nasa/ci_lab/blob/a5e8b4b013c59f073ca065f325e40bfebba1e8a0/fsw/src/ci_lab_app.c#L225-L232
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/ci_lab/issues/127
+"Fix #125, Standardize CI_LAB function names","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #125
+  - Standardize naming of CI_LAB functions to match predominant cFS style.
+  - Updates the list of command codes in `ci_lab_msg.h` in order for CHeaderParser.py to correctly generate the full list of commands in the `CI_LAB_CMD` binary file.
+
+Also requires a change to the [cfe startup script](https://github.com/nasa/cFE/pull/2168)
+A few files in the [Ground System](https://github.com/nasa/cFS-GroundSystem/pull/230) should also be updated to match the predominant convention.
+
+**Testing performed**
+Only GitHub CI workflow actions.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/ci_lab/pull/126
+Apply standard naming convention (CI_LAB...),"**Describe the bug**
+Copy of https://github.com/nasa/to_lab/issues/67
+There's at least one case in ci_lab as well - will scrub and ensure consistent naming convention (CI_LAB...).
+Requires a single change to the cFE startup script as well.
+A few files in the Ground System should also be updated for consistency.
+
+**Expected behavior**
+Apply standard naming pattern (CI_LAB...)
+
+**Code snips**
+https://github.com/nasa/ci_lab/blob/a5e8b4b013c59f073ca065f325e40bfebba1e8a0/fsw/src/ci_lab_app.c#L78
+![screenshot](https://user-images.githubusercontent.com/9024662/196061902-b3b75b5d-343f-47fe-8e15-9e9cfa242e16.png)
+
+**Reporter Info**
+Avi Weiss @thnkslprpt ",,https://github.com/nasa/ci_lab/issues/125
+ci_lab Integration candidate: Caelum-rc4+dev25,"**Describe the contribution**
+PR #123
+- Fix #122, Remove redundant comments
+
+PR #120 
+- Fix #119, Create CHANGELOG.md
+
+**Testing performed**
+
+ci_lab checks <https://github.com/nasa/ci_lab/pull/124/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/pull/590/checks>
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt",,https://github.com/nasa/ci_lab/pull/124
+"Fix #122, Remove redundant comments","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #122
+Removes redundant comments (incl. `/* end of function */`, `/* end if */`, function name in function header comments).
+Empty lines before the final closing brace of functions were removed as well, as they were triggering the CI checks.
+
+**Testing performed**
+None (comment changes only).
+
+**Expected behavior changes**
+No impact on behavior.
+These updates will reduce clutter and inconsistency in the code, improving readability.
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/ci_lab/pull/123
+"Redundant comments (/* end of function */, /* end if */ etc.)","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/to_lab/issues/68 and https://github.com/nasa/sample_app/issues/111
+There are quite a few redundant comments in the code, such as:
+- `/* end of function */`-type comments
+- `/* end if */`-type comments
+- function header comments which include the function name
+
+**Expected behavior**
+Remove redundant comments to reduce clutter and inconsistency in the code, and improve readability.
+
+**Reporter Info**
+@thnkslprpt ",,https://github.com/nasa/ci_lab/issues/122
+ci_lab Integration candidate: Caelum-rc4+dev23,"**Describe the contribution**
+PR #116
+- Fix #115, Remove unnecessary parentheses around return values.
+
+PR #118 
+- Fix #117, Remove 'return;' from last line of void functions.
+
+**Testing performed**
+
+ci_lab checks <https://github.com/nasa/ci_lab/pull/121/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/pull/586/checks>
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt",,https://github.com/nasa/ci_lab/pull/121
+"Fix #119, Create CHANGELOG.md","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #119
+
+**Testing performed**
+None.
+
+**Expected behavior changes**
+Minimizes unnecessary clutter in README.md
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/ci_lab/pull/120
+Use a changelog to keep track of changes instead of having them in the Readme,"Copy of https://github.com/nasa/osal/issues/552
+
+**Is your feature request related to a problem? Please describe.**
+The version history in the Readme file clutters useful information
+
+**Describe the solution you'd like**
+Move the ""version history"" from `Readme.md` to `CHANGELOG.md`
+
+**Requester Info**
+@thnkslprpt 
+",,https://github.com/nasa/ci_lab/issues/119
+"Fix #117, Remove 'return;' from last line of void functions.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #117
+Removes all cases of redundant ""return;"" statements on the last line of void functions.
+
+**Testing performed**
+None, prior to submission.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/ci_lab/pull/118
+"Remove ""return;"" from last line of void functions","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+""return;"" at last line in void function is redundant.
+Copy of https://github.com/nasa/cFE/issues/1540
+
+**Describe the solution you'd like**
+Remove
+
+**Reporter Info**
+@thnkslprpt ",,https://github.com/nasa/ci_lab/issues/117
+"Fix #115, Remove unnecessary parentheses around return values.","**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #115 
+Removes parentheses in return statements in ci_lab that return a single value/term.
+This is aligns these return statements with the predominant style of cFS.
+
+**Testing performed**
+None, prior to submission of the pull request.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/ci_lab/pull/116
+Scrub use of () in return statements,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Unnecessary parentheses around return values in ci_lab
+Copy of https://github.com/nasa/osal/issues/866
+
+**Reporter Info**
+@thnkslprpt ",,https://github.com/nasa/ci_lab/issues/115
+ci_lab Integration candidate: Caelum-rc4+dev12,"**Describe the contribution**
+PR #113
+- Fix #112, update cmake_minimum_required
+
+
+**Testing performed**
+
+ci_lab checks <https://github.com/nasa/ci_lab/pull/114/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/pull/523/checks>
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey",,https://github.com/nasa/ci_lab/pull/114
+"Fix #112, update cmake_minimum_required","**Describe the contribution**
+Fixes the warning that support for old versions will be removed
+The build does not actually expect such an old version
+
+Fixes #112
+
+**Testing performed**
+Build using CMake 3.20
+
+**Expected behavior changes**
+No more deprecation warning
+
+**System(s) tested on**
+RHEL 8
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/ci_lab/pull/113
+Update cmake mimimum required to something more recent,"**Is your feature request related to a problem? Please describe.**
+The `cmake_minimum_required` command currently lists a very old version.  In fact some of the CFE/CFS build scripts assume at least version 3.5 to support things like target-specific includes and flags.
+
+Notably, when using a recent version of cmake (e.g. 3.20) this generates a warning that says:
+
+```
+CMake Deprecation Warning at /home/jphickey/code/cfecfs/dtn/apps/ci_lab/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 2.8.12 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value or use a ...<max> suffix to tell
+  CMake that the project does not need compatibility with older versions.
+```
+
+**Describe the solution you'd like**
+Update the cmake_minimum_version to 3.5 (this would match CFE)
+
+**Describe alternatives you've considered**
+Disable warning?
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.",,https://github.com/nasa/ci_lab/issues/112
+"Fix #110, Remove registration of empty EVS filters","**Describe the contribution**
+- Fix #110
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+Initializes with an empty filter set (use EVS add filter command to add)
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/ci_lab/pull/111
+Registration of events with 0x0000 filters isn't all that helpful,"**Is your feature request related to a problem? Please describe.**
+Registration of all events with `0x0000` filters just loads the system without actually filtering anything.  Also fills the event filter buffer for the app and likely drops some since default limit is 8.
+
+**Describe the solution you'd like**
+Remove zero entries from initialization and add a filter when/if needed (or operationally via command).
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/ci_lab/issues/110
+"Fix #104, Update codeql workflow for reusable updates","**Describe the contribution**
+- Fix #104 
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just fixes codeql workflow
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC
+","CCB:Approved, CCB:FastTrack",https://github.com/nasa/ci_lab/pull/109
+"HOTFIX #101, Standardize version.h","**Describe the contribution**
+
+Per conversation in CCB:2022-03-24 and in https://github.com/nasa/cFE/commit/e5be0612ad6bf9db09ddf640306a65292abce2d5#commitcomment-69358417
+
+Ensuring REVISION number is set to 99 and MISSION_REV = 0xFF
+
+**Testing performed**
+Text and documentation only
+
+**Expected behavior changes**
+No behavior change
+
+**System(s) tested on**
+n/a
+
+**Additional context**
+https://github.com/nasa/cFE/commit/e5be0612ad6bf9db09ddf640306a65292abce2d5#commitcomment-69358417
+
+**Third party code**
+none
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Gerardo E. Cruz-Ortiz, NASA",,https://github.com/nasa/ci_lab/pull/108
+ci_lab Integration candidate: Caelum-rc4+dev7,"**Describe the contribution**
+PR #106 
+- Fix #105, Update copyright header
+
+PR #108
+- HOTFIX #101, Standardize version information
+
+
+**Testing performed**
+
+ci_lab checks <https://github.com/nasa/ci_lab/pull/107/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/445/checks>
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 
+RTEMS
+
+**Additional context**
+nasa/cFS#445
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper 
+",,https://github.com/nasa/ci_lab/pull/107
+"Fix #105, Update copyright header","**Describe the contribution**
+- Fix #105 
+
+**Testing performed**
+Documentation only, but built/ran unit tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: i5/wsl
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/ci_lab/pull/106
+Apply latest copyright header,"**Is your feature request related to a problem? Please describe.**
+Updated copyright header
+
+**Describe the solution you'd like**
+Update
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",docs,https://github.com/nasa/ci_lab/issues/105
+CodeQL Workflow Broken due to Name Change,"**Describe the bug**
+
+Merging https://github.com/nasa/cFS/pull/413 broke the components' CodeQL workflow as expected. 
+
+Need to update the codeQL workflows to match the patterns implemented in https://github.com/nasa/cFE/pull/2035
+
+**To Reproduce**
+
+See failed workflows 
+- https://github.com/nasa/ci_lab/actions/workflows/codeql-build.yml
+
+**Expected behavior**
+
+Workflow executes
+
+**Code snips**
+None
+
+**System observed on:**
+GitHub Actions
+
+**Additional context**
+None
+
+**Reporter Info**
+Gerardo E. Cruz-Ortiz NASA",continuous-integration,https://github.com/nasa/ci_lab/issues/104
+"Fix #102, Apply header guard standard","**Describe the contribution**
+- Fix #102
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/ci_lab/pull/103
+Apply header guard standard formatting,"**Is your feature request related to a problem? Please describe.**
+Nonstandard guard used
+
+**Describe the solution you'd like**
+Apply standard
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/ci_lab/issues/102
+ci_lab Integration candidate: Caelum+dev1,"**Describe the contribution**
+
+
+PR #95 from jphickey/fix-94-messagetype-conv
+- Fix nasa#94, Use CFE_MSG_PTR conversion macro 
+
+**Testing performed**
+
+ci_lab Checks <https://github.com/nasa/ci_lab/pull/101/checks>
+cFS Bundle Checks <https://github.com/nasa/cFS/pull/390/checks>
+
+**Expected behavior changes**
+See PRs 
+
+**System(s) tested on**
+Ubuntu 18.04
+RTEMS 4.11
+RTEMS 5
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/390/>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey ",,https://github.com/nasa/ci_lab/pull/101
+"Fix #99, Reuse CodeQL, Static Analysis, and Format Check","**Describe the contribution**
+Fixes #99 
+
+**Testing performed**
+ci_lab CodeQL Reuse: https://github.com/ArielSAdamsNASA/ci_lab/actions/runs/1391936340
+ci_lab Format Check Reuse: https://github.com/ArielSAdamsNASA/ci_lab/actions/runs/1391958598
+ci_lab Static Analyis Reuse: https://github.com/ArielSAdamsNASA/ci_lab/actions/runs/1391960515
+
+**Expected behavior changes**
+PSP will reuse CodeQL, Static Analysis, and Format Checker that are held in cFS. These workflows will not work until nasa/cFS#386 is merged.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal
+",continuous-integration,https://github.com/nasa/ci_lab/pull/100
+"Reuse CodeQL, Format Checker, and Static Analysis Workflows","**Is your feature request related to a problem? Please describe.**
+When needing to change workflows, one must create an issue and PR for each submodule. This feature would reduce duplication.
+
+**Describe the solution you'd like**
+To reuse workflows, the targeted workflow must include workflow_call and inputs as seen below. 
+```
+on:
+  push:
+  pull_request:
+  workflow_call:
+    inputs:
+      runs-on: 
+        description: Platform to execute on
+        type: string
+        default: ubuntu-latest
+```
+
+**Describe alternatives you've considered**
+Keep it as is. 
+
+**Additional context**
+Tested in OSAL, OSAL cFE CodeQL Reuse Build: https://github.com/ArielSAdamsNASA/osal/runs/4023159610?check_suite_focus=true
+Tested in OSAL, OSAL CodeQL Reuse Build: https://github.com/ArielSAdamsNASA/osal/actions/runs/1390702434
+cFS CodeQL Reuse: https://github.com/ArielSAdamsNASA/cFS-JSF-Rules/actions/runs/1390561827
+
+**Requester Info**
+Ariel Adams, ASRC Federal",continuous-integration,https://github.com/nasa/ci_lab/issues/99
+"Workflows overly restrictive run, missing duplicate check, format job name incorrect, remove --quiet from cppcheck","**Is your feature request related to a problem? Please describe.**
+Branch restriction unnecessary:
+https://github.com/nasa/ci_lab/blob/12b8cdd5cc8945fe4dfd4423e57f48114f1948d8/.github/workflows/codeql-build.yml#L3-L7
+
+Branch restriction unnecessary, missing duplicate check, incorrect job name:
+https://github.com/nasa/ci_lab/blob/12b8cdd5cc8945fe4dfd4423e57f48114f1948d8/.github/workflows/format-check.yml#L4-L12
+
+Branch restriction unnecessary, missing duplicate check:
+https://github.com/nasa/ci_lab/blob/12b8cdd5cc8945fe4dfd4423e57f48114f1948d8/.github/workflows/static-analysis.yml#L4-L12
+
+Remove `--quiet` flag to report files processed:
+https://github.com/nasa/ci_lab/blob/12b8cdd5cc8945fe4dfd4423e57f48114f1948d8/.github/workflows/static-analysis.yml#L26
+
+**Describe the solution you'd like**
+Fix
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","duplicate, continuous-integration",https://github.com/nasa/ci_lab/issues/98
+Overrun for CFE_MSG_Message_t ,"**Describe the bug**
+Out-of-bounds access (OVERRUN). Overrunning struct type CFE_MSG_Message_t of 16 bytes by passing it to a function which accesses it at byte offset 39 using argument 40UL.
+
+**Expected behavior**
+Fix overrun
+
+**Code snips**
+https://github.com/nasa/ci_lab/blob/12b8cdd5cc8945fe4dfd4423e57f48114f1948d8/fsw/src/ci_lab_app.c#L189
+
+**System observed on:**
+Coverity: https://scan.coverity.com/projects/arielsadamsnasa-cfs-jsf-rules?tab=overview
+
+**Reporter Info**
+Ariel Adams, ASRC Federal
+",enhancement,https://github.com/nasa/ci_lab/issues/97
+Check Return Value of CFE_SB_CreatePipe ,"**Describe the bug**
+Calling CFE_SB_CreatePipe without checking return value (as is done elsewhere 9 out of 10 times).
+
+**Expected behavior**
+Check return value of CFE_SB_CreatePipe. Should also check return value of CFE_EVS_Register and CFE_SB_Subscribe as seen in sample_app.
+
+**Code snips**
+https://github.com/nasa/ci_lab/blob/12b8cdd5cc8945fe4dfd4423e57f48114f1948d8/fsw/src/ci_lab_app.c#L149-L154
+
+**System observed on:**
+Coverity: https://scan.coverity.com/projects/arielsadamsnasa-cfs-jsf-rules?tab=overview
+
+**Additional context**
+Examples of how return value is checked for CFE_SB_CreatePipe:
+
+https://github.com/nasa/cFE/blob/d03e24e675fcd253222e40a5c544920e03854c5f/modules/tbl/fsw/src/cfe_tbl_task.c#L182-L187
+
+https://github.com/nasa/cFE/blob/5e41330979586bcdb113f491ea6c38ff9975fc72/modules/time/fsw/src/cfe_time_task.c#L181-L186
+
+https://github.com/nasa/sample_app/blob/d009197df721af1f430d173584fa64a507a94a13/fsw/src/sample_app.c#L172-L177
+
+**Reporter Info**
+Ariel Adams, ASRC Federal
+","enhancement, good first issue",https://github.com/nasa/ci_lab/issues/96
+"Fix #94, Use CFE_MSG_PTR conversion macro","**Describe the contribution**
+Updates conversions to CFE_Message_t to use the MSG macro
+This also uses consistent naming - TelemetryHeader rather than TlmHeader
+
+Fixes #94
+
+**Testing performed**
+Build and sanity check CFE, run all tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Ubuntu
+
+**Additional context**
+Depends on nasa/cfe#1966
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/ci_lab/pull/95
+Update CFE_MSG_Message_t conversions to use CFE_MSG_PTR macro,"**Is your feature request related to a problem? Please describe.**
+In nasa/cfe#1966 introduces a `CFE_MSG_PTR` macro which converts a cmd/tlm header object to a `CFE_MSG_Message_t*` pointer, which is intended to be used rather than assuming a specific member name (e.g. `.Msg`).
+
+**Describe the solution you'd like**
+Use the macro instead of assuming `.Msg` member name.
+
+**Additional context**
+Required when using generated headers, as the member name may not be ""Msg"" or may be further encapsulated.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+",enhancement,https://github.com/nasa/ci_lab/issues/94
+ci_lab Integration candidate: 2021-09-21,"**Describe the contribution**
+
+PR #92
+
+- Fix #91, apply CFE_SB_ValueToMsgId where required
+
+
+**Testing performed**
+ci_lab Checks <https://github.com/nasa/ci_lab/pull/93/checks>
+cFS Bundle Checks <https://github.com/nasa/cFS/pull/359/checks>
+
+**Expected behavior changes**
+See PR
+
+**System(s) tested on**
+Ubuntu
+RTEMS (qemu)
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/359
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey ",,https://github.com/nasa/ci_lab/pull/93
+"Fix #91, apply CFE_SB_ValueToMsgId where required","**Describe the contribution**
+Whenever an integer value is used as a CFE_SB_MsgId_t, it should go through the explicit conversion using the supplied inline
+function.
+
+Fixes #91
+
+**Testing performed**
+Build and sanity check CFE
+
+**Expected behavior changes**
+Allows CI_LAB to be built when CFE_SB_MsgId_t is an opaque/non-integer type.
+None with default config (where CFE_SB_MsgId_t is an integer type).
+
+**System(s) tested on**
+Ubuntu
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.",CCB:Approved,https://github.com/nasa/ci_lab/pull/92
+Improve consistency in application of CFE_SB_MsgIdToValue/ValueToMsgId conversions,"**Is your feature request related to a problem? Please describe.**
+A `CFE_SB_MsgId_t` value, like other IDs, is supposed to be a unique type/opaque value that identifies a message within the SB application context.   Although it is currently implemented using an integer (`uint32` specifically) application should not assume this.  Instead, a set of macros and inline conversion functions (CFE_SB_MsgIdToValue and CFE_SB_ValueToMsgId) are provided for when the application needs to interpret the value as an integer for a valid purpose.
+
+**Describe the solution you'd like**
+Add conversions where they are currently missing
+
+**Additional context**
+See nasa/cfe#1945 for full info.  A separate issue+PR will be submitted for each framework app.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/ci_lab/issues/91
+Typos in documentation,"**Is your feature request related to a problem? Please describe.**
+Found typos md files and code comments
+
+**Describe the solution you'd like**
+ Correct grammar and spelling errors
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Retroactive issue for #89",,https://github.com/nasa/ci_lab/issues/90
+"Fix #90, Correct typos in SECURITY.md and ci_lab_app.c","**Describe the contribution**
+
+- Fix #90
+
+Fixed a couple of minor typos in the _text_ of:
+- SECURITY.md
+  
+...and in the _comments_ of:
+- fsw/src/ci_lab_app.c
+  
+
+
+**Testing performed**
+None (non-executable code).
+
+**Expected behavior changes**
+None (minor Markdown doc and comments changes).
+
+**System(s) tested on**
+n/a
+
+**Additional context**
+n/a
+
+**Code contributions**
+n/a",community,https://github.com/nasa/ci_lab/pull/89
+ci_lab Integration candidate: 2021-06-22,"## Context
+
+Part of <https://github.com/nasa/cfs/issues/270>
+
+## Author
+
+@ArielSAdamsNASA 
+
+## Description 
+
+### PR #87
+
+Fix #86, Implement Coding Standard Rules in CodeQL
+
+
+
+
+
+
+",,https://github.com/nasa/ci_lab/pull/88
+"Fix #86, Implement Coding Standard Rules in CodeQL","**Describe the contribution**
+Fix #86 
+Added the duplicate jobs action to avoid duplicate jobs from running. Added a separate job for coding standard queries. Created two configuration files, one for default queries and security queries and another for jpl rules. Removed push on main branch so when users push code to their forked repos, the workflow runs. Added main branch to pull request, so CodeQL runs on pull request made in the main branch. This is the same logic used in the cFS bundle repo. 
+
+**Testing performed**
+Testing done on cFE forked repository, ArielSAdamsNASA/cFE which used the same files, but with different configuration paths.
+
+Jobs were failing when the entire path of the configuration file were not used. Have to use nasa/cFE/.github/codeql/config-name@branch-name. The branch must be included in the path. 
+
+The CodeQL analysis workflow will fail for this PR since it is calling for a configuration file in main the main branch. It will not work until the configuration files are merged into main. 
+
+In the screenshot is the same workflow as in this pull request, but the configuration path is changed to the forked repo and tested branch. 
+
+![image](https://user-images.githubusercontent.com/69638935/119024913-36fa2580-b969-11eb-9aac-ede0002804a0.png)
+
+**Expected behavior changes**
+There should be one job for security queries and one job for JPL and MISRA queries. 
+
+**Describe alternatives you've considered**
+Can allow all branches to run CodeQL for pull requests as seen in cFE and PSP instead of just the main branch like cFS. 
+
+**Third party code**
+Skip duplicate workflows license: https://github.com/fkirc/skip-duplicate-actions/blob/master/LICENSE
+
+CodeQL license: https://github.com/github/codeql-action/blob/main/LICENSE
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","CCB:Approved, continuous-integration",https://github.com/nasa/ci_lab/pull/87
+Implement Coding Standard Rules in CodeQL,"**Is your feature request related to a problem? Please describe.**
+CodeQL does not use JPL rules, which is used in the upcoming coding standard. 
+
+**Describe the solution you'd like**
+Implement JPL rules for CodeQL. Continue using the security queries, but keep them separate from the JPL results. Can use two different workflows, one for the coding standard and one for the security queries. 
+
+**Describe alternatives you've considered**
+Might be able to use one workflow, as long as the results can be easily identified as a coding standard issue or security issue. 
+
+**Additional context**
+JPL queries are found here: https://github.com/github/codeql/tree/main/cpp/ql/src/JPL_C
+
+**Requester Info**
+Ariel Adams, ASRC Federal ",continuous-integration,https://github.com/nasa/ci_lab/issues/86
+ci_lab Integration candidate: 2021-03-30,"## Describe the contribution
+Fix #82, remove app registration 
+Fix #73, use zero copy API 
+
+
+## Testing performed
+ci_lab checks <https://github.com/nasa/ci_lab/pull/85/checks>
+bundle checks <https://github.com/nasa/cFS/pull/227/checks>
+
+## Expected behavior changes
+
+### PR #83 
+Removes unnecessary call to `CFE_ES_RegisterApp()` since app registration is done automatically.
+
+### PR #84 
+Demonstrates the use of the Zero Copy API. Adds a step that obtains a buffer prior to calling OS_SocketRecvFrom then transmits that same buffer directly rather than copying it.
+
+
+
+## Additional context
+Part of <https://github.com/nasa/cFS/pull/227>
+
+## Third party code
+
+None
+
+## Authors
+@jphickey 
+",,https://github.com/nasa/ci_lab/pull/85
+"Fix #73, use zero copy API","**Describe the contribution**
+Updates CI_LAB to obtain a buffer prior to calling `OS_SocketRecvFrom`, and then transmit that same buffer directly rather than copying it.
+
+This demonstrates use of the Zero Copy API.
+
+Fixes #73
+
+**Testing performed**
+Build CFE along with nasa/cfe#1257 and send various commands using ""cmdUtil"".  Confirm that commands were received correctly.
+
+**Expected behavior changes**
+Internal change only - No impact to external behavior.
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Requires nasa/cfe#1257 as prerequisite
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/ci_lab/pull/84
+"Fix #82, remove app registration","**Describe the contribution**
+It is not necessary for applications to register themselves, this is all done automatically.
+
+Fixes #82 
+
+**Testing performed**
+Build and sanity check, run unit tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Needs to be merged with nasa/cfe#1250
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:FastTrack,https://github.com/nasa/ci_lab/pull/83
+Remove references to CFE_ES_RegisterApp,"**Is your feature request related to a problem? Please describe.**
+As part of nasa/osal#853 and nasa/cfe#1215 the registration APIs are getting fully deprecated and removed.  Applications no longer need to call OS_TaskRegister, CFE_ES_RegisterApp, or CFE_ES_RegisterChildTask.
+
+**Describe the solution you'd like**
+Remove references to these functions.
+
+**Additional context**
+Will be required with nasa/osal#853 and nasa/cfe#1215
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/ci_lab/issues/82
+"Fix #80, Add Contributing Guide","**Describe the contribution**
+Fix #80
+Added a contributing guide that links to the main cFS contributing guide. 
+
+**Expected behavior changes**
+Users should be able to view the contributing guide contents easily from the ci_lab repo. 
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","CCB:FastTrack, docs",https://github.com/nasa/ci_lab/pull/81
+Add Contributing Guide,"**Is your feature request related to a problem? Please describe.**
+Add a contributing guide for the OSAL repo. 
+
+**Describe the solution you'd like**
+Create a contributing guide markdown file. In the guide, add a link to the ci_lab contributing guide. 
+
+**Requester Info**
+Ariel Adams, ASRC Federal
+",docs,https://github.com/nasa/ci_lab/issues/80
+ HOTFIX Integration candidate: 2021-03-12 #215 ,"**Describe the contribution**
+Bump to v2.4.0-rc1+dev30 and update ReadMe",,https://github.com/nasa/ci_lab/pull/79
+"Fix #77, use cfe.h instead of individual headers","**Describe the contribution**
+Use `cfe.h` in ci_lab rather than the individual component-specific headers.
+
+The all-inclusive header should give everything needed, and be more future proof in case component names ever need to change.
+
+Fixes #77 
+
+**Testing performed**
+Build and sanity check CFE
+
+**Expected behavior changes**
+No impact
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Needed for nasa/cfe#1203
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:FastTrack,https://github.com/nasa/ci_lab/pull/78
+"Applications should use all-inclusive ""cfe.h"" header","**Is your feature request related to a problem? Please describe.**
+The CFE documentation recommends that applications use the supplied `cfe.h` header which in turn provides all CFE core, PSP, and OSAL APIs as well as mission config.
+
+Because some header names are getting changed in nasa/cfe#1203, including the headers individually becomes a problem.  
+
+**Describe the solution you'd like**
+Change to using the `cfe.h` all-inclusive header, which makes ci_lab work with the new directory structure, and should avoid future issues, and it matches what the documentation recommends.
+
+**Describe alternatives you've considered**
+Change `cfe_msg_api.h` -> `cfe_msg.h`
+
+**Additional context**
+Needed for nasa/cfe#1203
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/ci_lab/issues/77
+ci_lab Integration candidate: 2021-03-05,"**Describe the contribution**
+PR #75
+
+**Testing performed**
+https://github.com/nasa/cFS/pull/214/checks
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+CI
+
+**Additional context**
+NA
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@ArielSAdamsNASA ",,https://github.com/nasa/ci_lab/pull/76
+"Fix #74, Add Testing Tools to the Security Policy","**Describe the contribution**
+Fix #74
+Updated the Security Policy to include the type of testing done for ci_lab or the cFS bundle under a new section titled ""Testing"". Provided a disclaimer that under the Apache license, liability is not provided. 
+
+Added that security reports should be emailed. 
+
+**Expected behavior changes**
+Users should now be aware of the type of testing ci_lab or the cFS bundle undergoes. 
+
+**Additional context**
+References: 
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/phpMussel/phpMussel/security/policy
+https://github.com/timberio/vector/security/policy
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal 
+","CCB:FastTrack, docs",https://github.com/nasa/ci_lab/pull/75
+Add Testing Tools to the Security Policy,"**Is your feature request related to a problem? Please describe.**
+Users are unaware of how cFS/ci_lab is tested. By providing this information, transparency is provided to the community which promotes trust. 
+
+**Describe the solution you'd like**
+The security policy should inform users what tools are being used to test cFS/ci_lab while being cautious of liability issues. To do so, we can state explicitly that our software does not provide liability under the Apache license. The security policy should inform users that they may view the LGTM results. The policy would state that the alerts from LGTM may not be accurate, since they cannot be dismissed.  
+
+Add that security report should be emailed. 
+
+**Additional context**
+References: https://github.com/thanos-io/thanos/security/policy
+
+**Requester Info**
+Ariel Adams, ASRC Federal 
+",docs,https://github.com/nasa/ci_lab/issues/74
+Refactor ingest to utilize zero copy (can reduce two copy to one),"**Is your feature request related to a problem? Please describe.**
+CI copies the data into a local buffer and then uses CFE_SB_TransmitMsg (which does a second copy into the SB buffer):
+https://github.com/nasa/ci_lab/blob/296d12cde4f90d112d1578cb584ddae200a2d282/fsw/src/ci_lab_app.c#L359-L374
+
+**Describe the solution you'd like**
+Could use zero copy to get a buffer, write directly to the buffer and CFE_SB_TransmitBuffer (single copy)
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+We don't have a functional example of zero copy, just documentation.  This would support user request for a working example as well as improve performance.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC (from stakeholder request)",enhancement,https://github.com/nasa/ci_lab/issues/73
+"Fix #71, Add CodeQL analysis to workflow","**Describe the contribution**
+Fix #71 - adds CodeQL analysis
+
+Differences from bundle - path theoretically limited to ci_lab, has timeout, and ""security and quality"", and only does the build (run not necessary for codeql analysis)
+
+**Testing performed**
+Ran on fork
+
+**Expected behavior changes**
+Adds Code QL analysis on push to main and pull requests (to main)
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:FastTrack, continuous-integration",https://github.com/nasa/ci_lab/pull/72
+Add CodeQL analysis to workflow,"**Is your feature request related to a problem? Please describe.**
+CodeQL analysis not implemented in submodules
+
+**Describe the solution you'd like**
+Add so alerts are generated on pull requests to submodules
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+CodeQL is run at the bundle (nasa/cFS) level, but link to code in submodules doesn't work.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, continuous-integration, security",https://github.com/nasa/ci_lab/issues/71
+"Fix #69, Add static analysis and format check","**Describe the contribution**
+Fix #69 - adds static analysis and format check into github workflow, includes badges in readme
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+Basic CI works again
+
+**System(s) tested on**
+CI
+
+**Additional context**
+Could add release/OMIT_DEPRECATED build, but this would break when/if there are cross-repo dependent changes.  Does get checked during merge processing as a bundle, and can be checked by pushing a test branch to cFS so it's debatable if it's worth implementing locally.
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, continuous-integration",https://github.com/nasa/ci_lab/pull/70
+CI updates - add static analysis and format in workflow,"**Is your feature request related to a problem? Please describe.**
+Travis-CI not transitioned to github actions
+
+**Describe the solution you'd like**
+Transition CI
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","enhancement, continuous-integration",https://github.com/nasa/ci_lab/issues/69
+ci_lab Integration candidate: 2021-01-19,"**Describe the contribution**
+
+Fix #66, Create Security Policy
+
+**Testing performed**
+See https://github.com/nasa/cFS/pull/177/checks
+
+**Expected behavior changes**
+PR #67 -Documentation: Add `Security.md` with instructions on reporting vulnerabilities
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/177
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@ArielSAdamsNASA ",,https://github.com/nasa/ci_lab/pull/68
+"Fix #66, Create Security Policy","**Describe the contribution**
+Fix #66 
+Created a draft of a security policy markdown file for ci_lab. The purpose of a security policy is to inform users on how to submit bugs or vulnerabilities. It is ideal to include a section for supported versions.
+
+**Additional context**
+Optional sections that may be included:
+
+- What to expect security-wise such as what type of testing is done
+- Address privacy concerns
+- Supported versions
+- License
+- Known vulnerabilities
+
+References to Public Security Policies:
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/minhealthnz/nzcovidtracer-app/security/policy
+https://github.com/odoo/odoo/security/policy
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","CCB:FastTrack, security, docs",https://github.com/nasa/ci_lab/pull/67
+Implement a Security Policy,"**Describe the bug**
+Create a security policy for users on how to report security vulnerabilities.
+
+**Expected behavior**
+The security policy should instruct users on how to report security vulnerabilities and provide them additional contact information for questions and concerns.
+
+**Additional context**
+Additional sections that may be included:
+- What to expect security-wise such as what type of testing is done
+- Address privacy concerns
+- Supported versions
+- License
+- Known vulnerabilities
+
+References to Public Security Policies:
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/minhealthnz/nzcovidtracer-app/security/policy
+https://github.com/odoo/odoo/security/policy
+
+**Reporter Info**
+Ariel Adams, ASRC Federal","security, docs",https://github.com/nasa/ci_lab/issues/66
+ci_lab Integration Candidate: 2020-12-08,"**Describe the contribution**
+
+Fix #62, Apply message alignment pattern 
+
+**Testing performed**
+See <https://github.com/nasa/cFS/pull/160/checks>
+
+**Expected behavior changes**
+PR #63 - Aligns messages according to changes in cFE <https://github.com/nasa/cFE/issues/1009>. Uses the ""raw"" message cmd/tlm types in definition
+
+**System(s) tested on**
+ Ubuntu 18.04
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/160>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper ",,https://github.com/nasa/ci_lab/pull/65
+Check message length vs bytes received before publishing,"**Is your feature request related to a problem? Please describe.**
+Command ingest doesn't verify message length (from header) matches bytes received.
+
+**Describe the solution you'd like**
+Verify prior to publishing to SB (stop the error at the source).
+
+**Describe alternatives you've considered**
+Leave as is - command sources should be sending one valid message per datagram
+
+**Additional context**
+None.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",bug,https://github.com/nasa/ci_lab/issues/64
+"Fix #62, Apply message alignment pattern","**Describe the contribution**
+Fix #62 (updates related to nasa/cFE#1009, implementing a consistent message alignment pattern)
+- Use CFE_SB_Buffer_t for receiving and casting to command types
+- Use CFE_MSG_CommandHeader_t and CFE_MSG_TelemetryHeader_t in
+  comamnd and telemetry type definitions
+- Use CFE_SB_TransmitMsg_t to copy the command and telemetry
+  into a CFE_SB_Buffer_t and send it where needed
+- Avoids need to create send buffers within the app (or union
+  the packet types with CFE_SB_Buffer_t)
+- Eliminates references to CFE_SB_CmdHdr_t and CFE_SB_TlmHdr_t
+  that formerly enforced alignment since these had potential
+  to change the actual packet sizes
+- No need to cast to CFE_MSG_Message_t anywhere since it's
+  available in the CFE_SB_Buffer_t union
+
+**Testing performed**
+Normal build, tested cmd/tlm interface and noops
+
+**Expected behavior changes**
+None.
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+See nasa/cFE#1009
+
+**Third party code**
+None.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/ci_lab/pull/63
+Update for suggested alignment enforcement pattern (nasa/cFE#1009),"**Is your feature request related to a problem? Please describe.**
+See nasa/cFE#1009, inconsistent pattern
+
+**Describe the solution you'd like**
+Match suggestion in nasa/cFE#1009, use the ""raw"" message cmd/tlm types in definition.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+nasa/cFE#1009
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/ci_lab/issues/62
+"Fix #59, Remove non-portable OS_PACK","**Describe the contribution**
+Fix #59 - removes OS_PACK (not portable)
+
+**Testing performed**
+Didn't confirm offsets, but checked size before and after and there was no change (36).  cFS-GroundSystem doesn't display the message, but passed unit tests and ran a few commands through the system.
+
+**Expected behavior changes**
+No impact, but removes undesirable pattern
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+Will update other patterns to match #1009 in a separate commit/PR.
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:FastTrack,https://github.com/nasa/ci_lab/pull/61
+Integration Candidate 2020-11-10,"**Describe the contribution**
+Fix #57, Use MSG APIs
+Fix #59, Remove non-portable OS_PACK
+
+**Testing performed**
+Bundle CI on astrogeco: https://travis-ci.com/github/astrogeco/cFS/builds/201769124 
+
+**Expected behavior changes**
+
+PR #58 -  Replaces deprecated SB API's with MSG
+
+PR #61 - No behavior impact, removes undesirable pattern use of `OS_PACK`
+
+**System(s) tested on**
+Ubuntu CI
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/156
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper ",,https://github.com/nasa/ci_lab/pull/60
+Remove use of OS_PACK,"**Is your feature request related to a problem? Please describe.**
+OS_PACK shouldn't be used.
+
+**Describe the solution you'd like**
+Remove it.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+nasa/osal#644
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",bug,https://github.com/nasa/ci_lab/issues/59
+"Fix #57, Use MSG APIs","**Describe the contribution**
+Replaces deprecated SB API's with MSG
+Fix #57
+
+**Testing performed**
+Built and ran, enabled telemetry, checked noops
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+nasa/cFE#777
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/ci_lab/pull/58
+Remove dependencies on deprecated SB APIs,"**Is your feature request related to a problem? Please describe.**
+SB APIs deprecated in nasa/cFE#777
+
+**Describe the solution you'd like**
+Update to use MSG module.
+
+**Describe alternatives you've considered**
+None.
+
+**Additional context**
+None.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/ci_lab/issues/57
+Integration candidate 2020-10-13,"**Describe the contribution**
+Fix #54 
+
+**Testing performed**
+See Bundle PR - https://github.com/nasa/cFS/pull/147/checks
+
+**Expected behavior changes**
+
+PR #55 -  Update the SocketID field to be `osal_id_t` instead of uint32
+
+**System(s) tested on**
+Ubuntu CI
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/147>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey 
+",,https://github.com/nasa/ci_lab/pull/56
+"Fix #54, Update CI_Lab to use osal_id_t","**Describe the contribution**
+Update the SocketID field to be `osal_id_t` instead of `uint32`
+
+Fixes #54 
+
+**Testing performed**
+Build and sanity test CFE
+
+**Expected behavior changes**
+None.
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+This makes it consistent with other modules
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/ci_lab/pull/55
+Update CI_LAB to use osal_id_t typedef,"**Is your feature request related to a problem? Please describe.**
+CI_LAB is using `uint32` type to hold its OSAL socket ID.
+
+**Describe the solution you'd like**
+Should use the `osal_id_t` typedef instead.
+
+**Additional context**
+Part of ongoing effort to update all framework code to use the typedef for OSAL IDs.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/ci_lab/issues/54
+"Close #51, Add buildnumber and baseline","**Describe the contribution**
+Close #51 
+
+**Testing performed**
+Bundle test - https://github.com/astrogeco/cFS/runs/972139876
+
+**Expected behavior changes**
+Version reporting uses version string macro and reports development versions build number. Development version display shows up as
+```
+EVS Port1 42/1/CI_LAB_APP 3: CI Lab Initialized. CI Lab App DEVELOPMENT BUILD v2.3.0+dev36, Last Official Release: v2.3.0
+```
+
+**System(s) tested on**
+Augmented [GCC Docker Image](https://github.com/docker-library/gcc/blob/36c1ff6d7b44428b35fa8b61787c76b225d8184a/10/Dockerfile)
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Gerardo E. Cruz-Ortiz, NASA-GSFC",CCB:FastTrack,https://github.com/nasa/ci_lab/pull/53
+Report version when responding to NoOp Comand to match Sample App template,"**Is your feature request related to a problem? Please describe.**
+The NoOp command response in CI_Lab is currently 
+
+```
+    CFE_EVS_SendEvent(CI_LAB_COMMANDNOP_INF_EID, CFE_EVS_EventType_INFORMATION, ""CI: NOOP command"");
+```
+
+While sample app and others usually include the app version as a response.
+
+**Describe the solution you'd like**
+Use the NoOp response template provided in ci_lab
+
+**Describe alternatives you've considered**
+Change the template so NoOps do not respond with the version. 
+
+OR
+
+Create and Enforce a NoOp API at the cFE level.
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz, NASA-GSFC
+",enhancement,https://github.com/nasa/ci_lab/issues/52
+Add Build name and Build number to version.h,"**Is your feature request related to a problem? Please describe.**
+Need a better way to describe versions during development
+
+**Describe the solution you'd like**
+Add Build name and Build number to version.h
+As discussed, we will add a a build name string and a continuously incrementing build number to `version.h`
+
+**Additional context**
+See notes from CCB: <https://github.com/nasa/cFS/wiki/Community-CCB-Agenda:-July-01-2020>
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz, NASA-GSFC
+",enhancement,https://github.com/nasa/ci_lab/issues/51
+Integration Candidate: 2020-05-27,"**Describe the contribution**
+Fix #48
+
+**Testing performed**
+https://github.com/nasa/cFS/pull/96/checks
+
+**Expected behavior changes**
+PR #49 - Replace references to `ccsds.h` types with the `cfe_sb.h`-provided type. 
+
+**System(s) tested on**
+Ubuntu:Bionic
+
+**Additional context**
+Part of nasa/cFS#96
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+ Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/ci_lab/pull/50
+"Fix #48, remove references to CCSDS types","**Describe the contribution**
+Replace references to `ccsds.h` types with the `cfe_sb.h`-provided type. 
+
+Fixes #48
+
+**Testing performed**
+Build and sanity check CFE, run all unit tests
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+
+","enhancement, CCB:FastTrack",https://github.com/nasa/ci_lab/pull/49
+"Remove references to ""CCSDS"" structures","**Is your feature request related to a problem? Please describe.**
+Applications should NOT refer to the ""CCSDS"" data types and macros, as there should be no assumption of a particular message framing type at this level.
+
+**Describe the solution you'd like**
+Use the abstract types provided in `cfe_sb.h` rather than directly using `ccsds.h` types.
+
+**Additional context**
+Related to nasa/cfe#554
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/ci_lab/issues/48
+Integration Candidate COMBINED 2020-04-29 and 2020-05-06,"**Describe the contribution**
+Fixes #45
+
+**Testing performed**
+See PRs
+Bundle CI: https://travis-ci.com/github/nasa/cFS/builds/165726730
+
+**Expected behavior changes**
+PR #46 -  Apply the CFE_SB_MsgIdToValue() and CFE_SB_ValueToMsgId() routines where compatibility with an integer MsgId is necessary - syslog prints, events, compile-time MID #define values.
+
+**System(s) tested on**
+See PRs
+
+**Additional context**
+Part of nasa/cfs#83
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+ Joseph Hickey, Vantage Systems, Inc.",,https://github.com/nasa/ci_lab/pull/47
+"Fix #45, Opaque CFE_SB_MsgId_t values","**Describe the contribution**
+Apply the `CFE_SB_MsgIdToValue()` and `CFE_SB_ValueToMsgId()` routines where compatibility with an integer MsgId is necessary - syslog prints, events, compile-time MID `#define` values.
+
+Fixes #45 
+
+**Testing performed**
+Unit test
+Execute CFE and sanity-check normal operation - send commands to app using `cmdUtil` and confirm commands are processed normally.
+
+**Expected behavior changes**
+No impact to behavior.
+
+**System(s) tested on**
+Ubuntu 18.04 LTS, 64-bit
+
+**Additional context**
+In future versions of CFE SB the MsgId type might not be a simple integer, so this is one step in the direction of avoiding this assumption in apps.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.",CCB:Approved,https://github.com/nasa/ci_lab/pull/46
+App should treat CFE_SB_MsgId_t values as opaque,"**Is your feature request related to a problem? Please describe.**
+For compatibility going forward, code should not assume that `CFE_SB_MsgId_t` is an integer.
+
+**Describe the solution you'd like**
+When dealing with an integer, such as when printing in events/messages or for backward compatibility with MID `#define`'s, the code may use `CFE_SB_ValueToMsgId()` and `CFE_SB_MsgIdToValue()` conversion routines.  
+
+**Additional context**
+Architecturally, the `CFE_SB_MsgId_t` is supposed to be an opaque/abstract value that identifies an endpoint on the software bus routing domain.  The specific meaning of integer values is already different in an ""extended header"" (CCSDS v2) build vs. the standard header build.  Therefore apps should never make assumptions regarding the specific integer values, and all introspection of `CFE_SB_MsgId_t` values should be through the CFE SB API only.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/ci_lab/issues/45
+Integration Candidate 2020-03-18,"**Describe the contribution**
+Fix #37 
+
+**Testing performed**
+See PR #41  
+Bundle testing in CI, see https://github.com/nasa/cFS/pull/58
+
+**Expected behavior changes**
+See PR, CI_LAB changes its listening port when either using a config with multiple CPUs or using the --cpuid option to override (in pc-linux at least).
+
+**System(s) tested on**
+CI Ubuntu: Bionic
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+Gerardo E. Cruz-Ortiz, NASA-GSFC",,https://github.com/nasa/ci_lab/pull/44
+Add git clone command to setup. Separate work into a style-check stag…,"…e and an integration stage.
+
+**Describe the contribution**
+A clear and concise description of what the contribution is.
+- Include explicitly what issue it addresses [e.g. Fixes #X]
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Build steps '...'
+1. Execution steps '...'
+
+**Expected behavior changes**
+A clear and concise description of how this contribution will change behavior and level of impact.
+ - API Change: xxx (if applicable)
+ - Behavior Change: xxx (if applicable)
+ - Or no impact to behavior
+
+**System(s) tested on**
+ - Hardware: [e.g. PC, SP0, MCP750]
+ - OS: [e.g. Ubuntu 18.04, RTEMS 4.11, VxWorks 6.9]
+ - Versions: [e.g. cFE 6.6, OSAL 4.2, PSP 1.3 for mcp750, any related apps or tools]
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Full name and company/organization/center of all contributors (""Personal"" if individual work)
+- If NASA Civil Servant Employee or GSFC Contractor on SES II
+  - Address/email/phone and contract/task information (if applicable) must be on file
+  - **HAND SIGNED** Company CLA must be on file (once per release): [Company CLA](https://github.com/nasa/cFE/blob/master/docs/GSC_18128_Corp_CLA_form_1219.pdf)
+- Else if Individual
+  - **HAND SIGNED** Individual CLA must be on file (once per release): [Individual CLA](https://github.com/nasa/cFE/blob/master/docs/GSC_18128_Ind_CLA_form_1219.pdf)
+",invalid,https://github.com/nasa/ci_lab/pull/43
+Fix comment issues in recent ic-20200304 merge,"**Describe the contribution**
+Minor fixup for comments in recent merge
+
+The recent name fixes created two occurrences of `CI_LAB_Lab` inside commends which was not noticed during review.  Minor fix.
+
+**Testing performed**
+Sanity check only - Build and run, confirm no issues.
+
+**Expected behavior changes**
+None - fixes code comment issue only.
+
+**System(s) tested on**
+ - Ubuntu 18.04 LTS, 64 bit
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:FastTrack,https://github.com/nasa/ci_lab/pull/42
+"Fix #37, Offset the UDP base port per-CPU","**Describe the contribution**
+Avoid port conflicts when having more than one CPU within the same mission load CI_LAB app.  Instead of binding to the port directly, add the CPU number as an offset.  Subtract 1 so that CPU1 remains at the same port (1234 by default) and cmdUtil is not affected.
+
+NOTE: the ""cpu number"" can be overridden on the command line when using the pc-linux PSP, thereby also permitting the listen point to be tuned for each launch config, if necessary.
+
+**Testing performed**
+Build using default config, ensure no errors.
+Run FSW and test sending commands with `cmdUtil` - confirm no impact when using defaults, still listens on port 1234 as before and can send commands.
+Run FSW using `--cpuid 2` switch, confirm that listening port has changed, observing syslog trace:
+`1980-012-14:03:20.25227 CI_LAB listening on UDP port: 1235`
+Confirmed that `cmdUtil` still works to send commands if the `--port 1235` option is given.
+
+**Expected behavior changes**
+- No behavior changes in the default/example config when also running with all defaults.
+- CI_LAB changes its listening port when either using a config with multiple CPUs or using the `--cpuid` option to override (in pc-linux at least).
+
+**System(s) tested on**
+ - Ubuntu 18.04 LTS, 64 bit
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/ci_lab/pull/41
+"Fix #39, Clang-format-10 fails in Travis CI","**Describe the contribution**
+Fix #39 
+
+**Testing performed**
+Ran CI
+
+**Expected behavior changes**
+CI builds
+No more warnings in config section of travis
+
+**System(s) tested on**
+CI - Ubuntu Bionic
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Gerardo E. Cruz-Ortiz NASA/GSFC","bug, CCB:FastTrack",https://github.com/nasa/ci_lab/pull/40
+Clang-format-10 fails in Travis CI,"**Describe the bug**
+Travis CI Fails with message:
+> The command ""sudo apt-get install clang-format-10"" failed and exited with 100 during .  
+
+See https://travis-ci.com/github/nasa/ci_lab/builds/152554544
+
+Also has some warnings for deprecated tags in the YAML file:
+>  root: deprecated key sudo (The key `sudo` has no effect anymore.)
+language: unexpected sequence, using the first value (c)
+root: missing os, using the default linux 
+
+see https://travis-ci.com/github/nasa/ci_lab/jobs/296302324/config
+
+**To Reproduce**
+Force a run of current master branch in Travis CI
+
+**Expected behavior**
+CI finishes set up and works. 
+No Travis warnings
+
+
+**System observed on:**
+Travis CI, Ubuntu - Bionic
+
+**Reporter Info**
+Gerardo E. Cruz-Ortiz NASA/GSFC
+","bug, continuous-integration",https://github.com/nasa/ci_lab/issues/39
+IC 20200304,"**Describe the contribution**
+Integration candidate 20200304
+Fixes #23, #27, #34, #36, and #39 
+
+See PR #35 for more details
+
+**Testing performed**
+CI Testing only
+
+**Expected behavior changes**
+#23 - Use OSAL socket API instead of BSD sockets
+
+#27 - Drop PDU introspection code
+
+#34 - Update command and telemetry logic to match other modules and recommended conventions
+
+#36 - Collect globals as a single top-level global structure
+
+#39 - ci again runs with clang-format
+
+**System(s) tested on**
+OS: Ubuntu-Bionic
+
+**Additional context**
+See PR #35 and #40 for more details
+
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey-  Vantage Systems, Inc.
+Gerardo E. Cruz-Ortiz - NASA/GSFC
+",,https://github.com/nasa/ci_lab/pull/38
+CI LAB fails when running more than one instance on the same host,"**Is your feature request related to a problem? Please describe.**
+With a CFE project that uses more than one target (multi-cpu), it is common during development to run more than one CFE core process on the same physical machine (i.e. when simulating on native).  
+
+But CI_LAB unconditionally binds to port 1234 so if more than one of those CFE core process is running CI_LAB then it fails to bind because the port is in use.
+
+**Describe the solution you'd like**
+CI_LAB should at least modify its port number based on the CPU number from the PSP.  This would allow all cfe-core instances from the same mission to avoid conflict, and not require a custom build of CI_LAB for each CPU.
+
+**Describe alternatives you've considered**
+Containers would also theoretically solve this too but it is complicated to set up and also makes debugging more complex which is generally the objective of doing a native build in the first place.
+
+**Additional context**
+Suggest using (base_port + cpu_number) as the port to which CI_LAB binds, so each CPU gets a different port.
+
+Also suggest setting the base port to 1233 instead of the current value of 1234, so that CPU1 ends up getting the same number.  So this way the ""cmdUtil"" still works with the same default port and will go to CPU1.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",bug,https://github.com/nasa/ci_lab/issues/37
+CI_LAB should put all global variables into a global structure,"**Is your feature request related to a problem? Please describe.**
+CI_LAB has several global variables, which are inconsistently named.  Most have a `CI` prefix but the prefix should at least be `CI_LAB` to match the module name.
+
+**Describe the solution you'd like**
+All globals  should all be put into a single top-level global structure, similar to the way other modules isolate their global variables.  This consolidates everything and also provides namespace protection.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/ci_lab/issues/36
+Multiple cleanup items for CI LAB,"**Describe the contribution**
+
+Cleans up multiple aspects of the CI_LAB implementation.  Details Below.
+
+Fixes #23
+Fixes #27
+Fixes #34
+
+These change sets are submitted as a single pull request, as they have inter-dependencies between them and will trigger conflicts if presented individually.  This pull request still contains each fix as an individual commit, so each one can be independently reviewed.
+
+For #27 / commit  157aac0: PDU introspection code in CI LAB has numerous quality issues and has repeatedly been a maintenance problem, and also is of questionable usefulness.  It was agreed in the CCB to drop this feature.
+
+For #23 / commit 3ff5cc1: Use the OSAL Socket API instead of calling BSD sockets functions directly.  This is fairly straightforward.
+
+For #34 / commit 5f873e0: Update the CI_LAB local command/telemetry processing logic to match the recommended patterns used in other modules.  This applies the recommended naming conventions, message structure, and functional structure by giving each command a dedicated handler function.
+
+**Testing performed**
+Build for native for both debug/release builds, with unit tests enabled.  Confirmed normal operation of CI_LAB for command ingest by running CFE and sending commands with cmdUtil.
+
+**Expected behavior changes**
+CFDP PDU manipulation with CI LAB is no longer supported. Normal command ingest behavior does not change.
+
+**System(s) tested on**
+Ubuntu 18.04 LTS 64 bit
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.",CCB:FastTrack,https://github.com/nasa/ci_lab/pull/35
+CI_LAB should split message handlers into separate functions,"**Is your feature request related to a problem? Please describe.**
+The ""process ground command"" routine in CI_LAB processes some commands ""inline"".  This does not match the current/recommended style which is to put command handling into a separate function.
+
+**Describe the solution you'd like**
+Putting each command into a separate function is the preferred CCB style and it improves modularity of the code.
+
+**Additional context**
+All CFE core apps the sample_app all implement the preferred pattern.  CI_LAB should be consistent.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/ci_lab/issues/34
+Remove CFDP PDU introspection from CI_LAB,"**Describe the contribution**
+
+Fix #27:
+
+PDU introspection code in CI LAB has numerous quality issues and has repeatedly been a maintenance problem, and also is of questionable usefulness.
+
+It was agreed in the CCB to drop this feature.
+
+**Testing performed**
+
+Build for native platform in both debug/release config, with unit tests.  Confirmed normal operation of CI_LAB for command ingest by running CFE and sending commands with cmdUtil.
+
+**Expected behavior changes**
+CFDP PDU manipulation with CI LAB is no longer supported.   Normal command ingest behavior does not change.
+
+**System(s) tested on**
+Ubuntu 18.04 LTS 64 bit
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.",duplicate,https://github.com/nasa/ci_lab/pull/33
+fails to build in Raspbian,"**Describe the bug**
+Building ci_lab under Raspbian (a Debian variant for Raspberry Pi SBC's) fails due to alignment issues.
+
+```
+/home/pi/cFS/apps/ci_lab/fsw/src/ci_lab_app.c:53:39: error: cast increases required alignment of target type [-Werror=cast-align]
+ CFE_SB_Msg_t *     CI_IngestPointer = (CFE_SB_Msg_t *)&CI_IngestBuffer[0];
+                                       ^
+/home/pi/cFS/apps/ci_lab/fsw/src/ci_lab_app.c: In function ‘CI_ReportHousekeeping’:
+/home/pi/cFS/apps/ci_lab/fsw/src/ci_lab_app.c:297:25: error: cast increases required alignment of target type [-Werror=cast-align]
+     CFE_SB_TimeStampMsg((CFE_SB_Msg_t *)&CI_HkTelemetryPkt);
+                         ^
+/home/pi/cFS/apps/ci_lab/fsw/src/ci_lab_app.c:298:20: error: cast increases required alignment of target type [-Werror=cast-align]
+     CFE_SB_SendMsg((CFE_SB_Msg_t *)&CI_HkTelemetryPkt);
+                    ^
+/home/pi/cFS/apps/ci_lab/fsw/src/ci_lab_app.c: In function ‘CI_ProcessPDU’:
+/home/pi/cFS/apps/ci_lab/fsw/src/ci_lab_app.c:618:35: error: cast increases required alignment of target type [-Werror=cast-align]
+                     checkSumPtr = (uint32 *)PduDataPtr;
+```
+
+**To Reproduce**
+Build ci_lab on Raspbian.
+
+**Expected behavior**
+Should build without error.
+
+**System observed on:**
+Raspberry Pi Zero W
+
+**Additional context**
+Add any other context about the problem here.
+
+**Reporter Info**
+Christopher.D.Knight@nasa.gov",bug,https://github.com/nasa/ci_lab/issues/32
+Integration Candidate 20200108,"**Describe the contribution**
+Merge #28, #30
+Fix #24, fix #29
+
+**Testing performed**
+1. Checked out IC bundle
+1. Built and ran cFS unit tests and OSAL coverage (vxworks and shared)
+   1. All passed
+1. make osalguide to confirm it built
+1. Ran core-cpu1 (cFS), no errors/warnings/failures observed
+
+**Expected behavior changes**
+None - code style and enforcement
+
+**System(s) tested on**
+ - cFS Dev Server 2
+ - OS: Ubuntu 18.04
+ - Versions: IC branches
+
+**Additional context**
+N/A
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/ci_lab/pull/31
+Apply standard coding style,"**Describe the contribution**
+Fixes #29 
+
+**Testing performed**
+Standard build/run from ic-20191230 bundle (with this change), confirmed CI starts up nominally
+
+**Expected behavior changes**
+Readability
+
+**System(s) tested on:**
+ - cFS Dev Server 2
+ - OS: Ubuntu 18.04
+ - Versions: ic-20191230 versions with this branch
+
+**Additional context**
+First commit was auto changes
+2nd was hand cleanup for comment alignment
+Re-applied auto format and confirmed no differences
+
+**Contributor Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/ci_lab/pull/30
+Apply standard coding style,"**Is your feature request related to a problem? Please describe.**
+Inconsistent coding style
+
+**Describe the solution you'd like**
+Apply standard style to code (see also #24 for enforcement)
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/ci_lab/issues/29
+"Fix #24, Enforce standard style in CI","**Describe the contribution**
+Fix #24 - CI enforcement of style
+
+**Testing performed**
+See CI results - no independent testing required
+
+**Expected behavior changes**
+Style enforced, CI will fail if new pull request does not meet expected style.
+
+**System(s) tested on:**
+ - CI, requires https://github.com/nasa/cFS/pull/38 to be merged to master to work
+
+**Additional context**
+None
+
+**Contributor Info**
+Jacob Hagement - NASA/GSFC",CCB:Approved,https://github.com/nasa/ci_lab/pull/28
+Remove CFDP PDU introspection features,"**Is your feature request related to a problem? Please describe.**
+CFDP PDU introspection is old debug code.  Remove to simplify ci_lab.
+
+Also subject of recommended issues from lgtm:
+
+ci_lab_app.c
+```
+line 625 - 732:
+Switch has at least one case that is too long: 4 (37 lines)
+
+line 599:
+
+/*    OS_printf(""CI: Captured PDU with length = %d\n"",PduHdrPtr->PDataLen); */
+--
+  | This comment appears to contain commented-out code
+
+```
+
+**Requester Info**
+Anh Van, NASA Goddard
+",enhancement,https://github.com/nasa/ci_lab/issues/27
+Fix #25 and release updates,"**Describe the contribution**
+Fix #25 
+ - Updated README
+ - removed custom license document
+ - added standard Apache 2.0
+ - Updated copyright release version cFE 6.6 -> 6.7
+
+**Testing performed**
+1. Standard build, unit test and execute
+
+**Expected behavior changes**
+ - No impact to behavior
+
+**System(s) tested on:**
+ - Hardware: cFS Dev Server 2
+ - OS: Ubuntu 18.04
+ - Versions: cFE 6.7.0 related versions and OSAL 5.0.0
+
+**Contributor Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/ci_lab/pull/26
+Update copyright for cFE 6.7 release,"**Is your feature request related to a problem? Please describe.**
+Copyright update (comment change only)
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/ci_lab/issues/25
+Enforce standard coding style in CI,"**Is your feature request related to a problem? Please describe.**
+Inconsistent formatting
+
+**Describe the solution you'd like**
+Once https://github.com/nasa/cFS/pull/38 is in, enforce in CI
+
+**Describe alternatives you've considered**
+Tried `indent` but didn't support editor integration
+Settled on clang-format, requires version 10 for define alignment
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/ci_lab/issues/24
+Update to use OSAL socket API,"**Is your feature request related to a problem? Please describe.**
+Currently uses cFE supplied network_includes.h and not the abstracted OSAL calls
+
+**Describe the solution you'd like**
+Update to use OSAL
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+See osapi-os-net.h and/or OSAL API.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/ci_lab/issues/23
+Added auto build capabilities using Travis-CI,"**Describe the contribution**
+Auto build capabilities added using Travis-CI
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Verified auto build performed when new code is pushed to Github
+
+**Expected behavior changes**
+ - Auto build will be performed whenever new code is pushed to GitHub
+ 
+**System(s) tested on:**
+ - GitHub - Linux Xenial distribution
+
+**Additional context**
+A branch, specified by environment variables in the buildvars.sh file, will be checked out and this application will be build in the context of that cFS tree 
+
+**Contributor Info**
+Travis Wheatley - Emergent Space Technologies
+
+**Community contributors**
+Work performed for NASA ""Task 3015""",duplicate,https://github.com/nasa/ci_lab/pull/14
+Integration Candidate 20190906,"**Describe the contribution**
+Merge of CCB 20190904 approved commits.
+Fixes #3, fixes #4, fixes #5, fixes #7 
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Setup and build per README instructions (no build warnings observed)
+2. Start up cfe with ci_lab included by default and observed:
+```
+1980-012-14:03:20.25219 ES Startup: Loading file: /cf/ci_lab.so, APP: CI_LAB_APP
+1980-012-14:03:20.25239 ES Startup: CI_LAB_APP loaded and created
+EVS Port1 42/1/CI_LAB_APP 6: CI: RESET command
+EVS Port1 42/1/CI_LAB_APP 3: CI Lab Initialized.  Version 2.2.0.0
+```
+2. Sent tlm_enable command, observed:
+```
+EVS Port1 42/1/TO_LAB_APP 3: TO telemetry output enabled for IP 127.0.0.1
+```
+3. Verified HK packet telmetry reception, sent ES processor reset ('1') to exit cFE 
+
+**Expected behavior changes**
+A clear and concise description of how this contribution will change behavior and level of impact.
+ - Performance ID updated but no behavior updates
+
+**System(s) tested on:**
+ - cFS development server
+ - OS: Ubuntu/Linux 4.4.0-146-generic
+ - Versions: bundle rc-6.7.0
+
+**Additional context**
+None
+
+**Contributor Info**
+Jacob Hageman/NASA-GSFC
+
+**Community contributors**
+CLA on file.
+",,https://github.com/nasa/ci_lab/pull/12
+"Fix #3, Change Perfid","changed to 32, 33",CCB:Approved,https://github.com/nasa/ci_lab/pull/11
+"Fix #5, Remove Classic Build",remove for_build folder.,CCB:Approved,https://github.com/nasa/ci_lab/pull/10
+"Fix #4, Remove MKS flags",remove MKS flags,CCB:Approved,https://github.com/nasa/ci_lab/pull/9
+"Replace deprecated cfe refs, #7","Fixes #7
+
+Submitted by @skliper , CLA on file
+
+Testing:
+- make ENABLE_UNIT_TESTS=TRUE SIMULATION=native prep
+- Built on linux with -DCFE_OMIT_DEPRECATED_6_6 with no build errors
+- make test passed (except osal_timer_UT which occasionally fails on linux)
+- cFS executes and loads apps with no issues","enhancement, CCB:Approved",https://github.com/nasa/ci_lab/pull/8
+Remove dependencies on deprecated cFE elements,"With:
+`cfe/CMakeLists.txt:add_definitions(""-D_ENHANCED_BUILD_ -DCFE_OMIT_DEPRECATED_6_6"")`
+build errors:
+```
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c: In function ‘CI_Lab_AppMain’:
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:115:24: error: ‘CFE_ES_APP_RUN’ undeclared (first use in this function)
+     uint32 RunStatus = CFE_ES_APP_RUN;
+                        ^
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:115:24: note: each undeclared identifier is reported only once for each function it appears in
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c: In function ‘CI_TaskInit’:
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:171:22: error: ‘CFE_EVS_BINARY_FILTER’ undeclared (first use in this function)
+                      CFE_EVS_BINARY_FILTER);
+                      ^
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:179:51: error: ‘CFE_EVS_ERROR’ undeclared (first use in this function)
+         CFE_EVS_SendEvent(CI_SOCKETCREATE_ERR_EID,CFE_EVS_ERROR,""CI: create soc
+                                                   ^
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:218:44: error: ‘CFE_EVS_INFORMATION’ undeclared (first use in this function)
+     CFE_EVS_SendEvent (CI_STARTUP_INF_EID, CFE_EVS_INFORMATION,
+                                            ^
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c: In function ‘CI_ProcessCommandPacket’:
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:258:50: error: ‘CFE_EVS_ERROR’ undeclared (first use in this function)
+             CFE_EVS_SendEvent(CI_COMMAND_ERR_EID,CFE_EVS_ERROR,
+                                                  ^
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c: In function ‘CI_ProcessGroundCommand’:
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:284:53: error: ‘CFE_EVS_INFORMATION’ undeclared (first use in this function)
+             CFE_EVS_SendEvent(CI_COMMANDNOP_INF_EID,CFE_EVS_INFORMATION,
+                                                     ^
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c: In function ‘CI_ResetCounters’:
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:367:46: error: ‘CFE_EVS_INFORMATION’ undeclared (first use in this function)
+     CFE_EVS_SendEvent(CI_COMMANDRST_INF_EID, CFE_EVS_INFORMATION,
+                                              ^
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c: In function ‘CI_ModifyFileSizeCmd’:
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:400:52: error: ‘CFE_EVS_DEBUG’ undeclared (first use in this function)
+     CFE_EVS_SendEvent(CI_MOD_PDU_FILESIZE_CMD_EID, CFE_EVS_DEBUG,
+                                                    ^
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c: In function ‘CI_CorruptChecksumCmd’:
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:426:52: error: ‘CFE_EVS_DEBUG’ undeclared (first use in this function)
+     CFE_EVS_SendEvent(CI_CORRUPT_CHECKSUM_CMD_EID, CFE_EVS_DEBUG,
+                                                    ^
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c: In function ‘CI_DropPDUCmd’:
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:484:44: error: ‘CFE_EVS_DEBUG’ undeclared (first use in this function)
+     CFE_EVS_SendEvent(CI_DROP_PDU_CMD_EID, CFE_EVS_DEBUG, ""CI: Drop PDU\n"");
+                                            ^
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c: In function ‘CI_CapturePDUsCmd’:
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:508:29: error: ‘CFE_SB_HIGHEST_VALID_MSGID’ undeclared (first use in this function)
+     if (CmdPtr->PDUMsgID <= CFE_SB_HIGHEST_VALID_MSGID)
+                             ^
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:514:48: error: ‘CFE_EVS_DEBUG’ undeclared (first use in this function)
+       CFE_EVS_SendEvent(CI_CAPTUREPDU_CMD_EID, CFE_EVS_DEBUG,
+                                                ^
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:520:51: error: ‘CFE_EVS_ERROR’ undeclared (first use in this function)
+       CFE_EVS_SendEvent(CI_INVALID_MSGID_ERR_EID, CFE_EVS_ERROR,
+                                                   ^
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c: In function ‘CI_StopPDUCaptureCmd’:
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:546:53: error: ‘CFE_EVS_DEBUG’ undeclared (first use in this function)
+       CFE_EVS_SendEvent(CI_STOP_PDUCAPTURE_CMD_EID, CFE_EVS_DEBUG,
+                                                     ^
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:570:47: error: ‘CFE_EVS_ERROR’ undeclared (first use in this function)
+       CFE_EVS_SendEvent(CI_NOCAPTURE_ERR_EID, CFE_EVS_ERROR,
+                                               ^
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c: In function ‘CI_VerifyCmdLength’:
+/home/jhageman/cFS/cFS-dev/apps/ci_lab/fsw/src/ci_lab_app.c:835:43: error: ‘CFE_EVS_ERROR’ undeclared (first use in this function)
+         CFE_EVS_SendEvent(CI_LEN_ERR_EID, CFE_EVS_ERROR,
+                                           ^
+```",enhancement,https://github.com/nasa/ci_lab/issues/7
+Enhanced version reporting,"Use CI_LAB_VERSION from cfecfs_version_info.h if available and report on NOOP and startup (along with classic version numbering""
+
+Classic version numbering can then just be updated on release, vs for every commit.",enhancement,https://github.com/nasa/ci_lab/issues/6
+Remove classic build support,Only supporting cmake build going forward.,"enhancement, good first issue",https://github.com/nasa/ci_lab/issues/5
+Remove old MKS flags from comments,"$Id, $Date, $Revision, $Log, etc all no longer useful and slightly misleading since they don't get updated.","enhancement, good first issue",https://github.com/nasa/ci_lab/issues/4
+Confirm valid PERF_ID use,"Originated by abrown4 (69 on babelfish):
+
+cFE reserves 0-31 perf-ids.  Need to confirm ci_lab does not use these.",enhancement,https://github.com/nasa/ci_lab/issues/3
+Split out ci_lab platform config from app header,"Originated by abrown4 (59 on babelfish):
+
+The platform-specific config (that I need to change for a deployment) is in the ci_lab_app.h, and thus common to all ci_lab builds. However, I want to build and deploy multiple cfs instances, each with a ci_lab. [It _is_ simple and handy.]
+Propose moving the platform-specific info into ci_lab_platform_cfg.h, like the other apps.
+",enhancement,https://github.com/nasa/ci_lab/issues/2
+"CI LAB ""PDUMsgID"" checking depends on SB macro","Originated by jphickey (22 on babelfish): 
+
+The CI LAB application attempts to verify that the PDUMsgId is within range by comparing it to the CFE_SB_HIGHEST_VALID_MSGID macro.
+Unfortunately, this is a configuration macro that is specific to the SB implementation and may not be available in future builds. It makes assumptions about the way SB dispatches/handles messages that CI really should not be making.
+This check also does not provide any real benefit - if the MsgID is out of range there is no major problem, it simply will not match any packets.
+To improve compatibility with future SB improvements this extra check should be removed. Calling this a ""defect"" as it actually does break the build with the EDS branch.",enhancement,https://github.com/nasa/ci_lab/issues/1

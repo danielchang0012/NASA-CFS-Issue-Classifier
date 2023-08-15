@@ -1,0 +1,2131 @@
+Title,Body,Labels,URL
+"Fix #99, cmd and tlm messages use payload sub-structure","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #99, adds Payload substructure to all command and telemetry messages
+
+**Testing performed**
+unit testing
+
+**Expected behavior changes**
+ no impact to behavior
+
+**System(s) tested on**
+ - OS: Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA
+",CCB:Ready,https://github.com/nasa/SC/pull/100
+"All CMD/TLM messages should put content in a ""Payload"" sub-structure","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [X] I reviewed the [README file](https://github.com/nasa/SC/blob/main/README.md) to see if the feature is in the major future work.
+* [X] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+To match the patterns used in CFE and other modules, all CMD/TLM message definitions should put the content (non-header) parts into a separate struct called ""Payload"".
+
+**Describe the solution you'd like**
+Separate message content into a sub structure called ""Payload"".
+
+**Additional context**
+This is benefit to tooling that can use the presence of this field to identify where the actual content starts (e.g. something like `offsetof(MsgType, Payload)` would work and be correct, as opposed to checking `sizeof(CFE_MSG_CommandHeader_t)` which may not actually reflect where the content starts due to possible compiler-added padding between them).
+
+**Requester Info**
+Haven Carlson - NASA",,https://github.com/nasa/SC/issues/99
+"Fix #80, Unit tests read past array bounds and general cleanup","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #80 
+
+Also consolidated ""result"" asserts using modern APIs, removed low-value/high-maintenance checks on event string and type (ID is sufficient to confirm path).
+
+Recommend a follow-on issue to replace the rest of the UtAssert_True uses.
+
+**Testing performed**
+CI (including coverage)
+
+**Expected behavior changes**
+Greatly reduced technical debt wrt unit tests (large reduction in lines, and consistent table initialization)
+
+**System(s) tested on**
+CI
+
+**Additional context**
+Note this should make the remaining bug fixes and updates easier, by reducing ut change overhead.
+
+Could squash if CCB wants, just tried to break down the changes a little.
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, Equuleus-rc2",https://github.com/nasa/SC/pull/98
+"Fix #96, Moved command validation out of command functions","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #96, validate command before calling the command function instead of after.
+
+**Testing performed**
+Unit testing
+
+**Expected behavior changes**
+ no impact to behavior
+
+**System(s) tested on**
+OS: Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA",CCB:Ready,https://github.com/nasa/SC/pull/97
+Apps should check/verify msg BEFORE calling handler,"**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [X] I reviewed the [README file](https://github.com/nasa/SC/blob/main/README.md) to see if the feature is in the major future work.
+* [X] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Copy of https://github.com/nasa/CS/issues/75
+
+The CFE core and sample app (which is supposed to be the example of ""best practice"") do validation on the message before calling the handler. For example:
+
+    case SAMPLE_APP_NOOP_CC:
+        if (SAMPLE_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(SAMPLE_APP_NoopCmd_t)))
+        {
+            SAMPLE_APP_Noop((SAMPLE_APP_NoopCmd_t *)SBBufPtr);
+        }
+
+This is different from SC, which does a similar check, but done inside each handler, for example:
+https://github.com/nasa/SC/blob/c7a3864fda27532005f75c7615cf785f7b9aa851/fsw/src/sc_cmds.c#L498-L506
+
+**Describe the solution you'd like**
+CFS Apps should follow the best practices/patterns set forth in the framework code. (there are reasons for the pattern being recommended practice)
+
+**Requester Info**
+Haven Carlson - NASA",,https://github.com/nasa/SC/issues/96
+"Fix #18, Make compiler-added padding in `SC_AtpControlBlock_t` explicit","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #18
+  - Implicit padding was being added in `SC_AtpControlBlock_t` - this PR makes it explicit
+
+**Testing performed**
+GitHub CI actions all passing successfully (incl. Build + Run, Unit/Functional Tests etc.).
+
+**Expected behavior changes**
+No change.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/SC/pull/95
+"Fix #93, UT support for larger SC_RTS_BUFF_SIZE","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #93 
+
+UT change only.  Updates logic to properly test buffer fill cases.
+
+**Testing performed**
+CI + a setting with SC_RTS_BUFF_SIZE = 500
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+- Ubuntu 20.04
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, Equuleus-rc1",https://github.com/nasa/SC/pull/94
+Support larger SC_RTS_BUFF_SIZE configurations in unit test,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/SC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Unit tests only work if `SC_RTS_BUF_SIZE` can be used up with < 2 packets of size `SC_PACKET_MAX_SIZE`
+ 
+**Describe the solution you'd like**
+Support larger settings
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",Equuleus-rc1,https://github.com/nasa/SC/issues/93
+"Fix #52, UT fix to support SC_LAST_RTS_WITH_EVENTS == SC_NUMBER_OF_RTS","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #52
+
+**Testing performed**
+CI and tested with SC_LAST_RTS_WITH_EVENTS == SC_NUMBER_OF_RTS
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Ubuntu 20.04
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, Equuleus-rc1",https://github.com/nasa/SC/pull/92
+Should `CFE_EVS_Register()` be called with `CFE_EVS_NO_FILTER` or `CFE_EVS_EventFilter_BINARY`?,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Shouldn't SC be calling `CFE_EVS_Register()` with `CFE_EVS_EventFilter_BINARY` for the `FilterScheme` parameter? (rather than `CFE_EVS_NO_FILTER`)
+
+They both end up as the integer zero, so the check here will treat them the same:
+https://github.com/nasa/cFE/blob/7479d221692672d66946081f1cc5eb7c1d2acf9b/modules/evs/fsw/src/cfe_evs.c#L59-L68
+
+A couple of other apps (CS and DS) actually just call it directly with `0` like so:
+`Result = CFE_EVS_Register(NULL, 0, 0);
+`
+...which also seems wrong (they should also just use `CFE_EVS_EventFilter_BINARY` directly).
+
+**Code snips**
+https://github.com/nasa/SC/blob/487169bb8a2ea5a532a829e85fc529c86243dac4/fsw/src/sc_app.c#L172
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/SC/issues/91
+"Fix #89, Convert `int32` return codes and variables to `CFE_Status_t`","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #89
+  - most `int32` return codes converted over to `CFE_Status_t`
+  - `int32` `status`/`return` variables holding cFE return codes converted to `CFE_Status_t`
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+
+**Expected behavior changes**
+No change to behavior.
+`CFE_Status_t` is more expressive and improves consistency with cFE/cFS.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","enhancement, CCB:Approved, Equuleus-rc1",https://github.com/nasa/SC/pull/90
+SC `int32` return codes and variables should be converted to `CFE_Status_t`,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+SC has a few return codes (as well as local `status`/`return` variables which hold CFE return codes) that can be easily converted over to the `CFE_Status_t` typedef.
+
+**Expected behavior**
+Use the more expressive `CFE_Status_t` and improve consistency with cFS.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",enhancement,https://github.com/nasa/SC/issues/89
+"Fix #87, Update Command Code underscores for consistency","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #87 
+  - A few command codes with inconsistent underscores separating words were updated to better fit the cFS/cFE naming conventions
+
+**Testing performed**
+GitHub CI actions all passing successfully (incl. Unit Tests and Build + Run).
+
+**Expected behavior changes**
+No change to behavior.
+Improved consistency and clarity.
+
+Note: there are similar issues with some of the SC EIDs lacking underscores between words: e.g. `SC_ENARTSGRP_CMD_INF_EID`
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","enhancement, CCB:Approved, Equuleus-rc1",https://github.com/nasa/SC/pull/88
+Command Code/Enum naming convention inconsistencies,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+- Similar to LC issue: https://github.com/nasa/LC/issues/70
+  - SC also has a few command code macros that are not consistent with the enumeration identifiers or the command function name (all are cases of 2 words being combined into 1).
+
+**Code snips**
+`SC_StartRtsGrpCmd()`
+`SC_START_RTSGRP_CC` (should be `SC_START_RTS_GRP_CC`)
+
+`SC_EnableRtsGrpCmd()`
+`SC_ENABLE_RTSGRP_CC` (should be `SC_ENABLE_RTS_GRP_CC`)
+
+...and a couple more.
+
+**Expected behavior**
+Identifiers should conform to the cFS/cFE naming convention with regard to consistent use of underscores to make mnemonics clear and readable.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",enhancement,https://github.com/nasa/SC/issues/87
+"Fix #85, Remove `CFE_BIT`-related macros","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #85 
+  - Removes the couple instances of the `CFE_BIT`-related macros which are being removed from cFE in https://github.com/nasa/cFE/pull/2294
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+
+**Expected behavior changes**
+No change.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/SC/pull/86
+Remove `CFE_BIT`-related macros,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+The `CFE_BIT` family of macros is being removed in https://github.com/nasa/cFE/pull/2294
+
+There are a couple of uses of these macros in SC that will need to be removed.
+
+**Expected behavior**
+Use the direct bit-check/manipulation expression rather than the abstracted macro which is being removed.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",Equuleus-rc1,https://github.com/nasa/SC/issues/85
+"SC relative timing discards seconds, and accumulates error","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+https://github.com/nasa/SC/blob/487169bb8a2ea5a532a829e85fc529c86243dac4/fsw/src/sc_utils.c#L48-L64
+
+SC nominally gets a 1 Hz wakeup, but discards seconds.  If the 1Hz is right around the subsecond rollover, relative timing could accumulate a second of error on a command.  For example 1 Hz at 1000.000, then 1000.999 would look like 1000 twice, delaying the relative command to the next frame.  Since the next command absolute time isn't calculated until the current command is sent this error would accumulate every time it happens (could be multiple seconds ""late"" by the end of the RTS.
+
+**To Reproduce**
+Code review.  Just started looking at this so maybe I missed something.
+
+**Expected behavior**
+Bounded, predicable errors for RTS timing.  Worst case over an entire RTS I'd think should be bounded by the wakeup rate.
+
+**Code snips**
+See above.
+
+**System observed on:**
+N/A
+
+**Additional context**
+- #83 
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/SC/issues/84
+SC relative timing logic based on CFE TIME which is not monotonic,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+SC gets a version of CFE_TIME at the start of wakeup processing for calculating when to send the next command:
+
+https://github.com/nasa/SC/blob/487169bb8a2ea5a532a829e85fc529c86243dac4/fsw/src/sc_utils.c#L48-L64
+
+cFE time is subject to adjustments, which means RTS's time offsets would be affected.  For example, if you ask for a relative time offset of 5 seconds and adjust cfe time 4 seconds forward you'll only get a relative time gap of 1 second.  I'd have thought RTS's would use the monotonic PSP time or a timer to avoid cFE time adjustment impacts.
+
+**To Reproduce**
+Just code inspection.
+
+**Expected behavior**
+Relative command times should be good to within a predicable, bounded accuracy.
+
+**Code snips**
+Above.
+
+**System observed on:**
+N/A
+
+**Additional context**
+None
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/SC/issues/83
+Support better than 1 second resolution commanding,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/SC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Currently RTS and ATS both can only command to a 1 second resolution
+
+**Describe the solution you'd like**
+Support higher resolution table time tags and check at whatever rate the wakeup is received
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/SC/issues/82
+"Fix #5, Use OS_stat instead of OS_OpenCreate to verify file existence","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #5 
+  - Call to `OS_OpenCreate()` in the `SC_LoadDefaultTables()` function converted to `OS_stat()`.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+Simplifies function and eases future maintenance.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/SC/pull/81
+SC_LoadAts_Test_AtsEntryOverflow Unit Test indexes past array bounds,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+
+The `SC_LoadAts_Test_AtsEntryOverflow` unit test indexes past array boundaries.
+
+There are two arrays that get indexed improperly, both in `unit-test/sc_loads_tests.c`:
+
+1. The first is a file-global variable, `uint32 SC_APP_TEST_GlobalAtsCmdStatusTbl[SC_NUMBER_OF_ATS * SC_MAX_ATS_CMDS];`
+    - this array has 2000 indexes (2 * 1000) by default 
+3. The second is local to `SC_LoadAts_Test_AtsEntryOverflow`, named: `uint32 AtsTable[SC_ATS_BUFF_SIZE32];`
+    - this array has 4000 indexes (8000 / 2) by default 
+
+In `SC_LoadAts_Test_AtsEntryOverflow`, local variable `j` gets increased to a value of `4005`. This variable is used to index into both of the above arrays. These accesses are indirect, through these pointers:
+
+- `SC_OperData.AtsCmdStatusTblAddr`
+- `SC_OperData.AtsTblAddr`
+
+Also, I'm not sure if I'm understanding the test correctly, but it seems like `i` should be used instead of `j`, when initializing the `AtsCmdStatusTblAddr` array. Perhaps it would help to use more verbose variables than `i` and `j`.
+
+
+**To Reproduce**
+
+1. Add prints to print out the values of `j` before each 
+2. Run the unit tests
+
+**Expected behavior**
+
+All of these out-of-bound accesses seem invalid, and should be able to be removed.
+
+This unit test should probably be revised and cleaned up anyway. For example, after the initial `for` loop, the test describes that its intending to fill the (one) last entry with an invalid value. However, what the actual test attempts to do is initialize two entries (not one).
+
+Additionally, this unit test doesn't do much verification of `SC_LoadAts` to confirm that the function worked as expected. I'd expect more than just a single `UtAssert_True(call_count_CFE_EVS_SendEvent == 0,` call.
+
+**Code snips**
+
+```
+void SC_LoadAts_Test_AtsEntryOverflow(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    uint8                AtsIndex = 0;
+    size_t               MsgSize1;
+    size_t               MsgSize2;
+    int                  BufEntrySize;
+    int                  MaxBufEntries;
+    int                  i, j;
+
+    memset(&AtsInfoTbl, 0, sizeof(AtsInfoTbl));
+    memset(&AtsTable, 0, sizeof(AtsTable));
+
+    SC_InitTables();
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsTblAddr[AtsIndex]          = &AtsTable[0];
+    SC_OperData.AtsInfoTblAddr                = &AtsInfoTbl;
+
+    MsgSize1      = SC_PACKET_MAX_SIZE;
+    BufEntrySize  = ((MsgSize1 + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD) + SC_ATS_HDR_NOPKT_WORDS;
+    MaxBufEntries = SC_ATS_BUFF_SIZE32 / BufEntrySize;
+
+    for (i = 0, j = 0; i < MaxBufEntries; i++, j += BufEntrySize)
+    {
+        Entry                                        = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][j];
+        Entry->CmdNumber                             = i + 1;
+        SC_OperData.AtsCmdStatusTblAddr[AtsIndex][j] = SC_EMPTY;
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize1, sizeof(MsgSize1), false);
+    }
+
+    /* Next entry should not leave enough buffer space for an ATS command header */
+    Entry                                        = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][j];
+    Entry->CmdNumber                             = i++ + 1;
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][j] = SC_EMPTY;
+
+    /* Use the remaining buffer space to calculate the final message size */
+    MsgSize2 = (SC_ATS_BUFF_SIZE32 - SC_ATS_HDR_WORDS + 4 - j) * SC_BYTES_IN_WORD;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize2, sizeof(MsgSize2), false);
+
+    /* Set up final entry that will create condition */
+    j += ((MsgSize2 + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD) + SC_ATS_HDR_WORDS;
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][j];
+    Entry->CmdNumber = i + 1;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize1, sizeof(MsgSize1), false);
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][j] = SC_EMPTY;
+
+    /* Execute the function being tested */
+    SC_LoadAts(AtsIndex);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, ""CFE_EVS_SendEvent was called %u time(s), expected 0"",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+```
+
+**System observed on:**
+ - x86_64 
+ - OS: GNU/Linux 5.4
+ - Versions: Draco rc4
+
+**Additional context**
+
+This issue only seemed to pop up when we built the linux target for a 32-bit linux executable, with `-m32`.
+
+**Reporter Info**
+
+Keegan Moore
+NASA/GSFC
+","bug, unit-test",https://github.com/nasa/SC/issues/80
+"Fix #78, Split up multiple-variable declaration statements","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #78 
+  - Declarations that define multiple variables have been split up into individual declarations.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+No change to behavior.
+Eases future maintenance.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/SC/pull/79
+Split up decl. statements that define multiple variables on the same line,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+SC has a few cases where multiple variables are defined on the same line (in a single declaration statement).
+
+**Code snips**
+https://github.com/nasa/SC/blob/487169bb8a2ea5a532a829e85fc529c86243dac4/fsw/src/sc_app.c#L373
+https://github.com/nasa/SC/blob/487169bb8a2ea5a532a829e85fc529c86243dac4/unit-test/sc_loads_tests.c#L120
+
+**Expected behavior**
+Split up. Declarations are clearer when kept to one definition per line.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/SC/issues/78
+"Fix #76, Squash static analysis (CodeQL) uninitialized variable warning","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #76 
+  - Initialize `ListCmdTime` to zero to avoid CodeQL warning/failure.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+CodeQL CI actions now passing without errors.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","enhancement, CCB:Approved, Equuleus-rc1",https://github.com/nasa/SC/pull/77
+Squash static analysis (CodeQL) uninitialized variable warning,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Code snips**
+https://github.com/nasa/SC/pull/55/checks?check_run_id=11949908681
+![image](https://user-images.githubusercontent.com/9024662/224636936-1ad8d906-11e0-4a81-85dc-643e239fd2b7.png)
+
+**Describe the bug**
+`ListCmdTime` variable triggering CodeQL (potentially) uninitialized variable warning on some PRs.
+CodeQL is apparently unable to confirm if `ListCmdTime` is assigned a value in all execution paths (i.e. if the top while block will always execute at least once).
+
+**Expected behavior**
+Code should compile without any serious static analysis failures.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",enhancement,https://github.com/nasa/SC/issues/76
+"Fix #74, Replace quotes with angle brackets in /inc","**Checklist (Please check before submitting)**
+
+* [ ] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [ ] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+A clear and concise description of what the contribution is.
+- Include explicitly what issue it addresses [e.g. Fixes #X]
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Build steps '...'
+1. Execution steps '...'
+
+**Expected behavior changes**
+A clear and concise description of how this contribution will change behavior and level of impact.
+ - API Change: xxx (if applicable)
+ - Behavior Change: xxx (if applicable)
+ - Or no impact to behavior
+
+**System(s) tested on**
+ - Hardware: [e.g. PC, SP0, MCP750]
+ - OS: [e.g. Ubuntu 18.04, RTEMS 4.11, VxWorks 6.9]
+ - Versions: [e.g. cFE 6.6, OSAL 4.2, PSP 1.3 for mcp750, any related apps or tools]
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Full name and company/organization/center of all contributors (""Personal"" if individual work)
+ - Note CLA's apply to software contributions.
+","CCB:Approved, draco-rc4",https://github.com/nasa/SC/pull/75
+Replace quotes with angle brackets in #include statements within /inc,"Describe the solution you'd like
+Quotes should be replaced with angle brackets in #include statements that reside in the /inc location. This will ensure that the preprocessor selects the files pre-designated to override the default files contained within the open source cFS build release - as opposed to selecting those located in the same directory.
+
+Requester Info
+Dan Knutsen
+NASA Goddard",draco-rc4,https://github.com/nasa/SC/issues/74
+"Fix #72, Include sc_msgdefs.h in sc_msg.h","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+Fixes #72 - Includes sc_msgdefs.h in sc_msg.h
+
+**Testing performed**
+CI
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Dan Knutsen
+NASA Goddard
+","CCB:Approved, draco-rc4",https://github.com/nasa/SC/pull/73
+Include sc_msgdefs.h in sc_msg.h,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+sc_msg.h includes macros defined in sc_msgdefs.h - which is not currently #included.
+
+**Reporter Info**
+Dan Knutsen
+NASA Goddard
+",draco-rc4,https://github.com/nasa/SC/issues/72
+Add fsw/src to app target,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Cannot build cert_testbed. `target_include_directories(xx PUBLIC fsw/src)` is needed to build tables, etc. Revise CMakeLists.txt
+
+**To Reproduce**
+Build in cert_testbed
+
+**Expected behavior**
+Error-free build
+
+**Code snips**
+If applicable, add references to the software.
+
+**System observed on:**
+ - Ubuntu 20.04
+
+**Additional context**
+N/A
+
+**Reporter Info**
+Justin Figueroa, Vantage Systems
+",invalid,https://github.com/nasa/SC/issues/71
+"Fix #69, Deletes duplicate header files","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #69 
+
+**Testing performed**
+make install
+lcov
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+- Ubuntu 22.04
+
+**Additional context**
+Bug introduced in https://github.com/nasa/SC/pull/68. This proposed pull request also restores lost comments from https://github.com/nasa/SC/pull/68.
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, Vantage Systems
+",draco-rc4,https://github.com/nasa/SC/pull/70
+Delete duplicate header files,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+There are duplicate files ""fsw/platform_inc/sc_msgids.h"", ""fsw/src/sc_events.h"",  ""fsw/src/sc_msg.h"", ""fsw/src/sc_msgdefs.h"", and ""fsw/src/sc_tbldefs.h"" that need to be removed.
+
+**To Reproduce**
+View fsw directory
+
+**Expected behavior**
+No impact to behavior
+
+**Code snips**
+If applicable, add references to the software.
+
+**System observed on:**
+-Ubuntu 22.04
+
+**Additional context**
+N/A
+
+**Reporter Info**
+Justin Figueroa, Vantage Systems
+",draco-rc4,https://github.com/nasa/SC/issues/69
+"Fix #65, Moves interface definition files to inc","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #65
+
+**Testing performed**
+make install
+lcov
+
+**Expected behavior changes**
+No expected behavior change.
+
+**System(s) tested on**
+-Ubuntu 18.04
+
+**Additional context**
+N/A
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+-Justin Figueroa, Vantage","CCB:Approved, draco-rc4",https://github.com/nasa/SC/pull/68
+"Fix #66, Re-acquire tbl data pointer in SC_ManageTable","**Checklist (Please check before submitting)**
+
+* [x ] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x ] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Updates SC_ManageTable to successfully re-acquire table data pointer [Fixes #66 ]
+
+**Testing performed**
+Build and run all tests'
+
+**Expected behavior changes**
+SC functions nominally
+
+**System(s) tested on**
+Ubuntu 22.04 and 20.04 (workflows)
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Dan Knusten
+NASA/Goddard
+","CCB:Approved, draco-rc4",https://github.com/nasa/SC/pull/67
+Table data pointer not successfully being re-acquired in SC_ManageTable,"**Checklist (Please check before submitting)**
+
+* [x ] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x ] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+SC is not able to successfully send commands.
+
+**To Reproduce**
+Attempt to send a command from a SC table.
+
+**Expected behavior**
+Stored commands executes nominally.
+
+**Code snips**
+   uint32 *         TblAddr;
+
+    switch (type)
+    {
+        case ATS:
+            TblHandle = SC_OperData.AtsTblHandle[ArrayIndex];
+            TblAddr   = SC_OperData.AtsTblAddr[ArrayIndex];
+            break;
+        case RTS:
+            TblHandle = SC_OperData.RtsTblHandle[ArrayIndex];
+            TblAddr   = SC_OperData.RtsTblAddr[ArrayIndex];
+            break;
+        case APPEND:
+        default:
+            TblHandle = SC_OperData.AppendTblHandle;
+            TblAddr   = SC_OperData.AppendTblAddr;
+            break;
+    }
+
+    /* Release table data pointer */
+    CFE_TBL_ReleaseAddress(TblHandle);
+
+    /* Allow cFE to manage table */
+    CFE_TBL_Manage(TblHandle);
+
+    /* Re-acquire table data pointer */
+    Result = CFE_TBL_GetAddress((void *)&TblAddr, TblHandle);
+
+**System observed on:**
+ - Hardware
+ - OS: [e.g. Linux 4.4]
+ - Versions [e.g. cFE 6.6, OSAL 4.2, PSP 1.3 for mcp750, any related apps]
+
+**Reporter Info**
+Dan Knutsen
+NASA/Goddard
+","bug, draco-rc4",https://github.com/nasa/SC/issues/66
+"Move interface definition files to ""inc"" location","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/SC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+The interface definition files of all open source apps currently exist in the ""src"" directory.
+
+**Describe the solution you'd like**
+Create an ""inc"" dir to go with the ""src"" dir.  Move the interface definitions into this location: ""_msg.h"", ""_msgdefs.h"", ""_tbldefs.h"", and ""_events.h"". Consider moving header files in both ""platform_inc"" and ""mission_inc"" to ""inc""
+
+**Describe alternatives you've considered**
+Leaving as is.
+
+**Additional context**
+N/A
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+",draco-rc4,https://github.com/nasa/SC/issues/65
+"Fix #63, Remove initializations causing Cppcheck errors","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #63 
+Both seem fine to change from initialization at the top of the function to a plain declaration.
+`TempAtsChar` is used in only one location, and that is after a mutually exclusive `if`/`else` which assigns it a value in both cases.
+`IndexDelta` is used inside just one `if` block, and is assigned a value (on line 409) before any of the 3 references to it are made.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+No impact on code behavior.
+Cppcheck now passes without error again.
+
+**Contributor Info**
+Avi @thnkslprpt","CCB:Approved, draco-rc4",https://github.com/nasa/SC/pull/64
+New Cppcheck errors: '[unreadVariable]',"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Latest version of Cppcheck is issuing the following failures for SC:
+```
+fsw/src/sc_cmds.c:62:35: style: Variable 'TempAtsChar' is assigned a value that is never used. [unreadVariable]
+    char              TempAtsChar = ' ';
+                                  ^
+fsw/src/sc_loads.c:388:31: style: Variable 'IndexDelta' is assigned a value that is never used. [unreadVariable]
+    uint16         IndexDelta = 0;
+                              ^
+```
+
+**To Reproduce**
+Run the current version of Cppcheck on the current main branch SC source code.
+
+**Expected behavior**
+Cppcheck should pass without raising any errors.
+
+**Reporter Info**
+Avi @thnkslprpt",draco-rc4,https://github.com/nasa/SC/issues/63
+"Fix #16, Move Table Header definitions from sc_app.h to sc_tbldefs.h","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #16 
+Moves ATS/RTS table header structs to sc_tbldefs.h
+
+**Testing performed**
+GitHub CI Build + Run & Unit Tests.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, draco-rc4",https://github.com/nasa/SC/pull/62
+"Fix #60, Apply consistent Event ID names to common events","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #60
+  - Consistent event IDs have been applied to the inconsistent cases to align them with a common Event ID naming convention.
+
+**Testing performed**
+Only GitHub CI actions.
+
+**Expected behavior changes**
+No impact on code behavior (no logic changes).
+Consistent Event ID names for the events which are common to all/most cFS components and apps will improve consistency and ease make code review/debugging easier.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",enhancement,https://github.com/nasa/SC/pull/61
+Inconsistent Event ID naming,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/cFE/issues/2175
+After finding that there were 9 different Event IDs to indicate the same thing (Invalid Message ID) in https://github.com/nasa/CF/issues/262, I scrubbed the other common commands (e.g. Task Initialisation [INIT], NOOP, Reset Counters etc.) and found the same issue there - almost every component/app had their own variation of the Event ID name for the exact same event.
+
+**Expected behavior**
+Apply consistent Event ID names to the events which are common to all/most components and apps.
+
+**Code snips**
+Invalid Message ID:
+`CFE_EVS_ERR_MSGID_EID`
+`CFE_SB_BAD_MSGID_EID`
+`CFE_TIME_ID_ERR_EID`
+`CS_MID_ERR_EID`
+`TO_LAB_MSGID_ERR_EID`
+`SAMPLE_APP_INVALID_MSGID_ERR_EID`
+`BP_INVALID_MID_ERR_EID`
+`SCH_MD_ERR_EID`
+`CI_LAB_COMMAND_ERR_EID`
+
+Initialization:
+`CFE_TIME_INIT_EID`
+`CFE_TBL_INIT_INF_EID`
+`CFE_EVS_STARTUP_EID`
+`CF_EID_INF_INIT`
+`BP_INIT_APP_INFO_EID`
+`SCH_INITSTATS_INF_EID`
+`CI_LAB_STARTUP_INF_EID`
+
+NOOP:
+`CFE_TIME_NOOP_EID`
+`CFE_TBL_NOOP_INF_EID`
+`CFE_SB_CMD0_RCVD_EID`
+`CF_EID_INF_CMD_NOOP`
+`FM_NOOP_CMD_EID`
+`CI_LAB_COMMANDNOP_INF_EID`
+
+Reset Counters:
+`CFE_TIME_RESET_EID`
+`CFE_TBL_RESET_INF_EID`
+`CFE_EVS_RSTCNT_EID`
+`CFE_SB_CMD1_RCVD_EID`
+`CF_EID_INF_CMD_RESET`
+`SC_RESET_DEB_EID`
+`HS_RESET_DBG_EID`
+`FM_RESET_CMD_EID`
+`HK_RESET_CNTRS_CMD_EID`
+`MD_RESET_CNTRS_DBG_EID`
+`CI_LAB_COMMANDRST_INF_EID`
+
+etc.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/SC/issues/60
+"Fix #58, Remove redundant/inconsistent comments (/* end of function */, /* end if */ etc.) and clean up empty lines.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #58
+Removes redundant and inconsistent comments (e.g. `/* end of function */`, `/* end if */`, function name in function header comments).
+There were also a few cases of unnecessary empty lines (e.g. on the last line before the closing brace of a function) and also missing empty lines (e.g. between functions) which were corrected. Some of these empty lines trigger the CI format checks.
+I've left the commits separated for now to make life easier for whoever reviews this. I can squash them if/when this is ready for merge.
+
+**Testing performed**
+None (comment and whitespace changes only).
+
+**Expected behavior changes**
+No impact on behavior.
+These updates will reduce clutter and inconsistency in the code, improving readability.
+
+**Contributor Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/SC/pull/59
+"Redundant comments (/* end of function */, /* end if */ etc.) and clean up empty lines.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/to_lab/issues/68 and https://github.com/nasa/sample_app/issues/111
+There are quite a few redundant comments in the code, such as:
+- `/* end of function */`-type comments
+- `/* end if */`-type comments
+- function header comments which include the function name
+
+Another minor issue has to do with empty lines:
+a) _unnecessary_ empty lines (e.g. first line after the opening brace of a function/struct, or the last line before the closing brace - the latter apparently sometimes triggers the CI format checks).
+b) _missing_ empty lines between functions (i.e. closing brace of last function, then next function beginning on the immediately next line without an empty line in between)
+
+The unnecessary empty lines (at the beginning or end of a function, for example) represent a low single-digit percentage of the cases (the vast majority of functions/structs do not have these extra empty lines), so there is an argument to remove them purely for consistency, not just due to them being redundant and triggering the CI format checks.
+
+**Expected behavior**
+Remove redundant comments to reduce clutter and inconsistency in the code, and improve readability.
+
+**Reporter Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/SC/issues/58
+"Fix #56, Remove 'return;' from last line of void functions.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #56
+Removes all cases of redundant ""return;"" statements on the last line of void functions.
+Corrected a few typos in the comments that were noticed along the way.
+
+**Testing performed**
+None, prior to submission.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info**
+@thnkslprpt ","CCB:Approved, draco-rc4",https://github.com/nasa/SC/pull/57
+"Remove ""return;"" from last line of void functions","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+""return;"" at last line in void function is redundant.
+Copy of https://github.com/nasa/cFE/issues/1540
+
+**Describe the solution you'd like**
+Remove
+
+**Reporter Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/SC/issues/56
+"Fix #54, Remove unnecessary parentheses around return values.","**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #54 
+  - Removes parentheses in return statements in SC that return a single value/term.
+
+This aligns these return statements with the predominant style of cFS.
+
+**Testing performed**
+None, prior to submission of the pull request.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt ","enhancement, CCB:Approved",https://github.com/nasa/SC/pull/55
+Scrub use of () in return statements,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Unnecessary parentheses around return values in SC
+Copy of https://github.com/nasa/osal/issues/866
+
+**Reporter Info**
+@thnkslprpt ",,https://github.com/nasa/SC/issues/54
+Unit Test SC_SendHkPacket_Test Fails,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+The `SC_SendHkPacket_Test` unit test fails. The expected `RtsExecutingStatus` and `RtsDisabledStatus` are not sent to the SB.
+
+**To Reproduce**
+1. Create a cFS bundle that includes a cFE, OSAL, PSP, and SC as an app
+2. `make SIMULATION=native ENABLE_UNIT_TESTS=true prep && make && make install`
+3. `make test`
+
+The `SC_SendHkPacket_Test` unit test will fail:
+```
+[BEGIN] 24 SC_SendHkPacket_Test
+[ PASS] 24.001 sc_cmds_tests.c:1438 - SC_OperData.HkPacket.CmdErrCtr == 1
+[ PASS] 24.002 sc_cmds_tests.c:1439 - SC_OperData.HkPacket.CmdCtr == 2
+[ PASS] 24.003 sc_cmds_tests.c:1440 - SC_OperData.HkPacket.RtsActiveErrCtr == 3
+[ PASS] 24.004 sc_cmds_tests.c:1441 - SC_OperData.HkPacket.RtsActiveCtr == 4
+[ PASS] 24.005 sc_cmds_tests.c:1442 - SCSC_OperData.HkPacket.AtsCmdCtr == 5
+[ PASS] 24.006 sc_cmds_tests.c:1443 - SC_OperData.HkPacket.AtsCmdErrCtr == 6
+[ PASS] 24.007 sc_cmds_tests.c:1444 - SC_OperData.HkPacket.RtsCmdCtr == 7
+[ PASS] 24.008 sc_cmds_tests.c:1445 - SC_OperData.HkPacket.RtsCmdErrCtr == 8
+[ PASS] 24.009 sc_cmds_tests.c:1446 - SC_OperData.HkPacket.LastAtsErrSeq == 9
+[ PASS] 24.010 sc_cmds_tests.c:1447 - SC_OperData.HkPacket.LastAtsErrCmd == 10
+[ PASS] 24.011 sc_cmds_tests.c:1448 - SC_OperData.HkPacket.LastRtsErrSeq == 11
+[ PASS] 24.012 sc_cmds_tests.c:1449 - SC_OperData.HkPacket.LastRtsErrCmd == 12
+[ PASS] 24.013 sc_cmds_tests.c:1450 - SC_OperData.HkPacket.AppendCmdArg == 13
+[ PASS] 24.014 sc_cmds_tests.c:1451 - SC_OperData.HkPacket.AppendEntryCount == 14
+[ PASS] 24.015 sc_cmds_tests.c:1452 - SC_OperData.HkPacket.AppendLoadCount == 16
+[ PASS] 24.016 sc_cmds_tests.c:1453 - SC_OperData.HkPacket.AtpFreeBytes[0] == (SC_ATS_BUFF_SIZE32 * SC_BYTES_IN_WORD)
+[ PASS] 24.017 sc_cmds_tests.c:1457 - SC_OperData.HkPacket.AtpFreeBytes[1] == (SC_ATS_BUFF_SIZE32 * SC_BYTES_IN_WORD)
+[ PASS] 24.018 sc_cmds_tests.c:1461 - SC_OperData.HkPacket.AtsNumber == 17
+[ PASS] 24.019 sc_cmds_tests.c:1462 - SC_OperData.HkPacket.AtpState == 18
+[ PASS] 24.020 sc_cmds_tests.c:1463 - SC_OperData.HkPacket.AtpCmdNumber == 19
+[ PASS] 24.021 sc_cmds_tests.c:1464 - SC_OperData.HkPacket.SwitchPendFlag == 0
+[ PASS] 24.022 sc_cmds_tests.c:1465 - SC_OperData.HkPacket.NextAtsTime == 0
+[ PASS] 24.023 sc_cmds_tests.c:1466 - SC_OperData.HkPacket.NumRtsActive == 20
+[ PASS] 24.024 sc_cmds_tests.c:1467 - SC_OperData.HkPacket.RtsNumber == 21
+[ PASS] 24.025 sc_cmds_tests.c:1468 - SC_OperData.HkPacket.NextRtsTime == 0
+[ PASS] 24.026 sc_cmds_tests.c:1469 - SC_OperData.HkPacket.ContinueAtsOnFailureFlag == 1
+[ FAIL] 24.027 sc_cmds_tests.c:1477 - SC_OperData.HkPacket.RtsExecutingStatus[0] (1) == 65535 (65535)
+[ FAIL] 24.028 sc_cmds_tests.c:1478 - SC_OperData.HkPacket.RtsDisabledStatus[0] (1) == 65535 (65535)
+[ FAIL] 24.029 sc_cmds_tests.c:1485 - SC_OperData.HkPacket.RtsExecutingStatus[2] (0) == 65535 (65535)
+[ FAIL] 24.030 sc_cmds_tests.c:1486 - SC_OperData.HkPacket.RtsDisabledStatus[2] (0) == 65535 (65535)
+[ FAIL] 24.031 sc_cmds_tests.c:1489 - SC_OperData.HkPacket.RtsExecutingStatus[LastRtsHkIndex] (1) == 32767 (32767)
+[ FAIL] 24.032 sc_cmds_tests.c:1490 - SC_OperData.HkPacket.RtsDisabledStatus[LastRtsHkIndex] (1) == 32767 (32767)
+[ PASS] 24.033 sc_cmds_tests.c:1494 - CFE_EVS_SendEvent was called 0 time(s), expected 0
+[  END] 24 SC_SendHkPacket_Test TOTAL::33    PASS::27    FAIL::6     MIR::0     TSF::0     TTF::0     WARN::0   
+```
+
+**Expected behavior**
+This unit test should pass. I am not sure why the unit test is expecting 65535 for the first and middle element and 32767 for the last element in `sc_cmds_tests.c`. Also not sure why the first and middle elements use different asserts compared to the last element but these don't appear to affect the behavior as they result in the same assert.
+
+**Code snips**
+/* Check first element */
+UtAssert_True(SC_OperData.HkPacket.RtsExecutingStatus[0] == 65535,
+                ""SC_OperData.HkPacket.RtsExecutingStatus[0] == 65535""); // fails
+UtAssert_True(SC_OperData.HkPacket.RtsDisabledStatus[0] == 65535,
+                ""SC_OperData.HkPacket.RtsDisabledStatus[0] == 65535""); // fails
+
+/* Check middle element */
+UtAssert_True(SC_OperData.HkPacket.RtsExecutingStatus[2] == 65535,
+                ""SC_OperData.HkPacket.RtsExecutingStatus[2] == 65535""); // fails
+UtAssert_True(SC_OperData.HkPacket.RtsDisabledStatus[2] == 65535,
+                ""SC_OperData.HkPacket.RtsDisabledStatus[2] == 65535""); // fails
+
+/* Check last element */
+UtAssert_INT32_EQ(SC_OperData.HkPacket.RtsExecutingStatus[LastRtsHkIndex], 32767); // fails
+UtAssert_INT32_EQ(SC_OperData.HkPacket.RtsDisabledStatus[LastRtsHkIndex], 32767); // fails
+```
+
+**System observed on:**
+ - Hardware
+ - OS: 20.04.1-Ubuntu
+ - Versions: cfe v7.0.0-rc4+dev143, osal v6.0.0-rc4+dev87, psp v1.6.0-rc4+dev41
+
+**Additional context**
+N/A
+
+**Reporter Info**
+Jeff St. Jean
+jstjean@turionspace.com
+",,https://github.com/nasa/SC/issues/53
+Unit Test SC_StartRtsCmd_Test_StartRtsNoEvents Fails,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+The `SC_StartRtsCmd_Test_StartRtsNoEvents` unit test fails. An informative `SC_RTS_START_INF_EID` event is sent instead of the debug `SC_STARTRTS_CMD_DBG_EID` event that is expected by the test.
+
+**To Reproduce**
+1. Create a cFS bundle that includes a cFE, OSAL, PSP, and SC as an app
+2. `make SIMULATION=native ENABLE_UNIT_TESTS=true prep && make && make install`
+3. `make test`
+
+The `SC_StartRtsCmd_Test_StartRtsNoEvents` unit test will fail:
+```
+[BEGIN] 02 SC_StartRtsCmd_Test_StartRtsNoEvents
+[ PASS] 02.001 cfe_msg_handlers.c:266 - UT_DefaultHandler_CFE_MSG_GetSize: Check for get value provided by test
+[ PASS] 02.002 sc_rtsrq_tests.c:156 - SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_EXECUTING
+[ PASS] 02.003 sc_rtsrq_tests.c:158 - SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr == 0
+[ PASS] 02.004 sc_rtsrq_tests.c:159 - SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr == 0
+[ PASS] 02.005 sc_rtsrq_tests.c:161 - SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr == 0
+[ PASS] 02.006 sc_rtsrq_tests.c:163 - SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr == 1
+[ PASS] 02.007 sc_rtsrq_tests.c:165 - SC_OperData.RtsCtrlBlckAddr->NumRtsActive == 1
+[ PASS] 02.008 sc_rtsrq_tests.c:166 - SC_OperData.HkPacket.RtsActiveCtr == 1
+[ PASS] 02.009 sc_rtsrq_tests.c:167 - SC_OperData.HkPacket.CmdCtr == 1
+[ FAIL] 02.010 sc_rtsrq_tests.c:169 - context_CFE_EVS_SendEvent[0].EventID (73) == SC_STARTRTS_CMD_DBG_EID (72)
+[ FAIL] 02.011 sc_rtsrq_tests.c:170 - context_CFE_EVS_SendEvent[0].EventType (2) == CFE_EVS_EventType_DEBUG (1)
+[ FAIL] 02.012 sc_rtsrq_tests.c:174 - Event string matched expected result, 'RTS Number %03d Started'
+[ PASS] 02.013 sc_rtsrq_tests.c:178 - CFE_EVS_SendEvent was called 1 time(s), expected 1
+[  END] 02 SC_StartRtsCmd_Test_StartRtsNoEvents TOTAL::13    PASS::10    FAIL::3     MIR::0     TSF::0     TTF::0     WARN::0   
+```
+
+**Expected behavior**
+This unit test should pass. I believe this is due to the inclusive comparison on in [fsw/src/sc_rtsrq.c](https://github.com/nasa/SC/blob/draco-rc3/fsw/src/sc_rtsrq.c#L114) but I am not intimately familiar with the expected behavior here. 
+
+**Code snips**
+sc_rtsrq_tests.c
+```
+UT_CmdBuf.RtsCmd.RtsId = SC_NUMBER_OF_RTS;
+{...}
+SC_StartRtsCmd(&UT_CmdBuf.Buf);
+{...}
+UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTS_CMD_DBG_EID); // fails
+UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG); // fails
+```
+sc_rtsrq.c:
+```
+if (((SC_RtsCmd_t *)CmdPacket)->RtsId <= SC_LAST_RTS_WITH_EVENTS)
+{
+    CFE_EVS_SendEvent(SC_RTS_START_INF_EID, CFE_EVS_EventType_INFORMATION,
+                        ""RTS Number %03d Started"", RtsId);
+}
+else
+{
+    CFE_EVS_SendEvent(SC_STARTRTS_CMD_DBG_EID, CFE_EVS_EventType_DEBUG, ""Start RTS #%d command"",
+                        RtsId);
+}
+```
+
+**System observed on:**
+ - Hardware
+ - OS: 20.04.1-Ubuntu
+ - Versions: cfe v7.0.0-rc4+dev143, osal v6.0.0-rc4+dev87, psp v1.6.0-rc4+dev41
+
+**Additional context**
+N/A
+
+**Reporter Info**
+Jeff St. Jean
+jstjean@turionspace.com
+",,https://github.com/nasa/SC/issues/52
+"Fix #50, Resolve usersguide issues with doxygen 1.8.17","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #50
+
+**Testing performed**
+Build doc with Ubuntu 20.04
+
+**Expected behavior changes**
+Successful doc build
+
+**System(s) tested on**
+ - Hardware: i5/Docker
+ - OS: Ubuntu 20.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc4",https://github.com/nasa/SC/pull/51
+Resolve issues building users guide with Ubuntu 20.04/Doxygen 1.8.17,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CF/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [CF README.md file](https://github.com/nasa/CF/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Doxygen `warnings for documented empty return type`
+
+**Describe the solution you'd like**
+Remove unnecessary documentation
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","docs, draco-rc4",https://github.com/nasa/SC/issues/50
+"Fix #4, Consolidate common patterns in sc_app.c","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #4, use loops to consolidate common code patterns in sc_app.c
+
+**Testing performed**
+Unit testing
+
+**Expected behavior changes**
+ no impact to behavior
+
+**System(s) tested on**
+ - OS:Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA","CCB:Approved, draco-rc4",https://github.com/nasa/SC/pull/49
+"Fix #7, consolidate functions for managing tables","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #7, consolidate `SC_ManageAtsTable()`, `SC_ManageRtsTable()`, and `SC_ManageAppendTable()`
+
+**Testing performed**
+Unit testing
+
+**Expected behavior changes**
+ no impact to behavior
+
+**System(s) tested on**
+ - OS: Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA","CCB:Approved, draco-rc4",https://github.com/nasa/SC/pull/48
+"Fix #10, consolidate loops in SC_BuildTimeIndexTable","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #10, combine 2 loops in SC_BuildTimeIndexTable()
+
+**Testing performed**
+Unit testing
+
+**Expected behavior changes**
+no impact to behavior
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA
+","CCB:Approved, draco-rc4",https://github.com/nasa/SC/pull/47
+"Fix #8, reorder conditions in if statements to optimize code","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #8, Reordered conditions in If statements so less complex conditions are tested first
+
+**Testing performed**
+Unit testing
+
+**Expected behavior changes**
+no impact to behavior
+
+**System(s) tested on**
+ - OS: Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA
+","enhancement, CCB:Approved",https://github.com/nasa/SC/pull/46
+Could simplify by just managing tables periodically vs by registering for command (unique approach across common apps),"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/SC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+For the standard 10 apps, SC is the only one to use the `CFE_TBL_NotifyByMessage` API and manage tables on command.
+https://github.com/nasa/SC/blob/68e2520da89f3157703ced2467b50a34b519ca36/fsw/src/sc_app.c#L606-L612
+https://github.com/nasa/SC/blob/68e2520da89f3157703ced2467b50a34b519ca36/fsw/src/sc_cmds.c#L683-L685
+https://github.com/nasa/SC/blob/68e2520da89f3157703ced2467b50a34b519ca36/fsw/src/sc_cmds.c#L721-L731
+
+**Describe the solution you'd like**
+Could instead just periodically manage all the tables (like all the rest).
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/SC/issues/45
+"Fix #20, removed mentions of ASIST from documentation","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+Describe the contribution
+Fix #20, removed all mentions of ASIST from comments
+
+Testing performed
+n/a
+
+Expected behavior changes
+no impact to behavior
+
+System(s) tested on
+n/a
+
+Contributor Info - All information REQUIRED for consideration of pull request
+Haven Carlson - NASA","CCB:Approved, draco-rc3",https://github.com/nasa/SC/pull/44
+Fill in missing requirements rationale,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/SC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+The following requirements have empty rationale:
+SC2000.3, SC2002.2, SC2005.1, SC2007, SC2007.1, SC2008, SC2008.1, SC2008.2, SC2008.3, SC2008.4, SC2008.5, SC2008.6, SC2008.7, SC2009, SC3000, SC3001.1, SC3003, SC3003.2, SC3003.2.1, SC3003.3, SC4001.1, SC4001.3.1, SC4003, SC4004, SC4005
+
+Or use query: `project = GSFCCFS AND issuetype = Requirement AND status in (Approved, Submitted) AND component in (""CF"", CFS_LIB, CS, DS, FM, fs_lib, HK, HS, LC, MD, MM, SC) and ""Requirement Rationale"" is EMPTY ORDER BY cf[13194] ASC`
+
+**Describe the solution you'd like**
+Fill in missing rationale
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",requirements,https://github.com/nasa/SC/issues/43
+"Fix #41, Remove stray UT printf and clean related test","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #41 
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+Removed stray printf from test output
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc3",https://github.com/nasa/SC/pull/42
+Remove stray printfs in UT and clean related test,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/SC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+https://github.com/nasa/SC/blob/e484dc01d8351b8d6147123c8cb1ca8a67a3379a/unit-test/sc_loads_tests.c#L99-L106
+
+**Describe the solution you'd like**
+Clean up
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","unit-test, draco-rc3",https://github.com/nasa/SC/issues/41
+"Fix #39, Remove stray terminators","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #39 
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc3",https://github.com/nasa/SC/pull/40
+Remove stray terminators,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/SC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+https://github.com/nasa/SC/blob/e484dc01d8351b8d6147123c8cb1ca8a67a3379a/unit-test/sc_loads_tests.c#L1584
+
+**Describe the solution you'd like**
+Remove
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","unit-test, draco-rc3",https://github.com/nasa/SC/issues/39
+Configuring Basic SC Example,"Hello,
+
+I am rather new to cFS and trying to get a basic example of the SC application running, but I am unsuccessful in doing so. I was hoping to get any form of guidance here to get up and running with the application. I see out of the box the application comes with sc_ats1.c and sc_rst001.c to serve as baseline examples of stored commands that can be sent. I am trying to get those two example tables to work.
+
+My cFS build is a freshly cloned v6.7.0.a to a Ubuntu 22.04 VM. The SCH application (version rc-2.2.2) has been installed and is up and running correctly. Furthermore, the SC application version 2.5.0 was cloned into the apps directory. 
+
+Inside, the SCH cFS/apps/sch/fsw/tables/sch_def_msgtbl.c file, I changed:
+```
+/* command ID #14 - Stored Command HK Request    */
+  { { CFE_MAKE_BIG16(SC_SEND_HK_MID),  CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } },
+/* command ID #21 - SC 1 Hz Wakeup                    */
+  { { CFE_MAKE_BIG16(SC_1HZ_WAKEUP_MID),        CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } },
+```
+Then in the cFS/apps/sch/fsw/tables/sch_def_schtbl.c file, I changed:
+```
+ /* slot #26 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 21, SCH_GROUP_NONE }, */  /* SC Wakeup */
+  {  SCH_ENABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 21, SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},
+```
+```
+ /* slot #44 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  4,  1, 14, SCH_GROUP_CFS_HK }, */  /* SC HK Request */
+  {  SCH_ENABLED, SCH_ACTIVITY_SEND_MSG,  4,  1, 14, SCH_GROUP_CFS_HK },                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE}, 
+```
+
+In addition, my SC CMakeLists.txt file is changed to the following:
+```
+cmake_minimum_required(VERSION 2.6.4)
+project(CFS_SC C)
+
+include_directories(fsw/mission_inc)
+include_directories(fsw/platform_inc)
+include_directories(fsw/tables)
+include_directories(fsw/src)
+
+aux_source_directory(fsw/src APP_SRC_FILES)
+aux_source_directory(fsw/tables APP_TABLE_FILES)
+# Create the app module
+add_cfe_app(sc ${APP_SRC_FILES})
+add_cfe_tables(sc ${APP_TABLE_FILES})
+```
+
+After compiling the project,  running the script ./core-cpu1 in build/exe/cpu1 I get the following output:
+
+```
+1980-012-14:03:20.25315 ES Startup: Loading file: /cf/sch.so, APP: SCH
+1980-012-14:03:20.25324 ES Startup: SCH loaded and created
+1980-012-14:03:20.25332 ES Startup: Loading file: /cf/sc.so, APP: SC
+1980-012-14:03:20.25342 ES Startup: SC loaded and created
+EVS Port1 42/1/SC 21: RTS table file load count = 0
+EVS Port1 42/1/SCH 13: OS Timer Accuracy (10000 > reqd 101 usec) requires Minor Frame MET sync
+EVS Port1 42/1/TO_LAB_APP 1: TO Lab Initialized. Version 2.3.0.0 Awaiting enable command.
+EVS Port1 42/1/SAMPLE_APP 4: SAMPLE: RESET command
+EVS Port1 42/1/SC 9: SC Initialized. Version 2.5.0.0
+EVS Port1 42/1/SCH 1: SCH Initialized. Version 2.2.1.0
+EVS Port1 42/1/SAMPLE_APP 1: SAMPLE App Initialized. Version 1.1.0.0
+EVS Port1 42/1/CI_LAB_APP 6: CI: RESET command
+EVS Port1 42/1/CI_LAB_APP 3: CI Lab Initialized.  Version 2.3.0.0
+1980-012-14:03:20.30375 ES Startup: CFE_ES_Main entering APPS_INIT state
+1980-012-14:03:20.30377 ES Startup: CFE_ES_Main entering OPERATIONAL state
+EVS Port1 42/1/CFE_TIME 21: Stop FLYWHEEL
+Segmentation fault (core dumped)
+```
+Is there a step that I am missing or have done incorrectly up to this point? I am noticing that there is no RTS table loaded but I am unsure of the steps to follow to load one. Any help is greatly appreciated.
+
+Thank you!
+
+
+
+
+",duplicate,https://github.com/nasa/SC/issues/38
+"Fix #15 #21 #36, Code coverage improvements","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Topics separated by commit, but submitted together to achieve 100% coverage
+- Fix #15 
+- Fix #21 
+- Fix #36
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just refactors to remove redundant conditions
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/SC/pull/37
+Redundant conditional (and repeated code) for determining ATS A vs B,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/SC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+`TempAtsChar` is set by testing `AtsNumber` against both `SC_ATSA` and `SC_ATSB`.  Not much point testing twice since the index is already assumed valid when used to dereference array elements.  It's also repeated multiple times.
+https://github.com/nasa/SC/blob/259415fb01d9a3b9d271974caf8d2ab29fff2977/fsw/src/sc_cmds.c#L173-L176
+https://github.com/nasa/SC/blob/259415fb01d9a3b9d271974caf8d2ab29fff2977/fsw/src/sc_cmds.c#L209-L212
+https://github.com/nasa/SC/blob/259415fb01d9a3b9d271974caf8d2ab29fff2977/fsw/src/sc_cmds.c#L245-L248
+
+**Describe the solution you'd like**
+Implement logic once, and it's either A or B.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Coverage issue
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, draco-rc2",https://github.com/nasa/SC/issues/36
+"Fix #17, Use real message types in tables","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #17
+
+Note so far this is just partial/example, is not backwards compatible with Caelum framework and has a dependency on nasa/cFE#2115.  Marking as draft for now.
+
+**Testing performed**
+Ran with the cFE changes, confirmed noops were sent/received using the following cmds:
+```
+./cmdUtil -ELE -C0 -A0xAA  # SC HK cycle so table wil get started
+./cmdUtil -ELE -C0 -A0xAB  # 1 Hz wakeup repeated as needed to trigger RTS manually
+```
+
+**Expected behavior changes**
+Behavior is the same, just makes table maintenance easier and slightly more portable across different endian systems and w/ different header implementations.
+
+**System(s) tested on**
+ - Hardware: i5/wsl
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit/repo and additions to build/run SC as well as the commit that adds the macro header macro
+
+**Additional context**
+Depends on cFE update nasa/cFE#2115
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc4",https://github.com/nasa/SC/pull/35
+"Fix #33, Updates CLA information for Apache 2.0","Deletes old SC CLAs, Removes language in contributing.md of app-specific CLA,
+Adds link to new CLAs in pull_request_template
+
+**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+A clear and concise description of what the contribution is.
+- Fixes #33
+- Fixes https://github.com/nasa/cFS/issues/495
+
+**Testing performed**
+Visually inspected links in fork and in PR template.
+
+**Expected behavior changes**
+All references to CLAs should be updated to the cFS app CLA.
+
+**System(s) tested on**
+Google Chrome browser
+
+**Additional context**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, ASRC Federal","docs, CCB:Approved, draco-rc2",https://github.com/nasa/SC/pull/34
+Update CLA Information,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [cFS README.md file](https://github.com/nasa/cFS/blob/main/README.md) to see if the feature is in the major future work.
+* [ ] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Have new CLAs given the change in https://github.com/nasa/cFS/pull/491 with the combined CLA, 
+
+**Describe the solution you'd like**
+
+- [ ] Update the instructions in each app's Contributing.md
+- [ ] Delete old CLA pdfs
+- [ ] Update PR and Issue templates as needed
+
+
+**Describe alternatives you've considered**
+
+None
+
+**Additional context**
+None
+
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz
+","docs, draco-rc2",https://github.com/nasa/SC/issues/33
+"Fix #31, Remove CFE_PSP_MemSet use for addresses in RAM","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #31
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just removes unnecessary API dependence
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/SC/pull/32
+Remove CFE_PSP_MemSet use for addresses in RAM,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/CS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Should just use memset/memcpy for addresses in RAM.  The PSP functions serve no use in this context.
+
+**Describe the solution you'd like**
+Replace with memset/memcpy.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, draco-rc2",https://github.com/nasa/SC/issues/31
+"Fix #29, Added codeql-build.yml","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+Describe the contribution
+A clear and concise description of what the contribution is.
+Added CodeQL to GitHub workflows
+Fix #29 
+
+Testing performed
+
+Pushed to branch
+Checked CodeQL ran successfully
+Expected behavior changes
+no impact to behavior
+
+System(s) tested on
+Browser
+
+Additional context
+Depends on https://github.com/nasa/cFS/pull/501 to run successfully
+
+Third party code
+If included, identify any third party code and provide text file of license
+
+Contributor Info - All information REQUIRED for consideration of pull request
+Full name and company/organization/center of all contributors (""Personal"" if individual work)
+
+Note CLA's apply to software contributions.","CCB:Approved, dependency, draco-rc2",https://github.com/nasa/SC/pull/30
+Add CodeQL to repository,"**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [X] I reviewed the [README file](https://github.com/nasa/SC/blob/main/README.md) to see if the feature is in the major future work.
+* [X] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Use CodeQL for continuous integration
+
+**Describe the solution you'd like**
+Add CodeQL workflow
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Add any other context about the feature request here.
+
+**Requester Info**
+Haven Carlson","continuous-integration, draco-rc2",https://github.com/nasa/SC/issues/29
+"Fix #22 #23, Resolve static analysis warnings","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CF/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #22 
+- Fix #23
+
+**Testing performed**
+CI + static analysis run
+
+**Expected behavior changes**
+None, just squashes static analysis warnings
+
+**System(s) tested on**
+ - Hardware: VM
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + apps + related static analysis resolution branches
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/SC/pull/28
+"Fix #25, RTS not loaded event no longer implies failure in text","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #25 
+
+Rewords event and simplifies unit test
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+Event text no longer implies failure
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/SC/pull/27
+"Fix #24, Resolve strict cppcheck style warnings","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #24
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just squashes strict cppcheck style warnings
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/SC/pull/26
+"RTS table file load ""failure"" event at startup misnomer causes build run workflow failure","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/SC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+The build and run workflow checks for err|warn|fail, but SC nominally sends the following event:
+`EVS Port1 66/1/SC 21: RTS table file load failure count = 62`
+
+See error here: https://github.com/nasa/SC/runs/6327781812?check_suite_focus=true
+
+**Describe the solution you'd like**
+Really this isn't a failure.  It's just than only 2 of up to 64 RTS tables were loaded automatically.  Maybe just change to say 'RTS table files not loaded automatically at startup = 62' or similar.
+
+**Describe alternatives you've considered**
+Could set the configuration just to load the 2 existing RTS's... but it may be handy to leave as somewhat larger to avoid requiring recompile to add more default RTS's.
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","enhancement, draco-rc2",https://github.com/nasa/SC/issues/25
+Strict cppcheck static analysis style warnings,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/SC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Fails cppcheck strict static analysis workflow as seen here (https://github.com/nasa/SC/runs/6327782270?check_suite_focus=true)
+```
+[fsw/src/sc_atsrq.h:66] -> [fsw/src/sc_atsrq.c:50]: (style, inconclusive) Function 'SC_StartAtsCmd' argument 1 names different: declaration 'CmdPacket' definition 'BufPtr'.
+[fsw/src/sc_atsrq.h:83] -> [fsw/src/sc_atsrq.c:131]: (style, inconclusive) Function 'SC_StopAtsCmd' argument 1 names different: declaration 'CmdPacket' definition 'BufPtr'.
+[fsw/src/sc_atsrq.h:47] -> [fsw/src/sc_atsrq.c:181]: (style, inconclusive) Function 'SC_BeginAts' argument 1 names different: declaration 'AtsId' definition 'AtsIndex'.
+[fsw/src/sc_atsrq.h:117] -> [fsw/src/sc_atsrq.c:305]: (style, inconclusive) Function 'SC_GroundSwitchCmd' argument 1 names different: declaration 'CmdPacket' definition 'BufPtr'.
+[fsw/src/sc_atsrq.h:187] -> [fsw/src/sc_atsrq.c:508]: (style, inconclusive) Function 'SC_JumpAtsCmd' argument 1 names different: declaration 'CmdPacket' definition 'BufPtr'.
+[fsw/src/sc_atsrq.h:203] -> [fsw/src/sc_atsrq.c:637]: (style, inconclusive) Function 'SC_ContinueAtsOnFailureCmd' argument 1 names different: declaration 'CmdPacket' definition 'BufPtr'.
+[fsw/src/sc_atsrq.h:222] -> [fsw/src/sc_atsrq.c:669]: (style, inconclusive) Function 'SC_AppendAtsCmd' argument 1 names different: declaration 'CmdPacket' definition 'BufPtr'.
+[fsw/src/sc_cmds.h:161] -> [fsw/src/sc_cmds.c:492]: (style, inconclusive) Function 'SC_ResetCountersCmd' argument 1 names different: declaration 'CmdPacket' definition 'BufPtr'.
+[fsw/src/sc_cmds.h:146] -> [fsw/src/sc_cmds.c:514]: (style, inconclusive) Function 'SC_NoOpCmd' argument 1 names different: declaration 'CmdPacket' definition 'BufPtr'.
+[fsw/src/sc_cmds.h:117] -> [fsw/src/sc_cmds.c:529]: (style, inconclusive) Function 'SC_ProcessRequest' argument 1 names different: declaration 'CmdPacket' definition 'BufPtr'.
+[fsw/src/sc_cmds.h:131] -> [fsw/src/sc_cmds.c:637]: (style, inconclusive) Function 'SC_ProcessCommand' argument 1 names different: declaration 'CmdPacket' definition 'BufPtr'.
+[fsw/src/sc_cmds.h:47] -> [fsw/src/sc_cmds.c:733]: (style, inconclusive) Function 'SC_TableManageCmd' argument 1 names different: declaration 'CmdPacket' definition 'BufPtr'.
+[fsw/src/sc_loads.h:47] -> [fsw/src/sc_loads.c:390]: (style, inconclusive) Function 'SC_ParseRts' argument 1 names different: declaration 'Buffer' definition 'Buffer32'.
+[fsw/src/sc_loads.h:110] -> [fsw/src/sc_loads.c:697]: (style, inconclusive) Function 'SC_VerifyAtsTable' argument 1 names different: declaration 'Buffer' definition 'Buffer32'.
+[fsw/src/sc_loads.h:126] -> [fsw/src/sc_loads.c:762]: (style, inconclusive) Function 'SC_VerifyAtsEntry' argument 1 names different: declaration 'Buffer' definition 'Buffer32'.
+```
+
+**Describe the solution you'd like**
+Fix the name inconsistencies.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","enhancement, draco-rc2",https://github.com/nasa/SC/issues/24
+Static analysis issues relative to flight code,"Handful of static analysis issues in the ""red"" identified (non-Style issues).  Need to resolve these.
+
+Filter: -file:elf -file:ut -file:cfe -file:os -file:cf_ -file:_lab_app.c !(significance:style)
+
+should resolve and/or disposition the higher ranked ones at minimum.
+
+Note license restricts publishing issues.
+
+Imported from GSFCCFS-1958","bug, draco-rc2",https://github.com/nasa/SC/issues/23
+Resolve static analysis issues relative to unit tests,"Many actual code issues (uninitialized variables, buffer overruns, etc) identified via static analysis in the unit tests.  All actual ""bugs"" should be resolved.
+
+Imported from GSFCCFS-1936","unit-test, draco-rc2",https://github.com/nasa/SC/issues/22
+"Revisit coverage, update to 100% code/branch or write issues where unreachable","Failure: Coverage cs lines 99.9% functions 100.0% branches 99.1%
+Failure: Coverage ds lines 99.6% functions 100.0% branches 97.7%
+Failure: Coverage fm lines 93.8% functions 94.0% branches 89.1%
+Failure: Coverage hs lines 100.0% functions 100.0% branches 98.1%
+Failure: Coverage lc lines 99.6% functions 100.0% branches 94.3%
+Failure: Coverage md lines 98.4% functions 100.0% branches 96.7%
+Failure: Coverage sc lines 99.9% functions 100.0% branches 99.0%
+
+Fix where possible, elsewise Issues should document all uncovered lines/branches and disposition (why it's ok as-is)
+
+Imported from GSFCCFS-1935","coverage, draco-rc2",https://github.com/nasa/SC/issues/21
+Remove all mentions of ASIST or ITOS artifacts from documentation,"Some of our doxygen docs still reference ASIST or ITOS artifacts. 
+
+See 
+cfs_mm repo: fsw/src/mm_msgdefs.h:l28
+
+Imported from GSFCCFS-1929","docs, draco-rc3",https://github.com/nasa/SC/issues/20
+Apps should use CFE_MSG_PTR macro instead of cast or local unwrapping,"Apps typically cast to a CFE_MSG_Message_t or use *.Msg.  Better to use abstracted CFE_MSG_PTR. NOTE - Not backwards compatible with Caelum so recommend not addressing in Draco.
+
+Imported from GSFCCFS-1900",enhancement,https://github.com/nasa/SC/issues/19
+SC: ATP Control Block Data has compiler added padding,"//The below update to sc_tbldefs.h would explicitly add padding
+
+typedef struct
+{
+
+    uint8  AtpState;       /* execution state of the ATP */
+    uint8  AtsNumber;      /* current ATS running if any */
+//uint16 Padding;        /* Alignment Padding  */
+    uint32 CmdNumber;      /* current cmd number to run if any */
+    uint16 TimeIndexPtr;   /* time index pointer for current cmd */
+    uint16 SwitchPendFlag; /* indicates that a buffer switch is waiting */
+
+} SC_AtpControlBlock_t;
+
+Imported from GSFCCFS-1891",enhancement,https://github.com/nasa/SC/issues/18
+Use real headers and structures to define tables,"RTS uses a relative time tag that is 32 bit native endian.  Current definition of tables uses a uint16 array which makes the table endian specific.
+
+Could instead define a structure with the real contents (headers and commands), union with an array to make it the right size, then use designated initializers.  This would allow the compiler to handle the endianness.
+
+Imported from GSFCCFS-1841","bug, draco-rc4",https://github.com/nasa/SC/issues/17
+Move table header definitions to table header,"SC_RtsEntryHeader_t and SC_AtsEntryHeader_t are currently defined in sc_app.h:
+https://aetd-git.gsfc.nasa.gov/gsfc-cfs/cfs_sc/-/blob/develop/fsw/src/sc_app.h#L306
+https://aetd-git.gsfc.nasa.gov/gsfc-cfs/cfs_sc/-/blob/develop/fsw/src/sc_app.h#L330
+
+Really should be owned by sc_tbldefs.h so that tables that use them don't need to include the entire sc_app.h.
+
+Imported from GSFCCFS-1840","enhancement, draco-rc4",https://github.com/nasa/SC/issues/16
+SC untestable branch condition,"SC has an untestable branch condition in sc_state.c SC_UpdateNextTime. The function checks the RtsNumber using <= SC_NUMBER_OF_RTS. However, the sub function called before the check, SC_GetNextRtsTime, guarantees that the RtsNumber cannot ever exceed SC_NUMBER_OF_RTS.
+
+Imported from GSFCCFS-1717","coverage, draco-rc2",https://github.com/nasa/SC/issues/15
+SC Code Simplification - reduce copies required to read/send sb messages,"SC could use significant code refactoring and simplification.  It would make code more readable, but could also reduce the number of copies required to read and send the software bus messages. 
+
+Imported from GSFCCFS-1645",enhancement,https://github.com/nasa/SC/issues/14
+Streamline SC_GetNextRtsCommand and SC_ParseRts,"Both functions use temporary buffers and potentially unnecessary copies.
+
+Imported from GSFCCFS-1471",enhancement,https://github.com/nasa/SC/issues/13
+Allow RtsGrp commands to accept non-contiguous ranges,"Currently the RtsGrp commands accept a range of RTSs from start_index to end_index.  Instead, the command could accept a set of bytes where each bit corresponds to the RTS to start.  This would allow the group commands to work with a range of RTSs that is non-sequential
+
+Imported from GSFCCFS-1468",enhancement,https://github.com/nasa/SC/issues/12
+Add a ContinueRtsOnFailureFlag to SC,"There is currently a ""ContinueAtsOnFailureFlag"" that allows an operator to choose whether the processing of an ATS should continue after an error has been encountered.  There is currently no corresponding option for RTS processing.  
+
+Imported from GSFCCFS-1467",enhancement,https://github.com/nasa/SC/issues/11
+Combine loops in SC_BuildTimeIndexTable,"There are two loops in SC_BuildTimeIndexTable that appear to be easily combinable.  
+
+Imported from GSFCCFS-1466","enhancement, draco-rc4",https://github.com/nasa/SC/issues/10
+SC_ProcessAtpCmd is very long - could be refactored,"
+
+Imported from GSFCCFS-1461",enhancement,https://github.com/nasa/SC/issues/9
+Reorder conditions to optimize code,"In SC_ProcessAtpCmd, the following condition could be reordered:
+if ((!SC_CompareAbsTime (SC_AppData.NextCmdTime[SC_ATP], SC_AppData.CurrentTime)) &&
+            (SC_AppData.NextProcNumber == SC_ATP) &&
+            (SC_OperData.AtsCtrlBlckAddr -> AtpState == SC_EXECUTING))
+
+
+Since SC_CompareAbsTime() is more complex than the next two conditions, put it as the last one to save CPU cycles should any of the simple comparisons fail
+
+
+Another small optimization: the ""StillProcessing = false"" condition could be moved out of the if and else blocks starting at line 201 in the SC_LoadAts function
+
+Imported from GSFCCFS-1460",enhancement,https://github.com/nasa/SC/issues/8
+Consolidate similar functions,"SC_ManageAtsTable, SC_ManageRtsTable, and SC_ManageAppendTable are similar enough that some consolidation may be possible.  
+
+
+
+Imported from GSFCCFS-1458","enhancement, draco-rc4",https://github.com/nasa/SC/issues/7
+Clarify code by making array index 0 reserved or unused,"The command interface to SC identifies RTSs and ATSs starting with 1, but the code identifies them starting with 0.  Thus in each command, there is code to adjust the Table Number to the Table Index.  Code could be simplified by making array index 0 reserved or unused so that the conversion could be avoided.
+
+Imported from GSFCCFS-1453",enhancement,https://github.com/nasa/SC/issues/6
+Use OS_stat to verify file existence,"In SC_LoadDefaultTables, the OS_OpenCreate function is used to verify that a file can be opened before any attempt is made to load a table from it.  Since the code as-is appears to only be checking for file existence (and not performing any validation on the files), code could be streamlined by using OS_stat.
+
+Imported from GSFCCFS-1447",enhancement,https://github.com/nasa/SC/issues/5
+Consolidate common patterns in SC,"Could reduce lines of code by using a loop for several common patterns in SC initialization.
+
+Specifically the sequence of CFE_TBL_Register calls in SC_RegisterAllTables(), the sequence of CFE_TBL_GetAddress calls in SC_GetDumpTablePointers(), and the sequence of CFE_TBL_NotifyByMessage calls in SC_RegisterManageCmds().
+
+Imported from GSFCCFS-1445","enhancement, draco-rc4",https://github.com/nasa/SC/issues/4
+Not updated for new cFS versions,The cFS API has changed substantially since the last commit to this repo and the SC app no longer compiles with new versions of cFS.,bug,https://github.com/nasa/SC/issues/3
+SC does not compile with cFS 6,"Hi all,
+
+I've tried to compile SC with cFS 6.6.0 and I get many errors. Here are a few examples:
+
+```
+Scanning dependencies of target sc
+[ 68%] Building C object cfe/apps/SC/CMakeFiles/sc.dir/fsw/src/sc_app.c.o
+In file included from /path/to/cfs/project/apps/SC/fsw/src/sc_app.h:65,
+                 from /path/to/cfs/project/apps/SC/fsw/src/sc_app.c:73:
+/path/to/cfs/project/apps/SC/fsw/src/sc_tbldefs.h:117:5: error: unknown type name ‘boolean’
+  117 |     boolean            DisabledFlag;    /* disabled/enabled flag */
+      |     ^~~~~~~
+In file included from /path/to/cfs/project/apps/SC/fsw/src/sc_app.h:67,
+                 from /path/to/cfs/project/apps/SC/fsw/src/sc_app.c:73:
+/path/to/cfs/project/apps/SC/fsw/src/sc_msg.h:83:27: error: ‘CFE_SB_TLM_HDR_SIZE’ undeclared here (not in a function)
+   83 |     uint8       TlmHeader[CFE_SB_TLM_HDR_SIZE];
+      |                           ^~~~~~~~~~~~~~~~~~~
+In file included from /path/to/cfs/project/apps/SC/fsw/src/sc_app.h:67,
+                 from /path/to/cfs/project/apps/SC/fsw/src/sc_app.c:73:
+/path/to/cfs/project/apps/SC/fsw/src/sc_msg.h:170:35: error: ‘CFE_SB_CMD_HDR_SIZE’ undeclared here (not in a function)
+  170 |     uint8               CmdHeader[CFE_SB_CMD_HDR_SIZE];
+      |                                   ^~~~~~~~~~~~~~~~~~~
+In file included from /path/to/cfs/project/apps/SC/fsw/src/sc_app.c:73:
+/path/to/cfs/project/apps/SC/fsw/src/sc_app.h:301:5: error: unknown type name ‘CFE_SB_MsgPtr_t’
+  301 |     CFE_SB_MsgPtr_t         MsgPtr;                             /**< \brief Pointer to command message          */
+      |     ^~~~~~~~~~~~~~~
+In file included from /path/to/cfs/project/apps/SC/fsw/src/sc_app.c:75:
+/path/to/cfs/project/apps/SC/fsw/src/sc_cmds.h:65:24: error: unknown type name ‘CFE_SB_MsgPtr_t’; did you mean ‘CFE_SB_MsgId_t’?
+   65 | void SC_TableManageCmd(CFE_SB_MsgPtr_t CmdPacket);
+      |                        ^~~~~~~~~~~~~~~
+      |                        CFE_SB_MsgId_t
+```
+
+Given how old the last commit in this repo is, I understand these incompatibilities. [I've read](https://github.com/nasa/SC/issues/1#issuecomment-658761822) that a new release is (was?) coming up ; when can we expect it? Fixing these errors should not take too much time, but I dont want to duplicate work, especially as you might have some NASA internal discussions, which I'm not part of, about how to make these changes consistently with the other cFS repos.
+",bug,https://github.com/nasa/SC/issues/2
+Pointer precision loss casting pointer down to (int,"Pointer precision loss casting pointer down to (int), causing segfault on 64-bit. See:
+
+https://github.com/nasa/SC/blob/43392d75418998a75f04b64416a3323be1d51918/fsw/src/sc_rtsrq.c#L641",bug,https://github.com/nasa/SC/issues/1

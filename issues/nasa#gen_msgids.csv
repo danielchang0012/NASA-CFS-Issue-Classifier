@@ -1,0 +1,7 @@
+Title,Body,Labels,URL
+Tool likely doesn't currently function with modern cFE,"Tool is likely related to supporting ground systems and seems to utilize old headers.
+
+Consider deprecating if it's no longer used, supported, functional.
+
+Possible alternative - CCDD for ID management.",,https://github.com/nasa/gen_msgids/issues/2
+"Create version header file, update to x.x.90, report on execution",,enhancement,https://github.com/nasa/gen_msgids/issues/1

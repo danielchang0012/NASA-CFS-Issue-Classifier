@@ -1,0 +1,1522 @@
+Title,Body,Labels,URL
+"Fix #80, cmd and tlm messages use payload sub-structure","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #80, adds Payload substructure to all command and telemetry messages
+
+**Testing performed**
+unit testing
+
+**Expected behavior changes**
+ no impact to behavior
+
+**System(s) tested on**
+ - OS: Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA",CCB:Ready,https://github.com/nasa/MM/pull/81
+"All CMD/TLM messages should put content in a ""Payload"" sub-structure","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/MD/blob/main/CONTRIBUTING.md).
+* [X] I reviewed the [README file](https://github.com/nasa/MD/blob/main/README.md) to see if the feature is in the major future work.
+* [X] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+To match the patterns used in CFE and other modules, all CMD/TLM message definitions should put the content (non-header) parts into a separate struct called ""Payload"".
+
+**Describe the solution you'd like**
+Separate message content into a sub structure called ""Payload"".
+
+**Additional context**
+This is benefit to tooling that can use the presence of this field to identify where the actual content starts (e.g. something like `offsetof(MsgType, Payload)` would work and be correct, as opposed to checking `sizeof(CFE_MSG_CommandHeader_t)` which may not actually reflect where the content starts due to possible compiler-added padding between them).
+
+**Requester Info**
+Haven Carlson - NASA",,https://github.com/nasa/MM/issues/80
+"Fix #8, Remove unnecessary characters from memory dump event","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #8
+- Removes the `0x` and trailing space around each byte from the dump event message.
+- Re-introduced from #52. #77, #78 reverted this PR.
+
+**Testing performed**
+Build & Run + Unit Tests.
+
+**Expected behavior changes**
+Increases the number of bytes that can be dumped in the event message string dramatically (by around double, depending on the value that is set for `CFE_MISSION_EVS_MAX_MESSAGE_LENGTH`).
+
+**Contributor Info**
+@thnkslprpt",Equuleus-rc2,https://github.com/nasa/MM/pull/79
+Fix #77: Revert merge of PR #52.,"**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #77.
+
+**Expected behavior changes**
+Reverts #52.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Dylan Z. Baker - NASA/GSFC","CCB:Ready, CCB:FastTrack, Equuleus-rc1",https://github.com/nasa/MM/pull/78
+Revert PR #52,"**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/MD/blob/main/CONTRIBUTING.md).
+* [X] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+The changes included in PR #52 introduce bugs. We will revert the PR for this release, then revisit it following release.
+
+**Reporter Info**
+Dylan Z. Baker - NASA/GSFC",,https://github.com/nasa/MM/issues/77
+"Fix #75, Moved command validation out of command functions","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #75 , validate command before calling the command function instead of after.
+
+**Testing performed**
+Unit testing
+
+**Expected behavior changes**
+ no impact to behavior
+
+**System(s) tested on**
+ - OS: Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA","CCB:Approved, Equuleus-rc2",https://github.com/nasa/MM/pull/76
+Apps should check/verify msg BEFORE calling handler,"**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/MD/blob/main/CONTRIBUTING.md).
+* [X] I reviewed the [README file](https://github.com/nasa/MD/blob/main/README.md) to see if the feature is in the major future work.
+* [X] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Copy of https://github.com/nasa/CS/issues/75
+The CFE core and sample app (which is supposed to be the example of ""best practice"") do validation on the message before calling the handler. For example:
+
+        case SAMPLE_APP_NOOP_CC:
+            if (SAMPLE_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(SAMPLE_APP_NoopCmd_t)))
+            {
+                SAMPLE_APP_Noop((SAMPLE_APP_NoopCmd_t *)SBBufPtr);
+            }
+This is different from MM, which does a similar check, but done inside each handler, for example:
+https://github.com/nasa/MM/blob/e76c2d3fcc6a74fc10e6a2b4cb18cc5d00d6e3b9/fsw/src/mm_app.c#L372-L389
+
+**Describe the solution you'd like**
+CFS Apps should follow the best practices/patterns set forth in the framework code. (there are reasons for the pattern being recommended practice)
+
+**Requester Info**
+Haven Carlson - NASA",,https://github.com/nasa/MM/issues/75
+"Fix #66, Adds local variables for command buffer processing","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+A clear and concise description of what the contribution is.
+- Fixes #66 
+
+**Testing performed**
+error-free build
+100% lcov coverage
+
+**Expected behavior changes**
+""Const-ness"" of command buffers are maintained. Minimized undefined behavior by creating and localizing changes instead of changing const buffers.
+
+**System(s) tested on**
+ - OS: Ubuntu 22.04
+
+**Additional context**
+N/A
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, Vantage Systems
+","enhancement, CCB:Approved, Equuleus-rc1",https://github.com/nasa/MM/pull/74
+"Fix #72, Convert `int32` return codes and variables to `CFE_Status_t`","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #72
+  - suitable `int32` return codes converted over to `CFE_Status_t`
+  - `int32` `status`/`return` variables holding cFE return codes converted to `CFE_Status_t`
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+
+**Expected behavior changes**
+No change to behavior.
+`CFE_Status_t` is more expressive and improves consistency with cFE/cFS.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","enhancement, CCB:Approved, Equuleus-rc1",https://github.com/nasa/MM/pull/73
+MM `int32` return codes and variables should be converted to `CFE_Status_t`,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+MM has a few return codes (as well as local `status`/`return` variables which hold CFE return codes) that can be easily converted over to the `CFE_Status_t` typedef.
+
+**Expected behavior**
+Use the more expressive `CFE_Status_t` and improve consistency with cFS.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt","enhancement, Equuleus-rc1",https://github.com/nasa/MM/issues/72
+"Fix #70, Remove redundant use of ""dummy"" in test code","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #70 
+  - Redundant use of the word ""dummy"" in test code variables/text has been removed
+
+**Testing performed**
+GitHub CI actions all passing successfully (incl. unit tests etc.)
+
+**Expected behavior changes**
+No change to behavior.
+Test code is simpler and cleaner when redundant qualifiers are removed.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/MM/pull/71
+"Remove redundant use of ""dummy"" in test code","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+- Similar to https://github.com/nasa/CF/issues/105
+  - Redundant use of the word ""dummy"" in some variables/text in the test code.
+
+All test code variables are 'dummy' variables - no need to label them as such.
+
+**Expected behavior**
+Simplify test code by removing redundant qualifiers.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",Equuleus-rc1,https://github.com/nasa/MM/issues/70
+"Fix #65, Adds EventString null termination","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+A clear and concise description of what the contribution is.
+- Fixes #65
+
+**Testing performed**
+* built app
+* Tested lcov
+* Ran passing cert_testbed::`./runCTFscript.sh cFE_MM_DumpInEventRAM.json` test
+
+**Expected behavior changes**
+Null terminated `EventString`
+
+**System(s) tested on**
+ - OS: Ubuntu 20.04
+
+**Additional context**
+Followed similar null-terminated character array concatenation in:https://github.com/nasa/DS/blob/64181647ab455653fbc04b20a43406764862673b/fsw/src/ds_file.c#L553
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+ - Justin Figueroa, Vantage","enhancement, CCB:Approved, Equuleus-rc1",https://github.com/nasa/MM/pull/69
+"Fix #67, Use `size_t` for 'size' variables","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #67 
+  - Converted the obvious candidates for conversion to `size_t` (mostly local variables).
+  - Updated the related local test variables to `size_t` as well for consistency.
+  - All variables updated were already unsigned (`uint8,` `uint16` and mostly `uint32`).
+
+4 functions had parameters converted to `size_t:`
+`MM_Verify32Aligned()` - `uint32 Size`
+`MM_Verify16Aligned()` - `uint32 Size`
+`MM_VerifyLoadDumpParams()` - `uint32 SizeInBytes`
+`MM_VerifyPeekPokeParams()` - `uint8 SizeInBits`
+
+Even if using `size_t` is unnecessary in some cases (and wastes some space), it is more expressive and more compliant with the relevant coding standards.
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+
+**Expected behavior changes**
+No change to behavior other than type changes outlined above.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","enhancement, CCB:Approved",https://github.com/nasa/MM/pull/68
+Size variables should use the `size_t` type,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Most variables representing sizes in MM use `size_t.`
+There are a few that do not follow this custom and could be transitioned over.
+
+**Code snips**
+https://github.com/nasa/MM/blob/b824250e2224ba5885971869c97a1706e3d2492c/fsw/src/mm_dump.c#L53
+https://github.com/nasa/MM/blob/b824250e2224ba5885971869c97a1706e3d2492c/fsw/src/mm_utils.c#L299
+
+**Expected behavior**
+All size variables that can use `size_t` should do so - `size_t` is more expressive and more consistent with the relevant coding guidelines.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",enhancement,https://github.com/nasa/MM/issues/67
+MM command handlers cast away const,"**Checklist (Please check before submitting)**
+
+* [x ] I reviewed the [Contributing Guide](https://github.com/nasa/MD/blob/main/CONTRIBUTING.md).
+* [ x] I reviewed the [README file](https://github.com/nasa/MD/blob/main/README.md) to see if the feature is in the major future work.
+* [x ] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Several MM functions cast away const on their command buffer such that they can manipulate it internally.  Buffers should be copied to a local variable prior to manipulation. 
+
+Examples include:
+MM_LoadMemFromFileCmd
+MM_DumpMemToFileCmd
+MM_SymTblToFileCmd
+
+**Describe the solution you'd like**
+Audit MM and clean up.
+
+**Requester Info**
+Dan Knutsen
+NASA Goddard
+","bug, Equuleus-rc1",https://github.com/nasa/MM/issues/66
+Null termination of strings - static analysis audit,"**Checklist (Please check before submitting)**
+
+* [x ] I reviewed the [Contributing Guide](https://github.com/nasa/MD/blob/main/CONTRIBUTING.md).
+* [x ] I reviewed the [README file](https://github.com/nasa/MD/blob/main/README.md) to see if the feature is in the major future work.
+* [x ] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+mm_dump.c:MM_DumpInEventCmd - Function should be updated to ensure NULL termination of EventString.
+
+**Describe the solution you'd like**
+Function should be updated to ensure NULL termination of EventString.
+
+**Requester Info**
+Dan Knutsen
+NASA Goddard
+",Equuleus-rc1,https://github.com/nasa/MM/issues/65
+"Fix #63, Replace quotes with angle brackets in /inc","**Checklist (Please check before submitting)**
+
+* [x ] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [x ] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #63 - replace quotes with angle brackets in /inc files.
+
+**Testing performed**
+1. Performed build verification testing
+2. CI
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Dan Knutsen
+NASA Goddard
+","CCB:Approved, draco-rc4",https://github.com/nasa/MM/pull/64
+Replace quotes with angle brackets in #include statements within /inc,"Describe the solution you'd like
+Quotes should be replaced with angle brackets in #include statements that reside in the /inc location. This will ensure that the preprocessor selects the files pre-designated to override the default files contained within the open source cFS build release - as opposed to selecting those located in the same directory.
+
+Requester Info
+Dan Knutsen
+NASA Goddard",draco-rc4,https://github.com/nasa/MM/issues/63
+"Fix #61, Adds fsw/src to app target","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+-Fixes #61
+
+**Testing performed**
+make install
+
+**Expected behavior changes**
+Successful cert_testbed build
+
+**System(s) tested on**
+- Ubuntu 20.04
+
+**Additional context**
+N/A
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, Vantage Systems
+","invalid, CCB:Ignore",https://github.com/nasa/MM/pull/62
+Add fsw/src to app target,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/MD/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Cannot build cert_testbed. `target_include_directories(xx PUBLIC fsw/src)` is needed to build tables, etc. Revise CMakeLists.txt
+
+**To Reproduce**
+Build in cert_testbed
+
+**Expected behavior**
+Error-free build
+
+**Code snips**
+If applicable, add references to the software.
+
+**System observed on:**
+ - Ubuntu 20.04
+
+**Additional context**
+N/A
+
+**Reporter Info**
+Justin Figueroa, Vantage Systems
+",invalid,https://github.com/nasa/MM/issues/61
+"Fix #59, 64-bit align cmd/tlm structures","**Checklist (Please check before submitting)**
+
+* [ x] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [x ] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Adds padding to cmd & tlm data structures for 64-bit alignment.
+
+**Testing performed**
+Updated ground database file(s) and ran build verification tests against both 32 & 64 bit systems.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Dan Knutsen
+NASA Goddard
+","CCB:Approved, draco-rc4",https://github.com/nasa/MM/pull/60
+Cmd/Tlm structures not 64-bit aligned,"**Is your feature request related to a problem? Please describe.**
+MM command and telemetry data structures are not 64-bit aligned.
+
+**Describe the solution you'd like**
+64-bit align the data structures
+
+**Requester Info**
+Dan Knutsen
+NASA Goddard
+",draco-rc4,https://github.com/nasa/MM/issues/59
+"Fix #57, Moves interface definition files to inc","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #57
+
+**Testing performed**
+make install
+lcov
+
+**Expected behavior changes**
+No expected behavior change.
+
+**System(s) tested on**
+-Ubuntu 18.04
+
+**Additional context**
+The make and lcov tests were successfully executed on these code changes with the [Werror flag](https://github.com/nasa/cFE/blob/9f89010b4a126c65a179765e6c8fde2ca807e979/cmake/sample_defs/arch_build_custom.cmake#L35) commented out. https://github.com/nasa/MM/issues/55 is a separate piece of work that addresses the outstanding compile errors.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+-Justin Figueroa, Vantage
+","CCB:Approved, draco-rc4",https://github.com/nasa/MM/pull/58
+"Move interface definition files to ""inc"" location","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/MM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+The interface definition files of all open source apps currently exist in the ""src"" directory.
+
+**Describe the solution you'd like**
+Create an ""inc"" dir to go with the ""src"" dir.  Move the interface definitions into this location: ""_msg.h"", ""_msgdefs.h"", ""_tbldefs.h"", and ""_events.h"". Consider moving header files in both ""platform_inc"" and ""mission_inc"" to ""inc""
+
+**Describe alternatives you've considered**
+Leaving as is.
+
+**Additional context**
+N/A
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+",draco-rc4,https://github.com/nasa/MM/issues/57
+"Fix #54, Update initializations causing Cppcheck failure","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #54
+Note: all are local variables only.
+In order of the errors reported in the issue report:
+
+mm_dump.c
+In the `MM_PeekCmd()` function:
+`bool Valid = true;`: `Valid` is assigned a value (on line 62) before any and all of its references, so it can be safely changed from an initialization to a declaration-only at the top of the function.
+
+In the `MM_DumpMemToFileCmd()` function:
+`int32 OS_Status = OS_SUCCESS;`: `OS_Status` is assigned a value (on line 240) before any and all of its references (and all are covered logically by this assignment on line 240).
+
+In the `MM_FillDumpInEventBuffer()` function:
+`int32 PSP_Status;`: This is a false positive. I've added a `cppcheck-suppress` comment on the preceding line as part of this PR.
+
+mm_load.c
+In the `MM_LoadMemWIDCmd()` function:
+`uint32 ComputedCRC = 0;`: `ComputedCRC` is only used on line 320 and it is assigned a value on the immediately preceding line of code.
+
+In the `MM_LoadMemFromFileCmd()` function:
+`int32 OS_Status = OS_SUCCESS;`: `OS_Status` is assigned a value on line 388 (and again on line 529) which cover logically all of its uses in the function.
+
+mm_mem16.c
+In the `MM_LoadMem16FromFile()` function:
+`uint32 i = 0;`: `i` is assigned a value in the init-statement of the `for` loop on line 82, so the initialization at the top of the function is redundant.
+`int32 ReadLength = 0;`: `ReadLength` is assigned a value in the `if` statement on line 72, and is only used once immediately after that inside that `if` block.
+
+In the `MM_DumpMem16ToFile()` function:
+`int32 OS_Status = OS_ERROR;`: `OS_Status` is assigned a value in the `if` statement on line 178, and is only used in that `if`/`else` block which is all covered by that local assignment on line 178. This makes the initialization at the top of the function redundant.
+`uint32 i = 0;`: `i` is assigned a value in the init-statement of the `for` loop on line 155, so the initialization at the top of the function is redundant.
+
+In the `MM_FillMem16()` function:
+`uint32 i = 0;`: `i` is assigned a value in the init-statement of the `for` loop on line 252, so the initialization at the top of the function is redundant.
+`uint32 NewBytesRemaining = 0;`: `NewBytesRemaining` is only used inside the `if` block (starting on line 234) and it is assigned a value there (on line 236) before any and all of its references.
+
+mm_mem32.c
+In the `MM_LoadMem32FromFile()` function:
+`uint32 i = 0;`: `i` is assigned a value in the init-statement of the `for` loop on line 82, so the initialization at the top of the function is redundant.
+`int32 ReadLength = 0;`: `ReadLength` is assigned a value in the `if` statement on line 72, and is only used once immediately after that inside that `if` block.
+
+In the `MM_DumpMem32ToFile()` function:
+`int32 OS_Status = OS_ERROR;`: `OS_Status` is assigned a value in the `if` statement on line 179, and is only used in that `if`/`else` block which is fully covered by that local assignment on line 179. This makes the initialization at the top of the function redundant.
+`uint32 i = 0;`: `i` is assigned a value in the init-statement of the `for` loop on line 155, so the initialization at the top of the function is redundant.
+
+In the `MM_FillMem32()` function:
+`uint32 i = 0;`: `i` is assigned a value in the init-statement of the `for` loop on line 253, so the initialization at the top of the function is redundant.
+`uint32 NewBytesRemaining = 0;`: `NewBytesRemaining` is only used inside the `if` block (starting on line 235) and it is assigned a value there (on line 237) before any and all of its references
+
+mm_mem8.c
+In the `MM_LoadMem8FromFile()` function:
+`uint32 i = 0;`: `i` is assigned a value in the init-statement of the `for` loop on line 82, so the initialization at the top of the function is redundant.
+`int32 ReadLength = 0;`: `ReadLength` is assigned a value in the `if` statement on line 72, and is only used once immediately after that inside that `if` block.
+
+In the `MM_DumpMem8ToFile()` function:
+`int32 OS_Status = OS_ERROR;`: `OS_Status` is assigned a value in the `if` statement on line 178, and is only used in that `if`/`else` block which is fully covered by that local assignment on line 178. This makes the initialization at the top of the function redundant.
+`uint32 i = 0;`: `i` is assigned a value in the init-statement of the `for` loop on line 155, so the initialization at the top of the function is redundant.
+
+In the `MM_FillMem8()` function:
+`uint32 i = 0;`: `i` is assigned a value in the init-statement of the `for` loop on line 241, so the initialization at the top of the function is redundant.
+
+mm_utils.c
+`int32 OS_Status = OS_SUCCESS;`: `OS_Status` is assigned a value on line 528 and is only used once on the next line.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully if separate issue https://github.com/nasa/MM/issues/55 is suppressed
+![image](https://user-images.githubusercontent.com/9024662/200222963-d0f9f7f0-0404-440f-b578-418c5c297bff.png)
+The log from the successful build (with the GCC suppressions that can't be included in this PR) can be viewed here:
+https://github.com/thnkslprpt/MM/actions/runs/3407355310/jobs/5667038143
+
+**Expected behavior changes**
+No impact on code behavior.
+Cppcheck now passes without error again.
+
+**Contributor Info**
+Avi @thnkslprpt","enhancement, CCB:Approved, draco-rc4",https://github.com/nasa/MM/pull/56
+New GCC warnings causing build failure [-Werror=stringop-overflow=],"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+I believe these are newly triggered GCC warnings (treated as errors) that are now causing the standard MM Build + Run workflow to fail.
+```
+In function ‘strncat’,
+    inlined from ‘MM_DumpInEventCmd’ at /home/runner/work/MM/MM/apps/mm/fsw/src/mm_dump.c:530:25:
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:136:10: error: ‘__builtin___strncat_chk’ specified bound depends on the length of the source argument [-Werror=stringop-overflow=]
+  136 |   return __builtin___strncat_chk (__dest, __src, __len, __bos (__dest));
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/MM/MM/apps/mm/fsw/src/mm_dump.c: In function ‘MM_DumpInEventCmd’:
+/home/runner/work/MM/MM/apps/mm/fsw/src/mm_dump.c:530:25: note: length computed here
+  530 |                         strncat(EventString, TempString, strlen(TempString));
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/string.h:495,
+...
+In function ‘strncat’,
+    inlined from ‘MM_DumpInEventCmd’ at /home/runner/work/MM/MM/apps/mm/fsw/src/mm_dump.c:539:21:
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:136:10: error: ‘__builtin___strncat_chk’ specified bound depends on the length of the source argument [-Werror=stringop-overflow=]
+  136 |   return __builtin___strncat_chk (__dest, __src, __len, __bos (__dest));
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/MM/MM/apps/mm/fsw/src/mm_dump.c: In function ‘MM_DumpInEventCmd’:
+/home/runner/work/MM/MM/apps/mm/fsw/src/mm_dump.c:539:21: note: length computed here
+  539 |                     strncat(EventString, TempString, strlen(TempString));
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
+```
+
+**To Reproduce**
+Run the Build + Run GitHub Action on the current main branch MM source code.
+
+**Expected behavior**
+Build + Run workflow should run without errors.
+
+**Reporter Info**
+Avi @thnkslprpt",enhancement,https://github.com/nasa/MM/issues/55
+New Cppcheck errors: '[unreadVariable]' and '[unusedVariable]',"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Latest version of Cppcheck is issuing the following failures for MM:
+```
+fsw/src/mm_dump.c:50:25: style: Variable 'Valid' is assigned a value that is never used. [unreadVariable]
+    bool          Valid = true;
+                        ^
+fsw/src/mm_dump.c:190:40: style: Variable 'OS_Status' is assigned a value that is never used. [unreadVariable]
+    int32                   OS_Status  = OS_SUCCESS;
+                                       ^
+fsw/src/mm_dump.c:573:11: style: Unused variable: PSP_Status [unusedVariable]
+    int32 PSP_Status;
+          ^
+fsw/src/mm_load.c:296:40: style: Variable 'ComputedCRC' is assigned a value that is never used. [unreadVariable]
+    uint32              ComputedCRC    = 0;
+                                       ^
+fsw/src/mm_load.c:366:42: style: Variable 'OS_Status' is assigned a value that is never used. [unreadVariable]
+    int32                    OS_Status   = OS_SUCCESS;
+                                         ^
+fsw/src/mm_mem16.c:54:28: style: Variable 'i' is assigned a value that is never used. [unreadVariable]
+    uint32  i              = 0;
+                           ^
+fsw/src/mm_mem16.c:55:28: style: Variable 'ReadLength' is assigned a value that is never used. [unreadVariable]
+    int32   ReadLength     = 0;
+                           ^
+fsw/src/mm_mem16.c:138:28: style: Variable 'OS_Status' is assigned a value that is never used. [unreadVariable]
+    int32   OS_Status      = OS_ERROR;
+                           ^
+fsw/src/mm_mem16.c:140:28: style: Variable 'i' is assigned a value that is never used. [unreadVariable]
+    uint32  i              = 0;
+                           ^
+fsw/src/mm_mem16.c:223:31: style: Variable 'i' is assigned a value that is never used. [unreadVariable]
+    uint32  i                 = 0;
+                              ^
+fsw/src/mm_mem16.c:227:31: style: Variable 'NewBytesRemaining' is assigned a value that is never used. [unreadVariable]
+    uint32  NewBytesRemaining = 0;
+                              ^
+fsw/src/mm_mem32.c:54:28: style: Variable 'i' is assigned a value that is never used. [unreadVariable]
+    uint32  i              = 0;
+                           ^
+fsw/src/mm_mem32.c:55:28: style: Variable 'ReadLength' is assigned a value that is never used. [unreadVariable]
+    int32   ReadLength     = 0;
+                           ^
+fsw/src/mm_mem32.c:138:28: style: Variable 'OS_Status' is assigned a value that is never used. [unreadVariable]
+    int32   OS_Status      = OS_ERROR;
+                           ^
+fsw/src/mm_mem32.c:140:28: style: Variable 'i' is assigned a value that is never used. [unreadVariable]
+    uint32  i              = 0;
+                           ^
+fsw/src/mm_mem32.c:224:31: style: Variable 'i' is assigned a value that is never used. [unreadVariable]
+    uint32  i                 = 0;
+                              ^
+fsw/src/mm_mem32.c:228:31: style: Variable 'NewBytesRemaining' is assigned a value that is never used. [unreadVariable]
+    uint32  NewBytesRemaining = 0;
+                              ^
+fsw/src/mm_mem8.c:54:27: style: Variable 'i' is assigned a value that is never used. [unreadVariable]
+    uint32 i              = 0;
+                          ^
+fsw/src/mm_mem8.c:55:27: style: Variable 'ReadLength' is assigned a value that is never used. [unreadVariable]
+    int32  ReadLength     = 0;
+                          ^
+fsw/src/mm_mem8.c:138:27: style: Variable 'OS_Status' is assigned a value that is never used. [unreadVariable]
+    int32  OS_Status      = OS_ERROR;
+                          ^
+fsw/src/mm_mem8.c:140:27: style: Variable 'i' is assigned a value that is never used. [unreadVariable]
+    uint32 i              = 0;
+                          ^
+fsw/src/mm_mem8.c:223:27: style: Variable 'i' is assigned a value that is never used. [unreadVariable]
+    uint32 i              = 0;
+                          ^
+fsw/src/mm_utils.c:505:21: style: Variable 'OS_Status' is assigned a value that is never used. [unreadVariable]
+    int32 OS_Status = OS_SUCCESS;
+                    ^
+##[error]Process completed with exit code 255.
+```
+
+**To Reproduce**
+Run the current version of Cppcheck on the current main branch MM source code.
+
+**Expected behavior**
+Cppcheck should run without errors.
+
+**Reporter Info**
+Avi @thnkslprpt",draco-rc4,https://github.com/nasa/MM/issues/54
+"Fix #21, Add MM_SegmentBreak() to MM_FillMem()","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #21 
+  - Added call to `MM_SegmentBreak()` between segments in `MM_FillMem()`. 
+
+**Testing performed**
+CI Run + Build & Unit Tests still passing successfully.
+
+**Expected behavior changes**
+Removes this source of potential CPU hogging.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",CCB:Approved,https://github.com/nasa/MM/pull/53
+"Fix #8, Remove unnecessary characters from memory dump event","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #8
+  - Removes the `0x` and trailing space around each byte from the dump event message.
+
+**Testing performed**
+Build & Run + Unit Tests.
+
+**Expected behavior changes**
+Increases the number of bytes that can be dumped in the event message string dramatically (by around double, depending on the value that is set for `CFE_MISSION_EVS_MAX_MESSAGE_LENGTH`).
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",CCB:Approved,https://github.com/nasa/MM/pull/52
+"Fix #50, Apply consistent Event ID names to common events","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #50 
+  - Consistent event IDs have been applied to the inconsistent cases to align them with a common Event ID naming convention.
+
+**Testing performed**
+Only GitHub CI actions.
+
+**Expected behavior changes**
+No impact on code behavior (no logic changes).
+Consistent Event ID names for the events which are common to all/most cFS components and apps will improve consistency and ease make code review/debugging easier.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/MM/pull/51
+Inconsistent Event ID naming,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/cFE/issues/2175
+After finding that there were 9 different Event IDs to indicate the same thing (Invalid Message ID) in https://github.com/nasa/CF/issues/262, I scrubbed the other common commands (e.g. Task Initialisation [INIT], NOOP, Reset Counters etc.) and found the same issue there - almost every component/app had their own variation of the Event ID name for the exact same event.
+
+**Expected behavior**
+Apply consistent Event ID names to the events which are common to all/most components and apps.
+
+**Code snips**
+Invalid Message ID:
+`CFE_EVS_ERR_MSGID_EID`
+`CFE_SB_BAD_MSGID_EID`
+`CFE_TIME_ID_ERR_EID`
+`CS_MID_ERR_EID`
+`TO_LAB_MSGID_ERR_EID`
+`SAMPLE_APP_INVALID_MSGID_ERR_EID`
+`BP_INVALID_MID_ERR_EID`
+`SCH_MD_ERR_EID`
+`CI_LAB_COMMAND_ERR_EID`
+
+Initialization:
+`CFE_TIME_INIT_EID`
+`CFE_TBL_INIT_INF_EID`
+`CFE_EVS_STARTUP_EID`
+`CF_EID_INF_INIT`
+`BP_INIT_APP_INFO_EID`
+`SCH_INITSTATS_INF_EID`
+`CI_LAB_STARTUP_INF_EID`
+
+NOOP:
+`CFE_TIME_NOOP_EID`
+`CFE_TBL_NOOP_INF_EID`
+`CFE_SB_CMD0_RCVD_EID`
+`CF_EID_INF_CMD_NOOP`
+`FM_NOOP_CMD_EID`
+`CI_LAB_COMMANDNOP_INF_EID`
+
+Reset Counters:
+`CFE_TIME_RESET_EID`
+`CFE_TBL_RESET_INF_EID`
+`CFE_EVS_RSTCNT_EID`
+`CFE_SB_CMD1_RCVD_EID`
+`CF_EID_INF_CMD_RESET`
+`SC_RESET_DEB_EID`
+`HS_RESET_DBG_EID`
+`FM_RESET_CMD_EID`
+`HK_RESET_CNTRS_CMD_EID`
+`MD_RESET_CNTRS_DBG_EID`
+`CI_LAB_COMMANDRST_INF_EID`
+
+etc.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",enhancement,https://github.com/nasa/MM/issues/50
+"Fix #9, move Memory Types to enums","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #9, created enum MM_MemType_t for memory types
+
+**Testing performed**
+Unit testing
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+ - OS: Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA","CCB:Approved, draco-rc4",https://github.com/nasa/MM/pull/49
+"Fix #47, Remove redundant/inconsistent comments (/* end of function */, /* end if */ etc.) and clean up empty lines.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #47
+Removes redundant and inconsistent comments (e.g. `/* end of function */`, `/* end if */`, function name in function header comments).
+There were also a few cases of unnecessary empty lines (e.g. on the last line before the closing brace of a function) and also missing empty lines (e.g. between functions) which were corrected. Some of these empty lines trigger the CI format checks.
+
+**Testing performed**
+None (comment and whitespace changes only).
+
+**Expected behavior changes**
+No impact on behavior.
+These updates will reduce clutter and inconsistency in the code, improving readability.
+
+**Contributor Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/MM/pull/48
+"Redundant comments (/* end of function */, /* end if */ etc.) and clean up empty lines.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/to_lab/issues/68 and https://github.com/nasa/sample_app/issues/111
+There are quite a few redundant comments in the code, such as:
+- `/* end of function */`-type comments
+- `/* end if */`-type comments
+- function header comments which include the function name
+
+Another minor issue has to do with empty lines:
+a) _unnecessary_ empty lines (e.g. first line after the opening brace of a function/struct, or the last line before the closing brace - the latter apparently sometimes triggers the CI format checks).
+b) _missing_ empty lines between functions (i.e. closing brace of last function, then next function beginning on the immediately next line without an empty line in between)
+
+The unnecessary empty lines (at the beginning or end of a function, for example) represent a low single-digit percentage of the cases (the vast majority of functions/structs do not have these extra empty lines), so there is an argument to remove them purely for consistency, not just due to them being redundant and triggering the CI format checks.
+
+**Expected behavior**
+Remove redundant comments to reduce clutter and inconsistency in the code, and improve readability.
+
+**Reporter Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/MM/issues/47
+"Fix #45, Remove 'return;' from last line of void functions.","v**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #45
+Removes all cases of redundant ""return;"" statements on the last line of void functions.
+Corrected a few typos in the comments that were noticed along the way.
+
+**Testing performed**
+None, prior to submission.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info**
+@thnkslprpt ","CCB:Approved, draco-rc4",https://github.com/nasa/MM/pull/46
+"Remove ""return;"" from last line of void functions","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+""return;"" at last line in void function is redundant.
+Copy of https://github.com/nasa/cFE/issues/1540
+
+**Describe the solution you'd like**
+Remove
+
+**Reporter Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/MM/issues/45
+"Fix #43, Remove unnecessary parentheses around return values.","**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #43 
+Removes parentheses in return statements in MM that return a single value/term.
+This is aligns these return statements with the predominant style of cFS.
+
+**Testing performed**
+None, prior to submission of the pull request.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt ","CCB:Approved, draco-rc4",https://github.com/nasa/MM/pull/44
+Scrub use of () in return statements,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Unnecessary parentheses around return values in MM
+Copy of https://github.com/nasa/osal/issues/866
+
+**Reporter Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/MM/issues/43
+"Fix #6, initialize return code to false","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #6, Initialize return codes and remove return statements from the end of void functions
+
+**Testing performed**
+Unit testing
+
+**Expected behavior changes**
+no impact to behavior
+
+**System(s) tested on**
+ - OS: Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA","CCB:Approved, draco-rc4",https://github.com/nasa/MM/pull/42
+"Fix #4, use CFE_FS_InitHeader() to initialize CFE header","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #4 
+
+**Testing performed**
+Unit testing
+
+**Expected behavior changes**
+no impact to behavior
+
+**System(s) tested on**
+ - OS:  Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA","enhancement, CCB:Approved, draco-rc4",https://github.com/nasa/MM/pull/41
+"Fix #39, Resolve usersguide issues with doxygen 1.8.17","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #39
+
+**Testing performed**
+Build doc with Ubuntu 20.04
+
+**Expected behavior changes**
+Successful doc build
+
+**System(s) tested on**
+ - Hardware: i5/Docker
+ - OS: Ubuntu 20.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc4",https://github.com/nasa/MM/pull/40
+Resolve issues building users guide with Ubuntu 20.04/Doxygen 1.8.17,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CF/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [CF README.md file](https://github.com/nasa/CF/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Doxygen warnings for `multiple @param documentation settings`
+
+**Describe the solution you'd like**
+Resove
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","docs, draco-rc4",https://github.com/nasa/MM/issues/39
+"Fix #16, removed mentions of ASIST from documentation","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+Describe the contribution
+Fix #16, removed all mentions of ASIST from comments
+
+Testing performed
+n/a
+
+Expected behavior changes
+no impact to behavior
+
+System(s) tested on
+n/a
+
+Contributor Info - All information REQUIRED for consideration of pull request
+Haven Carlson - NASA","CCB:Approved, draco-rc3",https://github.com/nasa/MM/pull/38
+"Fix #32, Requirements cleanup and add MM2000.2","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #32
+
+**Testing performed**
+NA
+
+**Expected behavior changes**
+None, requirements updates only (cleanup and add missing)
+
+**System(s) tested on**
+NA
+
+**Additional context**
+Needs careful review... just submitting the changes to start the process
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc3",https://github.com/nasa/MM/pull/37
+Fill in missing requirements rationale,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/MD/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/MD/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+MM3400 and MM3500 requirements rationale are empty:
+https://github.com/nasa/MM/blob/71d2ff43e0855423ef9f31e4829cab9ee25ea4cb/docs/mm_FunctionalRequirements.csv#L73-L74
+
+**Describe the solution you'd like**
+Fill in
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",requirements,https://github.com/nasa/MM/issues/36
+"Fix #34, Remove stray terminators","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #34
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc3",https://github.com/nasa/MM/pull/35
+Remove stray terminators,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/MD/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/MD/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+https://github.com/nasa/MM/blob/71d2ff43e0855423ef9f31e4829cab9ee25ea4cb/unit-test/mm_app_tests.c#L117
+https://github.com/nasa/MM/blob/71d2ff43e0855423ef9f31e4829cab9ee25ea4cb/unit-test/mm_utils_tests.c#L3494
+
+**Describe the solution you'd like**
+Remove
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","unit-test, draco-rc3",https://github.com/nasa/MM/issues/34
+Implicit padding being added to multiple MM commands,"**Checklist (Please check before submitting)**
+
+* [x ] I reviewed the [Contributing Guide](https://github.com/nasa/MD/blob/main/CONTRIBUTING.md).
+* [x ] I reviewed the [README file](https://github.com/nasa/MD/blob/main/README.md) to see if the feature is in the major future work.
+* [x ] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Some MM commands assume a 64 bit aligned header while others are offset by 32 bits.  An example would be the Peek vs Poke commands.
+
+**Requester Info**
+Dan Knutsen
+NASA Goddard
+",enhancement,https://github.com/nasa/MM/issues/33
+Clarify incomplete or unclear requirements for commands,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/MD/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/MD/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Some requirements are unclear or derive their meaning from the parent requirement
+
+**Describe the solution you'd like**
+In general, rewrite ALL requirements in EARS format. 
+
+**Describe alternatives you've considered**
+Fix a small subset of requirements, specifically 
+
+| Number | New Text |
+| --- | --- |
+| MM2000 | When MM receives a Poke command, MM shall write the command-specified number of bits of data to the command-specified RAM address.
+| MM2000.1 | When MM writes data to RAM, MM shall generate an event message containing the following data: <br />1. address written; <br />2. length of data written; <br />3. value of the data written |
+| *NEW* **MM2000.2** | When MM receives a Poke command, if the data size is not 8, 16, or 32 bits, MM shall reject the command. |
+| MM2002 | When MM receives a Peek command, MM shall read the command-specified number of bits of data from the command-specified RAM address and generate an event message containing the following data: <br /> 1. address read; <br /> 2. length of data read; <br /> 3. value of the data read
+| MM2003 | When MM receives a “Write With Interrupts Disabled” command, MM shall write up to a compile-time-specified number of bytes to the command-specified RAM memory address with interrupts disabled. | 
+| MM2003.1 | When MM receives a “Write with Interrupts Disabled” command, MM shall verify that the command-specified CRC matches the computed CRC of the data. |
+| MM2003.2 | When MM receives a “Write with Interrupts Disabled” command, If the command-specified CRC fails validation, MM shall reject the command. |
+| MM2004 | When MM receives a “Dump to Event” command, MM shall read the command-specified number of consecutive bytes from the command-specified RAM memory address and generate an event message containing the data. |
+| MM2004.1 | When MM receives a “Dump to Event” command, if the number of bytes exceeds the maximum event message size then the command shall be rejected. |
+| MM2100.1 | When MM receives a “Load From File” command, If the CRC contained in the command-specified file fails validation, MM shall reject the command. |
+
+
+**Additional context**
+None
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz | NASA
+","requirements, draco-rc2",https://github.com/nasa/MM/issues/32
+"Fix #29, Updates CLA information for Apache 2.0","Deletes old MM CLAs, Removes language in contributing.md of app-specific CLA,
+Adds link to new CLAs in pull_request_template
+
+**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+A clear and concise description of what the contribution is.
+- Fixes #29
+- Fixes https://github.com/nasa/cFS/issues/495
+
+**Testing performed**
+Visually inspected links in fork and in PR template.
+
+**Expected behavior changes**
+All references to CLAs should be updated to the cFS app CLA.
+
+**System(s) tested on**
+Google Chrome browser
+
+**Additional context**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, ASRC Federal
+","docs, CCB:Approved, draco-rc2",https://github.com/nasa/MM/pull/31
+Use fixed sizes for memory addresses and offsets in tbl/cmd/tlm,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/MD/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/MD/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Same as nasa/CS#26.  Using cpuaddr in tbl/cmd/tlm results in different sized structures (and possibly different alignment/padding).
+
+**Describe the solution you'd like**
+Use `CFE_ES_MemAddress_t` and `CFE_ES_MemOffset_t`
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/MM/issues/30
+Update CLA Information,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [cFS README.md file](https://github.com/nasa/cFS/blob/main/README.md) to see if the feature is in the major future work.
+* [ ] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Have new CLAs given the change in https://github.com/nasa/cFS/pull/491 with the combined CLA, 
+
+**Describe the solution you'd like**
+
+- [ ] Update the instructions in each app's Contributing.md
+- [ ] Delete old CLA pdfs
+- [ ] Update PR and Issue templates as needed
+
+
+**Describe alternatives you've considered**
+
+None
+
+**Additional context**
+None
+
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz
+","docs, draco-rc2",https://github.com/nasa/MM/issues/29
+"Fix #27, Remove CFE_PSP_MemSet and CFE_PSP_MemCpy use for addresses in RAM","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #27
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just removes unnecessary API dependence
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/MM/pull/28
+Remove CFE_PSP_MemSet and CFE_PSP_MemCpy use on addresses in RAM,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/CS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Should just use memset/memcpy for addresses in RAM.  The PSP functions serve no use in this context.
+
+**Describe the solution you'd like**
+Replace with memset/memcpy.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, draco-rc2",https://github.com/nasa/MM/issues/27
+"Fix #22, Use %p for printing addresses, resolves truncation","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #22
+
+**Testing performed**
+Built and ran unit tests, passed
+
+**Expected behavior changes**
+No longer truncates addresses in event messages
+
+**System(s) tested on**
+ - Hardware: i5/wsl
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit (w/ app additions)
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/MM/pull/26
+"Fix #24, Added codeql-build.yml","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+Describe the contribution
+A clear and concise description of what the contribution is.
+Added CodeQL to GitHub workflows
+Fix #24 
+
+Testing performed
+
+Pushed to branch
+Checked CodeQL ran successfully
+Expected behavior changes
+no impact to behavior
+
+System(s) tested on
+Browser
+
+Additional context
+Depends on https://github.com/nasa/cFS/pull/501 to run successfully
+
+Third party code
+If included, identify any third party code and provide text file of license
+
+Contributor Info - All information REQUIRED for consideration of pull request
+Full name and company/organization/center of all contributors (""Personal"" if individual work)
+
+Note CLA's apply to software contributions.","CCB:Approved, dependency, draco-rc2",https://github.com/nasa/MM/pull/25
+Add CodeQL to repository,"**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/MD/blob/main/CONTRIBUTING.md).
+* [X] I reviewed the [README file](https://github.com/nasa/MD/blob/main/README.md) to see if the feature is in the major future work.
+* [X] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Use CodeQL for continuous integration
+
+**Describe the solution you'd like**
+Add CodeQL workflow
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Add any other context about the feature request here.
+
+**Requester Info**
+Haven Carlson","continuous-integration, draco-rc2",https://github.com/nasa/MM/issues/24
+"Fix #17 #18, Resolve static analysis warnings","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CF/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #17
+- Fix #18
+
+**Testing performed**
+CI + static analysis run
+
+**Expected behavior changes**
+None, just squashes static analysis warnings
+
+**System(s) tested on**
+ - Hardware: VM
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + apps + related static analysis resolution branches
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/MM/pull/23
+MM Messages - Memory address being truncated to 32 bits on 64 bit machines,"**Describe the bug**
+Memory address's displayed in messages are (sometimes) being truncated to 32 bits on 64 bit machines
+
+**Code snips**
+Example from mm_app.c:
+CFE_EVS_SendEvent(MM_SYM_LOOKUP_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                ""Symbol Lookup Command: Name = '%s' Addr = 0x%08X"", CmdPtr->SymName,
+                                 (unsigned int)ResolvedAddr);
+
+**Reporter Info**
+Dan Knutsen
+NASA Goddard
+","bug, draco-rc2",https://github.com/nasa/MM/issues/22
+MM_FillMem doesn't call MM_SegmentBreak like read from or write to file,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/MD/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/MD/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+MM_FillMem writes memory in a tight loop here with no MM_SegmentBreak:
+https://github.com/nasa/MM/blob/90cbd8df5d557891ef3a7ea3a457b7b52ad79a1b/fsw/src/mm_load.c#L825-L839
+
+Both MM_LoadMemFromFile and MM_DumpMemToFile do have a MM_SegmentBreak (example):
+https://github.com/nasa/MM/blob/90cbd8df5d557891ef3a7ea3a457b7b52ad79a1b/fsw/src/mm_load.c#L576-L604
+
+MM_FillMem is likely quicker, but should still support a break
+
+**Describe the solution you'd like**
+Add MM_SegmentBreak
+
+**Describe alternatives you've considered**
+Could leave as is, but large fill command processing could hog the CPU
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/MM/issues/21
+"Fix #19, Resolve strict strict cppcheck style warning","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/MM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #19 
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just squashes strict cppcheck warnings
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC
+","CCB:Approved, draco-rc2",https://github.com/nasa/MM/pull/20
+Static analysis workflow fails due to strict cppcheck style warnings,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/MD/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/MD/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Workflow failure, see https://github.com/nasa/MM/runs/6357801210?check_suite_focus=true
+
+```
+[fsw/src/mm_load.h:177] -> [fsw/src/mm_load.c:803]: (style, inconclusive) Function 'MM_FillMem' argument 1 names different: declaration 'DestAddr' definition 'DestAddress'.
+```
+
+**Describe the solution you'd like**
+Fix
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, draco-rc2",https://github.com/nasa/MM/issues/19
+Static analysis issues relative to flight code,"Handful of static analysis issues in the ""red"" identified (non-Style issues).  Need to resolve these.
+
+Filter: -file:elf -file:ut -file:cfe -file:os -file:cf_ -file:_lab_app.c !(significance:style)
+
+should resolve and/or disposition the higher ranked ones at minimum.
+
+Note license restricts publishing issues.
+
+Imported from GSFCCFS-1958","bug, draco-rc2",https://github.com/nasa/MM/issues/18
+Resolve static analysis issues relative to unit tests,"Many actual code issues (uninitialized variables, buffer overruns, etc) identified via static analysis in the unit tests.  All actual ""bugs"" should be resolved.
+
+Imported from GSFCCFS-1936","unit-test, draco-rc2",https://github.com/nasa/MM/issues/17
+Remove all mentions of ASIST or ITOS artifacts from documentation,"Some of our doxygen docs still reference ASIST or ITOS artifacts. 
+
+See 
+cfs_mm repo: fsw/src/mm_msgdefs.h:l28
+
+Imported from GSFCCFS-1929","docs, draco-rc3",https://github.com/nasa/MM/issues/16
+Apps should use CFE_MSG_PTR macro instead of cast or local unwrapping,"Apps typically cast to a CFE_MSG_Message_t or use *.Msg.  Better to use abstracted CFE_MSG_PTR. NOTE - Not backwards compatible with Caelum so recommend not addressing in Draco.
+
+Imported from GSFCCFS-1900",enhancement,https://github.com/nasa/MM/issues/15
+MM Should include the status of the EEPROM write enable in housekeeping telemetry,"MM includes commands to enable or disable writing to EEPROM.  That setting cannot currently be verified in telemetry.  The status of the write enable for each EEPROM bank should be added to the housekeeping packet.  
+
+Imported from GSFCCFS-1613",enhancement,https://github.com/nasa/MM/issues/14
+Change order of size checks for optimization,"In MM_VerifyLoadWIDParams, it is more efficient to check SizeInBytes before calling CFE_PSP_MemValidateRange.  This same optimization would be applicable in other functions.
+
+Imported from GSFCCFS-1573",enhancement,https://github.com/nasa/MM/issues/13
+Perf counter in MM_SegmentBreak may be unnecessary,"The performance marker only wraps a task delay.
+
+Imported from GSFCCFS-1571",enhancement,https://github.com/nasa/MM/issues/12
+MM clarify names of constants,"mm configuration parameters for sizes often don't include the word SIZE, making their purpose a little less clear.
+
+Imported from GSFCCFS-1570",enhancement,https://github.com/nasa/MM/issues/11
+Function names MM_ResetHk and MM_WriteMemWID are misleading,"
+
+Imported from GSFCCFS-1569",enhancement,https://github.com/nasa/MM/issues/10
+Make MM MemType into an enum,"
+
+Imported from GSFCCFS-1568","enhancement, draco-rc4",https://github.com/nasa/MM/issues/9
+MM_DumpInEventCmd wastes event characters,"In MM_DumpInEventCmd, including the ""0x"" and trailing space on the hex digits unnecessarily limits how much can actually be dumped in the event.
+
+Imported from GSFCCFS-1564",enhancement,https://github.com/nasa/MM/issues/8
+MM Investigate use of static variables,"In MM_DumpInEventCmd, EventString is declared as static to keep it off the stack.  Need to investigate whether this is necessary.
+
+Imported from GSFCCFS-1562",enhancement,https://github.com/nasa/MM/issues/7
+Generally better to initialize return code to false,"
+
+Imported from GSFCCFS-1561","enhancement, draco-rc4",https://github.com/nasa/MM/issues/6
+"In MM_DumpMemToFileCmd, would be faster to checksum while writing","
+
+Imported from GSFCCFS-1558",enhancement,https://github.com/nasa/MM/issues/5
+In MM_DumpMemToFile command could use CFE_FS_InitHeader,"
+
+Imported from GSFCCFS-1556","enhancement, draco-rc4",https://github.com/nasa/MM/issues/4
+Investigate whether Eeprom and Symtable handing belongs in MM,"Some discussion needed in the future to reevaluate whether Eeprom and symbol table handling belongs in MM since not every platform has them. 
+
+Imported from GSFCCFS-1546",enhancement,https://github.com/nasa/MM/issues/3
+"MM IntLock removed, no longer implements ""write with interrupts disabled"" requirement MM2003","Historical - (note the lock/unlock have been removed, see comments):
+Memory Manager uses OS_IntLock() and OS_IntUnlock(). That's the only place any of the OS_Int* functions are used in the GSFC apps.  These functions will likely be deprecated in the next OSAL release.
+
+I'm guessing it does this with the intent of loading the mem block ""atomically"" with the hope of preventing another task from writing to it while this happens?
+
+IntLock/Unlock has always been a no-op on POSIX, and furthermore even on platforms where it does something, it will not achieve that exclusivity effect on Multi-Core CPUs, as it only locks the interrupts on the core which calls it, and other cores continue to run anyway, interrupt or not.
+
+Probably worth re-evaulating what MM is trying to achieve with the intlock... might be able to simply take it out with no loss of function.
+
+20220324 - OS_IntLoc and OS_IntUnlock were removed as part of GSFCCFS-1156.  Although now requirement GSFCCFS-611 isn't being met.
+
+Imported from GSFCCFS-1132",bug,https://github.com/nasa/MM/issues/2
+MM Unclear app configuration assumptions,"Stakeholder:
+Discovered and added comments to the config file that some app configuration values have assumptions on modulo-2 or modulo-4 sizes.  For example, these 16 and 32-bit dump routines would fail if these config #defines are not set with the appropriate values.
+
+Imported from GSFCCFS-925",enhancement,https://github.com/nasa/MM/issues/1

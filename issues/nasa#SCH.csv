@@ -1,0 +1,336 @@
+Title,Body,Labels,URL
+Update the SCH codebase to a more recent cFS revision (March 2023),"Hello,
+
+We learned that the SCH codebase had not been updated since June 2019, so we updated it to have it at least compile with our customized cFS build system.
+
+We hope that this work will help someone like us to get to a working SCH faster.
+
+If there was any interest in integrating this work, we would be happy to resolve any issues with this patch. Before doing any integration, we would highly recommend setting up Clang Format for SCH, using the `.clang-format` from the parent cFS repository. With the formatting in place, it would be much easier to work with the needed diffs.
+
+This contribution is made on behalf of Reflex Aerospace GmbH (Berlin) where I am employed as a software engineer.
+
+---
+
+This changeset contains 90%+ fixes that are needed to have this SCH working against the more recent cFS setup as of March 2023.
+
+The cFS revision that this is compiled against: 192f2ea3061bfe722b8ed1d72b7adecbf36d4f6e
+
+https://github.com/nasa/cFS/commit/192f2ea3061bfe722b8ed1d72b7adecbf36d4f6e
+
+Known issues:
+
+- The changeset contains minor formatting issues but I am deciding to ignore them because the SCH itself needs to be Clang Formatted and I didn't find an existing .clang-format in the repository.
+- This changeset does not touch anything related to setting up the table files in the CMake build system. There are other patches that are attempting to fix those issues: https://github.com/nasa/SCH/pull/6/files
+- We are still reworking the SCH codebase to fit our needs, so it may be that a few lines were missed and they will not compile.",,https://github.com/nasa/SCH/pull/26
+Update SCH to be compatible with latest CFE ,Current SCH will not build with lastest [cFE Draco-RC4](https://github.com/nasa/cFE/releases/tag/draco-rc4) release,,https://github.com/nasa/SCH/issues/25
+"Fix #23, Moves interface definition files to inc","**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #57
+
+**Testing performed**
+No testing performed.
+
+**Expected behavior changes**
+No expected behavior change.
+
+**System(s) tested on**
+-Ubuntu 18.04
+
+**Additional context**
+https://github.com/nasa/SCH/issues/5 remains unaddressed ?
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+-Justin Figueroa, Vantage",,https://github.com/nasa/SCH/pull/24
+"Move interface definition files to ""inc"" location","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+The interface definition files of all open source apps currently exist in the ""src"" directory.
+
+**Describe the solution you'd like**
+Create an ""inc"" dir to go with the ""src"" dir.  Move the interface definitions into this location: ""_msg.h"", ""_msgdefs.h"", ""_tbldefs.h"", and ""_events.h"". Consider moving header files in both ""platform_inc"" and ""mission_inc"" to ""inc""
+
+**Describe alternatives you've considered**
+Leaving as is.
+
+**Additional context**
+N/A
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+",,https://github.com/nasa/SCH/issues/23
+Implement Requirement SCH9001,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Requirement SCH9001 is not implemented. 
+
+**Describe the solution you'd like**
+Upon any Initialization, the SCH Application shall inhibit processing of the Schedule Definition Table until the cFE indicates that all of the applications have started.
+
+**Additional context**
+SCH_CustomEarlyInit and SCH_CustomLateInit does not inhibit the processing of SDT until cFE apps started. SCH_AppMain calls on SCH_AppInit that intializates cFE events, software bus, etc. But I do not see where it inhibits the processing of SDT. 
+
+**Reporter Info**
+Ariel Adams, MCSG Tech
+",,https://github.com/nasa/SCH/issues/22
+Implement Requirements SCH2006 and SCH2007,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Requirements SCH2006 and SCH2007 are not implemented. 
+
+**Describe the solution you'd like**
+SCH2006: Upon receipt of a SDT Load, SCH shall validate the entries of the table and if any   entry is invalid, the table is declared invalid and rejected.
+SCH2006.1: SCH shall identify any ""Unused"" SDT entry that contains data other than   ""Unused"" as invalid
+SCH2006.2: SCH shall identify any ""Enabled"" or   ""Disabled"" SDT entry that contains a Frequency of zero as invalid
+SCH2006.3: SCH shall identify any ""Enabled"" or ""Disabled"" SDT entry that   contains a Frequency Offset greater than the entry's specified Frequency as   invalid.
+SCH2006.4: SCH shall identify any ""Enabled"" or   ""Disabled"" SDT entry that contains a Message Index of zero or   greater than the maximum number of Messages in the Message Definition Table   as invalid.
+SCH2006.5: SCH shall identify any ""Enabled"" or ""Disabled"" SDT entry that   contains an undefined Activity Type as invalid.
+
+SCH2007: Upon receipt of a Message Definition Table Load, SCH shall validate the entries of   the table and if any table entry is invalid, reject the table
+SCH2007.1: SCH shall identify any ""Unused"" MDT entry that contains data other than   ""Unused"" as invalid
+SCH2007.2: SCH shall identify any MDT entry that has a   message definition with a Message ID that is greater than   <MISSION_DEFINED> maximum Message ID as invalid
+SCH2007.3: SCH shall identify any MDT entry that has a message definition with a Message ID   that is less than <MISSION_DEFINED> minimum Message ID as invalid
+SCH2007.4: SCH shall identify any MDT entry that has a   message length greater than <PLATFORM_DEFINED> maximum message length   as invalid
+SCH2007.5: SCH shall identify any MDT entry that has a message length that is an odd number   of bytes as invalid
+
+**Additional context**
+It looks as though this requirement is being met in SCH_AcquirePointers - it's handling table loads through table services during the housekeeping cycle, not through an explicit command. The sub-requirements are not being met. 
+
+**Reporter Info**
+Ariel Adams, MCSG Tech
+",,https://github.com/nasa/SCH/issues/21
+Implemented Requirement SCH2003,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Requirement SCH2003 is not implemented. 
+
+**Describe the solution you'd like**
+SCH shall identify the spacecraft Major Frame Signal as ""noisy"" when two Major Frame Signals occur consecutively that are separated from the previous Major Frame Signal by less than <PLATFORM_DEFINED, 990> milliseconds (running fast) and/or greater than <PLATFORM_DEFINED, 1010> milliseconds (running slow)
+
+**Additional context**
+Only condition found was: ""If we are NOT synchronized to the MET (i.e. - the Minor Frame timer has an acceptable resolution), then the Major Frame signal should only occur in the last slot of the schedule table. If we ARE synchronized to the MET (i.e. - the Minor Frame timer is  not as good as we would like), then the Major Frame signal should occur within a window of slots at the end of the table.""
+
+**Reporter Info**
+Ariel Adams, MCSG Tech
+",,https://github.com/nasa/SCH/issues/20
+Implement Requirement SCH2001,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Requirement SCH2001 is not implemented. 
+
+**Describe the solution you'd like**
+The Schedule Definition Table shall schedule activities with a minimum minor frame resolution of <PLATFORM_DEFINED, 10> milliseconds and a major frame resolution of <PLATFORM_DEFINED, 1> second.
+
+**Reporter Info**
+Ariel Adams, MCSG Tech
+",,https://github.com/nasa/SCH/issues/19
+Implement Requirements SCH3003 and SCH3003.1,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Requirements SCH3003 and SCH3003.1 are not implemented.
+
+**Describe the solution you'd like**
+SCH3003: SCH shall allow the user to combine one or more groups of activities in the Schedule Definition Table into one or more Multi-Groups.
+SCH3003.1: SCH shall support a maximum of 24 Multi-Groups.
+
+**Additional context**
+Should be implemented by SCH_EnableGroupCmd in sch_cmds.c. This allows a group to be enabled, but does not allow users to combine groups. Groups are also not limited. 
+
+**Reporter Info**
+Ariel Adams, MCSG Tech
+",,https://github.com/nasa/SCH/issues/18
+Implement Requirements SCH3000 and SCH3000.1,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Requirements SCH3000 and SCH3000.1 are not implemented. 
+
+**Describe the solution you'd like**
+SCH3000: SCH shall associate each activity with a single Group and zero to 24 Multi-Groups.
+SCH3000.1: SCH shall support a maximum of 255 Groups
+
+**Additional context**
+Should be implemented in SCH_ValidateScheduleData, but is not. 
+
+**Reporter Info**
+Ariel Adams, MCSG Tech
+",,https://github.com/nasa/SCH/issues/17
+Implement Requirement SCH2000,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Requirement SCH2000 is not implemented. 
+
+**Describe the solution you'd like**
+Upon receipt of a Major Frame Signal, SCH shall start processing the Scheduler Definition Table (SDT) which contains the defined activities.
+
+**Additional context**
+The SCH Timing Test Scenario document from JIRA states: _Still need to figure out how to control the major frame signal. Waiting to hear back from Alan Cudmore._ 
+
+**Reporter Info**
+Ariel Adams, MCSG Tech
+",,https://github.com/nasa/SCH/issues/16
+"Fix #14, Remove redundant/inconsistent comments (/* end of function */, /* end if */ etc.) and clean up empty lines.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #14
+  - Removes redundant and inconsistent comments (e.g. `/* end of function */`, `/* end if */`, function name in function header comments).
+  - There were also a few cases of unnecessary empty lines (e.g. on the last line before the closing brace of a function) and also missing empty lines (e.g. between functions) which were corrected. Some of these empty lines trigger the CI format checks.
+
+I've left the commits separated for now to make life easier for whoever reviews this. I can squash them if/when this is ready for merge.
+
+**Testing performed**
+None (comment and whitespace changes only).
+
+**Expected behavior changes**
+No impact on behavior.
+These updates will reduce clutter and inconsistency in the code, improving readability.
+
+**Contributor Info**
+@thnkslprpt ",,https://github.com/nasa/SCH/pull/15
+"Redundant comments (/* end of function */, /* end if */ etc.) and clean up empty lines.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/to_lab/issues/68 and https://github.com/nasa/sample_app/issues/111
+There are quite a few redundant comments in the code, such as:
+- `/* end of function */`-type comments
+- `/* end if */`-type comments
+- function header comments which include the function name
+
+Another minor issue has to do with empty lines:
+a) _unnecessary_ empty lines (e.g. first line after the opening brace of a function/struct, or the last line before the closing brace - the latter apparently sometimes triggers the CI format checks).
+b) _missing_ empty lines between functions (i.e. closing brace of last function, then next function beginning on the immediately next line without an empty line in between)
+
+The unnecessary empty lines (at the beginning or end of a function, for example) represent a low single-digit percentage of the cases (the vast majority of functions/structs do not have these extra empty lines), so there is an argument to remove them purely for consistency, not just due to them being redundant and triggering the CI format checks.
+
+**Expected behavior**
+Remove redundant comments to reduce clutter and inconsistency in the code, and improve readability.
+
+**Reporter Info**
+@thnkslprpt ",,https://github.com/nasa/SCH/issues/14
+sch_def_schtbl.tbl not generated at all,"Hello,
+I'm trying to run the Aquila release of cFS.
+I've installed the following: 
+cFE 6.7.0, CFS_CI-1.5, CFS_IO_LIB-1.5, CFS_TO-1.5, osal-5.0.0, PSP-1.4.0, SCH-2.2.2, cFS-GroundSystem-2.2.0-rc1
+
+**Issue**
+When I build the software the sch_def_schtbl.tbl and the to_config.tbl time are not loading.
+
+![image](https://user-images.githubusercontent.com/105933215/185139225-7180be48-d681-4a59-b440-469e42113eec.png)
+
+
+
+**What I've tired** 
+>I've looked at issue #7 ([#7](https://github.com/nasa/SCH/issues/7)  ). In that solution the assumption is that the files are being generated but placed in the cf folder. In my case there are no .tbl files being generated at all.
+
+>I've looked through the hidden cf folder located in [...]build/exe/cpu<x> folder and the only item that appear is the cfe_es_startup.scr ci.so, io_lib.so, sample_app.so, sample_lib.so, sch.so, to.so.
+
+>I've tried using the elf2cfetbl tool to build the *.tbl files but it doesn't seem to work.
+I followed the instructions in the README.txt file and the system is still unable to find the tool in the tools folder
+
+I may also have an issue with seeing the correct error call outs.
+
+I'm unsure of what to try next.",,https://github.com/nasa/SCH/issues/13
+Port to Caelum,"Hey @skliper, Once again you're the only one I can think to contact...
+
+I have started porting this to Caelum for usage at my work, Space Machines Company. So far I have just done macro/type swaps and fixed up some SB message casting in accordance with the changes outlined [here at OpenSatKit](https://github.com/OpenSatKit/OpenSatKit/wiki/App-Migration-Notes-from-cFE-6.7-to-Caelum). Things are compiling and running at the moment.
+
+I wanted to start having a look at unit tests so I can be confident that things work instead of just not knowing they don't. I am not sure where to start. This app seems to have a different test harness structure than the other apps. Can you or anybody over there comment on this? I am happy to submit a pr to this repo, so any changes are public-facing, and your workload is potentially lessened.",,https://github.com/nasa/SCH/issues/12
+Clarifications,"1. In `SCH_DefaultScheduleTable` (from [sch_def_schtbl.c](https://github.com/nasa/SCH/blob/master/fsw/tables/sch_def_schtbl.c)), is there a particular reason that certain entries are commented out _and_ have their EnableState set to `SCH_DISABLED`? Isn't this redundant (i.e. does this have the same result as simply uncommenting those lines and keeping their disabled status)?
+2. Can the order of entries in `SCH_DefaultScheduleTable` be rearranged without affecting the results of the scheduler app?
+3. Despite being commented out, is there a particular reason for putting entries with different MessageIndex out of order and spaced out by several SCH_UNUSED entries? For example, the following lines of code are seperated by many SCH_UNUSED entries and appear out of order by MessageIndex
+`/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  4,  1,  6, SCH_GROUP_CFS_HK }, */  /* CS HK Request */` has a MessageIndex of 6 and appears on [line 122](https://github.com/nasa/SCH/blob/dbaf51ebbcffe1177997880d0f555c7d489217f5/fsw/tables/sch_def_schtbl.c#L122)
+`/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */` has a MessageIndex of 24 and appears on [line 130](https://github.com/nasa/SCH/blob/dbaf51ebbcffe1177997880d0f555c7d489217f5/fsw/tables/sch_def_schtbl.c#L130)
+`/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  4,  2,  7, SCH_GROUP_CFS_HK }, */  /* DS HK Request */` has a MessageIndex of 7 and appears on [line 159](https://github.com/nasa/SCH/blob/dbaf51ebbcffe1177997880d0f555c7d489217f5/fsw/tables/sch_def_schtbl.c#L159)
+
+4.`/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */` appears 20 times in the file. Is there a reason for this?
+5. Is there any significance to separating entries into slots of 5 (or slots at all) in the layout of the array? Is this simply a matter of styling or is there a concept of slots in the code too? If so, what is the point of that?",,https://github.com/nasa/SCH/issues/11
+Issues with installing the Scheduler application,"Hello all!
+I'm trying to install a fully functional Scheduler application, according to exercise 7 in the presentation https://ntrs.nasa.gov/api/citations/20205011588/downloads/TM%2020205000691%20REV%201.pdf
+When I trying to build, errors occur: In file included from ~/cFS/apps/sch/fsw/src/sch_api.c:26:0:
+~/cFS/apps/sch/fsw/public_inc/sch_api.h:85:1:error: unknown type name ‘boolean’; did you mean ‘bool’?
+  boolean SCH_GetProcessingState (void); ...
+After trying to fix the types to bool, many other errors appear.
+Please, can anyone suggest how to properly integrate the Scheduler application into the cFS system?
+(The lab scheduler worked well.)
+
+Ubuntu 18.04
+cFS installed from Core Flight System - BUNDLE (https://github.com/nasa/cfs).
+Igor",,https://github.com/nasa/SCH/issues/10
+Plans for update,"Hi,
+
+I have been experimenting with post 6.70 cFS (commit 6aeca23a57a4808fc278f33033ccb0e51746e732). When compiling SCH, I get errors regarding features which appear to be deprecated. For example, use of `boolean`, `CFE_ES_APP_RUN`, `CFE_ES_APP_ERROR` and so on. I have tried building with `OMIT_DEPRECATED=false`, but this makes no difference.
+
+Are there plans to update the application?
+
+Many thanks,
+Jack White",,https://github.com/nasa/SCH/issues/9
+Unit tests use the incorrect data type for HK testing,"The SCH_HousekeepingCmd_Test() function in the sch_cmds_test.c file sets:
+
+SCH_AppData.IgnoreMajorFrame = 19;
+SCH_AppData.UnexpectedMajorFrame = 20;
+
+But both variables are data type ""boolean"".  This still compiles and passed with older versions of the OSAL, but with OSAL 6.7.3-bv this compiles but fails unit test.  I recommend changing the 19 and 20 to true.  When this change is made, SCH passes unit testing.
+
+",,https://github.com/nasa/SCH/issues/8
+sch_def_schtbl.tbl not being defined,"SCH app fails on cFS startup as it is unable to open file. 
+Errors: 
+Error (RC=0xCC00002C) Loading SDT with /cf/apps/sch_def_schtbl.tbl
+
+The app is loaded and created fine, but exits when it is unable to load this table. I've tried using commits from other errors but none seem to be working. 
+New to cfs, any help is appreciated. ",,https://github.com/nasa/SCH/issues/7
+Closes #5. Register tables and include sch_msgdefs,,,https://github.com/nasa/SCH/pull/6
+Fails to build / register tables with CMake build,"The tables used by SCH aren't registered in the CMake build, which means they can't be overridden in the defs directory. The build also fails due to  sch_msgdefs.h not being in an included directory.
+
+Using with cFE version 6.7.11",,https://github.com/nasa/SCH/issues/5
+Recommendation is to change ScheduleTable from 1 Dim Array to 2 Dim array,"The current format of the array in fsw/tables/sch_defsch.c:
+
+SCH_ScheduleEntry_t SCH_DefaultScheduleTable[SCH_TABLE_ENTRIES] 
+is a one dimensional array slots*entries. It is processed by SCH_ProcessNextSlot as basically a 2D array:
+SlotIndex = SCH_AppData.NextSlotNumber * SCH_ENTRIES_PER_SLOT;
+NextEntry = &SCH_AppData.ScheduleTable[SlotIndex];
+By making a slight change in the definition of the Table - NOT the code, the compiler will be much more helpful in
+- Discovering issues where not enough or too many entries are defined per slot, causing an action to move into the backwards or forwards to the wrong slot
+- Increase readability
+ - File can be shorter, because the compiler will set (AFAIK) the undefined entries to 0 anyway
+
+This does not require a change in the code, except for the code generator (which I have some idea's for but not yet done)
+[sch_def_schtbl.c.gz](https://github.com/nasa/SCH/files/4309531/sch_def_schtbl.c.gz)
+
+**Reporter Info**
+Maurice Smulders, Geneva Technologies Inc
+",,https://github.com/nasa/SCH/issues/4
+Updates to SCH message table approach. ,"Abstracted CCSDS header info from the generic message component. Allows CCSDS v1 and v2 compatibility. Also, allows changes to CCSDS v2 bit configurations without a table source file change.",,https://github.com/nasa/SCH/pull/3
+Test Issue,(this is just a test),,https://github.com/nasa/SCH/issues/2
+The unit tests in this repository are incorrect,The unit tests in this repository are different from the tests in Sourceforge and do not work.,,https://github.com/nasa/SCH/issues/1

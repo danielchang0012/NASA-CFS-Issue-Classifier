@@ -1,0 +1,185 @@
+Title,Body,Labels,URL
+Update CCSDS 133.0 URL in macros.dox,,,https://github.com/nasa/ECI/pull/63
+Fix nasa#55 eci not compatible with caelum,,,https://github.com/nasa/ECI/pull/62
+Fix 52 not compatible bootes rc2,,,https://github.com/nasa/ECI/pull/61
+Fix 59 GitHub actions main.yaml is not uniform,,,https://github.com/nasa/ECI/pull/60
+Github actions main.yaml is not uniform,"main.yaml borrows from cFS's yaml file which outlines the steps more explicitly, should update the other steps to match.",,https://github.com/nasa/ECI/issues/59
+Fix 57 add clang format and clang format gihub action,"Copied clang-format from cFS, ran clang-format on all .c and .h files, then implemented format check github action from cFS ",,https://github.com/nasa/ECI/pull/58
+Add clang-format and clang-format github action,"Clone cFS's clang-format file to ECI, make sure all of ECI is formatted, and then implement a github actions format check based off of cFE's format check [here](https://github.com/nasa/cFE/blob/main/.github/workflows/format-check.yml)  ",,https://github.com/nasa/ECI/issues/57
+Fix 54 update ci pipeline to use GitHub actions,,,https://github.com/nasa/ECI/pull/56
+ECI is not compatible with cFS version Caelum,"ECI needs to be updated to work with cFS Caelum. Will need to update cFE api calls, ect.",,https://github.com/nasa/ECI/issues/55
+Update CI pipeline to use Github Actions,The existing Travis CI pipeline is out of date and no longer functional. We should migrate to using github actions to get the pipeline working again.,bug,https://github.com/nasa/ECI/issues/54
+init commit for fix 19,"First go at fix 19 to make the spg4 example more noisy, Have not tested it yet by deliberately triggering the time to go outside the epoch range. ",,https://github.com/nasa/ECI/pull/53
+ECI is not compatible with cFS version bootes-rc2 (cFS 6.8-RC2),"cFS tag bootes-rc2 (cFS version 6.8, release candidate 2?), or earlier, removes the boolean type, renames Event Type level constants, and removes CCSDS parsing utilities. The current version of the ECI needs to be updated to be compatible with these changes.
+
+The immediate files that I have identified as requiring changes are:
+fsw/src/eci_app.c
+fsw/src/eci_app.h
+faultrep/app_faultrep.c
+faultrep/app_faultrep_priv.h
+
+I have not evaluated the unit test files to determine if they are also affected.",,https://github.com/nasa/ECI/issues/52
+Changed the behavior of non-ECI_CMD_MID messages,"This change aims to remove the failure condition on messages
+with a value command message id (0x1xxx). The limitations
+that ECI was putting on messages registered with the MsgRcv
+array doesn't allow for multiple commands and this change will
+add the ability to create any number of commands with their
+appropriate command structure.
+
+The previous implmenation of the ECI commanding basically did
+one check to see wether or not the command had a function
+code between ECI_FUNC_CODE_START and ECI_FUNC_CODE_END but
+then passed the message into the receive message function.
+By directly passing the message with a command function code
+into the rcv_msg function, the only check we lose is if that
+command has a function code within the range. All other checks
+for length and queue buffer size are still tested within this
+function.
+
+This commit also removes the test that enforces that expects an
+error to be sent when receiving a command message that isn't
+ECI_CMD_MID.",,https://github.com/nasa/ECI/pull/51
+Support for multiple user-defined commands,"The current way the ECI handles commands by using the ECI_CMD_MID doesn't support any more than 1 custom command. This problem has to do with the limitation that when declaring the buffer/object to store the received command data, the ECI can't determine which object to use by only using the ECI_CMD_MID.
+
+In particular, the problem can be isolated to the behavior for non-ECI_CMD_MID values in the default of the [switch statement processing commands](https://github.com/nasa/ECI/blob/master/fsw/src/eci_app.c#L1567). Changing the default behavior of this switch statement to always call `rcv_msg(msg, messageID, ActualLength, CMDPIPE)` rather than rejecting all command messages should give the desired behavior. Internal to the `rcv_msg` function, the same checks for the length and updates to the CmdErrorCounter still happen so no other changes should be needed.",bug,https://github.com/nasa/ECI/issues/50
+Broken links to example code in documentation,"At some point the links to the example code have been broken and now appear empty. This problem, on first glance, only seems to affect the `eci_interface.h` file referenced for the [creating eci interface](https://nasa.github.io/ECI/creating_eci_interface.html) but we should probably check to make sure this didn't affect anything else.","bug, documentation",https://github.com/nasa/ECI/issues/49
+46 Fix CDS implementation,"* Update name of CDS table in ECI code (expected to be provided by eci_interface.h)
+* Add CDS table to example as test case
+* Fix undeclared status variable in CDS handling
+* Update spec to reflect new CDS variable name",bug,https://github.com/nasa/ECI/pull/48
+Reorganize includes in eci_app.c to simplify includes for users,"* Reorganize includes which do not depend on `eci_interface.h` earlier so that values are available are defined for `eci_interface.h`
+* Added include of `eci_app_cfg.h` to `eci_app.h` so that users only need include `eci_app.h`
+* Clarified comments about include order
+
+Closes #45 ",,https://github.com/nasa/ECI/pull/47
+Fix `ECI_CDS` undefined,"The SIL is currently in the process of implementing the ECI's CDS interface and currently cannot compile with ECI because it does not define `ECI_CDS`, which is the structure ECI expects to contain the definition of the CDS elements. It defines that structure as `ECI_CdsTable`. Normally the SIL would need to align with ECI definitions, however, the SIL's name is better (doesn't look like a macro, is clear that its a table), and so in this case the ECI should be updated.
+
+I don't believe there are currently any test cases using CDS in the ECI repo, so this update should only require modification to the ECI source code.","bug, enhancement",https://github.com/nasa/ECI/issues/46
+Fix `ECI_CMD_MSG_QUEUE_SIZE` undefined,"`eci_app.c` includes all ECI header files after including `eci_interface.h` because some defines in `eci_interface.h` influence the code implemented in `eci_app.c`. This is intended, however,  `eci_interface.h` used `ECI_CMD_MSG_QUEUE_SIZE` (defined in `eci_app_cfg.h`) if commands are defined, which causes compilation to fail.
+
+Need to update include order. Also need to ensure an test suite includes and example of an app with a command to catch this in the future.",bug,https://github.com/nasa/ECI/issues/45
+Add check for command APID when command queue defined,"The segfault in issue #42 was caused by specifying a command MID with a message not defined as a command (and which thus had no queue defined for it). The ECI code blindly attempted to utilize the queue which didn't exist, causing the segfault. 
+
+During the course of resolving that issue it was determined that a check can be done [here](https://github.com/nasa/ECI/blob/master/fsw/src/eci_app.c#L328) to confirm the that there's a queue allocated if the MID indicates the message is a command. 
+
+That check would look something like if `MsgRcv[idx].MsgStruct->qptr == NULL`, issue an error event message warning the user about a misconfiguration, and either
+
+* skip the configuration of the queue for that message (if we can establish that the app will still work without it)
+* exit the app, if its going to be too broken to function
+
+Work needs to be done to determine the correct course of action and implement this check.",enhancement,https://github.com/nasa/ECI/issues/44
+Add support for custom CCSDS commands through the ECI header,"It's been a commonly requested internal feature to add support for custom commands as part of the ECI. Currently, the only commands supported are housekeeping and noop but these are standard across apps.
+
+This feature shouldn't impact the performance of any other parts of the ECI and can be included as part of the eci_interface header file. The structure exposed should look like:
+```
+{
+  uint8 function code
+  struct defining message
+  int function pointer
+}
+```
+where function code is a 7 byte value to identify the command and the function pointer is a C style function pointer to the function to execute once the command is received. To reduce the boiler plate code needed to be written, we also include an extra field containing the structure to fill with command information.
+
+More information on the CCSDS packet protocol can be found [here](https://public.ccsds.org/Pubs/133x0b1c2.pdf) under section 4.1.3.2: ""Packet Secondary Header"". The CFS uses only the ancillary field of the secondary packet header and the relevant portion for this issue will be 0x7F00 >> 8 defined as the function code of the command message.",enhancement,https://github.com/nasa/ECI/issues/43
+Segmentation Fault,"I am getting a seg fault when running my app (CNT_app) in core-linux.bin.  Any assistance in tracing this back to the origin would be appreciated.
+
+![image](https://user-images.githubusercontent.com/52501916/66436388-ee406380-e9f4-11e9-8d51-0fa3121c4b1d.png)
+",,https://github.com/nasa/ECI/issues/42
+Add a tutorial on how to build the docs locally,"Even though the new documentation automatically gets pushed into github pages, we still need instructions to build locally.",documentation,https://github.com/nasa/ECI/issues/41
+Testing fixes,The CI pipeline/cmake build now properly collects the submodules for the pinned commit of cFS rather than continuing to use master's submodules.,,https://github.com/nasa/ECI/pull/40
+Alter the sample app compiler flag to satisfy the cFS-GroundSystem,"The latest commit of the cFS-Groundsystem includes glibc specific features specifically the inclusion of the `struct addrinfo`. The addrinfo struct definition is only exposed in gcc when passed a gnu compliant standard (the current test cmake definition uses `-std=c99`).
+
+More information on the topic of C standard compliance vs the GNU libraries can be found on this stack overflow post: https://stackoverflow.com/questions/33076175/why-is-struct-addrinfo-defined-only-if-use-xopen2k-is-defined","bug, wontfix",https://github.com/nasa/ECI/issues/39
+Fix the spelling error in to_lab for testing,"A recent commit to the master branch of TO_Lab fixed a spelling mistake
+https://github.com/nasa/to_lab/blame/master/fsw/src/to_lab_msg.h#L98
+which needs to be reflected in the to_lab sub table header in the testing files.","bug, wontfix",https://github.com/nasa/ECI/issues/38
+Pages,This was the feature branch off doxy that added github pages support.,,https://github.com/nasa/ECI/pull/37
+Main page updates,,,https://github.com/nasa/ECI/pull/36
+Refined the doxygen documentation,"This provides the documentation for non-developer usability such as tutorials and information on the interface file.
+
+TLDR:
+ - Added main page for docs
+ - Added an eci_interface.h line-by-line explanation
+ - Added documentation for all the optional and required macros for ECI
+ - Added a tutorial on how to build and run the sample apps. This section also talks about how to install an ECI app into a non-fresh CFS.",,https://github.com/nasa/ECI/pull/35
+ECI should only subscribe to the ECI_TBL_MANAGE_MID if tables are defined,"Since both state and parameter tables are optional, it should make sense that ECI_TBL_MANAGE_MID should also be optional. Currently, even if there are no tables defined, ECI will subscribe to the table management message id.",,https://github.com/nasa/ECI/issues/34
+No examples of using ECI for CDS management,None of the examples provided give any insight on how to manage the CDS using the internal ECI mechanisms.,enhancement,https://github.com/nasa/ECI/issues/33
+Add checks to make sure each required macro is set,"In addition to the documentation mentioning what macros need to be set in the interface file for an app, there should be a compile time warning alerting the user to undefined values.
+
+It might also be prudent to add validity checks against the entered values (for example when a bad MID was provided or a name exceeds a max value for the cfe).",enhancement,https://github.com/nasa/ECI/issues/32
+Add an explanation of the message ID's used by ECI,"Since ECI expects certain macro's to be defined for the system to work, these macro names should be added to the documentation. Currently, there is a reference that needs to link to this page in the doxy branch.",documentation,https://github.com/nasa/ECI/issues/31
+Implement counters for status reporting flags,"Some users have expressed the desire for the ECI to telemeter a counter of how many times each status flag has tripped, for better insight into how often the flag is set over the current flag value and the latched flag which the ECI provides now. ",,https://github.com/nasa/ECI/issues/30
+Update the documentation for each of the ECI structures,"Even though everything was converted into auto-doc comments for Doxygen, the content has been lacking. Specifically, we need to document the members of the structures provided for use in the `eci_interface.h` file since it's more user facing. For maintainability, each structure should have a good explanation of it's intended use and a brief explanation of it's members.",documentation,https://github.com/nasa/ECI/issues/29
+Provide a tutorial describing what's needed to build an app with ECI,"The previous approach of directing people to the automated build system leaves some holes when trying to explain how to integrate an app with ECI. To combat this, we should provide an explanation of how to build an ECI app in both the cFE make and cmake build systems.
+
+Information for building a 6.5 ECI app can be found [here](https://github.com/nasa/ECI/blob/master/doc/ECI_FSW_Integration_Guide.docx) but there isn't any explanation of how to build with cmake.",documentation,https://github.com/nasa/ECI/issues/28
+Provide a walk through of the main components of the ECI,We've had a large amount of questions asking for an introduction to how to configure the ECI. This should be part of a larger scale effort to document ECI up to a standard of basic usability.,documentation,https://github.com/nasa/ECI/issues/27
+Update ECI to be compatible with cFE 6.6,"ECI has been 6.6 compatible for a while now but we've decided to allow ECI to work with 6.5 (using the make system) and 6.6 (using cmake) rather than make a separate 6.5 release. Since the NASA PACE project uses cFE 6.5 and ECI it makes sense that they should still be able to benefit from newer features in ECI.
+
+Changes:
+* Added basic Doxygen documentation to ECI source code
+* Added files needed for cmake build system to example apps to support CFE 6.6
+* Updated CI pipeline to build example apps under both CFE 6.5 and 6.6
+* Updated MID's in example apps to resolve collision with CFS default apps
+* Fixed MID's in example apps so that they're consistent with the cmd/tlm header in packet
+",,https://github.com/nasa/ECI/pull/26
+Build and run existing ECI unit tests under CFE 6.6,"Since the cFE 6.6 removed the for_build directory in it's cmake build system, we are kind of lost on how to add unit tests for the cFS 6.6 apps using UT assert. Effort needs to be made to figure out what unit test looks like for ECI 6.6 and document it accordingly.",enhancement,https://github.com/nasa/ECI/issues/25
+Integrate with 6.5,This commit merges the code in the master branch with the cfe 6.6 to make both compatible.,,https://github.com/nasa/ECI/pull/24
+Fixed example apps based on 6.6 changes.,"After preparing the ECI for cFE 6.6 we noticed a few issues with the example apps. We've taken some of the changes and altered them in a way that works in cFE 6.5. These changes have been verified by hand to compile and run in the cFS environment.
+
+closes #15
+closes #20 ",,https://github.com/nasa/ECI/pull/23
+Fixed the MID collision in sgp4 and simple app.,close #12,,https://github.com/nasa/ECI/pull/20
+Make the sgp4 example more noisy,"Although this seems like a strange issue, it's not very obvious to a user whether or not the example sgp4 app works. It would be a nice addition to sgp4 to add some sort of periodic event message to show that the app has initialized and the main loop is executing.
+
+Edit: The simple app could benefit from this as well.",enhancement,https://github.com/nasa/ECI/issues/19
+Remove unused files from the cFE 6.6 branch,"While converting to cFE 6.6, we didn't prune the unused files from cFE 6.5. This removal would include the Makefile in each of the example directories and bash scripts inside the ci directory.",,https://github.com/nasa/ECI/issues/18
+Add CI tests to start CFS and verify no errors,"In many cases, verifying that code compiles is not sufficient to ensure that it runs as expected. As an extra level of verification, it would be nice to add some CI tests to actually startup the CFS system and verify that the intended apps start and no initialization errors occur.
+
+This would be good to have for both CFE 6.5 and 6.6 on the master and cfe-6.6 branches respectively.",enhancement,https://github.com/nasa/ECI/issues/17
+Improve cmake function naming/documentation for cfe 6.6 branch,"Some new users are reporting that its hard to figure out how to build a CFS app with ECI (example #9 ). I think this can be partially addressed by pointing them at the CI pipeline as a ""recipe"", but I think it would be helpful to add some better breadcrumbs for them to follow. 
+
+As a couple examples, I'd suggest perhaps: 
+* renaming `setup_cfe.cmake` to `eci_utils.cmake` or something similar, to reflect that there are functions in there for doing more than just setting up cfe (sets up CFS system, also some helper functions for integrating ECI apps, etc).
+* add docstrings for each function in that file explaining the result of each and perhaps at what point in the integration process its useful.
+* ensure that the function names reflect their purpose. For example, I think `create_cfe()` might be more aptly called `clone_cfs` or `clone_cfs_if_not_exist` (though that's a little verbose). `install_eci` I think performs multiple operations (integrates to/sch/ci files, install eci source, etc) but from the name I'd think it only puts the ECI source files into the CFS tree.
+* Ensure that functions output messages to track their progress, which can also help document the functions. 
+
+Let me know if this makes sense and we can discuss any specific changes here as well.",enhancement,https://github.com/nasa/ECI/issues/16
+Adding missing default table and fix segfault in 6.5 version of sample app,"Also, I think the changes relating to the sample app will need to be propagated to the cfe 6.5 version (in master). Can you submit a PR towards master?
+
+_Originally posted by @SpaceSteve121 in https://github.com/nasa/ECI/pull/14#issuecomment-516028857_",,https://github.com/nasa/ECI/issues/15
+Fixed the test builds for cFE 6.6,"This commit makes multiple changes to return the tests to a working
+state. For whatever reason, the simple app never worked when ran in
+a cFS context even though it built.
+
+close #11",bug,https://github.com/nasa/ECI/pull/14
+cFE 6.6: Add a CMakeLists file for building the ECI source,"There is a duplication of effort when compiling the ECI source files with a project. So far both the simple app and sgp4 prop examples both require some steps to include the ECI source to compile the app. It would be nice, for build simplicity, to include a CMakeLists in the ECI repository that given a list of source files will compile external code along side ECI. This system could be used to remove the need for each app to specify the directories of ECI's source which was a source of duplicate code.",,https://github.com/nasa/ECI/issues/13
+Fix MID collision with SGP4Prop example and CFE_Time,"The SGP4 propagator example uses 0x1805 as it's house keeping message ID but this is the MID assigned to CFE_TIME_CMD_MID. To prevent future collisions with the cfe-core, we should switch all the message ID's in our examples to something like 0x[0|1]AA[x] to prevent accidentally assigning to another MID.",,https://github.com/nasa/ECI/issues/12
+Update the repository target for cFE 6.6,"Since the cFE 6.6 branch of ECI was pointing to an experimental branch in the nasa/cFE repository and cFE has pushed cFE-6.6 into master, the ECI 6.6 branch should update the links for cFE 6.6. The main repository to build the entire cFE 6.6 has been removed from the cFE repository and has been moved to https://github.com/nasa/cFS.",,https://github.com/nasa/ECI/issues/11
+Changed ECI's table path prefix,Changed the ECI path prefix to match the changes made to the cmake build system in cFE 6.6. Close #7 ,,https://github.com/nasa/ECI/pull/10
+Clarify the installation and building of the example apps in a pre-made system,"Please specify where and what exactly to run the shell scripts contained with ECI for cFS 6.6. Specifically to get it to work in nos3. A step-by-step guide on how to install and an ECI example app would be very useful, mentioning specifically what directories different files have to be located and run in.
+
+For example like this under the setup and build and run secions of cFS on github, located here https://github.com/nasa/cFS",,https://github.com/nasa/ECI/issues/9
+Suggest enhanced version information reporting (at init and noop),"At build put the response from `git describe --tags --always --dirty` (similar to version.cmake in cfe/cmake) into a define and report by the code if defined in addition to the manual version number.
+
+Can do it at build -D_ENHANCED_V_NAME_=response from git, or generate a header file on the fly and poke in the #define, and include from the code.
+
+cFS app guide will eventually say something like this, it's the direction we are going with version reporting to eliminate all the manual changes to the version header (only required at release with this update), or the confusion it causes when it's not updated.  Since before every merge to master really was a new version but not tracked well.",enhancement,https://github.com/nasa/ECI/issues/8
+The table path prefix needs to be updated for cFE 6.6,"In the course of organizing the build for 6.5, the PARAM_TBL_PATH_PREFIX value was changed from ""/ram/"" to ""/cf/tables"" for some separation between the shared objects and the flight software tables. The arch-build.cmake file in cFE 6.6 doesn't allow for the ability to specify the output sub-directory of shared objects or tables and places everything into the target directory. The default directory of cFE 6.6 is ""/cf/"" which the 6.6 compatible version of ECI should match.",,https://github.com/nasa/ECI/issues/7
+Baseline testing branch as master,Initial commit to master branch,,https://github.com/nasa/ECI/pull/6
+Added support for Sphinx+Hawkmoth C autodocs,Set up the Sphinx framework and integrated the Hawkmoth extension. Also included a quick example.,,https://github.com/nasa/ECI/pull/5
+Added support for Sphinx+Hawkmoth C autodoc,This PR adds the basic framework for Sphinx auto-doc with Hawkmoth as well as a quick example comment for sb_init().,,https://github.com/nasa/ECI/pull/4
+Inconsistently named ECI macros,"Some macros ECI defines do not follow the naming convention (starting with `ECI_`) and should be standardized.
+
+Known offenders are the Event types (which start with `EVENT_MESSAGE`) and HK and Table-related MIDs (which start with `SIL_`).",,https://github.com/nasa/ECI/issues/3
+ECI strip headers from incoming packets,"For prior uses of ECI, keeping the header of ingested packets was desirable because it contained information used in the processing of the packet. For some applications that header is unneeded or burdensome to the external code, which has to allocate space for it in its data structures. To maintain compatibility its likely that keeping the header will continue to be the default ECI behavior, but adding the ability for the ECI to strip the header off an incoming packet and a configuration setting so that the user could enable this functionality might be a good improvement. 
+
+For the envisioned use case, a global setting (applying to all incoming packets) is sufficient but not sure if there are use-cases where the ability to set this per-packet would be needed.",enhancement,https://github.com/nasa/ECI/issues/2
+ECI not updating outgoing packet headers properly,"In past usage, the external code allocated space for the CCSDS header in the output messages, but expected the ECI to manage the header (which is generally out-of-scope for the external code). This was implemented by having the ECI initialize the header at startup (using CFE_SB_InitMsg) and then filling the MessageID (via CFE_SB_SetMsgId), Packet Length (via CFE_SB_SetTotalMsgLength), and Timestamp (via CFE_SB_TimeStampMsg) after each step function.
+
+This implementation works so long as the external code does not modify the header. It was discovered that if the external code overwrote the secondary header flag to indicate no secondary header, CFE_SB_TimeStampMsg, which checks that flag, did not update the time as intended.
+
+To remedy this situation and better define the intent of the external code, I intend to update the ECI such that it overwrite the entire header (using CFE_SB_InitMsg) after the execution of the step function and then update the timestamp (using CFE_SB_TimeStampMsg), which ensures a correct header regardless of what the step function may have done during execution. The external code may disable this functionality by defining `ECI_MSG_HEADER_NO_OVERWRITE`, in which case the external code takes full responsibility for managing the header (including setting the messageID, packet length, and timestamps or checksum). 
+
+This change preserves the current output message definition, but does not allow packet-by-packet control of this behavior. That could be investigated if that's a desired feature.","bug, enhancement",https://github.com/nasa/ECI/issues/1

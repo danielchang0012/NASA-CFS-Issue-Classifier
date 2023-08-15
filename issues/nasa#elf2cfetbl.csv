@@ -1,0 +1,2599 @@
+Title,Body,Labels,URL
+"Fix #132, Adds CheckStatus helper functions","**Describe the contribution**
+- Fixes #132, This improvement reduces the cyclomatic complexity of the main() function from 21 to 8 which is less than the recommended 15 cyclomatic complexity upper limit. The change accomplishes this improvement by adding two new status-checking helper functions.
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+ - No impact to behavior. This change distributes complexity to newly created helper functions.
+
+**System(s) tested on**
+ - OS: Ubuntu 20.04
+
+**Additional context**
+* Note, that this improvement doesn't reduce the overall complexity of the elf2cfetbl program. It just distributes the complexity across the two new helper functions which each have 1 cyclomatic complexity, potentially making the code easier to understand and maintain. 
+* Also note that the multiple `return()` statements are replaced with `exit()`via the two new helper functions. Calling `return()` from main() when no other non-daemon threads are running, will have the same effect as calling `exit()`. It will terminate the process. I chose to use `exit()` to make use of the new helper functions since elf2cfetbl does not appear to use multi-threading.
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, Vantage Systems
+","enhancement, CCB:Approved, Equuleus-rc2",https://github.com/nasa/elf2cfetbl/pull/137
+"Fix #129, Reduce cyclomatic complexity of GetElfHeader","**Describe the contribution**
+- Fixes #129 
+This change reduces the cyclomatic complexity by 5. The changes specifically condense extraneous ""Verbose"" if statements for printing header as well as extraneous status assignments when checking the elf magic number.
+
+**Testing performed**
+None
+
+**Expected behavior changes**
+No expected impact to behavior.
+
+**System(s) tested on**
+ - OS: Ubuntu 22.04
+
+**Additional context**
+The cyclomatic complexity for this function still remains above the recommended 15, however the code is relatively clean and follows a pretty straightforward process. If desired, further reduction of cylomatic complexity by 8 can be achieved by creating new functions for the [processor class type](https://github.com/nasa/elf2cfetbl/blob/46b29f82c76429be97687203f75f4b1b25227c60/elf2cfetbl.c#L1521-L1547) verification and [data encoding type](https://github.com/nasa/elf2cfetbl/blob/46b29f82c76429be97687203f75f4b1b25227c60/elf2cfetbl.c#L1559-L1589) verification switch/case.
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, Vantage Systems
+","enhancement, CCB:Ready",https://github.com/nasa/elf2cfetbl/pull/136
+Inconsistent prototype in elf2cfetbl.c : OutputDataToTargetFile,"**Describe the bug**
+
+The function `OutputDataToTargetFile` in `elf2cfetbl.c` is prototyped on line 84 with a `void` argument list but defined on line 2486 with an empty argument list.  This causes the compilation to error out if the compiler and its flags are sufficiently strict.
+
+```
+...
+int32 OutputDataToTargetFile(void);
+...
+int32 OutputDataToTargetFile()
+```
+
+
+The fix is to change the line 2486 argument list to `void`
+
+**To Reproduce**
+
+By inspection:
+
+[e.g. This description here](https://wiki.sei.cmu.edu/confluence/display/c/DCL20-C.+Explicitly+specify+void+when+a+function+accepts+no+arguments)
+
+> According to the C Standard, subclause 6.7.6.3, paragraph 14 [[ISO/IEC 9899:2011](https://wiki.sei.cmu.edu/confluence/display/c/AA.+Bibliography#AA.Bibliography-ISO-IEC9899-2011)],
+>> An identifier list declares only the identifiers of the parameters of the function. An empty list in a function declarator that is part of a definition of that function specifies that the function has no parameters. The empty list in a function declarator that is not part of a definition of that function specifies that no information about the number or types of the parameters is supplied.
+> Subclause 6.11.6 states that
+>> The use of function declarators with empty parentheses (not prototype-format parameter type declarators) is an obsolescent feature.
+> Consequently, functions that accept no arguments should explicitly declare a void parameter in their parameter list. This holds true in both the declaration and definition sections (which should match).
+> 
+
+
+This is caught and rejected by sufficiently-strict (with flags) compilers. One example is the current Apple Mac Clang compiler
+```
+% cc --version
+Apple clang version 14.0.3 (clang-1403.0.22.14.1)
+Target: x86_64-apple-darwin22.4.0
+Thread model: posix
+```
+with flags including `-std=c99 -pedantic -Wall -Wstrict-prototypes`.
+
+Admittedly, the Mac is not a cFS supported system, but `clang` is a pretty standard compiler, and eventually you can expect `gcc` to complain as well.
+
+**System observed on:**
+ - MacBook Pro (Intel)
+ - OS: MacOS Ventura 13.3.1
+ - Versions: clang version 14.0.3
+",,https://github.com/nasa/elf2cfetbl/issues/135
+"Fix #133, Update references to CFE_FS_Header_t time members","**Describe the contribution**
+- Fixes #133 
+  - References to the `CFE_FS_Header_t` file create time members are updated to go through to the `CFE_TIME_SysTime_t` substruct.
+
+**Testing performed**
+GitHub CodeqL tasks failing to build because this goes along with updates to cFE: https://github.com/nasa/cFE/pull/2246
+
+Local testing confirms all working together successfully when both changes implemented together. 100% of tests passing and net coverage unaffected.
+![Screenshot 2023-04-03 09 35 59](https://user-images.githubusercontent.com/9024662/229385655-b6e0bd83-660d-4e09-91a9-013bae009e1d.png)
+![Screenshot 2023-04-03 09 35 33](https://user-images.githubusercontent.com/9024662/229385660-6f91514b-ba77-43fb-9c83-50b069feaa4c.png)
+
+**Expected behavior changes**
+No change to behavior.
+
+**System(s) tested on**
+Intel(R) Celeron(R) N4100 CPU @ 1.10GHz x86_64
+Debian GNU/Linux 11 (bullseye)
+Current main branch of cFS.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/elf2cfetbl/pull/134
+References to time members in CFE_FS_Header_t should be converted to CFE_TIME_SysTime_t,"**Describe the bug**
+cFE PR https://github.com/nasa/cFE/pull/2246 converts all remaining seconds/subseconds time struct members to use `CFE_TIME_SysTime_t` that were not already doing so.
+elf2cfetbl requires some updates as it references one of them directly (for cFE FS) in a few locations.
+
+**Code snips**
+https://github.com/nasa/elf2cfetbl/blob/46b29f82c76429be97687203f75f4b1b25227c60/elf2cfetbl.c#L2528-L2536
+
+**Expected behavior**
+Needs to be updated to reference the time members through the `CFE_TIME_SysTime_t` sub-struct.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/elf2cfetbl/issues/133
+main - cyclomatic complexity of 21,"**Is your feature request related to a problem? Please describe.**
+NASA guidelines in NPR 7150.2D recommends maintaining a cyclomatic complexity in software, in particular flight software of 15.
+
+elf2cfetbl.c::[main](https://github.com/nasa/elf2cfetbl/blob/46b29f82c76429be97687203f75f4b1b25227c60/elf2cfetbl.c#L603) unnecessarily violates the recommendation with a cyclomatic complexity of 21.  
+
+**Describe the solution you'd like**
+Clean up main such that it has a cyclomatic complexity of 15 or less.
+
+**Describe alternatives you've considered**
+Leave as-is
+
+**Additional context**
+Imported from JSC static analysis audit
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+",enhancement,https://github.com/nasa/elf2cfetbl/issues/132
+LocateAndReadUserObject - cyclomatic complexity of 29,"**Is your feature request related to a problem? Please describe.**
+NASA guidelines in NPR 7150.2D recommends maintaining a cyclomatic complexity in software, in particular flight software of 15.
+
+elf2cfetbl.c::[LocateAndReadUserObject](https://github.com/nasa/elf2cfetbl/blob/46b29f82c76429be97687203f75f4b1b25227c60/elf2cfetbl.c#L2328) unnecessarily violates the recommendation with a cyclomatic complexity of 29.  
+
+**Describe the solution you'd like**
+Clean up GetElfHeader such that it has a cyclomatic complexity of 15 or less.
+
+**Describe alternatives you've considered**
+Leave as-is
+
+**Additional context**
+Imported from JSC static analysis audit
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+",enhancement,https://github.com/nasa/elf2cfetbl/issues/131
+GetSectionHeader - cyclomatic complexity of 35,"**Is your feature request related to a problem? Please describe.**
+NASA guidelines in NPR 7150.2D recommends maintaining a cyclomatic complexity in software, in particular flight software of 15.
+
+elf2cfetbl.c::[GetSectionHeader](https://github.com/nasa/elf2cfetbl/blob/46b29f82c76429be97687203f75f4b1b25227c60/elf2cfetbl.c#L1679) unnecessarily violates the recommendation with a cyclomatic complexity of 35.  
+
+**Describe the solution you'd like**
+Clean up GetElfHeader such that it has a cyclomatic complexity of 15 or less.
+
+**Describe alternatives you've considered**
+Leave as-is
+
+**Additional context**
+Imported from JSC static analysis audit
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+",enhancement,https://github.com/nasa/elf2cfetbl/issues/130
+GetElfHeader - cyclomatic complexity of 36,"**Is your feature request related to a problem? Please describe.**
+NASA guidelines in NPR 7150.2D recommends maintaining a cyclomatic complexity in software, in particular flight software of 15.
+
+elf2cfetbl.c::[GetElfHeader](https://github.com/nasa/elf2cfetbl/blob/46b29f82c76429be97687203f75f4b1b25227c60/elf2cfetbl.c#L1467) unnecessarily violates the recommendation with a cyclomatic complexity of 36.  
+
+**Describe the solution you'd like**
+Clean up GetElfHeader such that it has a cyclomatic complexity of 15 or less.
+
+**Describe alternatives you've considered**
+Leave as-is
+
+**Additional context**
+Imported from JSC static analysis audit
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+",enhancement,https://github.com/nasa/elf2cfetbl/issues/129
+ProcessCmdLineOptions - cyclomatic complexity of 45,"**Is your feature request related to a problem? Please describe.**
+NASA guidelines in NPR 7150.2D recommends maintaining a cyclomatic complexity in software, in particular flight software of 15.
+
+elf2cfetbl.c::[ProcessCmdLineOptions](https://github.com/nasa/elf2cfetbl/blob/46b29f82c76429be97687203f75f4b1b25227c60/elf2cfetbl.c#L921) unnecessarily violates the recommendation with a cyclomatic complexity of 45.  
+
+**Describe the solution you'd like**
+Clean up ProcessCmdLineOptions such that it has a cyclomatic complexity of 15 or less.
+
+**Describe alternatives you've considered**
+Leave as-is
+
+**Additional context**
+Imported from JSC static analysis audit
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+",enhancement,https://github.com/nasa/elf2cfetbl/issues/128
+"Fix #126, Move variables declared mid-function to the top","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #126 
+  - A couple stray variables that were declared mid-function were moved to the top of their respective functions.
+
+**Testing performed**
+GitHub CI actions (incl. Codeql Build etc.) all passing successfully excl. CodeQL-security for apparently pre-existing issues that are being flagged now.
+
+**Expected behavior changes**
+All variables declared top of function as per cFS conventions/guidelines.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/elf2cfetbl/pull/127
+Variables declared mid-function,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+A couple of stray cases of variables declared mid-function left here.
+Copy of https://github.com/nasa/CF/issues/109
+
+**Expected behavior**
+All variables should be declared at the top of the function.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/elf2cfetbl/issues/126
+"Fix #87, Check return value of stat()","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #87 
+  - Adds a check for the return value of `stat` in case of error return, and prints an error message.
+    - Does not return `FAILURE`, as the `chmod` may well have been successful, and following this there is only an informational message (about the file permissions).
+
+**Testing performed**
+GitHub CI actions (incl. Codeql Build etc.) all passing successfully excl. CodeQL-security for apparently pre-existing issues that are being flagged now.
+
+**Expected behavior changes**
+No impact on behavior.
+Adds error message for an (unlikely) error return from `stat()`.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/elf2cfetbl/pull/125
+"Fix #86, Check return from chmod","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #86 
+  - Adds check for `return` value from `chmod`.
+  - This PR adds a `FAILURE` return, but could also leave this out, as the updated permissions are reported after chmod as well.
+
+**Testing performed**
+GitHub CI actions (incl. Codeql Build etc.) all passing successfully excl. CodeQL-security for apparently pre-existing issues that are being flagged now.
+
+**Expected behavior changes**
+In cases of error (non-zero) `return` from `chmod` the error info will be printed and early return with FAILED will occur.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/elf2cfetbl/pull/124
+"Fix #85, Add checks for all return values from fseek()","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #85 
+  - Adds checks for the return from `fseek()` in 5 locations where this was absent.
+
+Note: in these cases, an error return from `fseek()` seems extremely unlikely (unless the input data is corrupted somehow) so these checks are mostly just to squash the warnings.
+
+**Testing performed**
+GitHub CI actions (incl. Codeql Build etc.) all passing successfully excl. CodeQL-security for apparently pre-existing issues that are being flagged now.
+
+**Expected behavior changes**
+In cases of error (non-zero) return from `fseek()` the error info will be printed and early return with `FAILED` will occur.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/elf2cfetbl/pull/123
+"Fix #91, Redo SymbolNames malloc to remove out-of-bounds write","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #91 
+  - Removes `while` loop and uses `strlen` for `malloc` rather than `i` variable.
+
+**Testing performed**
+Just GitHub CI Actions so far.
+
+**Expected behavior changes**
+Logic stays the same, but the possibility of an out-of-bounds write is removed.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/elf2cfetbl/pull/122
+elf2cfetbl Integration candidate: Caelum-rc4+dev26,"**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/elf2cfetbl/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- PR #119. Addresses Issue #118
+
+**Testing performed**
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/597/checks)
+[elf2cfetbl Checks](https://github.com/nasa/elf2cfetbl/pull/121/checks)
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt",,https://github.com/nasa/elf2cfetbl/pull/121
+elf2cfetbl Integration candidate: Caelum-rc4+dev25,"**Describe the contribution**
+
+PR #117
+    
+- Fix #52, Create CHANGELOG.md
+
+**Testing performed**
+
+[elf2cfetbl Checks](https://github.com/nasa/elf2cfetbl/pull/120/checks)
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/590/checks)
+
+**Expected behavior changes**
+
+See PRs
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt",,https://github.com/nasa/elf2cfetbl/pull/120
+"Fix #118, Remove C++-style comments","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #118
+C++-style comments have been changed to C-style comments.
+
+**Testing performed**
+None (comment changes only).
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/elf2cfetbl/pull/119
+Remove C++-style comments,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+A couple of C++-style comments remain in the elf2cfetbl code.
+
+**Expected behavior**
+Only C-style comments (/* ... */) will remain, aligning with the cFS coding style/standard.
+
+**Reporter Info**
+@thnkslprpt ",,https://github.com/nasa/elf2cfetbl/issues/118
+"Fix #52, Create CHANGELOG.md","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #52
+
+**Testing performed**
+None.
+
+**Expected behavior changes**
+Minimizes unnecessary clutter in README.md
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/elf2cfetbl/pull/117
+Poorly documented file,"**Describe the bug**
+Poorly documented large function 
+
+**Expected behavior**
+Same behavior. Better documentation for future users/developers. Either document functions or remove empty comment blocks.
+
+**Code snips**
+One function example out of many:
+https://github.com/nasa/elf2cfetbl/blob/b6aa1c072da94295e216a7b794f51d6724a1646c/elf2cfetbl.c#L817-L821
+
+**Additional context**
+Caught by CodeQL - Security queries.
+Several functions have empty comment blocks where documentation should go. 
+
+**Reporter Info**
+Ariel Adams, MCSG Tech
+",,https://github.com/nasa/elf2cfetbl/issues/116
+CMake script refers to obsolete path,"**Describe the bug**
+The CMake build script for elf2cfetbl is outdated and refers to a CFE path that no longer exist in the CFE bundle.
+
+https://github.com/nasa/elf2cfetbl/blob/b6aa1c072da94295e216a7b794f51d6724a1646c/CMakeLists.txt#L5
+
+**Expected behavior**
+At a minimum, the incorrect path should be removed
+A better approach altogether would be to use an interface library that refers to the OSAL API
+
+**Additional context**
+Doesn't really break anything because nonexistent paths are typically ignored by GCC (although that may not be the case with some other compilers)
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/elf2cfetbl/issues/115
+Replacing sprintf with snprintf to avoid overflow.,"**Describe the contribution**
+Replaced sprintf() with snprintf() to avoid overflow
+
+**Testing performed**
+CTest
+
+**Expected behavior changes**
+Protect against overflow by setting the buffer to n+1 of the char String[50] to avoid overflow that may occur.
+
+**System(s) tested on**
+ - Hardware: PC, Raspberry Pi
+ - OS: Ubuntu 22.04 LTS, Windows 10
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Awf Wiswasi - California State University, Fullerton
+",,https://github.com/nasa/elf2cfetbl/pull/114
+elf2cfetbl Integration candidate: Caelum-rc4+dev10,"**Describe the contribution**
+
+PR #112 
+    
+- Fix #111, Resolve uninit var static analysis warnings
+
+**Testing performed**
+
+[elf2cfetbl Checks](https://github.com/nasa/elf2cfetbl/pull/113/checks)
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/492/checks)
+
+**Expected behavior changes**
+
+See PRs
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/492>
+Commit and PR format-check failure expected for Integration Candidates
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+skliper
+",,https://github.com/nasa/elf2cfetbl/pull/113
+"Fix #111, Resolve uninit var static analysis warnings","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CF/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #111
+
+**Testing performed**
+CI + static analysis run
+
+**Expected behavior changes**
+None, just squashes static analysis warnings
+
+**System(s) tested on**
+ - Hardware: VM
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + apps + related static analysis resolution branches
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/elf2cfetbl/pull/112
+Uninitialized variable static analysis warning,"**Is your feature request related to a problem? Please describe.**
+Uninitialized variable static analysis warning observed (license restricts publishing warnings)
+
+**Describe the solution you'd like**
+Fix
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/elf2cfetbl/issues/111
+"Fix #109, Update codeql workflow for reusable updates","**Describe the contribution**
+- Fix #109 
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just fixes codeql workflow
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, CCB:FastTrack",https://github.com/nasa/elf2cfetbl/pull/110
+CodeQL Workflow Broken due to Name Change,"**Describe the bug**
+
+Merging https://github.com/nasa/cFS/pull/413 broke the components' CodeQL workflow as expected. 
+
+Need to update the CodeQL workflows to match the patterns implemented in https://github.com/nasa/cFE/pull/2035
+
+**To Reproduce**
+
+See failed workflows 
+- https://github.com/nasa/elf2cfetbl/actions/runs/2042727791
+
+**Expected behavior**
+
+Workflow executes
+
+**Code snips**
+None
+
+**System observed on:**
+GitHub Actions
+
+**Additional context**
+Use `uses: nasa/cFS/.github/workflows/codeql-reusable.yml@main`
+
+**Reporter Info**
+Ariel Adams, ASRC Federal ","good first issue, continuous-integration",https://github.com/nasa/elf2cfetbl/issues/109
+elf2cfetbl Integration candidate: Caelum-rc4+dev7,"**Describe the contribution**
+
+PR #106 
+- Fix #105, Update copyright header
+
+PR #107 
+- HOTFIX #98, Standardize Version Information
+
+
+**Testing performed**
+elf2cfetbl Checks <https://github.com/nasa/elf2cfetbl/pull/108/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/445/checks>
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 
+RTEMS
+
+**Additional context**
+Part of nasa/cFS#445
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper 
+@astrogeco ",,https://github.com/nasa/elf2cfetbl/pull/108
+"HOTFIX #98, Standardize version information","**Describe the contribution**
+
+Per conversation in CCB:2022-03-24 and in https://github.com/nasa/cFE/commit/e5be0612ad6bf9db09ddf640306a65292abce2d5#commitcomment-69358417
+
+Ensuring REVISION number is set to 99 and MISSION_REV = 0xFF
+
+**Testing performed**
+Text and documentation only
+
+**Expected behavior changes**
+No behavior change
+
+**System(s) tested on**
+n/a
+
+**Additional context**
+https://github.com/nasa/cFE/commit/e5be0612ad6bf9db09ddf640306a65292abce2d5#commitcomment-69358417
+
+**Third party code**
+none
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Gerardo E. Cruz-Ortiz, NASA",,https://github.com/nasa/elf2cfetbl/pull/107
+"Fix #105, Update copyright header","**Describe the contribution**
+- Fix #105 
+
+**Testing performed**
+Documentation only, but built/ran unit tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: i5/wsl
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/elf2cfetbl/pull/106
+Apply latest copyright header,"**Is your feature request related to a problem? Please describe.**
+Updated copyright header
+
+**Describe the solution you'd like**
+Update
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",docs,https://github.com/nasa/elf2cfetbl/issues/105
+ RST-IVV-179: ICDH Build 2: cFS Tool Contains Potentially Null Pointers that are De-referenced in Function,"This issue was observed in IV&V's analysis of the Roman Space Telescope's WFI Instrument ICDH FSW Build 2.0 software release. See attachment for code reference.
+[cFS TIMs.pdf](https://github.com/nasa/cFS/files/8126982/cFS.TIMs.pdf)
+
+RST-IVV-179: ICDH Build 2: cFS Tool Contains Potentially Null Pointers that are De-referenced in Function AllocateSymbols
+ 
+IVV Severity: 4
+Issue Category: Code
+Issue Type: Incorrect Code
+Count: 2
+
+Description:
+There are 2 instances where pointers are checked for Null and then later de-referenced by function AllocateSymbols in file elf2cfetbl.c [Ref. 1], regardless of whether they are valid:
+1. Pointer 'SymbolNames', of type Elf_Sym, is checked for NULL on line 841, and is dereferenced on line 850.
+2. Pointer 'SymbolPtrs', of type Elf_Sym, is checked for NULL on line 834, and is dereferenced on line 849.
+
+If either pointer is Null, a local variable, Status, of type int32, is set to FAILED. However, the Status is not checked prior to de-referencing the pointers. Null pointers should not be de-referenced as doing so will result in application exit or other unpredictable or undesired behavior.
+
+Recommended Actions: Recommend only de-referencing pointers, SymbolPtrs and SymbolNames, when Status is set to SUCCESS.
+
+Impact:
+De-referencing a Null pointer, in this case, will create an inconvenience for operators, crew or other projects' personnel since the function, which is part of ground software, will crash and exit.
+Options",,https://github.com/nasa/elf2cfetbl/issues/103
+RST-IVV-177: ICDH Build 2: cFS Tool “elf2cfetbl” Experiences a Buffer Overflow when the Section Header Description Exceeds 60 Characters,"This issue was observed in IV&V's analysis of the Roman Space Telescope's WFI Instrument ICDH FSW Build 2.0 software release. See attachment for code reference. 
+[cFS TIMs.pdf](https://github.com/nasa/cFS/files/8126971/cFS.TIMs.pdf)
+
+This was veing tracked in the WFI FSW Jira system under: https://etdjira.gsfc.nasa.gov/browse/WFI-695
+
+
+RST-IVV-177: ICDH Build 2: cFS Tool “elf2cfetbl” Experiences a Buffer Overflow when the Section Header Description Exceeds 60 Characters
+
+IVV Severity: 4
+Issue Category: Code
+Issue Type: Incorrect Code
+Count: 1
+
+Description:
+When reading the section header using the function GetSectionHeader() on line 1667 of file elf2cfetbl.c [Ref. 1], the array of “VerboseStr”, which is of size 60, will experience a buffer overflow when “i”, the iteration integer used in the while loop on the same line, exceeds the value of 60. This can occur because the maximum characters allowed for the section header is 128 as defined by the macro MAX_SECTION_HDR_NAME_LEN on line 44 in the same file. On line 1674, “VerboseStr” is expected to have length MAX_SECTION_HDR_NAME_LEN - 1, which is 127. So, if the “SrcFileDesc” points to a section header with longer than 60 characters, on line 1667, the iterator ""i""
+will exceed 60.
+
+Note: The elf2cfetbl utility is a ground tool that provides a method of converting an object file containing the desired contents of a cFE application's Table Image into a binary file that is compatible with the cFE Table Services for loading the image.
+
+Recommended Actions:
+Declare the “VerboseStr” in function GetSectionHeader() to be an array of characters for at least MAX_SECTION_HDR_NAME_LEN, 128.
+
+Impact:
+A buffer overflow can result in unpredictable/undesired behavior during the execution of the elf2cfetbl utility. With the current code, the user would need to change the section header description to be shorter than 60 characters and re-run the elf2cfetbl tool if the header were greater than 60 characters long. This creates inconvenience for operators or other project personnel.",,https://github.com/nasa/elf2cfetbl/issues/104
+"Fix #101, Remove explicit filename doxygen comments","**Describe the contribution**
+- Fix #101 
+
+**Testing performed**
+Make doc, observe no filename warnings
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: i5/wsl
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/elf2cfetbl/pull/102
+Remove explicit file name references in doxygen file comments to avoid warnings,"**Is your feature request related to a problem? Please describe.**
+File comment without a filename implies the comments apply to the current file.  Adding the file name makes doxygen try to match that file.  The issue is there's multiple files with the same name, so doxygen gets confused unless you add full path.  Really it's just overhead since the point is to comment the current file.
+
+Sample warning if you `make doc` from the bundle:
+```
+/home/jhageman/cFS/cFS-GitHub/osal/src/os/posix/src/os-impl-binsem.c:22: warning: the name `os-impl-binsem.c' supplied as the second argument in the \file statement matches the following input files:
+   /home/jhageman/cFS/cFS-GitHub/osal/src/os/posix/src/os-impl-binsem.c
+   /home/jhageman/cFS/cFS-GitHub/osal/src/os/rtems/src/os-impl-binsem.c
+   /home/jhageman/cFS/cFS-GitHub/osal/src/os/vxworks/src/os-impl-binsem.c
+Please use a more specific name by including a (larger) part of the path!
+```
+
+**Describe the solution you'd like**
+Easiest to just remove the name since for every case the comment applies to the current file
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",docs,https://github.com/nasa/elf2cfetbl/issues/101
+"Fix #99, Apply header guard standard","**Describe the contribution**
+- Fix #99 
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/elf2cfetbl/pull/100
+Apply header guard standard formatting,"**Is your feature request related to a problem? Please describe.**
+Nonstandard guard used
+
+**Describe the solution you'd like**
+Apply standard
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/elf2cfetbl/issues/99
+elf2cfetbl Integration candidate: Caelum+dev1,"**Describe the contribution**
+PR #93 
+- Fix #89, Check get_sh_entsize(SectionHeader) value 
+
+
+
+
+**Testing performed**
+
+sample_app Checks <https://github.com/nasa/elf2cfetbl/pull/98/checks>
+cFS Bundle Checks <https://github.com/nasa/cFS/pull/390/checks>
+
+**Expected behavior changes**
+See PRs 
+
+**System(s) tested on**
+Ubuntu 18.04
+RTEMS 4.11
+RTEMS 5
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/390/>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@ArielSAdamsNASA ",,https://github.com/nasa/elf2cfetbl/pull/98
+"Fix #96, Reuse CodeQL, Static Analysis, and Format Check","**Describe the contribution**
+Fixes #96 
+
+**Testing performed**
+elf2cfetbl CodeQL Reuse: https://github.com/ArielSAdamsNASA/elf2cfetbl/actions/runs/1395601113
+elf2cfetbl Format Check Reuse: https://github.com/ArielSAdamsNASA/elf2cfetbl/actions/runs/1395601110
+elf2cfetbl Static Analysis Reuse: https://github.com/ArielSAdamsNASA/elf2cfetbl/actions/runs/1395601108
+
+**Expected behavior changes**
+elf2cfetbl will reuse CodeQL, Static Analysis, and Format Checker that are held in cFS. These workflows will not work until nasa/cFS#386 is merged.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal",continuous-integration,https://github.com/nasa/elf2cfetbl/pull/97
+"Reuse CodeQL, Format Checker, and Static Analysis Workflows","**Is your feature request related to a problem? Please describe.**
+When needing to change workflows, one must create an issue and PR for each submodule. This feature would reduce duplication.
+
+**Describe the solution you'd like**
+To reuse workflows, the targeted workflow must include workflow_call and inputs as seen below. 
+```
+on:
+  push:
+  pull_request:
+  workflow_call:
+    inputs:
+      runs-on: 
+        description: Platform to execute on
+        type: string
+        default: ubuntu-latest
+```
+
+**Describe alternatives you've considered**
+Keep it as is. 
+
+**Additional context**
+Tested in OSAL, OSAL cFE CodeQL Reuse Build: https://github.com/ArielSAdamsNASA/osal/runs/4023159610?check_suite_focus=true
+Tested in OSAL, OSAL CodeQL Reuse Build: https://github.com/ArielSAdamsNASA/osal/actions/runs/1390702434
+cFS CodeQL Reuse: https://github.com/ArielSAdamsNASA/cFS-JSF-Rules/actions/runs/1390561827
+
+**Requester Info**
+Ariel Adams, ASRC Federal",continuous-integration,https://github.com/nasa/elf2cfetbl/issues/96
+"Fix #83 #94, Remove workflow branch restrictions, add duplicate check, remove --quiet","**Describe the contribution**
+- Fix #83 
+- Fix #94 
+
+Remove workflow branch restrictions, add duplicate check, remove --quiet
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+- No longer restricts branches
+- Skips duplicate runs
+- Now reports cppcheck analyzed file list
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC
+@astrogeco","duplicate, continuous-integration",https://github.com/nasa/elf2cfetbl/pull/95
+Remove static analysis workflow cppcheck --quiet flag,"**Is your feature request related to a problem? Please describe.**
+Analyzed files not reported:
+https://github.com/nasa/elf2cfetbl/blob/10f55fb3663efce8724affbcbbeac52a028ea781/.github/workflows/static-analysis.yml#L26
+
+**Describe the solution you'd like**
+Remove flag
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","duplicate, continuous-integration",https://github.com/nasa/elf2cfetbl/issues/94
+"Fix #89, Check get_sh_entsize(SectionHeader) value","**Describe the contribution**
+Fixes #89 
+
+**Testing performed**
+GitHub Actions
+
+**Expected behavior changes**
+Checks the value of get_sh_entsize(SectionHeader) to ensure NumSymbols does not divide by 0. 
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal",CCB:Approved,https://github.com/nasa/elf2cfetbl/pull/93
+"Fix #91,Out-of-bounds Write for VerboseStr","**Describe the contribution**
+A clear and concise description of what the contribution is.
+- Include explicitly what issue it addresses [e.g. Fixes #X]
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Build steps '...'
+1. Execution steps '...'
+
+**Expected behavior changes**
+A clear and concise description of how this contribution will change behavior and level of impact.
+ - API Change: xxx (if applicable)
+ - Behavior Change: xxx (if applicable)
+ - Or no impact to behavior
+
+**System(s) tested on**
+ - Hardware: [e.g. PC, SP0, MCP750]
+ - OS: [e.g. Ubuntu 18.04, RTEMS 4.11, VxWorks 6.9]
+ - Versions: [e.g. cFE 6.6, OSAL 4.2, PSP 1.3 for mcp750, any related apps or tools]
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Full name and company/organization/center of all contributors (""Personal"" if individual work)
+- If NASA Civil Servant Employee or GSFC Contractor on SES II
+  - Address/email/phone and contract/task information (if applicable) must be on file
+- Else if Company
+  - **HAND SIGNED** Company CLA must be on file (once per release): [Company CLA](https://github.com/nasa/cFE/blob/master/docs/GSC_18128_Corp_CLA_form_1219.pdf)
+- Else if Individual
+  - **HAND SIGNED** Individual CLA must be on file (once per release): [Individual CLA](https://github.com/nasa/cFE/blob/master/docs/GSC_18128_Ind_CLA_form_1219.pdf)
+","invalid, community",https://github.com/nasa/elf2cfetbl/pull/92
+Out-of-bounds Write for VerboseStr,"**Describe the bug**
+Bad while loop causing out-of-bounds write 
+
+**Expected behavior**
+Fix while loop
+
+**Code snips**
+https://github.com/nasa/elf2cfetbl/blob/10f55fb3663efce8724affbcbbeac52a028ea781/elf2cfetbl.c#L1927-L1932
+
+**System observed on:**
+Coverity: https://scan.coverity.com/projects/arielsadamsnasa-cfs-jsf-rules?tab=overview
+
+**Additional context**
+Checking i < 60UL implies that i is 60 on the false branch.
+
+ Overrunning array VerboseStr of 60 bytes at byte offset 60 using index i (which evaluates to 60).
+
+**Reporter Info**
+Ariel Adams, ASRC Federal
+",,https://github.com/nasa/elf2cfetbl/issues/91
+TOCTOU bug for chmod,"**Describe the bug**
+Calling function chmod that uses DstFilename after a check function. This can cause a time-of-check, time-of-use race condition
+
+**Expected behavior**
+Use fchmod as seen in OS_FileChmod_Impl. 
+
+**Code snips**
+https://github.com/nasa/elf2cfetbl/blob/10f55fb3663efce8724affbcbbeac52a028ea781/elf2cfetbl.c#L1460
+
+**System observed on:**
+Coverity: https://scan.coverity.com/projects/arielsadamsnasa-cfs-jsf-rules?tab=overview
+
+**Reporter Info**
+Ariel Adams, ASRC Federal 
+",,https://github.com/nasa/elf2cfetbl/issues/90
+Tainted Expression get_sh_entsize(SectionHeader),"**Describe the bug**
+Using tainted expression get_sh_entsize(SectionHeader) as the divisor in get_sh_size(SectionHeader) / get_sh_entsize(SectionHeader).
+
+**Expected behavior**
+Check that get_sh_entsize(SectionHeader) does not equal to 1 so get_sh_entsize(SectionHeader) is not divided by 0. 
+
+**Code snips**
+https://github.com/nasa/elf2cfetbl/blob/10f55fb3663efce8724affbcbbeac52a028ea781/elf2cfetbl.c#L1777
+
+**System observed on:**
+Coverity: https://scan.coverity.com/projects/arielsadamsnasa-cfs-jsf-rules?tab=overview
+
+**Additional context**
+Untrusted divisor (TAINTED_SCALAR)
+
+**Reporter Info**
+Ariel Adams, ASRC Federal
+",enhancement,https://github.com/nasa/elf2cfetbl/issues/89
+Truncated stdio Return Value,"**Describe the bug**
+There are API usage errors with fgetc. 
+
+**Expected behavior**
+Check EOF then cast value. 
+
+**Code snips**
+https://github.com/nasa/elf2cfetbl/blob/10f55fb3663efce8724affbcbbeac52a028ea781/elf2cfetbl.c#L1746
+
+https://github.com/nasa/elf2cfetbl/blob/10f55fb3663efce8724affbcbbeac52a028ea781/elf2cfetbl.c#L1927
+
+https://github.com/nasa/elf2cfetbl/blob/10f55fb3663efce8724affbcbbeac52a028ea781/elf2cfetbl.c#L2464
+
+https://github.com/nasa/elf2cfetbl/blob/10f55fb3663efce8724affbcbbeac52a028ea781/elf2cfetbl.c#L2617
+
+**System observed on:**
+Coverity: https://scan.coverity.com/projects/arielsadamsnasa-cfs-jsf-rules?tab=overview
+
+**Additional context**
+Assigning the return value of fgetc to char AByte truncates its value.
+
+ Assigning the return value of fgetc to char VerboseStr[i] truncates its value.
+
+**Reporter Info**
+Ariel Adams, ASRC Federal 
+",,https://github.com/nasa/elf2cfetbl/issues/88
+Check Return Value of stat,"**Describe the bug**
+Calling stat(DstFilename, &dststat) without checking return value. This library function may fail and return an error code.
+
+**Expected behavior**
+Check the return value of stat
+
+**Code snips**
+https://github.com/nasa/elf2cfetbl/blob/10f55fb3663efce8724affbcbbeac52a028ea781/elf2cfetbl.c#L1461
+
+**System observed on:**
+Coverity: https://scan.coverity.com/projects/arielsadamsnasa-cfs-jsf-rules?tab=overview
+
+**Reporter Info**
+Ariel Adams, ASRC Federal 
+",,https://github.com/nasa/elf2cfetbl/issues/87
+Check Return Value of chmod,"**Describe the bug**
+Calling chmod(DstFilename, dststat.st_mode & 0xffffffc0U) without checking return value. This library function may fail and return an error code.
+
+**Expected behavior**
+Check the return value of chmod. 
+
+**Code snips**
+https://github.com/nasa/elf2cfetbl/blob/10f55fb3663efce8724affbcbbeac52a028ea781/elf2cfetbl.c#L1460
+
+**System observed on:**
+Coverity: https://scan.coverity.com/projects/arielsadamsnasa-cfs-jsf-rules?tab=overview
+
+**Reporter Info**
+Ariel Adams, ASRC Federal
+",,https://github.com/nasa/elf2cfetbl/issues/86
+Check Return Value of fseek,"**Describe the bug**
+The return value of fseek is not checked which may cause an unexpected failure. 
+
+**Expected behavior**
+Check the return value for fseek in elf2cfetbl.c. 
+
+**Code snips**
+https://github.com/nasa/elf2cfetbl/blob/10f55fb3663efce8724affbcbbeac52a028ea781/elf2cfetbl.c#L1744
+
+https://github.com/nasa/elf2cfetbl/blob/10f55fb3663efce8724affbcbbeac52a028ea781/elf2cfetbl.c#L1925
+
+https://github.com/nasa/elf2cfetbl/blob/10f55fb3663efce8724affbcbbeac52a028ea781/elf2cfetbl.c#L2278
+
+https://github.com/nasa/elf2cfetbl/blob/10f55fb3663efce8724affbcbbeac52a028ea781/elf2cfetbl.c#L2432
+
+
+**Additional context**
+Identified by Coverity: https://scan.coverity.com/projects/arielsadamsnasa-cfs-jsf-rules?tab=overview
+
+Possible solution: 
+```
+                Status = fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+                if (Status != 0)
+                {
+                    printf(""Error locating Section Header #%d in file '%s'\n"", SectionIndex, SrcFilename);
+                    return FAILED;
+                }
+                else 
+                {
+                    fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+                }
+```
+
+**Reporter Info**
+Ariel Adams, ASRC Federal 
+",,https://github.com/nasa/elf2cfetbl/issues/85
+"Typos in documentation, print statements, and comments","**Is your feature request related to a problem? Please describe.**
+Found multiple typos throughout the codebase
+
+**Describe the solution you'd like**
+Correct grammar and spelling errors
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Retroactive Issue for #82
+",,https://github.com/nasa/elf2cfetbl/issues/84
+"Remove workflow branch restrictions, add duplicate check, fix format check name","**Describe the bug**
+
+The format check and static analysis workflows only run on pushes to main or on pull requests so community users will not get the alerts on their forks. 
+
+The CodeQL workflow may run on pull requests to branches other than `main` 
+
+**To Reproduce**
+Fork repo, commit new branch: format check and static analysis workflows aren't triggered. 
+
+**Expected behavior**
+All workflows run on fork branches, even those without pull requests. 
+
+**Code snips**
+https://github.com/nasa/elf2cfetbl/blob/3eeae683cca418322077e89bea587cb3f1159354/.github/workflows/format-check.yml#L4-L9
+
+https://github.com/nasa/elf2cfetbl/blob/3eeae683cca418322077e89bea587cb3f1159354/.github/workflows/static-analysis.yml#L4-L9
+
+https://github.com/nasa/elf2cfetbl/blob/3eeae683cca418322077e89bea587cb3f1159354/.github/workflows/codeql-build.yml#L3-L8
+
+**System observed on:**
+GitHub
+
+**Additional context**
+Should also add check-for-duplicates job to workflows after relaing the branch requirement on the push trigger
+
+**Reporter Info**
+Full name and company/organization if applicable
+",continuous-integration,https://github.com/nasa/elf2cfetbl/issues/83
+"Fix #84, Correct comment and event message typos","**Describe the contribution**
+Fixed various minor text typos in comments and event message strings.
+
+- Fix #84
+
+**Testing performed**
+Only automated checks.
+
+**Expected behavior changes**
+None (minor comments and event message strings that do not interact with any max lengths etc.). Code execution is unaffected.
+
+**System(s) tested on**
+n/a
+
+**Additional context**
+n/a
+
+**Code contributions**
+n/a",community,https://github.com/nasa/elf2cfetbl/pull/82
+elf2cfetbl Integration candidate: 2021-06-22,"## Context
+
+Part of <https://github.com/nasa/cfs/issues/270>
+
+## Author
+
+@ArielSAdamsNASA 
+
+## Description 
+
+### PR #80
+
+Fix #78, Implement Coding Standard CodeQL
+
+
+
+
+
+
+
+
+
+",,https://github.com/nasa/elf2cfetbl/pull/81
+"Fix #78, Implement Coding Standard CodeQL","**Describe the contribution**
+Fix #78
+Added the duplicate jobs action to avoid duplicate jobs from running. Added a separate job for coding standard queries. Created two configuration files, one for default queries and security queries and another for jpl rules. Removed push on main branch so when users push code to their forked repos, the workflow runs. Added main branch to pull request, so CodeQL runs on pull request made in the main branch. This is the same logic used in the cFS bundle repo. 
+
+**Testing performed**
+Testing done on cFE forked repository, ArielSAdamsNASA/cFE which used the same files, but with different configuration paths.
+
+Jobs were failing when the entire path of the configuration file were not used. Have to use nasa/cFE/.github/codeql/config-name@branch-name. The branch must be included in the path. 
+
+The CodeQL analysis workflow will fail for this PR since it is calling for a configuration file in main the main branch. It will not work until the configuration files are merged into main. 
+
+In the screenshot is the same workflow as in this pull request, but the configuration path is changed to the forked repo and tested branch. 
+
+![image](https://user-images.githubusercontent.com/69638935/119024913-36fa2580-b969-11eb-9aac-ede0002804a0.png)
+
+**Expected behavior changes**
+There should be one job for security queries and one job for JPL and MISRA queries. 
+
+**Describe alternatives you've considered**
+Can allow all branches to run CodeQL for pull requests as seen in cFE and PSP instead of just the main branch like cFS. 
+
+**Third party code**
+Skip duplicate workflows license: https://github.com/fkirc/skip-duplicate-actions/blob/master/LICENSE
+
+CodeQL license: https://github.com/github/codeql-action/blob/main/LICENSE
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","CCB:Approved, continuous-integration",https://github.com/nasa/elf2cfetbl/pull/80
+Should error if output name does not match input name,"**Is your feature request related to a problem? Please describe.**
+The cFE build scripts assume that the file name of the output of `elf2cfetbl` matches the input basename but with a  `.tbl` extension added.
+
+In reality, this tool uses the output name specified in the source file.  If this doesn't match, an obscure installation error occurs because the ""expected"" binary file will be missing.
+
+**Describe the solution you'd like**
+elf2cfetbl should error out if the input name does not match the output name.
+
+**Describe alternatives you've considered**
+Alternatively, the tool could have a new command line option added to directly control the output name and override whatever was in the source file.  This would be a more substantial change, however.
+
+**Additional context**
+This can create confusion when the multiple table feature in nasa/cfe#1538 is used.  If the source file internal definition doesn't match the expected name the error occurs later at install time, not when elf2cfetbl runs, so it can be confusing.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+","enhancement, good first issue",https://github.com/nasa/elf2cfetbl/issues/79
+Implement Coding Standard Rules in CodeQL,"**Is your feature request related to a problem? Please describe.**
+CodeQL does not use JPL rules, which is used in the upcoming coding standard. 
+
+**Describe the solution you'd like**
+Implement JPL rules for CodeQL. Continue using the security queries, but keep them separate from the JPL results. Can use two different workflows, one for the coding standard and one for the security queries. 
+
+**Describe alternatives you've considered**
+Might be able to use one workflow, as long as the results can be easily identified as a coding standard issue or security issue. 
+
+**Additional context**
+JPL queries are found here: https://github.com/github/codeql/tree/main/cpp/ql/src/JPL_C
+
+**Requester Info**
+Ariel Adams, ASRC Federal ",continuous-integration,https://github.com/nasa/elf2cfetbl/issues/78
+"Fix #76, Add Contributing Guide","**Describe the contribution**
+Fix #76 
+Added a contributing guide that links to the main cFS contributing guide. 
+
+**Expected behavior changes**
+Users should be able to view the contributing guide contents easily from the elf2cfetbl repo. 
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","docs, CCB:FastTrack",https://github.com/nasa/elf2cfetbl/pull/77
+Add Contributing Guide ,"**Is your feature request related to a problem? Please describe.**
+Add a contributing guide for the elf2cfetbl repo. 
+
+**Describe the solution you'd like**
+Create a contributing guide markdown file. In the guide, add a link to the cFS contributing guide. 
+
+**Requester Info**
+Ariel Adams, ASRC Federal
+",docs,https://github.com/nasa/elf2cfetbl/issues/76
+Integration candidate: 2021-03-05,"**Describe the contribution**
+PR #74
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@ArielSAdamsNASA ",,https://github.com/nasa/elf2cfetbl/pull/75
+"Fix #73, Add Testing Tools to the Security Policy","**Describe the contribution**
+Fix #73
+Updated the Security Policy to include the type of testing done for elf2cfetbl under a new section titled ""Testing"". Provided a disclaimer that under the Apache license, liability is not provided. 
+
+Added that security reports should be emailed. 
+
+**Expected behavior changes**
+Users should now be aware of the type of testing elf2cfetbl  undergoes. 
+
+**Additional context**
+References: 
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/phpMussel/phpMussel/security/policy
+https://github.com/timberio/vector/security/policy
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal 
+","docs, CCB:FastTrack",https://github.com/nasa/elf2cfetbl/pull/74
+Add Testing Tools to the Security Policy ,"**Is your feature request related to a problem? Please describe.**
+Users are unaware of how cFS/elf2cfetbl is tested. By providing this information, transparency is provided to the community which promotes trust. 
+
+**Describe the solution you'd like**
+The security policy should inform users what tools are being used to test cFS/elf2cfetbl while being cautious of liability issues. To do so, we can state explicitly that our software does not provide liability under the Apache license. The security policy should inform users that they may view the LGTM results. The policy would state that the alerts from LGTM may not be accurate, since they cannot be dismissed.  
+
+Add that security report should be emailed. 
+
+**Additional context**
+References: https://github.com/thanos-io/thanos/security/policy
+
+**Requester Info**
+Ariel Adams, ASRC Federal 
+",docs,https://github.com/nasa/elf2cfetbl/issues/73
+elf2cfetbl Integration candidate: 2021-03-02,"**Describe the contribution**
+Fix #70, fix comment stlye
+
+**Testing performed**
+See <https://github.com/nasa/cFS/pull/204/checks>
+
+**Expected behavior changes**
+PR #71 - Changes cpp-styled comments to c-style to meet coding standard
+
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/204/>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@zanzaben ",,https://github.com/nasa/elf2cfetbl/pull/72
+"Fix #70, fix comment stlye","**Describe the contribution**
+Fixes #70
+Change the comment style 
+
+**Testing performed**
+Build and run unit test
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Alex Campbell GSFC",CCB:FastTrack,https://github.com/nasa/elf2cfetbl/pull/71
+C++ comment style and commented out code violations,"**Is your feature request related to a problem? Please describe.**
+C++ comment style and commented out code violates style guidelines
+
+https://github.com/nasa/elf2cfetbl/blob/6762b1c3b455665dae57e35f14a50fe327830391/elf2cfetbl.c#L2269
+
+**Describe the solution you'd like**
+Clean up
+
+**Describe alternatives you've considered**
+None
+
+**Requester Info**
+Alex Campbell GSFC","bug, docs",https://github.com/nasa/elf2cfetbl/issues/70
+"Fix #68, Add CodeQL analysis to workflow","**Describe the contribution**
+Fix #68 - adds CodeQL analysis
+
+Differences from bundle - just builds elf2cfetbl, has timeout
+
+**Testing performed**
+Ran on fork
+
+**Expected behavior changes**
+Adds Code QL analysis on push to main and pull requests (to main)
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:FastTrack, continuous-integration",https://github.com/nasa/elf2cfetbl/pull/69
+Add CodeQL analysis to workflow,"**Is your feature request related to a problem? Please describe.**
+CodeQL analysis not implemented in submodules
+
+**Describe the solution you'd like**
+Add so alerts are generated on pull requests to submodules
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+CodeQL is run at the bundle (nasa/cFS) level, but link to code in submodules doesn't work.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, security, continuous-integration",https://github.com/nasa/elf2cfetbl/issues/68
+"Fix #66, Add static analysis and format check","**Describe the contribution**
+Fix #66 - adds static analysis and format check into github workflow, includes badges in readme
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+Basic CI works again
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:FastTrack, continuous-integration",https://github.com/nasa/elf2cfetbl/pull/67
+CI updates - add static analysis and format in workflow,"**Is your feature request related to a problem? Please describe.**
+Travis-CI not transitioned to github actions
+
+**Describe the solution you'd like**
+Transition CI
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","enhancement, continuous-integration",https://github.com/nasa/elf2cfetbl/issues/66
+elf2cfetbl Integration candidate: 2021-01-19,"**Describe the contribution**
+
+Fix #63, Create Security Policy
+
+
+**Testing performed**
+See https://github.com/nasa/cFS/pull/177/checks
+
+**Expected behavior changes**
+PR #64 - Documentation, Add `Security.md` with instructions on reporting vulnerabilities
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/177
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@ArielSAdamsNASA
+",,https://github.com/nasa/elf2cfetbl/pull/65
+"Fix #63, Create Security Policy","**Describe the contribution**
+Fix #63 
+Created a draft of a security policy markdown file for elf2cfetbl. The purpose of a security policy is to inform users on how to submit bugs or vulnerabilities. It is ideal to include a section for supported versions.
+
+**Additional context**
+Optional sections that may be included:
+
+- What to expect security-wise such as what type of testing is done
+- Address privacy concerns
+- Supported versions
+- License
+- Known vulnerabilities
+
+References to Public Security Policies:
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/minhealthnz/nzcovidtracer-app/security/policy
+https://github.com/odoo/odoo/security/policy
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","docs, CCB:FastTrack, security",https://github.com/nasa/elf2cfetbl/pull/64
+Implement a Security Policy,"**Describe the bug**
+Create a security policy for users on how to report security vulnerabilities.
+
+**Expected behavior**
+The security policy should instruct users on how to report security vulnerabilities and provide them additional contact information for questions and concerns.
+
+**Additional context**
+Additional sections that may be included:
+- What to expect security-wise such as what type of testing is done
+- Address privacy concerns
+- Supported versions
+- License
+- Known vulnerabilities
+
+References to Public Security Policies:
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/minhealthnz/nzcovidtracer-app/security/policy
+https://github.com/odoo/odoo/security/policy
+
+**Reporter Info**
+Ariel Adams, ASRC Federal","docs, security",https://github.com/nasa/elf2cfetbl/issues/63
+Integration Candidate 2020-08-26,"**Describe the contribution**
+Fix #54 
+Fix #56 
+Fix #58 
+Fix #60 
+
+**Testing performed**
+Bundle CI - https://github.com/nasa/cFS/pull/134/checks
+
+**Expected behavior changes**
+PR #55 - Restricts destination file permissions
+PR #57 - Squash int comparison warning
+PR #59 - Replace ctime (which generates LGTM warning) with ctime_r
+PR #61 - Deconflicts global/local parameters
+
+**System(s) tested on**
+Ubuntu - CI
+
+**Additional context**
+https://github.com/nasa/cFS/pull/134
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman, NASA-GSFC
+",,https://github.com/nasa/elf2cfetbl/pull/62
+"Fix #60, Deconflict global and local parameters","**Describe the contribution**
+Fix #60 - deconflicts global/local parameters
+
+**Testing performed**
+Built and executed cFS, loaded tables as expected
+
+**Expected behavior changes**
+None, squashed warning
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: bundle main (+ cfe/osal main) + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:Approved, CCB:FastTrack",https://github.com/nasa/elf2cfetbl/pull/61
+LGTM warning - local parameter hides global variable with the same name,"**Is your feature request related to a problem? Please describe.**
+```
+line: 368, 380, 392, 404, 416, 428, 1907, 1922
+uint8_t get_e_ident(const union Elf_Ehdr *ElfHeader, int index)
+--
+  | Parameter ElfHeader hides a global variable with the same name.
+
+```
+
+**Describe the solution you'd like**
+Deconflict.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+#28 
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",bug,https://github.com/nasa/elf2cfetbl/issues/60
+"Fix #58, Replace ctime with ctime_r","**Describe the contribution**
+Fix #58 - replace ctime (which generates LGTM warning) with ctime_r
+
+**Testing performed**
+Built and ran code in verbose mode, confirmed time output
+
+**Expected behavior changes**
+Eliminate LGTM warning
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: bundle main (+ cfe/osal main) + this change
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:Approved, CCB:FastTrack",https://github.com/nasa/elf2cfetbl/pull/59
+LGTM issue - replace call to ctime with ctime_r,"**Is your feature request related to a problem? Please describe.**
+```
+line: 1382
+if (Verbose) printf(""Original Source File Modification Time: %s\n"", ctime(&SrcFileStats.st_mtime));
+--
+  | Call to ctime is potentially dangerous
+```
+
+**Describe the solution you'd like**
+LGTM recommends replace with ctime_r
+
+**Describe alternatives you've considered**
+strftime
+
+**Additional context**
+Split from #28
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",bug,https://github.com/nasa/elf2cfetbl/issues/58
+"Fix #56, Squash int comparison warning","**Describe the contribution**
+Fix #56 - squash int comparison warning
+
+**Testing performed**
+Build and ran cfe (uses tables built by elf2cfetbl), no issues.
+
+**Expected behavior changes**
+No longer produce the LGTM warning.  No behavior change.
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: bundle main (+ cfe/osal main) + this change.
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:Approved, CCB:FastTrack",https://github.com/nasa/elf2cfetbl/pull/57
+LGTM issue - comparison between int16 and int,"**Is your feature request related to a problem? Please describe.**
+```
+line 934:
+while ((i<ArgumentCount) && (Status == SUCCESS))
+--
+  | Comparison between i of type int16 and ArgumentCount of wider type int.
+```
+
+**Describe the solution you'd like**
+i is an iterator, no need to be fixed size.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",bug,https://github.com/nasa/elf2cfetbl/issues/56
+"Fix #54, Restrict destination file permissions","**Describe the contribution**
+Fix #54 - restricts destination file permissions
+
+**Testing performed**
+Built and ran elf2cfetbl, confirmed file permissions restricted (checked w/ verbose)
+
+**Expected behavior changes**
+Created file not writable by group or other.
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: bundle main + this commit
+
+**Additional context**
+CWE-732
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:Approved, CCB:FastTrack, security",https://github.com/nasa/elf2cfetbl/pull/55
+File created without restricting permissions,"**Describe the bug**
+Allows anyone to open and write the file, DstFileDesc. 
+
+**Expected behavior**
+Must set user permissions to file.  
+
+**Code snips**
+https://github.com/nasa/elf2cfetbl/blob/7a3d1cab61de365fbc8ff969c6930701220f9578/elf2cfetbl.c#L1443
+
+**System observed on:**
+https://lgtm.com/projects/g/nasa/cFS/snapshot/20ff9b0c5aa6653815b9cd2feb4a02180b239737/files/tools/elf2cfetbl/elf2cfetbl.c?sort=name&dir=ASC&mode=heatmap
+
+**Additional context**
+Previously mentioned in ticket #28 
+References: 
+- https://lgtm.com/rules/1505913006104/
+- https://cwe.mitre.org/data/definitions/732.html
+- https://wiki.sei.cmu.edu/confluence/display/c/FIO06-C.+Create+files+with+appropriate+access+permissions
+
+**Reporter Info**
+Ariel Adams, ASRC Federal
+",security,https://github.com/nasa/elf2cfetbl/issues/54
+Move content from README.txt to Readme.md,"**Is your feature request related to a problem? Please describe.**
+Having two files named Readme is confusing. Making users click over to a second file when they might expect Readme.md to have a thorough description of the tool is inefficient.
+
+**Describe the solution you'd like**
+Absorb Readme.txt into Readme.md
+
+**Describe alternatives you've considered**
+Have full blown documentation folder using doxygen or similar
+
+**Additional context**
+None
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz
+",docs,https://github.com/nasa/elf2cfetbl/issues/53
+Use a changelog to keep track of changes instead of having them in the Readme ,"**Is your feature request related to a problem? Please describe.**
+The version history in the Readme file clutters useful information
+
+**Describe the solution you'd like**
+Move the ""version history"" from `Readme.md` to `CHANGELOG.md` and start following this spec: https://keepachangelog.com/en/1.0.0/
+
+**Describe alternatives you've considered**
+Move changelog section in the readme to a section at the very bottom of the file
+
+**Additional context**
+None
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz, NASA-GSFC
+",docs,https://github.com/nasa/elf2cfetbl/issues/52
+"Resolve #50, Add baseline and build number to version.h","**Describe the contribution**
+Resolve #6 
+Resolve #50 
+
+
+**Testing performed**
+Bundle built using docker gcc+cmake image. 
+
+**Expected behavior changes**
+Version reporting now uses the version numbers defined in `elf_version.h` and reports build number.
+<img width=""561"" alt=""Screen Shot 2020-07-19 at 12 55 27 PM"" src=""https://user-images.githubusercontent.com/59618057/87880372-35657700-c9bf-11ea-9b2c-347e4e76abfb.png"">
+
+**System(s) tested on**
+Ubuntu
+
+**Additional context**
+None
+
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Gerardo E. Cruz-Ortiz, NASA-GSFC",CCB:FastTrack,https://github.com/nasa/elf2cfetbl/pull/51
+Add build name and number,"**Is your feature request related to a problem? Please describe.**
+Need a better way to describe versions during development
+
+**Describe the solution you'd like**
+Add Build name and Build number to version.h
+As discussed, we will add a a build name string and a continuously incrementing build number to `version.h`
+
+**Additional context**
+See notes from CCB: <https://github.com/nasa/cFS/wiki/Community-CCB-Agenda:-July-01-2020>
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz, NASA-GSFC
+",enhancement,https://github.com/nasa/elf2cfetbl/issues/50
+"Fix #48, string table identification.","**Describe the contribution**
+
+Support ELF files that have all strings, including ELF section names, in one single "".strtab"" section in the ELF file.
+
+This gives preferential treatment to a section named "".strtab"" as this should always be the section which contains the names for the "".symtab"" section.
+
+This should also be true of ELF files that contain other strtab sections, such as a "".dynstr"" section.
+
+Fixes #48
+
+**Testing performed**
+Confirmed that normal table files built using GCC (e.g. those in the sample framework configuration) are identical, before and after this change is applied.
+
+Confirmed that this is now able to also correctly parse an ELF file from `clang` which has all strings in a single `.strtab` section.
+
+**Expected behavior changes**
+Now correctly parses ELF files that do _not_ have a separate `.shstrtab` and `.strtab` section.
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","bug, CCB:FastTrack",https://github.com/nasa/elf2cfetbl/pull/49
+"elf2cfetbl does not handle files without a separate "".shstrtab"" section","**Describe the bug**
+In ELF files all strings are put into string table sections (`SHT_STRTAB` type).
+
+Many tools dedicate a separate STRTAB section specifically for the section names, with the number of this section indicated in the main ELF header `e_shstrndx` field.
+
+However there is no requirement to put these strings in a separate table section.  Some compilers generate a single STRTAB section containing all strings, section names and symbol names.  In this case the ELF header `e_shstrndx` field points to this unified section.
+
+**To Reproduce**
+Pass an ELF table object file generated from `clang` compiler to `elf2cfetbl` - it fails to identify the symbol names correctly, and it therefore fails to find the `CFE_TBL_FileDef` symbol.
+
+**Expected behavior**
+elf2cfetbl should work with these ELF files and produce an output.
+
+**System observed on:**
+Ubuntu 20.04 (build host)
+
+**Additional context**
+Note that ELF also doesn't say any maximum number of string table sections either.  There could be just one (this bug) or there could be more than two.
+
+As best I can tell, the string table used for the `.symtab` section should always be named `.strtab` - so this is probably a better way to identify the right section.
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+",bug,https://github.com/nasa/elf2cfetbl/issues/48
+Integration Candidate: 2020-06-24,"**Describe the contribution**
+Fix #45 
+Fix #48 
+Resolve #6
+Resolve #50
+
+**Testing performed**
+Bundle CI - https://github.com/nasa/cFS/pull/108/checks
+
+**Expected behavior changes**
+PR #46 -  Adds a null to the end of SrcFilename and DstFilename when using strncpy.
+
+PR #49 - Support ELF files that have all strings, including ELF section names, in one single "".strtab"" section in the ELF file.
+
+PR #51 - Version reporting now uses the version numbers defined in `elf_version.h` and reports build number.
+
+**System(s) tested on**
+Ubuntu - CI
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/108
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Christopher D. Knight, NASA-ARC
+Joseph Hickey, Vantage Systems, Inc.
+Gerardo E. Cruz-Ortiz, NASA-GSFC",,https://github.com/nasa/elf2cfetbl/pull/47
+Fix #45 - null terminates src/dst filenames,"**Describe the contribution**
+Adds a null to the end of SrcFilename and DstFilename when using strncpy.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Christopher.D.Knight@nasa.gov",CCB:Approved,https://github.com/nasa/elf2cfetbl/pull/46
+SrcFilename and DstFilename not ensured to be null-terminated,"**Describe the bug**
+elf2cfetbl uses strncpy to load the SrcFilename and DstFilename strings, but does not ensure that the strings are null-terminated.
+
+**Additional context**
+This is related to https://github.com/nasa/cFE/issues/730
+
+**Reporter Info**
+Christopher.D.Knight@nasa.gov",bug,https://github.com/nasa/elf2cfetbl/issues/45
+Integration Candidate: 2020-05-20,"**Describe the contribution**
+Fix #32 
+
+**Testing performed**
+See PR #42 
+Bundle CI - https://travis-ci.com/github/nasa/cFS/builds/168822512
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Ubuntu:Bionic
+
+**Additional context**
+Part of nasa/cfs#91
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman, NASA-GSFC",,https://github.com/nasa/elf2cfetbl/pull/44
+Input file Description/TableName without terminator causes segfault,"**Describe the bug**
+Segfault at:
+https://github.com/nasa/elf2cfetbl/blob/8e54e26f24419e0218587574ec717106937e59fe/elf2cfetbl.c#L2379
+
+Likely also an issue with TableName:
+https://github.com/nasa/elf2cfetbl/blob/8e54e26f24419e0218587574ec717106937e59fe/elf2cfetbl.c#L2412
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Create a table input file with a 32 byte description (no null terminator)
+2. Run elf2cfetbl
+
+**Expected behavior**
+Error or warn/truncate.
+
+**Code snips**
+See above
+
+**System observed on:**
+ - Versions: Master bundle
+
+**Additional context**
+Identified by JSC
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC","bug, good first issue",https://github.com/nasa/elf2cfetbl/issues/43
+"Fix #32, Apply standard code style","**Describe the contribution**
+Whitespace changes only.
+Fix #32 
+
+**Testing performed**
+CI - https://travis-ci.com/github/skliper/cFS/builds/167637651
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: CI
+ - OS: Ubuntu 18.04
+ - Versions: Bundle w/ all whitespace change commits
+
+**Additional context**
+Note - not enforcing, just a single cleanup since there's no pending activity in this repo.
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:FastTrack",https://github.com/nasa/elf2cfetbl/pull/42
+Integration Candidate COMBINED 2020-04-29 and 2020-05-06,"**Describe the contribution**
+Fixes #37
+
+**Testing performed**
+See PRs
+Bundle CI - https://travis-ci.com/github/nasa/cFS/builds/165726730
+
+**Expected behavior changes**
+PR #38 - No string termination warnings in GCC9.
+PR #39 - Fix typos
+
+**System(s) tested on**
+See PRs
+Bundle CI
+
+**Additional context**
+Part of nasa/cfs#83
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+ Joseph Hickey, Vantage Systems, Inc.
+Pierre Grimaud, self",,https://github.com/nasa/elf2cfetbl/pull/41
+Integration Candidate: 2020-04-22,"**Describe the contribution**
+Fixes #33 
+
+**Testing performed**
+See PR
+Bundle CI - https://github.com/nasa/cFS/pull/74/checks?check_run_id=637637965
+
+**Expected behavior changes**
+PR #36 -  Builds for vxworks w/ 32-bit host
+
+**System(s) tested on**
+See PRs
+Bundle CI - Ubuntu:Bionic
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/74
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman, NASA-GSFC",,https://github.com/nasa/elf2cfetbl/pull/40
+Fix typos,"Hey,
+
+This tiny PR will fix : 
+
+- 1 typo in `ELF_Structures.h`
+- 1 typo in `README.txt`
+
+
+
+Best! :robot:","enhancement, CCB:Approved, docs",https://github.com/nasa/elf2cfetbl/pull/39
+"Fix #37, termination on strncpy","**Describe the contribution**
+Fix possible non-termination of strings within command line parsing.
+This generated a warning in GCC9.
+
+Fixes #37
+
+**Testing performed**
+Build code with default config, SIMULATION=native BUILDTYPE=release on GCC 9.3.0.
+Confirm successful build with no warning.
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+Ubuntu 20.04 LTS 64 bit
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.","bug, CCB:Approved",https://github.com/nasa/elf2cfetbl/pull/38
+String truncation warnings with newer GCC,"**Describe the bug**
+Ubuntu has released 20.04 LTS which includes GCC 9.3.0.  When using this compiler it implements a much stricter (and often over-zealous) checking of string ops.
+
+For instance: 
+```
+In file included from /usr/include/string.h:495,
+                 from /home/joe/code/cfecfs/github/tools/elf2cfetbl/elf2cfetbl.c:34:
+In function ‘strncpy’,
+    inlined from ‘ProcessCmdLineOptions’ at /home/joe/code/cfecfs/github/tools/elf2cfetbl/elf2cfetbl.c:945:13:
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:106:10: error: ‘__builtin_strncpy’ specified bound 32 equals destination size [-Werror=stringop-truncation]
+  106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function ‘strncpy’,
+    inlined from ‘ProcessCmdLineOptions’ at /home/joe/code/cfecfs/github/tools/elf2cfetbl/elf2cfetbl.c:939:13:
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:106:10: error: ‘__builtin_strncpy’ specified bound 38 equals destination size [-Werror=stringop-truncation]
+  106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
+```
+
+**To Reproduce**
+Build code with default config using GCC 9.3.0, with optimization enabled and full warnings.
+
+**Expected behavior**
+Code should build cleanly.
+
+**System observed on:**
+Ubuntu 20.04 LTS 64 bit.
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+",bug,https://github.com/nasa/elf2cfetbl/issues/37
+"Fix #33, Resolve print format mismatches on 32-bit host","**Describe the contribution**
+Casts where needed for print formatting on 32-bit host
+Fix #33
+
+**Testing performed**
+Steps taken to test the contribution:
+1. CI - See https://travis-ci.com/github/skliper/cFS/builds/160575856
+2. Also built for vxworks on 32-bit host
+
+**Expected behavior changes**
+Builds for vxworks w/ 32-bit host
+
+**System(s) tested on**
+ - Hardware: CI, cross compiled for VxWorks 6.9 MCP750 on 32-bit linux host
+ - OS: Ubuntu 18.04, VxWorks 6.9, Redhat 6.10
+ - Versions: Bundle + this commit
+
+**Additional context**
+None (this isn't the only issue on vxworks, but haven't written them up yet)
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","bug, CCB:Approved",https://github.com/nasa/elf2cfetbl/pull/36
+If you get a PATH_MAX undefined issue...,"The inclusion of the PATH_MAX has introduced a compilation error when compiling on linux systems. While this is a little confusing, the PATH_MAX definition is located in <linux/limits.h> not <limits.h> which is currently included [here](https://github.com/nasa/elf2cfetbl/blob/3c4be5954cccc845fb329b81872d94df3780d126/elf2cfetbl.c#L40).
+
+Steps to reproduce the behavior:
+1. Pull the latest build of the CFS that uses this tool (as of commit b7dcc71360467ce2443dff27ea6314199f5c3ef0)
+2. Attempt to build using the sample cmake
+
+**Expected behavior**
+No compilation errors.
+
+**System observed on:**
+ - OS: Ubuntu 18.04.4 LTS
+ - Versions: cFE 6.7.11, OSAL 5.0.10, PSP 1.4.7 for linux",question,https://github.com/nasa/elf2cfetbl/issues/35
+RFC: bin2cfetbl.py tool (ELF and Mach-O support),"**Describe the contribution**
+
+This work complements the work I did for CFS/OSAL in https://github.com/nasa/osal/pull/352. In order to run CFS on macOS the `elf2cfetbl` tool has to be updated to support Mach-O.
+
+This work is based on the following comment by @jphickey :
+
+> When I said there is no requirement to use this specific tool, you will need to somehow generate appropriate binary .tbl files for your target if you want to use apps that load runtime tables. The format is pretty simple (C struct encapsulated with a FS+TBL header) so its not hard to hack out a python script to create these files, there is just no python tool already written AFAIK.
+
+I have decided to rewrite the tool in Python and made it to support both ELF and Mach-O files.
+
+I would like to get feedback about the approach: if the direction is approved I would to complete the implementation and add all missing test cases.
+
+This is a small plan of what is done and what still has to be done:
+
+- [x] Reading Mach-O 64-bit and writing `.tbl` file (little endian binaries)
+- [x] Reading ELF 64-bit and writing `.tbl` file (little endian binaries)
+- [x] Integration tests using LLVM Integrated Tester (LIT)
+- [x] Integration of the Python tool and integration tests into CMake tree
+- [ ] Supporting reading command-line arguments as supported by current `elf2cfetbl`
+- [ ] Big endian binaries
+- [ ] 32-bit binaries
+- [ ] Supporting more output of what the current `elf2cfetbl` does (example: `Original Source File Modification Time:`)
+- [ ] Add more test fixtures. For now I am only using `sample_table.tbl` and `sch_lab_table` which are built by CFS by default.
+
+**Testing performed**
+
+`pip install lief lit filecheck`
+
+Run the `bin2cfetbl-tests-integration` CMake target. The LIT tests should pass.
+
+**Expected behavior changes**
+
+- I have tried to preserve existing behavior 1 to 1. The only difference I am seeing is in what gets printed.
+- I consider my implementation cleaner and easier to follow.
+  - Current C implementation uses global variables a lot and that makes the code harder to follow. I have tried to package all functions in such a way that the reasoning would be easier to follow.
+
+**System(s) tested on**
+
+ - Hardware: MacBook Pro
+ - OS: macOS Mojave 10.14.6
+ - Versions: The latest master branch of this repository.
+
+**Additional context**
+
+None.
+
+**Third party code**
+
+- `lief`, Apache License Version 2.0
+- `lit`, [Apache License v2.0 with LLVM Exceptions](https://github.com/llvm-mirror/llvm/blob/master/LICENSE.TXT)
+- `FileCheck.py`, Apache License Version 2.0
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+
+Stanislav Pankevich. Personal.
+
+The individual CLA has been signed and sent to the GSFC-SoftwareRelease.
+",,https://github.com/nasa/elf2cfetbl/pull/34
+fails to build under Raspbian and VxWorks,"**Describe the bug**
+Building elf2cfetbl under Raspbian (the Debian variant released for the popular Raspberry Pi SBC's by the Raspberry Pi organization) it fails with a long laundry list of printf type mismatch errors.
+
+```
+/home/pi/cFS/tools/elf2cfetbl/elf2cfetbl.c:2211:67: error: format ‘%ld’ expects argument of type ‘long int’, but argument 5 has type ‘size_t’ {aka ‘unsigned int’} [-Werror=format=]
+             printf(""strstr[%d] = %s; strlenSN = %ld; strlenON = %ld\n"",i,strstr(SymbolNames[i], TblFileDef.ObjectName),
+                                                                 ~~^
+                                                                 %d
+```
+
+**To Reproduce**
+Build elf2cfetbl under Raspbian.
+
+**Expected behavior**
+Should be casting types to what printf expects.
+
+**Code snips**
+If applicable, add references to the software.
+
+**System observed on:**
+Raspberry Pi Zero W.
+
+**Additional context**
+Add any other context about the problem here.
+
+**Reporter Info**
+Christopher.D.Knight@nasa.gov",bug,https://github.com/nasa/elf2cfetbl/issues/33
+Apply standard code style,"**Is your feature request related to a problem? Please describe.**
+Inconstant style
+
+**Describe the solution you'd like**
+See https://github.com/nasa/ci_lab/pull/30 and https://github.com/nasa/ci_lab/pull/28
+
+**Describe alternatives you've considered**
+N/A
+
+**Additional context**
+N/A
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, good first issue",https://github.com/nasa/elf2cfetbl/issues/32
+"Non-constant format string in sprintf call, lgtm warning","**Is your feature request related to a problem? Please describe.**
+Recommended issues from lgtm:
+
+elf2cfetbl.c
+```
+line 2101:
+sprintf(Result, Map->String, Key);
+--
+  | The format string argument to sprintf should be constant to prevent security issues and other potential errors.
+```
+
+**Requester Info**
+Anh Van, NASA Goddard
+",enhancement,https://github.com/nasa/elf2cfetbl/issues/31
+"Fix #29, Release Prep","**Describe the contribution**
+Fix #12
+ - Updated README
+ - removed custom license document
+ - added standard Apache 2.0
+ - Updated copyright release version cFE 6.6 -> 6.7
+
+**Testing performed**
+1. Standard build, unit test and execute
+
+**Expected behavior changes**
+ - No impact to behavior
+
+**System(s) tested on:**
+ - Hardware: cFS Dev Server 2
+ - OS: Ubuntu 18.04
+ - Versions: cFE 6.7.0 related versions and OSAL 5.0.0
+
+**Contributor Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/elf2cfetbl/pull/30
+Release prep,"**Is your feature request related to a problem? Please describe.**
+Updates for release:
+- Updated README
+- removed custom license document
+- added standard Apache 2.0
+- Updated copyright release version cFE 6.6 -> 6.7
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/elf2cfetbl/issues/29
+"Possible world-writable file creation, LGTM warning","**Describe the bug**
+LGTM warning: A file may be created here with mode 0666, which would make it world-writable.
+https://github.com/nasa/elf2cfetbl/blob/eb5e326a3c85af2dd34735913881f8e15db808db/elf2cfetbl.c#L1446-L1464
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Build against lgtm 
+
+**Reporter Info**
+Anh Van, NASA Goddard
+
+*EDIT* - removed warnings covered by other issues (split)
+*EDIT* - updated per latest warning
+",duplicate,https://github.com/nasa/elf2cfetbl/issues/28
+"Fix #26, PATH_MAX not defined with -std=c99","**Describe the contribution**
+Fixes #26 
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Built with -std=c99 defined, elf2cfetbl now builds
+
+**Expected behavior changes**
+None
+
+**System(s) tested on:**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 16.04
+ - Versions: master bundle with this branch
+
+**Additional context**
+None
+
+**Contributor Info**
+Jacob Hageman - NASA/GSFC
+",invalid,https://github.com/nasa/elf2cfetbl/pull/27
+PATH_MAX not defined if -std=c99 set,"**Describe the bug**
+Make with -std=c99 gives the following error
+```
+/home/jhageman/cFS/cFS-GitHub/tools/elf2cfetbl/elf2cfetbl.c:101:18: error: ‘PATH_MAX’ undeclared here (not in a function)
+ char SrcFilename[PATH_MAX]={""""};
+```
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. add_definitions(-Wall -Wstrict-prototypes -std=c99 -pedantic) to mission_build.cmake prepare function
+2. make prep
+3. make
+
+**Expected behavior**
+Clean build
+
+**Code snips**
+N/A
+
+**System observed on:**
+ - Hardware: cFS Dev server
+ - OS: Ubuntu 16.04
+ - Versions: master bundle
+
+**Additional context**
+N/A
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC
+",invalid,https://github.com/nasa/elf2cfetbl/issues/26
+Integration candidate 2019-10-09,"**Describe the contribution**
+Integration candidate for pull requests approved at 2019-10-09 CCB
+Covers the following pull requests:
+#15 - Add guide on creating table files
+#20 - add validation for rtncode and update bracket to standard
+#21 - init DstFile and SrcFile to NULL, Validate DstFile and SrcFile
+#23 - use path_max instead of os_max_file_name
+#24 - Clean up elf2cfetbl build logic
+
+**Testing performed**
+Build code for native host (SIMULATION=native) with unit test enabled
+Execute CFE core, issued various test commands from cmdUtil
+Execute all unit tests and confirm passage.
+
+**Expected behavior changes**
+None
+
+**System(s) tested on:**
+Ubuntu 18.04.2 LTS 64-bit
+
+**Additional context**
+NA
+
+**Contributor Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+",,https://github.com/nasa/elf2cfetbl/pull/25
+Fix #22: Clean up elf2cfetbl build logic,"Remove the now-unnecessary inclusion of CFE TBL internal definitions.
+All logic in this tool is based on public include files only.
+
+CFE ensures that the header sizes are always a multiple of 4 bytes,
+so the logic to selectively byte-align is unnecessary.  CFE now
+requires this to be 4-byte aligned.
+
+Clean up all hacks in the CMake recipe, the build is now much
+more straightforward when internal headers aren't being used.
+
+**Describe the contribution**
+Fixes issue #22, cleans up the build process for this tool.
+
+_IMPORTANT_ - This depends on nasa/cfe#27 and cannot be merged/tested prior to this being merged.  This can only be cleaned up on this side once it is ensured that the internal CFE_TBL definitions are no longer required here.
+
+Note this also removes the `-n` option to the tool, as  nasa/cfe#27 now guarantees this to be 4-byte aligned through the use of compile-time checks.  It is not possible for this option to do anything, and the code that implemented this option was depending on a symbol that was no longer available, so it was easiest and cleanest to just prune it out.
+
+
+**Testing performed**
+Rebuild code with sample table definitions.  Table is built successfully.
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on:**
+Ubuntu 18.04.2, 64-bit
+
+**Contributor Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",CCB:Approved,https://github.com/nasa/elf2cfetbl/pull/24
+"Fix #5, use path_max instead of os_max_file_name","**Describe the contribution**
+Fix #5, used path_max instead of os_max_file_name. 
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Build 
+2. Create sample_table.tbl file using elf2cfetbl. Used full path to trigger warning:
+3. Verify warning and that tbl file is still created. 
+```
+Lenght of Source Filename + Path exceed OS_MAX_FILE_NAME
+Lenght of Destination Filename + Path exceed OS_MAX_FILE_NAME
+```
+
+4. Used sample_table.tbl file and verify it still work in cFS. 
+
+**System(s) tested on:**
+ - Hardware
+ - 18.04.03
+ - cFE 6.7.0, elf2cfetbl 3.1.1
+
+**Contributor Info**
+Anh Van, NASA Goddard
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",CCB:Approved,https://github.com/nasa/elf2cfetbl/pull/23
+Simplify header inclusion and cmake list,"**Is your feature request related to a problem? Please describe.**
+Complex CMakeList.txt header logic shouldn't be needed any more
+
+**Describe the solution you'd like**
+Include the now ""external"" headers for tables
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Related to https://github.com/nasa/cFE/pull/25
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/elf2cfetbl/issues/22
+"Fix #3, init DstFile and SrcFile to NULL, Validate DstFile and SrcFil…","**Describe the contribution**
+Fix #3, initialize DstFile and SrcFile to NULL. Validate before closing.
+
+**Testing performed**
+1. Build 
+2. Execute with ddd
+3. Forced Return status of AllocateSectionHeader() to -1
+4. Verify that git dstfiledesc was NULL and did not cause program to crash. 
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on:**
+ - Hardware
+ - Ubuntu 18.04.03
+ - cFE 6.7, elf2cfetbl 3.1
+
+
+**Contributor Info**
+Anh Van, NASA Goddard
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",CCB:Approved,https://github.com/nasa/elf2cfetbl/pull/21
+"Fix #17, add validation for rtncode and update bracket to standard","**Describe the contribution**
+Fix #17. Resolve warning with flags  -Wall -std=c99 -pedantic -Wstrict-prototypes -Wwrite-strings
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Build 
+2. Verify warning does not appear
+3. Execute elf2cfetbl against table object
+4. Verify *.tbl is generated
+5. Execute again with DDD
+6. Force RtnCode = -1
+7. Verify *.tbl is generated
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on:**
+ - Hardware
+ - Ubuntu 18.04.03
+ - elf2cfetbl version 3.1.0, cFE 6.7.0
+
+**Contributor Info**
+Anh Van, NASA Goddard
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",CCB:Approved,https://github.com/nasa/elf2cfetbl/pull/20
+Integration Candidate 20191001,"**Describe the contribution**
+Covers the following pull requests:
+- #16 - String format mismatch warning (FASTTRACKED)
+- #18 - Remove classic build support (FASTTRACKED)
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Followed standard build/run steps with permissive mode on cFS development server
+
+**Expected behavior changes**
+None
+
+**System(s) tested on:**
+ - cFS development server 
+ - Ubuntu 16.04.6 LTS, 4.4.0-164-generic
+ - Versions: ic-20191001 bundle (all ic-20191001 branches)
+
+**Additional context**
+NA
+
+**Contributor Info**
+Jacob Hageman - NASA/GSFC
+
+**Community contributors**
+CLA on file",CCB:Approved,https://github.com/nasa/elf2cfetbl/pull/19
+"issue #4, delete for_build and top Makefile","**Describe the contribution**
+delete for_build and Makefile. 
+
+**Contributor Info**
+Anh Van, NASA Goddard
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",,https://github.com/nasa/elf2cfetbl/pull/18
+Add validation for returncode and fix bracket to standard,"**Is your feature request related to a problem? Please describe.**
+Build with options : -Wall -std=c99 -pedantic -Wstrict-prototypes -Wwrite-strings
+two warning appear:
+
+/media/sf_share/cFS/tools/elf2cfetbl/elf2cfetbl.c:134:43: warning: missing braces around initializer [-Wmissing-braces]
+ union Elf_Shdr SectionHeaderStringTable = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                                           ^
+                                            {                            }
+/media/sf_share/cFS/tools/elf2cfetbl/elf2cfetbl.c: In function ‘OpenSrcFile’:
+/media/sf_share/cFS/tools/elf2cfetbl/elf2cfetbl.c:1357:9: warning: variable ‘RtnCode’ set but not used [-Wunused-but-set-variable]
+     int RtnCode;
+         ^~~~~~~
+
+**Describe the solution you'd like**
+First issues, add second bracket:
+union Elf_Shdr SectionHeaderStringTable = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
+
+second issue:
+Add validation for return code.
+
+**Requester Info**
+Anh Van, NASA Goddard
+",bug,https://github.com/nasa/elf2cfetbl/issues/17
+"Fix #2, fix long string mismatch","**Describe the contribution**
+Fix #2, fix mismatch in printf. Used cppcheck with options --enable=performance,portability,warning --std=c99 --std=posix --inconclusive -j 8
+
+**Testing performed**
+1. Run cppcheck with options --enable=performance,portability,warning --std=c99 --std=posix --inconclusive -j 8
+2. Verify warning is gone
+3. Build
+4. Verify elf2cfetbl still compile and pass table.o through
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on:**
+ - Hardware
+ - Ubuntu 18.04
+ - cFE 6.7.0
+
+
+**Contributor Info**
+Anh Van, NASA Goddard
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",,https://github.com/nasa/elf2cfetbl/pull/16
+"Fix #14, Add guide on creating table files","**Describe the contribution**
+Fix #14, Add guide on creating table file using elf2cfetbl 
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Create a table file using elf2cfetbl
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on:**
+ - Hardware
+ - OS: Ubuntu 18.04.03
+ - elf2cfetbl version 3.0a
+
+**Additional context**
+None
+
+**Contributor Info**
+Anh Van, NASA Goddard
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",CCB:Approved,https://github.com/nasa/elf2cfetbl/pull/15
+Tutorial on using elf2cfetbl,"**Is your feature request related to a problem? Please describe.**
+No
+
+**Describe the solution you'd like**
+A guide on how to use elf2cfetbl to create an table file
+
+**Describe alternatives you've considered**
+none
+
+**Additional context**
+none
+
+**Requester Info**
+Anh Van, Nasa Goddard
+","enhancement, docs",https://github.com/nasa/elf2cfetbl/issues/14
+Integration Candidate 20190906,"**Describe the contribution**
+Merge of CCB 20190904 approved commits.
+Fixes #8 
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Checked out http://github.com/nasa/cFS master and followed setup instructions
+2. Checked out ic-20190906
+3. Followed standard build instructions (no cmdUtil build warnings observed)
+
+**Expected behavior changes**
+- No impact to behavior from this change, just replaced deprecated dependencies
+
+**System(s) tested on:**
+- Server
+- OS: Ubuntu/Linux 4.4.0-146-generic
+- Versions: bundle release candidate 6.7 with this branch
+
+**Additional context**
+None
+
+**Contributor Info**
+Jacob Hageman/NASA
+
+**Community contributors**
+CLA on file",,https://github.com/nasa/elf2cfetbl/pull/13
+Remove use of OSAL boolean type,"Migrate away from using the OSAL boolean typedef, prefer to use the C99 `bool` type going forward.
+Existing refs to this typedef should be fixed.",duplicate,https://github.com/nasa/elf2cfetbl/issues/12
+#8 Replace deprecated defines,"Fixes #8 
+
+Work submitted by @skliper CLA on file.","enhancement, CCB:Approved",https://github.com/nasa/elf2cfetbl/pull/11
+"64 bit support and machine additions, #7","Fixes #7 
+
+Note already reviewed and approved by community CCB on babelfish.  Submitting pull request to follow GitHub process for merging to master.
+
+Work performed by @the-other-james ","enhancement, CCB:Approved",https://github.com/nasa/elf2cfetbl/pull/10
+#8 Replace deprecated defines,"Fixes issue #8 
+
+Built with unit tests enabled on Linux after fix (with the OMIT DEPRECATED defined).",invalid,https://github.com/nasa/elf2cfetbl/pull/9
+Remove dependencies on deprecated elements,"Building with CFE_OMIT_DEPRECATED_6_6 fails, needs to be fixed.",bug,https://github.com/nasa/elf2cfetbl/issues/8
+Bring in 64 bit support and machine additions from babelfish,See https://babelfish.arc.nasa.gov/trac/cfs_tools/ticket/57,enhancement,https://github.com/nasa/elf2cfetbl/issues/7
+"Create version header file, update to x.x.90, report on execution",,enhancement,https://github.com/nasa/elf2cfetbl/issues/6
+elf2cfetbl internal filename/path length dependency on OSAL questionable,"Originated by abrown4 (68 on babelfish):
+
+The internal filename/path length for the table files produced do NOT have to depend upon the OSAL. The OSAL OS_MAX_FILE_NAME limit is too restrictive. Need to use the PATH_MAX from linux/limits.h that is appropriate for the host.
+
+JH - Suggest possibly checking size against OSAL and notify user when limit exceeded (but still allow to run as long as it meets PATH_MAX).","bug, enhancement",https://github.com/nasa/elf2cfetbl/issues/5
+elf2cfetbl classic build include path order issues,"Originated by abrown (67 on babelfish):
+
+elf2cfetbl Makefile doesn't include paths in the correct order (classic build)
+
+Using cFE 6.5.0a with the ""classic"" makefile system: the tools/elf2cfetbl/for_build/Makefile has include paths in the wrong order such that it always picks up config files from the defined source first, rather than what is in your actual mission or local build directory. Ex: you change OS_MAX_FILE_NAME in your flight build and there is a table header mismatch with elf2cfetbl.","bug, good first issue",https://github.com/nasa/elf2cfetbl/issues/4
+elf2cfetbl crashes when destination file not found,"Originated by Thadeus (65 on babelfish):
+
+When the destination filename cannot be found in the table object file, the destination object file is not opened. However, the FreeMemoryAllocations function unconditionally calls fclose on its pointer, which segfaults when it is NULL. Initializing both file pointers to NULL and checking them before calling fclose prevents the segfault.
+
+[0001-Prevent-a-segfault-in-elf2cfetbl.txt](https://github.com/nasa/elf2cfetbl/files/3322545/0001-Prevent-a-segfault-in-elf2cfetbl.txt)
+","bug, good first issue",https://github.com/nasa/elf2cfetbl/issues/3
+printf format string vs data type mismatches,"We have some lingering mismatches between printf format string conversions and the parameter data types; all but one of them are in elf2cfetbl so pinning this bug on elf2cfetbl (will fix cmdUtil in passing):
+
+tools/cmdUtil/cmdUtil.c:229:9: warning: format '%d' expects argument of type 'int', but argument 2 has type 'long int' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:710:25: warning: format '%d' expects argument of type 'int', but argument 3 has type 'uint32' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:798:25: warning: format '%d' expects argument of type 'int', but argument 3 has type 'uint32' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1004:5: warning: format '%X' expects argument of type 'unsigned int', but argument 3 has type 'time_t' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1192:5: warning: format '%x' expects argument of type 'unsigned int', but argument 2 has type 'long unsigned int' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1227:9: warning: format '%d' expects argument of type 'int', but argument 2 has type 'int32' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1235:9: warning: format '%d' expects argument of type 'int', but argument 2 has type 'int32' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1243:9: warning: format '%d' expects argument of type 'int', but argument 2 has type 'int32' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1273:17: warning: format '%d' expects argument of type 'int', but argument 3 has type 'int32' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1361:9: warning: format '%x' expects argument of type 'unsigned int', but argument 2 has type 'long unsigned int' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1389:9: warning: format '%d' expects argument of type 'int', but argument 2 has type 'int32' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1397:9: warning: format '%d' expects argument of type 'int', but argument 2 has type 'int32' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1403:5: warning: format '%d' expects argument of type 'int', but argument 2 has type 'long int' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1430:5: warning: format '%x' expects argument of type 'unsigned int', but argument 2 has type 'long unsigned int' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1596:13: warning: format '%d' expects argument of type 'int', but argument 2 has type 'uint32' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1596:13: warning: format '%x' expects argument of type 'unsigned int', but argument 3 has type 'uint32' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1619:9: warning: format '%d' expects argument of type 'int', but argument 2 has type 'int32' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1647:70: warning: format '%d' expects argument of type 'int', but argument 2 has type 'int32' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1647:70: warning: format '%d' expects argument of type 'int', but argument 3 has type 'char *' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1655:9: warning: format '%d' expects argument of type 'int', but argument 2 has type 'int32' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1655:9: warning: format '%d' expects argument of type 'int', but argument 3 has type 'int32' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1670:9: warning: format '%d' expects argument of type 'int', but argument 3 has type 'long int' [-Wformat=]
+tools/elf2cfetbl/elf2cfetbl.c:1707:28: warning: format '%d' expects argument of type 'int', but argument 4 has type 'uint32' [-Wformat=]
+Attachments (0)","bug, good first issue",https://github.com/nasa/elf2cfetbl/issues/2
+invalid pointer casts (byteSwap),"Originated by glimes (31 on babelfish):
+
+cppcheck has a very useful warning about invalid pointer casts which is triggered by the a call to byteSwap. We could patch this with a double-cast ... or we could fix it, by having byteSwap take a (void*) pointer parameter. But fixing it is a good idea, so future cppcheck messages about this condition are more useful.",invalid,https://github.com/nasa/elf2cfetbl/issues/1

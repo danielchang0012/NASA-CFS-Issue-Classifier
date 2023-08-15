@@ -1,0 +1,3 @@
+Title,Body,Labels,URL
+Remove old MKS flags from comments,"$Id, $Date, $Revision, $Log, etc all no longer useful and slightly misleading since they don't get updated.","enhancement, good first issue",https://github.com/nasa/gen_sch_tbl/issues/2
+"Create version header file, update to x.x.90, report on execution",,enhancement,https://github.com/nasa/gen_sch_tbl/issues/1

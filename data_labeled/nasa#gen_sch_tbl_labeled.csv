@@ -1,0 +1,3 @@
+text,label
+"remove old <allcaps> mks </allcaps> flags from comments $ id , $ date , $ revision , $ log , etc all no longer useful and slightly misleading since they do not get updated .",2
+"create version header file , update to x . x . <number> , report on execution",2

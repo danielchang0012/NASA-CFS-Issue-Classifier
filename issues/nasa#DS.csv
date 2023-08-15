@@ -1,0 +1,2346 @@
+Title,Body,Labels,URL
+Non-distinct identifiers static analysis warning,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+DS_CloseFileCmd conflict here:
+https://github.com/nasa/DS/blob/2a6c6a2df5b2f00915a06f0a5ac30b9c327c725d/fsw/src/ds_cmds.c#L963-L965
+
+**To Reproduce**
+Static analysis
+
+**Expected behavior**
+Unique identifiers.  TBH calling this variable a Cmd is misleading, it's a pointer to the payload.  Suggest changing to PayloadPtr for all of these command processing routines (which would resolve this issue as well).
+
+**System observed on:**
+CodeSonar static analysis
+
+**Additional context**
+None
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/DS/issues/115
+"Fix #113, Use `size_t` for size parameters and variables","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #113
+  - Updated a few parameters and local variables which represent size to use the more expressive `size_t` typedef.
+    - `DS_TableEntryUnused()` parameter `BufferSize` was signed previous to this change, but it is actually used in DS with `size_t` types being passed in to that parameter
+    - Updated loop counter variable `i` in `DS_TableEntryUnused()` to unsigned for clarity/defensiveness
+
+Note: there is a signed/unsigned comparison in `DS_FileWriteData()`, but I know there are many other cases of this in cFS currently.
+
+**Testing performed**
+GitHub CI actions all passing successfully (incl. Build + Run, Unit/Functional Tests etc.).
+
+**Expected behavior changes**
+No change to overall behavior.
+Code is more compliant with relevant coding standards (JPL, MISRA etc. which all prefer the more expressive typedefs where possible).
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/DS/pull/114
+Use `size_t` for size parameters/variables,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+A few variables/parameters representing size could be updated to the more expressive `size_t` typedef.
+
+**Code snips**
+`DataLength` should be `size_t`:
+https://github.com/nasa/DS/blob/2a6c6a2df5b2f00915a06f0a5ac30b9c327c725d/fsw/src/ds_file.h#L121-L127
+
+`MaxFileSize` should be `size_t`:
+https://github.com/nasa/DS/blob/2a6c6a2df5b2f00915a06f0a5ac30b9c327c725d/fsw/src/ds_table.h#L353-L357
+
+...and a few other local variables.
+
+**Expected behavior**
+Update to `size_t` where possible.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/DS/issues/113
+Fix #111: Use correct length filename for too large test,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes https://github.com/nasa/DS/issues/111
+
+**Testing performed**
+See reproduction steps from linked issue
+
+**Expected behavior changes**
+Tests should pass if OSAL_CONFIG_MAX_PATH_LEN is increased
+
+**System(s) tested on**
+- Hardware: Intel Xeon CPU E5-2687W v4 @ 3.00GHz
+- OS: CentOS 7
+- Versions: trunk DS, cFE Draco rc-3
+
+**Additional context**
+Add any other context about the contribution here.
+Related cFE issue: https://github.com/nasa/cFE/issues/2372
+
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Full name and company/organization/center of all contributors (""Personal"" if individual work)
+Isaac Rowe, NASA JSC/Jacobs Technology
+",Equuleus-rc2,https://github.com/nasa/DS/pull/112
+OSAL path length variables cause tests to fail,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+A clear and concise description of what the bug is.
+
+For certain values of `OSAL_CONFIG_MAX_FILE_NAME` and `OSAL_CONFIG_MAX_PATH_LEN`, DS tests fail.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Build cFS distribution with  `OSAL_CONFIG_MAX_FILE_NAME` set to 64 and  `OSAL_CONFIG_MAX_PATH_LEN` set to 128
+2. `ctest coverage -VV --test-dir build/intel64/default_intel64/ -R coverage-ds-ds_file`
+
+**Expected behavior**
+A clear and concise description of what you expected to happen.
+Expect test to pass.
+
+**Code snips**
+If applicable, add references to the software.
+```
+111: [BEGIN] 25 DS_FileCreateName_Test_PathBaseSeqTooLa
+111: [ PASS] 25.001 ds_file_tests.c:736 - DS_FileCreateName(FileIndex)
+111: [ FAIL] 25.002 ds_file_tests.c:742 - strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname) + strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Basename) + DS_SEQUENCE_DIGITS + strlen(""/"") (64) == DS_TOTAL_FNAME_BUFSIZE (128)
+111: [ FAIL] 25.003 ds_file_tests.c:743 - CallCount CFE_EVS_SendEvent() (0) == 1 (1)
+111: [ FAIL] 25.004 ds_file_tests.c:744 - context_CFE_EVS_SendEvent[0].EventType (0) == CFE_EVS_EventType_ERROR (3)
+111: [ FAIL] 25.005 ds_file_tests.c:745 - context_CFE_EVS_SendEvent[0].EventID (0) == DS_FILE_NAME_ERR_EID (14)
+111: [  END] 25 DS_FileCreateName_Test_PathBaseSeqTooLa TOTAL::5     PASS::1     FAIL::4     MIR::0     TSF::0     TTF::0     WARN::0   
+111: 
+111: [BEGIN] 26 DS_FileCreateName_Test_PathBaseSeqExtTo
+111: [ PASS] 26.001 ds_file_tests.c:765 - DS_FileCreateName(FileIndex)
+111: [ FAIL] 26.002 ds_file_tests.c:772 - strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname) + strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Basename) + strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Extension) + DS_SEQUENCE_DIGITS + strlen(""/"") (64) == DS_TOTAL_FNAME_BUFSIZE (128
+111: [ FAIL] 26.003 ds_file_tests.c:773 - CallCount CFE_EVS_SendEvent() (0) == 1 (1)
+111: [ FAIL] 26.004 ds_file_tests.c:774 - context_CFE_EVS_SendEvent[0].EventType (0) == CFE_EVS_EventType_ERROR (3)
+111: [ FAIL] 26.005 ds_file_tests.c:775 - context_CFE_EVS_SendEvent[0].EventID (0) == DS_FILE_NAME_ERR_EID (14)
+111: [  END] 26 DS_FileCreateName_Test_PathBaseSeqExtTo TOTAL::5     PASS::1     FAIL::4     MIR::0     TSF::0     TTF::0     WARN::0   
+
+111: [BEGIN] 36 DS_FileCloseDest_Test_PlatformConfigMov
+111: [ PASS] 36.001 ds_file_tests.c:998 - DS_AppData.FileStatus[FileIndex].FileAge (0) == 0 (0)
+111: [ PASS] 36.002 ds_file_tests.c:999 - DS_AppData.FileStatus[FileIndex].FileSize (0) == 0 (0)
+111: [ PASS] 36.003 ds_file_tests.c:1000 - DS_AppData.FileStatus[FileIndex].FileName[0] (0) == 0 (0)
+111: [ FAIL] 36.004 ds_file_tests.c:1001 - context_CFE_EVS_SendEvent[0].EventID (0) == DS_MOVE_FILE_ERR_EID (61)
+111: [ FAIL] 36.005 ds_file_tests.c:1002 - context_CFE_EVS_SendEvent[0].EventType (0) == CFE_EVS_EventType_ERROR (3)
+111: [ FAIL] 36.006 ds_file_tests.c:1003 - CallCount CFE_EVS_SendEvent() (0) == 1 (1)
+111: [  END] 36 DS_FileCloseDest_Test_PlatformConfigMov TOTAL::6     PASS::3     FAIL::3     MIR::0     TSF::0     TTF::0     WARN::0   
+
+111: [  END] 52 SUMMARY              TOTAL::159   PASS::148   FAIL::11    MIR::0     TSF::0     TTF::0     WARN::0   
+111: COMPLETE: 52 tests Segment(s) executed
+111: 
+111: OS_BSP_Initialize():Maximum user msg queue depth = 1024
+1/1 Test #111: coverage-ds-ds_file ..............***Failed    0.01 sec
+```
+
+**System observed on:**
+ - Hardware: Intel(R) Xeon(R) CPU E5-2687W v4 @ 3.00GHz
+ - OS: CentOS 7 Linux
+ - Versions: draco-rc3 tags for cFE, OSAL, and DS. Also tried with draco-rc4 DS.
+
+**Additional context**
+Add any other context about the problem here.
+Related cFE issue: https://github.com/nasa/cFE/issues/2372
+
+**Reporter Info**
+Full name and company/organization if applicable
+Isaac Rowe, JSC/Jacobs Technology
+",,https://github.com/nasa/DS/issues/111
+"Fix #107, Convert command success events to `INFORMATION` type","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #107
+  - Updates command events (except Reset - see note below) to `INFO` type rather than `DEBUG` which is the nominal pattern across cFE/cFS although currently there are a couple of apps that don't comply, and a couple of cFE components that only partially comply.
+
+**Note:** cFE and most (but not all) apps leave the Reset command as `DEBUG` - should this remain the case, or should it be changed as well to `INFO`  as the operator might still want to be informed that the Reset command occurred successfully when `DEBUG` events are turned off.
+
+**Testing performed**
+GitHub CI actions all passing successfully (incl. Build + Run, Unit/Functional Tests etc.).
+
+**Expected behavior changes**
+Align command event types to cFS guidelines as per cFE Developer's Guide [s7.2](https://github.com/nasa/cFE/blob/main/docs/cFE%20Application%20Developers%20Guide.md#72-event-types)
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/DS/pull/110
+Check the need of CFE_SB_MessageStringGet() to ensure null term,"              OK to squash the warning but I suspect we also have a null termination concern here.
+Recommend to add another issue to check if this should really be `CFE_SB_MessageStringGet()`  (this ensures null term on the output string)
+
+_Originally posted by @jphickey in https://github.com/nasa/DS/pull/108#pullrequestreview-1413729983_
+            ",,https://github.com/nasa/DS/issues/109
+"Fix #94, Use sizeof destination instead of source","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #94 
+
+**Testing performed**
+Pipeline verification
+
+**Expected behavior changes**
+Successful compilation when compiling with -Werror=sizeof-pointer-memaccess
+
+**System(s) tested on**
+Pipeline
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jose F Martinez Pedraza - NASA GSFC 582
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/DS/pull/108
+Convert command success events to INFORMATION type,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Command success events in DS are `CFE_EVS_EventType_DEBUG`, example:
+https://github.com/nasa/DS/blob/64181647ab455653fbc04b20a43406764862673b/fsw/inc/ds_events.h#L284-L287
+https://github.com/nasa/DS/blob/64181647ab455653fbc04b20a43406764862673b/fsw/src/ds_cmds.c#L106
+
+cFE pattern (AFAIK) is event success creates `CFE_EVS_EventType_INFORMATION`.
+
+**Describe the solution you'd like**
+Since these are triggered by command only, flooding isn't anticipated and it's useful to see the event nominally.  Would then match nominal pattern in cFE.
+
+**Describe alternatives you've considered**
+Change all command success responses to DEBUG, or even add a new command success type.  Consistency is key.
+
+**Additional context**
+In concert w/ reporting time stamps in event messages, this makes it easier to quickly verify RTS timing/behavior.  Even without it in the log, the time tagged event messages provide a similar benefit.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/DS/issues/107
+Reject duplicate message ID in filter table validation,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+DS doesn't reject duplicate message ID entry in the filter table.  Although SB does report the duplicate:
+```
+66/1/CFE_SB 7: Duplicate Subscription,MsgId 0x901 on DS_CMD_PIPE pipe,app DS
+```
+When DS does the lookup it only returns the first hit:
+https://github.com/nasa/DS/blob/64181647ab455653fbc04b20a43406764862673b/fsw/src/ds_table.c#L1120-L1135
+
+**Describe the solution you'd like**
+Since duplicate message ID in filter table isn't supported, should clearly reject an attempt by the user to do so.  I suggest failing filter table validation.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Can send to multiple destinations from a single entry, and supports changing those destinations via command so no additional functionality needed there.  Just should reject multiple filter table entries with the same MID (user error).
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/DS/issues/106
+"Fix #104, Convert `int32` return codes and variables to `CFE_Status_t`","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #104
+  - most `int32` return codes converted over to `CFE_Status_t`
+  - `int32` `status`/`return` variables holding cFE return codes converted to `CFE_Status_t`
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+
+**Expected behavior changes**
+No change to behavior.
+`CFE_Status_t` is more expressive and improves consistency with cFE/cFS.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","enhancement, CCB:Approved, Equuleus-rc1",https://github.com/nasa/DS/pull/105
+DS `int32` return codes and variables should be converted to `CFE_Status_t`,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+DS has quite a few return codes (as well as local `status`/`return` variables which hold CFE return codes) that can be easily converted over to the `CFE_Status_t` typedef.
+
+**Expected behavior**
+Use the more expressive `CFE_Status_t` and improve consistency with cFS.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt","enhancement, Equuleus-rc1",https://github.com/nasa/DS/issues/104
+"Fix #96, use separate dispatcher for messages","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Isolate the message verification and dispatch from the general message processing.  Functions in the ""cmds"" file now strictly handle the command content, and do not get involved in general validation.
+
+Fixes #96
+
+**Testing performed**
+Build and run CFE, sanity check
+
+**Expected behavior changes**
+No impact
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.","CCB:Approved, Equuleus-rc1",https://github.com/nasa/DS/pull/103
+"Fix #92, Use payload sub-struct in all messages","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Puts the CMD/TLM content in a member struct called ""Payload"".  This makes it consistent with other CFE modules and provides a predictably named member for determining the position of non-header content.
+
+Fixes #92
+
+**Testing performed**
+Build and run all tests, sanity check operation
+
+**Expected behavior changes**
+None, however the addition of the sub-structure may affect some compiler-added padding between members (platform dependent).
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/DS/pull/102
+"Fix #100, use generated stubs","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Separate the global variables into separate stub source units, then re-run the stub generator for all internal APIs. The committed result here is the exact output of the tool, unmodified.
+
+This eases future maintenance, when an internal API changes one just needs to re-run the stub generator tool to update it.
+
+Fixes #100
+
+**Testing performed**
+Build and run all tests.  (Affects UT only)
+
+**Expected behavior changes**
+Stubs easier to maintain going forward.  No changes in behavior.
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/DS/pull/101
+Use generated stubs,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/HS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+DS unit testing currently uses a set of stubs for its internal units that are not generated by the tool
+
+**Describe the solution you'd like**
+Use the generated stubs directly whenever possible, as this makes future maintenance easier - when an API changes, just re-run the generator tool to update the stubs.
+
+**Additional context**
+This requires some additional separation of items - global variable stubs should be in a separate compilation unit, as the tool does not generate these.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+","enhancement, Equuleus-rc1",https://github.com/nasa/DS/issues/100
+"Fix #93, Remove file age check bug","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #93 
+
+**Testing performed**
+CI and local check that files get produced as requested (1 per minute when configured to do so)
+
+**Expected behavior changes**
+Will produce the expected files, vs 17 per 10 minutes when configured to produce 1 per minute
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, Equuleus-rc1",https://github.com/nasa/DS/pull/99
+"Fix #97, Update UT to handle DS_SEQUENCE_DIGITS configuration","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #97 
+
+**Testing performed**
+CI and ran with DS_SEQUENCE_DIGITS of 4
+
+**Expected behavior changes**
+Won't fail for changed DS_SEQUENCE_DIGITS
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, Equuleus-rc1",https://github.com/nasa/DS/pull/98
+Unit test breaks on `DS_SEQUENCE_DIGITS` configuration change,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Unit test assumes default config for `DS_SEQUENCE_DIGITS`, fails any customization.
+
+https://github.com/nasa/DS/blob/ce988535edffd6b36cc1083e10988c2d0a4a38db/fsw/inc/ds_platform_cfg.h#L221
+https://github.com/nasa/DS/blob/ce988535edffd6b36cc1083e10988c2d0a4a38db/unit-test/ds_file_tests.c#L595
+https://github.com/nasa/DS/blob/ce988535edffd6b36cc1083e10988c2d0a4a38db/unit-test/ds_file_tests.c#L615
+https://github.com/nasa/DS/blob/ce988535edffd6b36cc1083e10988c2d0a4a38db/unit-test/ds_file_tests.c#L637
+https://github.com/nasa/DS/blob/ce988535edffd6b36cc1083e10988c2d0a4a38db/unit-test/ds_file_tests.c#L750
+https://github.com/nasa/DS/blob/ce988535edffd6b36cc1083e10988c2d0a4a38db/unit-test/ds_file_tests.c#L787
+
+**Describe the solution you'd like**
+Built the test strings based on actual config, or otherwise improve result verification.
+
+**Describe alternatives you've considered**
+None.
+
+**Additional context**
+Likely an issue with default configuration changes all over cFS, but should at least move in the direction of unit tests that support valid configuration ranges.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",Equuleus-rc1,https://github.com/nasa/DS/issues/97
+Apps should check/verify msg BEFORE calling handler,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+This remains an area with coding pattern discrepancies between CFE core and CFS apps, and also different between CFS apps to some degree as well. 
+
+The CFE core and sample app (which is supposed to be the example of ""best practice"") do validation on the message before calling the handler.  For example:
+```
+        case SAMPLE_APP_NOOP_CC:
+            if (SAMPLE_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(SAMPLE_APP_NoopCmd_t)))
+            {
+                SAMPLE_APP_Noop((SAMPLE_APP_NoopCmd_t *)SBBufPtr);
+            }
+```
+
+This is different from DS, which does a similar check, but done inside each handler, for example:
+
+https://github.com/nasa/DS/blob/ce988535edffd6b36cc1083e10988c2d0a4a38db/fsw/src/ds_cmds.c#L85-L95
+
+**Describe the solution you'd like**
+CFS Apps should follow the best practices/patterns set forth in the framework code.  (there are reasons for the pattern being recommended practice)
+
+**Additional context**
+The pattern recommended in the framework (checking before calling, as done in sample_app) has several advantages:
+
+1. Each command handler function has a unique type-safe prototype, that cannot be interchanged with another handler without triggering a type mismatch compiler error.
+2. All typecasting/conversions are confined to one place, and it is nearby to the place that the verification is done - which eases maintainability because check and conversion are all in close proximity and any mismatches will be more visible.
+3. It spreads out the cyclomatic complexity.  In the non-recommended pattern, there is a case where the length check fails, and the entire handler is essentially skipped.  This adds to the cyclomatic complexity of every handler.  In the recommended pattern, those checks are done prior to the invocation of the handler, so the handler can focus solely on its intended purpose - doing the command itself.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",Equuleus-rc1,https://github.com/nasa/DS/issues/96
+Remove conditionally compiled code,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Conditionally-compiled code is a maintenance problem because code then needs to be validated both ways, with the condition on and off, and it is easy for the lesser-used/non-default option to become stale or broken, particularly with respect to the coverage testing.
+
+**Describe the solution you'd like**
+Remove conditional compilation, replace with runtime conditional checks, which can be constant-value in FSW context, but can be coverage test both ways via a single binary build.
+
+**Additional context**
+In general conditional compilation of large chunks of code should be avoided, per 582 coding standards.
+Example here of a block that is 84 lines long: https://github.com/nasa/DS/blob/ce988535edffd6b36cc1083e10988c2d0a4a38db/fsw/src/ds_file.c#L804-L893
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/DS/issues/95
+strncpy source sizeof,"**Checklist (Please check before submitting)**
+
+* [ ] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [ ] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+While building with **-Werror=sizeof-pointer-memaccess** flag the compiler complains about ""error: argument to ‘sizeof’ in ‘strncpy’ call is the same expression as the source; did you mean to use the size of the destination?""
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Add -Werror=sizeof-pointer-memaccess flag to compiler
+2. Build
+
+**Expected behavior**
+No errors
+
+**Code snips**
+https://github.com/nasa/DS/blob/ce988535edffd6b36cc1083e10988c2d0a4a38db/fsw/src/ds_file.c#L886
+
+**System observed on:**
+ - OS: Oracle Linux 8.7
+
+**Additional context**
+N/A
+
+**Reporter Info**
+Claudio Olmi - NASA/METECS
+
+","bug, Equuleus-rc1",https://github.com/nasa/DS/issues/94
+File age check logic is wrong,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Produces ~17 files in 10 minutes when requesting 1 file per minute
+
+**To Reproduce**
+1. Enable a 1 file per minute config
+2. Watch ~17 files get produced
+
+**Expected behavior**
+1 file per minute when configured to do so
+
+**Code snips**
+The problem is how file age is accumulated.  W/ the default config, 4 seconds are added every HK message, and another second is added every 1 second SB timeout.  So within the typical 4 second scheduled HK request the file age gets incremented by 7 seconds (4 from HK processing and 3 from SB timeouts).
+
+https://github.com/nasa/DS/blob/ce988535edffd6b36cc1083e10988c2d0a4a38db/fsw/src/ds_app.c#L124
+https://github.com/nasa/DS/blob/ce988535edffd6b36cc1083e10988c2d0a4a38db/fsw/src/ds_app.c#L520
+
+Really the time accumulation logic is broken since it's going to vary based on receiving any other command that would cause SB not to timeout.
+
+Likely needs a functional test update to catch this issue.
+
+**System observed on:**
+Independent of system
+
+**Additional context**
+None
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC","bug, Equuleus-rc1",https://github.com/nasa/DS/issues/93
+"All CMD/TLM message should put content in a ""Payload"" sub-structure","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+To match the patterns used in CFE and other modules, all CMD/TLM message definitions should put the content (non-header) parts into a separate struct called ""Payload"".
+
+**Describe the solution you'd like**
+Separate message content into a sub structure called ""Payload"".
+
+**Additional context**
+This is benefit to tooling that can use the presence of this field to identify where the actual content starts (e.g. something like `offsetof(MsgType, Payload)` would work and be correct, as opposed to checking `sizeof(CFE_MSG_CommandHeader_t)` which may not actually reflect where the content starts due to possible compiler-added padding between them).
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",Equuleus-rc1,https://github.com/nasa/DS/issues/92
+"Fix #90, Rename SB Command Pipe to CmdPipe","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #90 
+`InputPipe` global data struct member renamed to `CmdPipe`.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+No change to behavior.
+DS's SB command pipe struct member is now named consistently with the rest of cFS and the other apps which improves future maintainability.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/DS/pull/91
+DS is the only app to label the SB Command Pipe as InputPipe,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+DS uses the name `InputPipe` to label the SB Command Pipe struct member of the global data struct.
+Every single other app/component of cFS other than CF uses the label CmdPipe.
+
+**Code snips**
+https://github.com/thnkslprpt/DS/blob/10a042fb08955723fa4163dd335d9d8c3db860f9/fsw/src/ds_app.h#L74
+
+**Expected behavior**
+Align DS with the rest of cFS by renaming InputPipe to CmdPipe.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",Equuleus-rc1,https://github.com/nasa/DS/issues/90
+"Fix #83, Adds null termination to software bus messaging","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+-Fixes #83
+
+**Testing performed**
+make build & lcov on local dev machine
+
+**Expected behavior changes**
+No expected behavior changes
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+N/A
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, Vantage Systems","enhancement, CCB:Approved, Equuleus-rc1",https://github.com/nasa/DS/pull/89
+"Fix #87, Combine consecutive, mutually-exclusive status checks","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #87
+Consecutive, mutually-exclusive status checks (two `if`s) were combined into a single `if`/`else`.
+Also cleared up a few out-of-place empty lines and minor typos in the same file.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+No change to behavior.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/DS/pull/88
+Combine consecutive mutually exclusive status checks into an if/else,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+`DS_AppInitialize` contains consecutive, mutually exclusive status checks.
+
+**Code snips**
+https://github.com/nasa/DS/blob/04c01548a8eaaf5a1b4abb2b7d7548140e0cd6c0/fsw/src/ds_app.c#L202-L211
+
+**Expected behavior**
+Combine into an `if`/`else` - no need to do 2 evaluations.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",Equuleus-rc1,https://github.com/nasa/DS/issues/87
+"Fix #85, Change EVS_Register failure from SendEvent to WriteToSysLog","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #85
+`CFE_EVS_SendEvent` replaced by `CFE_ES_WriteToSysLog` on failure of `CFE_EVS_Register`.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+Coverage maintained at 100%:
+```
+  lines......: 100.0% (1311 of 1311 lines)
+  functions..: 100.0% (66 of 66 functions)
+  branches...: 100.0% (485 of 485 branches)
+```
+
+**Expected behavior changes**
+Failure can be successfully recorded somewhere even without the EVS now.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/DS/pull/86
+Sends an event message on failure of registering with EVS,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+`CFE_EVS_SendEvent` is used when `CFE_EVS_Register` fails.  Should use `CFE_ES_WriteToSysLog` for a better chance of actually recording the error.
+
+**Expected behavior**
+Use a mechanism for reporting errors that's more likely to succeed in case of an EVS registration failure.
+
+**Code snips**
+https://github.com/nasa/DS/blob/04c01548a8eaaf5a1b4abb2b7d7548140e0cd6c0/fsw/src/ds_app.c#L197-L206
+
+**System observed on:**
+N/A
+
+**Additional context**
+Recommend checking the rest of the apps and marking as bug.
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC",Equuleus-rc1,https://github.com/nasa/DS/issues/85
+DS_AppProcessCmd - cyclomatic complexity of 20,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+NASA guidelines in NPR 7150.2D recommends maintaining a cyclomatic complexity in software, in particular flight software of 15. [ds_app.c::DS_ProcessCmd](https://github.com/nasa/DS/blob/04c01548a8eaaf5a1b4abb2b7d7548140e0cd6c0/fsw/src/ds_app.c#L343) unnecessarily violates the recommendation with a cyclomatic complexity of 20.
+
+**Describe the solution you'd like**
+Clean up DS_ProcessCmd such that it has a cyclomatic complexity of 15 or less.
+
+**Describe alternatives you've considered**
+N/A
+
+**Additional context**
+N/A
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+","enhancement, wontfix, Equuleus-rc1",https://github.com/nasa/DS/issues/84
+Improper Null Termination on Software Bus Message handling,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+It is not guarenteed that the source or destination arguments of `strncpy` for software bus message uses in ds/apps/fsw/src assure Null termination. Many standard functions such as strcpy, strlen, strcmp among others rely on arrays of characters to be Null terminated.
+
+**To Reproduce**
+From local ds repo, command `grep -r strncpy` and view uses where argument is a software bus message.
+
+**Expected behavior**
+No expected behavior changes. Replace `strncpy` with  [`CFE_SB_MessageStringGet`](https://github.com/nasa/cFE/blob/e35c3da83a7b3adf20ac2d909cf4c36f4370632c/modules/sb/fsw/src/cfe_sb_util.c#L169)
+
+**Code snips**
+The below code snips are DS strncpy uses that do not guarentee null-termination
+https://github.com/nasa/DS/blob/04c01548a8eaaf5a1b4abb2b7d7548140e0cd6c0/fsw/src/ds_cmds.c#L742
+https://github.com/nasa/DS/blob/04c01548a8eaaf5a1b4abb2b7d7548140e0cd6c0/fsw/src/ds_cmds.c#L809
+https://github.com/nasa/DS/blob/04c01548a8eaaf5a1b4abb2b7d7548140e0cd6c0/fsw/src/ds_cmds.c#L876
+
+This strncpy example in FM may help with null-terminated destination but does not guarentee null-terminated source:
+[FM strncpy example](https://github.com/nasa/FM/blob/2be3511211e756058236b30abe40b0de372bd2f1/fsw/src/fm_child.c#L1227-L1228)
+
+**System observed on:**
+ imported from JSC static analysis audit
+
+**Additional context**
+The FM example above proves to assure Null termination for the destination, however, it may be best approach to replace `strncpy` with [`CFE_SB_MessageStringGet`](https://github.com/nasa/cFE/blob/e35c3da83a7b3adf20ac2d909cf4c36f4370632c/modules/sb/fsw/src/cfe_sb_util.c#L169) to consolidate handling of strings.
+
+**Reporter Info**
+Justin Figueroa, Vantage Systems
+","enhancement, CCB:Approved, Equuleus-rc1",https://github.com/nasa/DS/issues/83
+"Fix #12, Use CFE_MSG_PTR macro","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+This updates DS to use the CFE_MSG_PTR macro.  This macro is provided by the CFE ""msg"" module to convert a local header buffer to the base struct type.  
+
+Use of this macro requires that the naming convention was followed, so this also means renaming `TlmHeader` -> `TelemetryHeader` and `CmdHeader` -> `CommandHeader`.
+
+Fixes #12
+
+**Testing performed**
+Build and run all tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Debian
+
+**Additional context**
+This matches the current naming, usage patterns, and recommended practices used in CFE, thereby bringing DS more up to date.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/DS/pull/82
+"Fix #80, Remove extraneous assignments to CFE_SUCCESS","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #80
+Extraneous assignments to CFE_SUCCESS were removed.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+No change to behavior.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/DS/pull/81
+Extraneous assignments to CFE_SUCCESS,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+DS has a few extraneous assignments to `CFE_SUCCESS` as in https://github.com/nasa/HS/issues/10
+
+**Code snips**
+https://github.com/nasa/DS/blob/d08de3042f42d74fb1fa541c3488ce3666017fdf/fsw/src/ds_file.c#L343-L351
+https://github.com/nasa/DS/blob/d08de3042f42d74fb1fa541c3488ce3666017fdf/fsw/src/ds_file.c#L762-L772
+
+**Expected behavior**
+Remove assignments - unnecessary code.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",Equuleus-rc1,https://github.com/nasa/DS/issues/80
+"Fix #78, Replace quotes with angle brackets in /inc","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #78  - replace quotes with angle brackets in /inc files.
+
+**Testing performed**
+1. Performed build verification testing
+2. CI
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Dan Knutsen
+NASA Goddard
+","CCB:Approved, draco-rc4",https://github.com/nasa/DS/pull/79
+Replace quotes with angle brackets in #include statements within /inc,"Describe the solution you'd like
+Quotes should be replaced with angle brackets in #include statements that reside in the /inc location. This will ensure that the preprocessor selects the files pre-designated to override the default files contained within the open source cFS build release - as opposed to selecting those located in the same directory.
+
+Requester Info
+Dan Knutsen
+NASA Goddard",draco-rc4,https://github.com/nasa/DS/issues/78
+"Fix #76, Add DS_ENABLED to ds_extern_typedefs.h","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Adds DS_ENABLED to ds_extern_typedefs.h
+
+**Testing performed**
+CI
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Dan Knutsen
+NASA Goddard","CCB:Approved, draco-rc4",https://github.com/nasa/DS/pull/77
+DS_ENABLED should be included in ds_extern_typedefs.h,"* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+DS_ENABLED should be included in ds_extern_typedefs.h - as it is used routinely in filter table generation.
+
+**Requester Info**
+Dan Knutsen
+NASA Goddard
+",draco-rc4,https://github.com/nasa/DS/issues/76
+"Fix #74, Adds fsw/src to app target","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+-Fixes #74
+
+**Testing performed**
+make install
+
+**Expected behavior changes**
+Successful cert_testbed build
+
+**System(s) tested on**
+- Ubuntu 20.04
+
+**Additional context**
+N/A
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, Vantage Systems
+
+","invalid, CCB:Ignore",https://github.com/nasa/DS/pull/75
+Add fsw/src to app target,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Cannot build cert_testbed. `target_include_directories(xx PUBLIC fsw/src)` is needed to build tables, etc. Revise CMakeLists.txt
+
+**To Reproduce**
+Build in cert_testbed
+
+**Expected behavior**
+Error-free build
+
+**Code snips**
+If applicable, add references to the software.
+
+**System observed on:**
+ - Ubuntu 20.04
+
+**Additional context**
+N/A
+
+**Reporter Info**
+Justin Figueroa, Vantage Systems
+",invalid,https://github.com/nasa/DS/issues/74
+"Fix #38, set pathname and basename size based on config values","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #38, replaced hard coded sized with sizes based on configuration values.
+
+**Testing performed**
+Unit testing
+
+**Expected behavior changes**
+no impact to behavior
+
+**System(s) tested on**
+ - OS: Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA","CCB:Approved, draco-rc4",https://github.com/nasa/DS/pull/73
+"Fix #71, Moves interface definition files to inc","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #71 
+
+**Testing performed**
+make install
+lcov
+
+**Expected behavior changes**
+No expected behavior change.
+
+**System(s) tested on**
+-Ubuntu 18.04
+
+**Additional context**
+N/A
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+-Justin Figueroa, Vantage
+","CCB:Approved, draco-rc4",https://github.com/nasa/DS/pull/72
+"Move interface definition files to ""inc"" location","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+The interface definition files of all open source apps currently exist in the ""src"" directory.
+
+**Describe the solution you'd like**
+Create an ""inc"" dir to go with the ""src"" dir.  Move the interface definitions into this location: ""_msg.h"", ""_msgdefs.h"", ""_tbldefs.h"", and ""_events.h"". Consider moving header files in both ""platform_inc"" and ""mission_inc"" to ""inc""
+
+**Describe alternatives you've considered**
+Leaving as is.
+
+**Additional context**
+N/A
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+",draco-rc4,https://github.com/nasa/DS/issues/71
+Commented-out test references old event type constant (CFE_EVS_ERROR),"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+A single stray reference to the old event type constants remains here in a commented-out test case (`CFE_EVS_ERROR`).
+Will cause a build failure if _un_-commented-out.
+
+**Expected behavior**
+1) Update to `CFE_EVS_EventType_ERROR`, or
+2) Delete this commented-out code
+
+**Code snips**
+https://github.com/nasa/DS/blob/7c50a875292ab065dbee02f9bd71151232b49847/unit-test/ds_cmds_tests.c#L3213
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",unit-test,https://github.com/nasa/DS/issues/70
+"Fix #65, Adds unit tests for DS_CmdRemoveMID","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #65 
+
+**Testing performed**
+lcov
+
+**Expected behavior changes**
+100% coverage
+
+**System(s) tested on**
+ - Ubuntu 18.04
+
+**Additional context**
+ds_cmds_tests.c may require later cleanup/formatting changes for all tests to user UT_DS_TEST_ADD
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, Vantage Systems
+","unit-test, CCB:Approved, draco-rc4",https://github.com/nasa/DS/pull/69
+"Fix #67, Adds DS_CmdRemoveMID requirement documentation","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #67
+
+**Testing performed**
+Viewed the csv
+
+**Expected behavior changes**
+Added requirements in the requirements csv file.
+
+**System(s) tested on**
+View documentation change on Github: https://github.com/chillfig/DS/blob/fca3d57ed1665df98abbbe39aaf955158912c929/docs/ds_FunctionalRequirements.csv
+
+**Additional context**
+N/A
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, Vantage Systems","docs, CCB:Approved, draco-rc4",https://github.com/nasa/DS/pull/68
+Add documentation of DS_CmdRemoveMID requirements,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+ds/docs/ds_FunctionalRequirements.csv is missing documentation of requirements associated with [DS_CmdRemoveMID](https://github.com/nasa/DS/blob/db99b7f887f757e3050cd4833d1d3b4b11029b3c/fsw/src/ds_cmds.c#L1451-L1549).
+
+**To Reproduce**
+Open and view ds/docs/ds_FunctionalRequirements.csv
+
+**Expected behavior**
+ ds/docs/ds_FunctionalRequirements.csv contains requirements documented in JIRA for DS_CmdRemoveMID. The added requirements should be DS5018, DS5018.1, DS5018.2, and DS5018.3.
+
+**Code snips**
+N/A
+
+**System observed on:**
+Simply viewed through Github: https://github.com/nasa/DS/blob/db99b7f887f757e3050cd4833d1d3b4b11029b3c/docs/ds_FunctionalRequirements.csv
+
+**Additional context**
+N/A
+
+**Reporter Info**
+Justin Figueroa, Vantage Systems
+","docs, draco-rc4",https://github.com/nasa/DS/issues/67
+"Fix #25, Remove misleading/unnecessary event text","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #25
+Unnecessary/misleading test (`""desc text = OK""`) has been removed from event messages in `DS_TableVerifyFilter()` and `DS_TableVerifyDestFile()`.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully - ~~except coverage rates which is being addressed in separate issue #65~~
+
+**Expected behavior changes**
+No impact on logic. `""desc text = OK""` will no longer be printed in these 2 event messages.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",CCB:Approved,https://github.com/nasa/DS/pull/66
+Add unit tests for DS_CmdRemoveMID,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Unit test coverage is less than 100% due to the additions of code in #51 .
+
+**To Reproduce**
+View unit test coverage resulting from workflow: https://github.com/nasa/DS/actions/runs/3378902466/jobs/5609743441
+
+**Expected behavior**
+100% unit test coverage
+
+**Code snips**
+N/A
+
+**System observed on:**
+Github workflow actions
+
+**Additional context**
+N/A
+
+**Reporter Info**
+Justin Figueroa, ASRC Federal
+","coverage, unit-test, draco-rc4",https://github.com/nasa/DS/issues/65
+"Fix #63, Change format string to avoid GCC workflow failure","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #63 
+Format string in `CFE_EVS_SendEvent` instance changed to avoid potential `NULL` argument being passed in to ""`%s`"" format specifier, which causes a GCC error and workflow failure.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+Workflow (Build + Run) will complete without GCC error causing failure.
+
+**Contributor Info**
+Avi @thnkslprpt","CCB:Ready, CCB:FastTrack, draco-rc4",https://github.com/nasa/DS/pull/64
+"Change format string to avoid ""‘%s’ directive argument is null error""","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Build + Run workflow fails due to GCC warning (treated as error) of potential NULL argument being passed to format string.
+This issue was noticed/raised here in PR https://github.com/nasa/DS/pull/61#issuecomment-1299409903
+
+**To Reproduce**
+Run CI workflow (specifically [Build and run with startup msg verification) and observe error.
+
+**Expected behavior**
+CI workflow run without failure.
+
+**Code snips**
+```
+/home/runner/work/DS/DS/apps/ds/fsw/src/ds_file.c:881:13: error: ‘%s’ directive argument is null [-Werror=format-overflow=]
+  881 |             CFE_EVS_SendEvent(DS_MOVE_FILE_ERR_EID, CFE_EVS_EventType_ERROR,
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  882 |                               ""FILE MOVE error: dir name = '%s', filename = '%s'"", PathName, FileName);
+```
+
+**Reporter Info**
+Avi @thnkslprpt",draco-rc4,https://github.com/nasa/DS/issues/63
+"Fix #10, Fix nasa/FM#13; Make DS/FM file header sub-types unique","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #10 and Fixes https://github.com/nasa/FM/issues/13
+Updates `DS_FILE_HDR_SUBTYPE` value to make it unique (not the same as `FM_DIR_LIST_FILE_SUBTYPE`).
+
+**Testing performed**
+Just GitHub CI actions (incl. build + run).
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",CCB:Approved,https://github.com/nasa/DS/pull/62
+"Fix #60, Apply consistent Event ID names to common events","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #60
+  - Consistent event IDs have been applied to the inconsistent cases to align them with a common Event ID naming convention.
+
+**Testing performed**
+Only GitHub CI actions.
+
+**Expected behavior changes**
+No impact on code behavior (no logic changes).
+Consistent Event ID names for the events which are common to all/most cFS components and apps will improve consistency and ease make code review/debugging easier.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/DS/pull/61
+Inconsistent Event ID naming,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/cFE/issues/2175
+After finding that there were 9 different Event IDs to indicate the same thing (Invalid Message ID) in https://github.com/nasa/CF/issues/262, I scrubbed the other common commands (e.g. Task Initialisation [INIT], NOOP, Reset Counters etc.) and found the same issue there - almost every component/app had their own variation of the Event ID name for the exact same event.
+
+**Expected behavior**
+Apply consistent Event ID names to the events which are common to all/most components and apps.
+
+**Code snips**
+Invalid Message ID:
+`CFE_EVS_ERR_MSGID_EID`
+`CFE_SB_BAD_MSGID_EID`
+`CFE_TIME_ID_ERR_EID`
+`CS_MID_ERR_EID`
+`TO_LAB_MSGID_ERR_EID`
+`SAMPLE_APP_INVALID_MSGID_ERR_EID`
+`BP_INVALID_MID_ERR_EID`
+`SCH_MD_ERR_EID`
+`CI_LAB_COMMAND_ERR_EID`
+
+Initialization:
+`CFE_TIME_INIT_EID`
+`CFE_TBL_INIT_INF_EID`
+`CFE_EVS_STARTUP_EID`
+`CF_EID_INF_INIT`
+`BP_INIT_APP_INFO_EID`
+`SCH_INITSTATS_INF_EID`
+`CI_LAB_STARTUP_INF_EID`
+
+NOOP:
+`CFE_TIME_NOOP_EID`
+`CFE_TBL_NOOP_INF_EID`
+`CFE_SB_CMD0_RCVD_EID`
+`CF_EID_INF_CMD_NOOP`
+`FM_NOOP_CMD_EID`
+`CI_LAB_COMMANDNOP_INF_EID`
+
+Reset Counters:
+`CFE_TIME_RESET_EID`
+`CFE_TBL_RESET_INF_EID`
+`CFE_EVS_RSTCNT_EID`
+`CFE_SB_CMD1_RCVD_EID`
+`CF_EID_INF_CMD_RESET`
+`SC_RESET_DEB_EID`
+`HS_RESET_DBG_EID`
+`FM_RESET_CMD_EID`
+`HK_RESET_CNTRS_CMD_EID`
+`MD_RESET_CNTRS_DBG_EID`
+`CI_LAB_COMMANDRST_INF_EID`
+
+etc.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",enhancement,https://github.com/nasa/DS/issues/60
+"Fix #51, remove mid","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #51 
+
+**Testing performed**
+Steps taken to test the contribution:
+* Printed out Filter Table Packet and DS AppData Hash Table Entries after adding a message ID to the Table using `OS_printf`.
+* Printed out Filter Table Packet Entries and DS AppData Hash Table Entries after removing that same message ID from the Table using `OS_printf`.
+* Observed that the Filter Table entry with the indicated message ID was reset to 0.
+* Observed that the DS AppData Hash Table Entry for the removed, indicated message ID was reset.
+
+**Expected behavior changes**
+Allows users to remove message IDs from the filter table.
+
+**System(s) tested on**
+ - Ubuntu 18.04
+
+**Additional context**
+N/A
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, Vantage Systems
+","CCB:Approved, draco-rc4",https://github.com/nasa/DS/pull/59
+"Fix #57, Remove redundant/inconsistent comments (/* end of function */, /* end if */ etc.) and clean up empty lines.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #57
+Removes redundant and inconsistent comments (e.g. `/* end of function */`, `/* end if */`, function name in function header comments).
+There were also a few cases of unnecessary empty lines (e.g. on the last line before the closing brace of a function) and also missing empty lines (e.g. between functions) which were corrected. Some of these empty lines trigger the CI format checks.
+I've left the commits separated for now to make life easier for whoever reviews this. I can squash them if/when this is ready for merge.
+
+**Testing performed**
+None (comment and whitespace changes only).
+
+**Expected behavior changes**
+No impact on behavior.
+These updates will reduce clutter and inconsistency in the code, improving readability.
+
+**Contributor Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/DS/pull/58
+"Redundant comments (/* end of function */, /* end if */ etc.) and clean up empty lines.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/to_lab/issues/68 and https://github.com/nasa/sample_app/issues/111
+There are quite a few redundant comments in the code, such as:
+- `/* end of function */`-type comments
+- `/* end if */`-type comments
+- function header comments which include the function name
+
+Another minor issue has to do with empty lines:
+a) _unnecessary_ empty lines (e.g. first line after the opening brace of a function/struct, or the last line before the closing brace - the latter apparently sometimes triggers the CI format checks).
+b) _missing_ empty lines between functions (i.e. closing brace of last function, then next function beginning on the immediately next line without an empty line in between)
+
+The unnecessary empty lines (at the beginning or end of a function, for example) represent a low single-digit percentage of the cases (the vast majority of functions/structs do not have these extra empty lines), so there is an argument to remove them purely for consistency, not just due to them being redundant and triggering the CI format checks.
+
+**Expected behavior**
+Remove redundant comments to reduce clutter and inconsistency in the code, and improve readability.
+
+**Reporter Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/DS/issues/57
+"Fix #55, Remove 'return;' from last line of void functions.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #55
+Removes all cases of redundant ""return;"" statements on the last line of void functions.
+
+**Testing performed**
+None, prior to submission.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info**
+@thnkslprpt ","CCB:Approved, draco-rc4",https://github.com/nasa/DS/pull/56
+"Remove ""return;"" from last line of void functions","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+""return;"" at last line in void function is redundant.
+Copy of https://github.com/nasa/cFE/issues/1540
+
+**Describe the solution you'd like**
+Remove
+
+**Reporter Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/DS/issues/55
+"Fix #53, Remove unnecessary parentheses around return values.","**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #53 
+Removes parentheses in return statements in DS that return a single value/term.
+This is aligns these return statements with the predominant style of cFS.
+
+**Testing performed**
+None, prior to submission of the pull request.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt ","CCB:Approved, draco-rc4",https://github.com/nasa/DS/pull/54
+Scrub use of () in return statements,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Unnecessary parentheses around return values in DS
+Copy of https://github.com/nasa/osal/issues/866
+
+**Reporter Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/DS/issues/53
+"Fix #8, use CFE_FS_InitHeader() to initialize CFE header","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #8 
+
+**Testing performed**
+Unit testing
+
+**Expected behavior changes**
+no impact to behavior
+
+**System(s) tested on**
+ - OS: Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA","CCB:Approved, draco-rc4",https://github.com/nasa/DS/pull/52
+Command to remove MIDs from the filter table,"**Checklist (Please check before submitting)**
+
+* [ x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x ] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x ] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Possibly long term,  Currently there is a command to add a MID to the filter table and subscribe to it.  However short of a manual filter table file update, there is no way to remove unused MIDs from the filter table or unsubscribe from it. 
+
+If the the MIDs required are changing overtime in flight this could potentially lead to running out of space in the filter table even though MIDs are no longer being used.  This in turn would force manual intervention to correct it. 
+
+
+**Describe the solution you'd like**
+Implement a command to unsubscribe from a MID and remove the MID from the filter table.
+
+(If needed it could be limited to MIDs with all its filters set to DS_UNUSED.)
+
+**Describe alternatives you've considered**
+Pushing an update to the table may not be feasible when needed in flight.  Since it unsubscribes to the entire table, it also creates a small gap in telemetry recording on those MIDs that are not modified.
+
+**Additional context**
+
+
+**Requester Info**
+Nathan Lynch JSC-ER611
+",draco-rc4,https://github.com/nasa/DS/issues/51
+Remove unnecessary handlers in ds_file_tests.c,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Overriding handlers for success is unnecessary complexity
+
+**Describe the solution you'd like**
+Remove unnecessary handler overrides.  Just use OS_OpenCreate to set up ID correctly.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","unit-test, draco-rc3",https://github.com/nasa/DS/issues/50
+Unused values and uninitialized variable static analysis warnings,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Unused values set in ds_table.c, uninitialized variable warning in ds_file_tests.c
+
+**Describe the solution you'd like**
+Squash
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Static analysis license restricts sharing actual warnings
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, draco-rc3",https://github.com/nasa/DS/issues/49
+Uninitialized string copy if move location is empty,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Pathname is only set when move is not empty, but the copy is done outside that condition:
+https://github.com/nasa/DS/blob/733b2b269011882c6e1d159bf7c51037f652a405/fsw/src/ds_file.c#L891-L906
+https://github.com/nasa/DS/blob/733b2b269011882c6e1d159bf7c51037f652a405/fsw/src/ds_file.c#L968
+
+**To Reproduce**
+Produce the packet with move empty
+
+**Expected behavior**
+Only copy over if Pathname was set
+
+**System observed on:**
+Observed, also flagged by static analysis
+
+**Additional context**
+Introduced with file complete tlm packet updates - #39, so doesn't impact draco-rc2
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC","bug, draco-rc3",https://github.com/nasa/DS/issues/48
+"Fix #46 #48 #49 #50, Resolve multiple static analysis issues (includes bug fixes) and remove unnecessary UT handlers","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #46 
+- Fix #48 
+- Fix #49
+- Fix #50
+
+Also removes the custom defined DS_STRING_TERMINATOR since anything other than '\0' would break standard calls.
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+No longer possible to overflow the various string buffers.
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc3",https://github.com/nasa/DS/pull/47
+Buffer overflow possibility on command processing from `strcpy` use and in `DS_FileCreateDest` w/ bad size to `strncpy`,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Pathname from cmd used in strcpy, could overflow table Pathname if not terminated:
+https://github.com/nasa/DS/blob/9d0651c221fa8db1403063ca6cb0911ca29ab9d6/fsw/src/ds_cmds.c#L766
+
+If DestFile->Pathname isn't null terminated garbage could be added to the Workname which gets copied back to the file name:
+https://github.com/nasa/DS/blob/9d0651c221fa8db1403063ca6cb0911ca29ab9d6/fsw/src/ds_file.c#L588
+
+**To Reproduce**
+This was actually happening in the test, although the test overflowed the buffer to get this condition:
+https://github.com/nasa/DS/blob/9d0651c221fa8db1403063ca6cb0911ca29ab9d6/unit-test/ds_file_tests.c#L1038-L1042
+
+**Expected behavior**
+Only copy up to the size of the Pathname.
+
+**Code snips**
+See above
+
+**System observed on:**
+CI
+
+**Additional context**
+None
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC","bug, draco-rc3",https://github.com/nasa/DS/issues/46
+"Fix #44, Standardize UT table initialization","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #44 
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+Avoids random test failures based on uninitialized UT variables
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc3",https://github.com/nasa/DS/pull/45
+"Uninitialized variables in UT, potential test failure","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+The destination file table and filter table are not consistently initialized in unit tests.  Example where DestFileTable isn't fully initialized:
+https://github.com/nasa/DS/blob/9d0651c221fa8db1403063ca6cb0911ca29ab9d6/unit-test/ds_file_tests.c#L729-L740
+
+Observed test failure:
+```
+[BEGIN] 16 DS_FileCreateDest_Test_StringTerminate
+[ PASS] 16.001 ds_file_tests.c:740 - DS_FileCreateDest(FileIndex)
+[ FAIL] 16.002 ds_file_tests.c:743 - CallCount OS_OpenCreate() (1) == 0 (0)
+[  END] 16 DS_FileCreateDest_Test_StringTerminate TOTAL::2     PASS::1     FAIL::1     MIR::0     TSF::0     TTF::0     WARN::0
+```
+
+Assuming there's a combination of random file name components that pass, which then cause OS_OpenCreate to be called.
+
+**Describe the solution you'd like**
+Implement a consistent initialization scheme for commonly used elements
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","unit-test, draco-rc3",https://github.com/nasa/DS/issues/44
+"Fix #42, Remove stray UT printf","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #42 
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+Removed stray print in UT
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc3",https://github.com/nasa/DS/pull/43
+Remove stray printf in UT,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Leftover printf?
+https://github.com/nasa/DS/blob/237385bca3be9cf28324a9aa05f94801e9bfb4b8/unit-test/stubs/ds_app_stubs.c#L67
+
+**Describe the solution you'd like**
+Remove
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","unit-test, draco-rc3",https://github.com/nasa/DS/issues/42
+"Fix #40, Remove TODO and clean associated UT","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #40 
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc3",https://github.com/nasa/DS/pull/41
+Remove TODO and clean up associated UT,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+https://github.com/nasa/DS/blob/237385bca3be9cf28324a9aa05f94801e9bfb4b8/unit-test/ds_file_tests.c#L1175-L1215
+
+**Describe the solution you'd like**
+Clean up the test, remove TODO
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","unit-test, draco-rc3",https://github.com/nasa/DS/issues/40
+"Fix #37, Sends message when file complete","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+A clear and concise description of what the contribution is.
+- Fixes #37
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Build steps '...'
+1. Execution steps '...'
+
+**Expected behavior changes**
+Generate a message when a file gets completed.
+
+**System(s) tested on**
+ - Ubuntu 18.04
+
+**Additional context**
+None
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, ASRC Federal","CCB:Approved, draco-rc3",https://github.com/nasa/DS/pull/39
+Unit test currently dependent on default DS_TOTAL_FNAME_BUFSIZE definition,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Unit tests currently depend on the configuration define DS_TOTAL_FNAME_BUFSIZE being a specific value, any other setting will fail.
+
+Example:
+https://github.com/nasa/DS/blob/367d4125321b2c1f6ad32b39a764161b4478ee3c/unit-test/ds_file_tests.c#L1065-L1078
+
+**Describe the solution you'd like**
+Replace hard coded string values with logic to fill in the strings using the config size such that it meets the expected test conditions.  For example in this case calculate which each length should be and fill Pathname with repeating ""a"" and Basename with repeating ""b"" or similar.
+
+Pathname size could be (DS_TOTAL_FNAME_BUFSIZE - DS_SEQUENCE_DIGITS - 1)/2 
+Basename size then just DS_TOTAL_FNAME_BUFSIZE - DS_SEQUENCE_DIGITS - 1 - Pathname size
+
+Then you can skip the assert on checking if the size is right (since you set it explicitly), and it will work for a reasonable range of DS_TOTAL_FNAME_BUFSIZE.
+
+Apply this pattern for all the tests that depend on the current config size.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","unit-test, draco-rc4",https://github.com/nasa/DS/issues/38
+Send a message when new files are completed,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Send a message when new files are completed in DS.
+
+**Describe the solution you'd like**
+
+- Initialize and send a message using `CFE_MSG_INIT()` and `CFS_SB_TransmitMsg()` respectively. 
+- Define a new packet `DS_FileCompletePkt_t` for a single `DS_FileInfo_t` payload.
+- Define a new MsgID.
+- May need to include logic that will use ""movename"" when DS_MOVE_FILES == FALSE and use ""filename"" when DS_MOVES_FILES == TRUE. 
+- This feature will be implemented at the close of a file within the `FileCloseDest()` function.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Justin Figueroa, ASRC Federal
+","enhancement, draco-rc3",https://github.com/nasa/DS/issues/37
+"Fix #35, Removes max missed branches","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+A clear and concise description of what the contribution is.
+- Fixes #35
+
+**Testing performed**
+1. lcov --capture --rc lcov_branch_coverage=1 --directory build --output-file coverage_test.info
+2. lcov --rc lcov_branch_coverage=1 --add-tracefile coverage_base.info --add-tracefile coverage_test.info --output-file coverage_total.info
+3. genhtml coverage_total.info --branch-coverage --output-directory lcov
+
+**Expected behavior changes**
+100% code coverage
+
+**System(s) tested on**
+ - Ubuntu 18.04
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, ASRC Federal
+","continuous-integration, CCB:Approved, draco-rc3",https://github.com/nasa/DS/pull/36
+Update .github/workflows/unit-test-coverage.yml with no max missed lines or branches,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Max-missed-branches and max-missed-lines should be removed to indicate 100% unit test coverage.
+https://github.com/nasa/DS/blob/df4432c60aee812c45ec9585d33e83ac01099574/.github/workflows/unit-test-coverage.yml#L12-L13
+
+**Describe the solution you'd like**
+Remove the max-missed-branches and max-missed-lines from .github/workflows/unit-test-coverage.yml after https://github.com/nasa/DS/pull/34 and https://github.com/nasa/DS/pull/32 are merged and closed.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Justin Figueroa, ASRC Federal
+","coverage, draco-rc3",https://github.com/nasa/DS/issues/35
+"Fix #29, Fix #14, update code coverage,","Removes comments about DS_AppProcessHK_Test_SnprintfFail,
+Adds DS_CmdCloseAll_Test_CloseAll,
+Adds coverage of null filename with no ""/"" to DS_FileCloseDest
+Adds coverage of !OS_ObjectDefined 2nd check in DS_FileSetupWrite()
+Adds coverage of StringTerminator branch in DS_FileCreateDest_Test()
+Adds coverage of MaxPathnameLength branch in DS_FileCreatName_Test()
+Adds PathBaseSeqTooLarge in DS_FileCreatName_Test()
+Adds PathBaseSeqExtTooLarge in DS_FileCreatName_Test()
+Adds ExtensionZero in DS_FileCreatName_Test()
+
+**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+A clear and concise description of what the contribution is.
+- Fixes #14
+- Fixes #29
+
+**Testing performed**
+1. lcov --capture --rc lcov_branch_coverage=1 --directory build --output-file coverage_test.info
+2. lcov --rc lcov_branch_coverage=1 --add-tracefile coverage_base.info --add-tracefile coverage_test.info --output-file coverage_total.info
+3. genhtml coverage_total.info --branch-coverage --output-directory lcov
+
+**Expected behavior changes**
+100% code coverage
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+100% coverage depends on the resolution of https://github.com/nasa/DS/pull/32
+Afterwards, .github/workflows/unit-test-coverage.yml will need to be updated in this pull request to account for no missing branch coverage.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, ASRC Federal
+","coverage, CCB:Approved, draco-rc3",https://github.com/nasa/DS/pull/34
+"Fix #30, Updates DS_TableAddMsgID header comment","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #30
+
+**Testing performed**
+Manual inspection
+
+**Expected behavior changes**
+Header comment for DS_TableAddMsgID() includes language about DS_TableAddMsgID()
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+None
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, ASRC Federal
+","CCB:Approved, draco-rc3",https://github.com/nasa/DS/pull/33
+"Fix #31, Remove second loop condition using FilterPackets","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+A clear and concise description of what the contribution is.
+- Fixes #31
+
+**Testing performed**
+Unit Test coverage
+
+**Expected behavior changes**
+100% unit test coverage
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+None
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, ASRC Federal
+","CCB:Approved, draco-rc3",https://github.com/nasa/DS/pull/32
+DS_TableFindMsgId has an extraneous FilterPacket loop condition,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Line 1156 from the code snip below shows an extraneous loop condition `(FilterPackets != NULL)`. `FilterPackets` is dereferenced on line 1144. The false branch of the condition is unreachable.
+
+**To Reproduce**
+View code snip below.
+
+**Expected behavior**
+100% code coverage.
+
+**Code snips**
+https://github.com/nasa/DS/blob/df4432c60aee812c45ec9585d33e83ac01099574/fsw/src/ds_table.c#L1143-L1172
+
+**System observed on:**
+Ubuntu 18.04
+
+**Additional context**
+None
+
+**Reporter Info**
+Justin Figueroa, ASRC Federal
+","coverage, draco-rc3",https://github.com/nasa/DS/issues/31
+DS_TableAddMsgID Definition includes incorrect header comment,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+DS_TableAddMsgID() has the header comment for DS_TableFindMsgID().
+
+**To Reproduce**
+Steps to reproduce the behavior:
+View the code snip below.
+
+**Expected behavior**
+DS_TableAddMsgID() should have the header comment associated with adding message IDs.
+
+**Code snips**
+https://github.com/nasa/DS/blob/df4432c60aee812c45ec9585d33e83ac01099574/fsw/src/ds_table.c#L1084-L1090
+
+**System observed on:**
+Ubuntu 18.04
+
+**Additional context**
+None
+
+**Reporter Info**
+Justin Figueroa, ASRC Federal
+","good first issue, draco-rc3",https://github.com/nasa/DS/issues/30
+Unreachable branch in ds_file.c,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+`OS_ObjectIdDefined(FileStatus->FileHandle)` always remains true following `DS_FileCreateDest(FileIndex);` The If statement logic about `DS_FileWriteData()` is not needed to maintain the same behavior.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+The missing coverage of fsw/src/ds_file.c can be seen in [Unit Test and Coverage](https://github.com/nasa/DS/actions/runs/2518546062).
+
+**Expected behavior**
+100% coverage
+
+**Code snips**
+https://github.com/nasa/DS/blob/df4432c60aee812c45ec9585d33e83ac01099574/fsw/src/ds_file.c#L276
+https://github.com/nasa/DS/blob/df4432c60aee812c45ec9585d33e83ac01099574/fsw/src/ds_file.c#L321-L331
+
+**System observed on:**
+Continuous Integration
+
+**Additional context**
+None
+
+**Reporter Info**
+Justin Figueroa, ASRC Federal","coverage, draco-rc3",https://github.com/nasa/DS/issues/29
+"Fix #27, Updates CLA information for Apache 2.0","Deletes old DS CLAs, Removes language in contributing.md of app-specific CLA,
+Adds link to new CLAs in pull_request_template.md and contributing.md
+
+**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #27
+- Fixes https://github.com/nasa/cFS/issues/495
+
+**Testing performed**
+Visually inspected links in fork and in PR template.
+
+**Expected behavior changes**
+All references to CLAs should be updated to the cFS app CLA.
+
+**System(s) tested on**
+Google Chrome browser
+
+**Additional context**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, ASRC Federal","docs, CCB:Approved, draco-rc2",https://github.com/nasa/DS/pull/28
+Update CLA Information,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [cFS README.md file](https://github.com/nasa/cFS/blob/main/README.md) to see if the feature is in the major future work.
+* [ ] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Have new CLAs given the change in https://github.com/nasa/cFS/pull/491 with the combined CLA, 
+
+**Describe the solution you'd like**
+
+- [ ] Update the instructions in each app's Contributing.md
+- [ ] Delete old CLA pdfs
+- [ ] Update PR and Issue templates as needed
+
+
+**Describe alternatives you've considered**
+
+None
+
+**Additional context**
+None
+
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz
+","docs, draco-rc2",https://github.com/nasa/DS/issues/27
+"Fix #13 #17 #18 #19, Requirements updates","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #13 
+- Fix #17 
+- Fix #18 
+- Fix #19
+
+**Testing performed**
+NA, requirements updates only
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+NA
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/DS/pull/26
+"Reports ""desc test = OK"" in DS_FLT_TBL_EID even though no validation is being performed","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Initiated from the following comment: https://github.com/nasa/DS/issues/18#issuecomment-1132263963.  Basically just could imply there's some validation of the descriptor text going on, which there currently isn't.
+
+**Describe the solution you'd like**
+Could just remove that text, it's not added value.
+
+**Describe alternatives you've considered**
+Leave as-is
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/DS/issues/25
+"Fix #23, Remove CFE_PSP_MemSet and CFE_PSP_MemSet use","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #23
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just removes unnecessary dependencies
+
+**System(s) tested on**
+CI (unit test and bundle run cover it)
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/DS/pull/24
+Remove CFE_PSP_MemSet and CFE_PSP_MemCpy use on addresses in RAM,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/CS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Should just use memset/memcpy for addresses in RAM.  The PSP functions serve no use in this context.
+
+**Describe the solution you'd like**
+Replace with memset/memcpy.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, draco-rc2",https://github.com/nasa/DS/issues/23
+"Fix #21, Added codeql-build.yml","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+Describe the contribution
+A clear and concise description of what the contribution is.
+Added CodeQL to GitHub workflows
+Fix #21 
+
+Testing performed
+
+Pushed to branch
+Checked CodeQL ran successfully
+Expected behavior changes
+no impact to behavior
+
+System(s) tested on
+Browser
+
+Additional context
+Depends on https://github.com/nasa/cFS/pull/501 to run successfully
+
+Third party code
+If included, identify any third party code and provide text file of license
+
+Contributor Info - All information REQUIRED for consideration of pull request
+Full name and company/organization/center of all contributors (""Personal"" if individual work)
+
+Note CLA's apply to software contributions.","CCB:Approved, dependency, draco-rc2",https://github.com/nasa/DS/pull/22
+Add CodeQL to repository,"**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/DS/blob/main/CONTRIBUTING.md).
+* [X] I reviewed the [README file](https://github.com/nasa/DS/blob/main/README.md) to see if the feature is in the major future work.
+* [X] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Use CodeQL for continuous integration
+
+**Describe the solution you'd like**
+Add CodeQL workflow
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Add any other context about the feature request here.
+
+**Requester Info**
+Haven Carlson",draco-rc2,https://github.com/nasa/DS/issues/21
+"Fix #15 #16, Resolve static analysis warnings","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CF/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #15
+- Fix #16
+
+**Testing performed**
+CI + static analysis run
+
+**Expected behavior changes**
+None, just squashes static analysis warnings
+
+**System(s) tested on**
+ - Hardware: VM
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + apps + related static analysis resolution branches
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/DS/pull/20
+Fill in missing requirements rationale,"There's a handful of missing requirements rationale.  Add.
+
+Imported from GSFCCFS-2019","requirements, draco-rc2",https://github.com/nasa/DS/issues/19
+DS: DS9007 Failure,"DS appears to have been updated and Descriptor text, pathname, basename and extention are no longer verified as specified in DS9007
+
+Imported from GSFCCFS-1961","requirements, draco-rc2",https://github.com/nasa/DS/issues/18
+DS: DS9005 Failure,"DS appears to have been updated such that it no longer validates descriptor text, and always reports that it is OK.
+
+Imported from GSFCCFS-1960","requirements, draco-rc2",https://github.com/nasa/DS/issues/17
+Static analysis issues relative to flight code,"Handful of static analysis issues in the ""red"" identified (non-Style issues).  Need to resolve these.
+
+Filter: -file:elf -file:ut -file:cfe -file:os -file:cf_ -file:_lab_app.c !(significance:style)
+
+should resolve and/or disposition the higher ranked ones at minimum.
+
+Note license restricts publishing issues.
+
+Imported from GSFCCFS-1958","bug, draco-rc2",https://github.com/nasa/DS/issues/16
+Resolve static analysis issues relative to unit tests,"Many actual code issues (uninitialized variables, buffer overruns, etc) identified via static analysis in the unit tests.  All actual ""bugs"" should be resolved.
+
+Imported from GSFCCFS-1936","unit-test, draco-rc2",https://github.com/nasa/DS/issues/15
+"Revisit coverage, update to 100% code/branch or write issues where unreachable","**Failure: Coverage ds lines 99.6% functions 100.0% branches 97.7%**
+
+Other coverage failures: 
+Failure: Coverage cs lines 99.9% functions 100.0% branches 99.1%
+Failure: Coverage fm lines 93.8% functions 94.0% branches 89.1%
+Failure: Coverage hs lines 100.0% functions 100.0% branches 98.1%
+Failure: Coverage lc lines 99.6% functions 100.0% branches 94.3%
+Failure: Coverage md lines 98.4% functions 100.0% branches 96.7%
+Failure: Coverage sc lines 99.9% functions 100.0% branches 99.0%
+
+Fix where possible, elsewise Issues should document all uncovered lines/branches and disposition (why it's ok as-is)
+
+Imported from GSFCCFS-1935","coverage, unit-test, draco-rc3",https://github.com/nasa/DS/issues/14
+App Requirement Issues,"1. LC3002.1.1 & LC3002.2.1 - Don’t see where event filter is able to be specified in Action Point or Watchpoint definition tables.
+2.  DS8000 – DS HK packet 
+3.  FM4000 – FM HK packet
+4. DS3000 - Requirement Incomplete
+
+
+Imported from GSFCCFS-1917","requirements, draco-rc2",https://github.com/nasa/DS/issues/13
+Apps should use CFE_MSG_PTR macro instead of cast or local unwrapping,"Apps typically cast to a CFE_MSG_Message_t or use *.Msg.  Better to use abstracted CFE_MSG_PTR. NOTE - Not backwards compatible with Caelum so recommend not addressing in Draco.
+
+Imported from GSFCCFS-1900",enhancement,https://github.com/nasa/DS/issues/12
+DS Hash logic comments only applicable to V1 Message IDs,"If the V1 Message ID isn't used, theoretically the hash could collide up to the entire length of the linked list.
+
+At minimum the comments should reflect the possibility for more hash collisions, but might be worth reconsidering implementation or reporting collision depth.
+
+Imported from GSFCCFS-1880",docs,https://github.com/nasa/DS/issues/11
+DS and FM use the same default subtype,"DS and FM both use ""12345"" as the default file subtype
+
+ds/fsw/platform_inc/ds_platform_cfg.h:#define DS_FILE_HDR_SUBTYPE 12345
+fm/fsw/platform_inc/fm_platform_cfg.h:#define FM_DIR_LIST_FILE_SUBTYPE 12345
+
+Imported from GSFCCFS-1735",enhancement,https://github.com/nasa/DS/issues/10
+DS could limit the maximum number of files,"The DS file table could be modified to (optionally) enforce a maximum number of files for each type of file.  This could be useful for missions with file space constraints.
+
+Currently DS will keep creating files until space is entirely consumed.
+
+Imported from GSFCCFS-1173",enhancement,https://github.com/nasa/DS/issues/9
+DS should use CFE_FS_InitHeader,"DS initializes and populates the CFE FS header itself (see ds_file.c, lines 273-278)
+This requires DS to understand the details of the header structure and could break if that structure changes.
+It should instead use the CFE_FS_InitHeader function which is designed to do exactly this.
+
+
+Imported from GSFCCFS-1018","enhancement, draco-rc4",https://github.com/nasa/DS/issues/8
+ds should (optionally) add a timestamp for each packet stored," CCSDS telemetry packets include a timestamp in the CCSDS headers. Command packets, on the other hand, do not. Also, if CCSDS timestamps are generated by something other than the local CPU, the timestamp may reflect when the packet was generated but not when the packet was received/stored by DS. Thirdly, if the CCSDS timestamp is generated using a different clock that is not in sync, the timestamps may not coincide. This is particularly important in multi-CPU environments, such as when cFS busses are connected via SBN.
+
+This will particularly help with replay using the ds_replay application as the timestamps will accurately reflect when DS received the packets and will be in the correct order.
+
+I suggest adding, for each packet stored in DS, a DS packet header containing a timestamp. This header could also include sequence count, message length (although easy to compute using the CCSDS header, a DS-generated length would make for easier access), byte position in file, or other fields.
+
+Of course, all of this adds to the amount of data stored in DS files, so all should be optional. The DS file header should include the necessary metadata to determine what the DS packet header will contain.
+
+Imported from GSFCCFS-766",enhancement,https://github.com/nasa/DS/issues/7
+DS file header should include additional metadata," DS currently stores a number of fields in the DS file header (DS_FileHeader_t), namely the time the file was closed, the file name, the file table index, and the file name type.
+
+When reading DS-created files on other platforms with other configurations, it is possible to tease apart platform/mission-specific information but it would be easier to store the configuration in the header for easier analysis of DS files.
+
+Additional information should include, at least, the CCSDS time format (CFE_SB_PACKET_TIME_FORMAT), the CCSDS secondary header (CC, timestamp) endian-ness, byte alignment, even the DS file header endian-ness for the close timestamp.
+
+Also, as this will break compatibility with any DS-generated files from previous versions, including a DS header format version # should be included.
+
+Imported from GSFCCFS-759",enhancement,https://github.com/nasa/DS/issues/6
+DS should add a per-message and/or per-file checksum,"Files generated by DS on a spacecraft may be subject to SEU. As such, DS should add checksums to messages stored in the DS file, and/or store a checksum for the entire DS file at close time.
+
+Imported from GSFCCFS-752",enhancement,https://github.com/nasa/DS/issues/5
+DS file header values should be big-endian,"As with CCSDS, which is standardizing on big-endian for message headers, the fields in the DS file header (close time, FileTableIndex, FileNameType) should be stored in big-endian order. (Should the same be true for the CFS file header?)
+
+(originally submitted to babelfish on 10/24/2016)
+
+Imported from GSFCCFS-737",enhancement,https://github.com/nasa/DS/issues/4
+error: unknown type name 'CFE_SB_CmdHdr_t',"I want to believe that I am missing a step in the documentation somewhere, but when I bring DS into my apps folder, I update my MISSION_GLOBAL_APPLIST with DS and attempt to build and get this error amongst others.
+
+/cFS/apps/DS/fsw/src/ds_msg.h:47:5: error: unknown type name ‘CFE_SB_CmdHdr_t’
+
+Is there a script or tool that should be running that I am unaware of?
+
+The training documentation here does not imply any other steps in Exercise 7 which is similar.
+https://ntrs.nasa.gov/citations/20205000691
+
+
+",bug,https://github.com/nasa/DS/issues/3
+Conditional compile macro uses wrong style of TRUE,"In ds_file.c  the line reading
+    #if (DS_MOVE_FILES == TRUE)
+causes the subsequent section of code to always compile if TRUE is not defined, and if DS_MOVE_FILES is defined; and DS_MOVE_FILES is required to be defined by compiler directives in ds_verify.c. Throughout the rest of ds code, the lower-case C keyword 'true' is used, i.e '#if (DS_MOVE_FILES == true ).
+When DS_MOVE_FILES is not set to 'true' in ds_platform_cfg.h, the build fails because 'Movename' does not get defined in ds_table.h, and the code section in ds_file.c needs it to be defined.",bug,https://github.com/nasa/DS/issues/2
+Should use CFE_FS_InitHeader instead of manually populating,"DS initializes and populates the CFE FS header itself (see [ds_file.c, lines 273-278](https://github.com/nasa/DS/blob/master/fsw/src/ds_file.c#L273-L278))
+
+This requires DS to understand the details of the header structure and could break if that structure changes.
+
+It should instead use the `CFE_FS_InitHeader` function which is designed to do exactly this.",duplicate,https://github.com/nasa/DS/issues/1

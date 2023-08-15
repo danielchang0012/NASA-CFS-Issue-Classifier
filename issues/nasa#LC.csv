@@ -1,0 +1,1643 @@
+Title,Body,Labels,URL
+"Fix #92, Refactor `LC_CreateTaskCDS()` to remove multiple returns","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #92 
+  - Simple refactor removes multiple returns from `LC_CreateTaskCDS()`
+
+**Testing performed**
+GitHub CI actions all passing successfully (incl. Build + Run, Unit/Coverage Tests etc.).
+
+**Expected behavior changes**
+No change to logic/behavior
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/LC/pull/94
+"Fix #15, Refactor `LC_SendHkCmd()` to reduce `switch` duplication","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #15
+  - Refactors `LC_HousekeepingReq()` (previously named `LC_SampleAPReq()`) to combine 4 `switch` blocks into 1 for the watch results, and 4 `switch` blocks into 2 for the action points.
+  - Minor update to `LC_SampleAPReq()` to reduce nesting a little (early continue in `for` loop)
+	  - The only other thing I can see to simplify `LC_SampleAPReq` is to add an early return to the first `if` condition, or to combine the 1st `if` condition with the 2nd (which results in a triple if-condition which is less clear than the current implementation) - it did not seem worth making these changes.
+
+**Testing performed**
+GitHub CI actions all passing successfully (incl. Build + Run, Unit/Coverage Tests etc.).
+
+**Expected behavior changes**
+No change to behavior.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","enhancement, CCB:Approved, Equuleus-rc1",https://github.com/nasa/LC/pull/93
+Refactor multiple return statements in `LC_CreateTaskCDS()`,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+- Issue https://github.com/nasa/LC/issues/36 was partially addressed with PR:
+  - https://github.com/nasa/LC/pull/68
+Opening this issue to address the 2nd half - refactoring the multiple returns out of `LC_CreateTaskCDS()` and simplify its control flow.
+
+**Code snips**
+https://github.com/nasa/LC/blob/45f8e87dc985d04424cad67f0b6e556efa4ce114/fsw/src/lc_app.c#L734-L853
+
+**Expected behavior**
+Single entry/exit point.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/LC/issues/92
+"Fix #90, Convert `int32` return codes and variables to `CFE_Status_t`","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #90
+  - most `int32` return codes converted over to `CFE_Status_t`
+  - `int32` `status`/`return` variables holding cFE return codes converted to `CFE_Status_t`
+  - removed the `Status` variable from `LC_AppPipe()` - it was not actually used - the function always returns `CFE_SUCCESS` as currently implemented
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+
+**Expected behavior changes**
+No change to behavior.
+`CFE_Status_t` is more expressive and improves consistency with cFE/cFS.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/LC/pull/91
+LC `int32` return codes and variables should be converted to `CFE_Status_t`,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+LC has quite a few return codes (as well as local `status`/`return` variables which hold CFE return codes) that can be easily converted over to the `CFE_Status_t` typedef.
+
+**Expected behavior**
+Use the more expressive `CFE_Status_t` and improve consistency with cFS.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",Equuleus-rc1,https://github.com/nasa/LC/issues/90
+"Fix #86, split configuration","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Use the ""generate_config_includefile"" for all headers that can come from alternate source (e.g. generated or mission-supplied).
+
+Fixes #86
+
+**Testing performed**
+Build and run LC in variety of configurations
+
+**Expected behavior changes**
+Better organization, more modular
+
+**System(s) tested on**
+Debian
+
+**Additional context**
+See nasa/HS#87 for reference - this is basically the same change applied to LC, making it consistent.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/LC/pull/89
+"Fix #82, use separate dispatcher for messages","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Isolate the message verification and dispatch from the general message processing.  Functions in the ""cmds"" file now strictly handle the command content, and do not get involved in general validation.
+
+Fixes #82
+
+**Testing performed**
+Build and run CFE with LC, sanity check operation
+
+**Expected behavior changes**
+No impact, just improves source unit organization
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/LC/pull/88
+"Fix #81, use payload sub-structure","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Put all cmd/tlm message content in a sub-structure named ""Payload""
+
+Fixes #81
+
+**Testing performed**
+Build and run CFE with LC, sanity check
+
+**Expected behavior changes**
+No impact
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/LC/pull/87
+"Split ""platform_cfg"" into external and internal components","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/LC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Currently, all configurable items for the app are contained in a single `lc_platform_cfg.h` header file.  This contains macro definitions that affect both the internal operation of the application (such as operational limits) as well as the external interface in CMD/TLM and table files.
+
+**Describe the solution you'd like**
+Split this header into two components, one that contains only public items (i.e. those that affect CMD/TLM/Table definitions) and one that contains private/internal items that are only used within the local application code and do not affect the interface.
+
+**Additional context**
+Mainly a scoping concern, separate files for separate scopes.  These files could also be generated in the future, but scope still needs to be consistent.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",Equuleus-rc1,https://github.com/nasa/LC/issues/86
+"Fix #19, Use CFE_MSG_PTR macro and other name updates","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Follow naming conventions for cmd/tlm data structures and use provided macros where appropriate.
+
+Fixes #19
+
+**Testing performed**
+Build and sanity check LC, run all tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.","CCB:Approved, Equuleus-rc1",https://github.com/nasa/LC/pull/85
+"Fix #83, use generated stubs","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Separate the global variables into separate stub source units, then re-run the stub generator for all internal APIs. The committed result here is the exact output of the tool, unmodified.
+
+Fixes #83
+
+**Testing performed**
+Build and run LC with all tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.","CCB:Approved, Equuleus-rc1",https://github.com/nasa/LC/pull/84
+Use Generated Stubs,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/LC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+LC unit testing currently uses a set of stubs for its internal units that are not generated by the tool
+
+**Describe the solution you'd like**
+Use the generated stubs directly whenever possible, as this makes future maintenance easier - when an API changes, just re-run the generator tool to update the stubs.
+
+**Additional context**
+This requires some additional separation of items - global variable stubs should be in a separate compilation unit, as the tool does not generate these.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",Equuleus-rc1,https://github.com/nasa/LC/issues/83
+Apps should check/verify msg BEFORE calling handler,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+This remains an area with coding pattern discrepancies between CFE core and CFS apps, and also different between CFS apps to some degree as well. 
+
+The CFE core and sample app (which is supposed to be the example of ""best practice"") do validation on the message before calling the handler.  For example:
+```
+        case SAMPLE_APP_NOOP_CC:
+            if (SAMPLE_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(SAMPLE_APP_NoopCmd_t)))
+            {
+                SAMPLE_APP_Noop((SAMPLE_APP_NoopCmd_t *)SBBufPtr);
+            }
+```
+
+This is different from LC, which does a similar check, but done inside each handler, for example:
+
+https://github.com/nasa/LC/blob/2f177ae83a24445d6ab6997682a2ffa71dacbd31/fsw/src/lc_cmds.c#L143-L150
+
+**Describe the solution you'd like**
+CFS Apps should follow the best practices/patterns set forth in the framework code.  (there are reasons for the pattern being recommended practice)
+
+**Additional context**
+The pattern recommended in the framework (checking before calling, as done in sample_app) has several advantages:
+
+1. Each command handler function has a unique type-safe prototype, that cannot be interchanged with another handler without triggering a type mismatch compiler error.
+2. All typecasting/conversions are confined to one place, and it is nearby to the place that the verification is done - which eases maintainability because check and conversion are all in close proximity and any mismatches will be more visible.
+3. It spreads out the cyclomatic complexity.  In the non-recommended pattern, there is a case where the length check fails, and the entire handler is essentially skipped.  This adds to the cyclomatic complexity of every handler.  In the recommended pattern, those checks are done prior to the invocation of the handler, so the handler can focus solely on its intended purpose - doing the command itself.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",Equuleus-rc1,https://github.com/nasa/LC/issues/82
+"All CMD/TLM message should put content in a ""Payload"" sub-structure","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+To match the patterns used in CFE and other modules, all CMD/TLM message definitions should put the content (non-header) parts into a separate struct called ""Payload"".
+
+**Describe the solution you'd like**
+Separate message content into a sub structure called ""Payload"".
+
+**Additional context**
+This is benefit to tooling that can use the presence of this field to identify where the actual content starts (e.g. something like `offsetof(MsgType, Payload)` would work and be correct, as opposed to checking `sizeof(CFE_MSG_CommandHeader_t)` which may not actually reflect where the content starts due to possible compiler-added padding between them).
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",Equuleus-rc1,https://github.com/nasa/LC/issues/81
+"Fix #79, Combine consecutive, mutually-exclusive status checks","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #79 
+  - Consecutive, mutually-exclusive status checks combined into an `if`/`else`.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+No change to logic.
+Single evaluation instead of twice in this if block now.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/LC/pull/80
+"Combine consecutive, mutually-exclusive status checks","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Mutually exclusive logic in these consecutive status checks in `LC_CreateResultTables()`.
+
+**Code snips**
+https://github.com/nasa/LC/blob/2f177ae83a24445d6ab6997682a2ffa71dacbd31/fsw/src/lc_app.c#L513-L519
+
+**Expected behavior**
+Combine into an `if`/`else`.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",Equuleus-rc1,https://github.com/nasa/LC/issues/79
+"Fix #77, Add break to default case of switch in LC_VerifyMsgLength","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #77 
+  - Adds a `break` statement to the `default` case of the `switch` block.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+Purely a style/guidelines issue for consistency and future maintenance.
+No change to logic (the `default` case would fall through to the bottom and exit the switch block even without a `break` statement).
+Guidelines and cFS consistency dictate that all switch cases (including `default`) should be terminated by an unconditional `break` statement.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/LC/pull/78
+Add break; for switch default case in LC_VerifyMsgLength(),"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+`default` case of the `switch` block in `LC_VerifyMsgLength()` is missing a `break;`.
+Purely a style/guidelines issue for consistency and future maintenance.
+
+**Code snips**
+https://github.com/nasa/LC/blob/2f177ae83a24445d6ab6997682a2ffa71dacbd31/fsw/src/lc_utils.c#L83-L92
+
+**Expected behavior**
+All switch cases (including `default`) should be terminated by an unconditional `break` statement.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",Equuleus-rc1,https://github.com/nasa/LC/issues/77
+Add LC_SAMPLE_AP_ALL_MID to use a cmd w/ no parameters to process all watchpoints,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/LC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+LC_SAMPLE_AP_MID is out-of-family with *most* MIDs for doing simple processing (like SEND_HK, etc) in that it has parameters.  This is fine until you try to send it from something like sch_lab which doesn't support command parameters.
+
+**Describe the solution you'd like**
+Add a simple LC_SAMPLE_AP_ALL_MID w/ no parameters (size 8)
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/LC/issues/76
+"Fix #69, simplify table defs","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Remove use of compiler extension flag, simplify definition
+
+Fixes #69
+
+**Testing performed**
+Build and run all tests
+
+**Expected behavior changes**
+No impact
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.","CCB:Approved, Equuleus-rc1",https://github.com/nasa/LC/pull/75
+"Fix #70, update global symbol names for consistency","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+This is a simple search and replace of nonconformant symbol names.
+
+Mapping from the old symbol name to the new symbol name is put behind a deprecated compatibility switch
+
+Fixes #70
+
+**Testing performed**
+Build and run all unit tests
+
+**Expected behavior changes**
+None - just a simple symbol rename
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/LC/pull/74
+"Fix #72, correct use of union type","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Use ISO C standard value conversion, do not rely on platform-dependent union access.
+
+Fixes #72
+
+**Testing performed**
+Build and run all tests, confirm `LC_GetSizedWPData()` call is still working as expected.
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Debian
+
+**Additional context**
+Assigning (by value) between signed and unsigned values is defined by ISO C and results are specified.  In contrast, writing to one union member and reading from another does not have specified results (although on a twos complement machine with typical implementation it happens to produce the same result...)
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/LC/pull/73
+Improper use of unions in LC_GetSizedWPData,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+The `LC_GetSizedWPData` function is not using the `LC_MultiType_t` union properly.  It is writing to one member and then reading from another, different member of the same union.  This is ""type punning"" and may not work in an optimized build.
+
+The new version of CppCheck reports this issue.
+
+**To Reproduce**
+Run Cppcheck workflow to see issue.
+No known way to actually produce a failure though, as most platforms will behave as the code expects it to, its just not guaranteed to work.
+
+**Expected behavior**
+Should not read from a different union member than was written to.
+
+**Code snips**
+This writes to `Unsigned8` but then reads from `Signed8`:
+https://github.com/nasa/LC/blob/f49a965a329dd853bd2fdd9ad3c0137d736154a0/fsw/src/lc_watch.c#L854-L855
+
+Additionally, Many cases write to `Signed32` but only `Unsigned32` is read here at the end:
+https://github.com/nasa/LC/blob/f49a965a329dd853bd2fdd9ad3c0137d736154a0/fsw/src/lc_watch.c#L922
+
+**System observed on:**
+N/A
+
+**Additional context**
+This code does work as intended but is not necessarily safe/portable across platforms in its current form, particularly when optimization is enabled.
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+",Equuleus-rc1,https://github.com/nasa/LC/issues/72
+"Fix #57, NaN check","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Use C99 standard math.h macros to check for NaN and/or infinity.
+
+Note that in addition to being platform independent, in an optimized build this will likely invoke a much more efficient CPU instruction to do the test as opposed to the bit-masking that was done before.
+
+Fixes #57
+
+**Testing performed**
+Build and run all tests
+
+**Expected behavior changes**
+No impact to behavior.
+
+**System(s) tested on**
+Debian
+
+**Additional context**
+C99 provides standardized macros for these NaN/Infinity checks in `math.h`
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/LC/pull/71
+Correct naming convention inconsistencies,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/LC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+The following identifiers used in LC do not correctly follow the naming conventions for CFE/CFS symbols:
+ - `LC_SET_AP_PERMOFF_CC`:  should be `LC_SET_AP_PERM_OFF_CC`, because the CamelCase version is `LC_SetAPPermOff_t`, thus ""Perm"" and ""Off"" are separate words.
+ -  `LC_ACTION_NOT_USED`: should be `LC_APSTATE_ACTION_NOT_USED`, because its used as an enum and the other labels all start with `LC_APSTATE` prefix
+ - `LC_WATCH_NOT_USED`: should be `LC_DATA_WATCH_NOT_USED`, for the same reason as LC_ACTION above.
+ - `LC_NO_OPER`: should be `LC_OPER_NONE`, same reason
+ - `LC_NO_BITMASK`: should be `LC_BITMASK_NONE`
+
+**Describe the solution you'd like**
+Rename these symbols for consistency.
+
+**Additional context**
+These name mismatches become relevant when using generated header files.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",Equuleus-rc1,https://github.com/nasa/LC/issues/70
+Remove use of compiler extension in LC table file definitions,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/LC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+The `__attribute__((__used__))` is a GNU compiler extension flag and such constructs should be avoided in portable code.
+
+**Describe the solution you'd like**
+Remove
+
+**Additional context**
+This flag is only in there to avoid a warning due to the use of `static` - but this object should not be static to begin with, then everything works without the use of special flags.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+",Equuleus-rc1,https://github.com/nasa/LC/issues/69
+"Fix #36, Refactor LC_TableInit to remove multiple returns","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #36 (partially - will separate out `LC_CreateTaskCDS()` into a new issue to tackle separately).
+  - Multiple returns have been removed from `LC_TableInit()`.
+  - There is now a single exit from the function.
+
+**Testing performed**
+GitHub CI Build + Run, Unit Tests all passing successfully.
+
+**Expected behavior changes**
+Essentially no change to logic.
+Previous early `return` exit points will now fail all the following tests for `if (Result == CFE_SUCCESS)` and fall through to the end of the function, where `Result` is returned.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","enhancement, CCB:Approved, Equuleus-rc1",https://github.com/nasa/LC/pull/68
+"Fix #66, correct buffer overflows in UT","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+The default size of the ""EventText"" string is 32, but the unit test had hard coded string sizes of 50 chars, which will overflow the buffer.
+
+Use ""sizeof"" operator to adjust to the actual size of the destination to correct the issue.
+
+Fixes #66
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Build steps '...'
+1. Execution steps '...'
+
+**Expected behavior changes**
+No more buffer overflow
+
+**System(s) tested on**
+Debian Bookworm
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+
+","CCB:Approved, draco-rc4",https://github.com/nasa/LC/pull/67
+Buffer overflow in unit tests when using default config,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+The unit test code sets the `EventText` member with a call to strncpy and a hardcoded size here:
+https://github.com/nasa/LC/blob/779b903faef553299d8130aded0b9f5133ffa8c5/unit-test/lc_action_tests.c#L233
+
+However in the default platform config the size is only 32:
+https://github.com/nasa/LC/blob/779b903faef553299d8130aded0b9f5133ffa8c5/fsw/inc/lc_platform_cfg.h#L228
+
+**To Reproduce**
+Build and run using default/out-of-box config.
+
+**Expected behavior**
+Example configuration should not trigger buffer overflow
+
+**Additional context**
+Consider using `sizeof()` operator here, to adapt the `strncpy` call to the real size of the target buffer.
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+","bug, draco-rc4",https://github.com/nasa/LC/issues/66
+"Fix #64, Replace quotes with angle brackets in /inc","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+
+**Describe the contribution**
+Fixes #64   - replace quotes with angle brackets in /inc files.
+
+**Testing performed**
+1. Performed build verification testing
+2. CI
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Dan Knutsen
+NASA Goddard
+","CCB:Approved, draco-rc4",https://github.com/nasa/LC/pull/65
+Replace quotes with angle brackets in #include statements within /inc,"Describe the solution you'd like
+Quotes should be replaced with angle brackets in #include statements that reside in the /inc location. This will ensure that the preprocessor selects the files pre-designated to override the default files contained within the open source cFS build release - as opposed to selecting those located in the same directory.
+
+Requester Info
+Dan Knutsen
+NASA Goddard",draco-rc4,https://github.com/nasa/LC/issues/64
+"Fix #62, Make lc_tbl.h public","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+Fixes #62  - makes lc_tbl.h public.
+
+**Testing performed**
+CI
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Dan Knutsen
+NASA Goddard
+","CCB:Approved, draco-rc4",https://github.com/nasa/LC/pull/63
+Make lc_tbl.h public,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/LC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+lc_tbl.h defines macros used in table generation and should be made public.
+
+**Requester Info**
+Dan Knutsen
+NASA Goddard",draco-rc4,https://github.com/nasa/LC/issues/62
+"Fix #60, Adds fsw/src to app target","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+-Fixes #55
+
+**Testing performed**
+make install
+
+**Expected behavior changes**
+Successful cert_testbed build
+
+**System(s) tested on**
+- Ubuntu 20.04
+
+**Additional context**
+N/A
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, Vantage Systems
+","invalid, CCB:Ignore",https://github.com/nasa/LC/pull/61
+Add fsw/src to app target,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Cannot build cert_testbed. `target_include_directories(xx PUBLIC fsw/src)` is needed to build tables, etc. Revise CMakeLists.txt
+
+**To Reproduce**
+Build in cert_testbed
+
+**Expected behavior**
+Error-free build
+
+**Code snips**
+If applicable, add references to the software.
+
+**System observed on:**
+ - Ubuntu 20.04
+
+**Additional context**
+N/A
+
+**Reporter Info**
+Justin Figueroa, Vantage Systems
+",invalid,https://github.com/nasa/LC/issues/60
+"Fix #58, Deletes duplicate header files in src","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #58 
+
+**Testing performed**
+lcov
+make install
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+Ubuntu 22.04
+
+**Additional context**
+N/A
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, Vantage Systems
+","CCB:FastTrack, draco-rc4",https://github.com/nasa/LC/pull/59
+Delete duplicate headers files in src,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+There are duplicate files ""fsw/src/lc_msg.h"" and ""fsw/src/lc_msgdefs.h"" that need to be removed.
+
+**To Reproduce**
+View fsw directory
+
+**Expected behavior**
+Single file of each
+
+**Code snips**
+If applicable, add references to the software.
+
+**System observed on:**
+ - Ubuntu 22.04
+ 
+**Additional context**
+Bug introduced in https://github.com/nasa/LC/pull/56
+
+**Reporter Info**
+Justin Figueroa, Vantage Systems
+",draco-rc4,https://github.com/nasa/LC/issues/58
+"LC ""IsNAN"" check relies on platform-defined behavior (non-standard)","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+With floating point watchpoints, the watch point checking code looks for the IEEE754 not-a-number (NaN) value before doing other comparisons.
+
+However, the method used for checking this involves accessing the `float` value as a `uint32`, and checking the bits per IEEE754.
+
+This type of action is not standardized by the C language, and results of doing this are platform-defined.
+
+**To Reproduce**
+N/A (it does work as intended on most compilers, it is just not standard or portable ""by the book"")
+
+**Expected behavior**
+Should only rely on behavior that is specified by ISO C.
+
+Regarding NaN, the C standard does guarantee that a NaN is never equal to any other value, even itself.  Therefore, the generally recommended, portable way to check for NaN is by checking that, e.g.:
+
+```
+if (value == value)
+{
+    /* value is valid */
+}
+else
+{
+    /* value is NaN */
+}
+```
+
+**Code snips**
+Code at issue is here: 
+https://github.com/nasa/LC/blob/358fc484e93d0c2c63e4a2faf1d61883962f0c0b/fsw/src/lc_watch.c#L1071-L1097
+
+**System observed on:**
+Code Inspection when doing EDS implementation
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+",bug,https://github.com/nasa/LC/issues/57
+"Fix #55, Moves interface definition files to inc","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #55
+
+**Testing performed**
+make install
+lcov
+
+**Expected behavior changes**
+No expected behavior change.
+
+**System(s) tested on**
+-Ubuntu 18.04
+
+**Additional context**
+N/A
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+-Justin Figueroa, Vantage
+","CCB:Approved, draco-rc4",https://github.com/nasa/LC/pull/56
+"Move interface definition files to ""inc"" location","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/LC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+The interface definition files of all open source apps currently exist in the ""src"" directory.
+
+**Describe the solution you'd like**
+Create an ""inc"" dir to go with the ""src"" dir.  Move the interface definitions into this location: ""_msg.h"", ""_msgdefs.h"", ""_tbldefs.h"", and ""_events.h"". Consider moving header files in both ""platform_inc"" and ""mission_inc"" to ""inc""
+
+**Describe alternatives you've considered**
+Leaving as is.
+
+**Additional context**
+N/A
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+",draco-rc4,https://github.com/nasa/LC/issues/55
+"Fix #53, Remove stray refs to old event type constants","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #53
+  - Stray references to the old event type constants have been updated to the new enum 
+constants.
+
+Alternative to updating these is to delete these (commented-out) lines.
+
+Either way, the references to the old event types should not remain, as if any of these tests are _un_-commented-out it will cause a build failure.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",CCB:Approved,https://github.com/nasa/LC/pull/54
+Remove remaining stray references to old event types,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+While updating event type constants in https://github.com/nasa/cFE/pull/2221 it was noticed that a few stray uses of the old types (`CFE_EVS_ERROR`, `CFE_EVS_INFORMATION` etc.) were still present in LC's commented-out tests.
+
+**Expected behavior**
+Update to new event type constants or remove these commented-out tests.
+
+**Code snips**
+https://github.com/nasa/LC/blob/358fc484e93d0c2c63e4a2faf1d61883962f0c0b/unit-test/lc_app_tests.c#L470
+https://github.com/nasa/LC/blob/358fc484e93d0c2c63e4a2faf1d61883962f0c0b/unit-test/lc_app_tests.c#L283
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",enhancement,https://github.com/nasa/LC/issues/53
+"Fix #51, externalize symbols in lc_test_utils.h","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Make the table objects in this header ""extern"" and instantiate them in the C file instead.  This solves the duplicate symbol linker errors.
+
+Fixes #51
+
+**Testing performed**
+Build and run all tests
+
+**Expected behavior changes**
+Tests will build, link, and execute successfully
+
+**System(s) tested on**
+Ubuntu 22.04
+
+**Additional context**
+Will submit a separate issue to consider adding `-fno-common` to the CFS CI workflows, as it masks this issue in Ubuntu 20.04.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, draco-rc4",https://github.com/nasa/LC/pull/52
+Items instantiated in header causes duplicate definitions and link errors,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+The unit test header file `lc_test_utils.h` instantiates objects directly in the header file, which breaks if it is ever included in more than one C file.
+
+**To Reproduce**
+Build LC with unit tests enabled, get lots of linker errors:
+
+```
+usr/bin/ld: libcoverage-lc_internal-stubs.a(lc_test_utils.c.o):/home/joe/code/cfecfs/github/apps/lc/unit-test/utilities/lc_test_utils.h:39: multiple definition of `WDTable'; CMakeFiles/coverage-lc-lc_action-testrunner.dir/lc_action_tests.c.o:/home/joe/code/cfecfs/github/apps/lc/unit-test/utilities/lc_test_utils.h:39: first defined here
+/usr/bin/ld: libcoverage-lc_internal-stubs.a(lc_test_utils.c.o):/home/joe/code/cfecfs/github/apps/lc/unit-test/utilities/lc_test_utils.h:40: multiple definition of `ADTable'; CMakeFiles/coverage-lc-lc_action-testrunner.dir/lc_action_tests.c.o:/home/joe/code/cfecfs/github/apps/lc/unit-test/utilities/lc_test_utils.h:40: first defined here
+```
+
+**Expected behavior**
+Build should work?
+
+**Code snips**
+https://github.com/nasa/LC/blob/543cf6b8906cd976d33f14d3907567d6bc8c8cd9/unit-test/utilities/lc_test_utils.h#L38-L43
+
+**System observed on:**
+Ubuntu 
+
+**Additional context**
+I was just trying to build LC ""out of the box"" - not modified in any way - and it failed badly.  Not sure how this ever built or passed any validation testing with this the way it was.
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+","bug, draco-rc4",https://github.com/nasa/LC/issues/51
+"Fix #49, Move variables declared mid-function to the top","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #49
+  - All of the variables that were declared mid-function were moved to the top of their respective functions.
+
+In LC these were all in test code, nevertheless consistency is worth applying across the board.
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+
+**Expected behavior changes**
+All variables declared top of function as per cFS conventions/guidelines.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",CCB:Approved,https://github.com/nasa/LC/pull/50
+Variables declared mid-function,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+A few cases of variables declared mid-function left here.
+Copy of https://github.com/nasa/CF/issues/109
+
+**Expected behavior**
+All variables should be declared at the top of the function.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",enhancement,https://github.com/nasa/LC/issues/49
+"Fix #16, Convert LC state macros to enums","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #16
+  - The LC state and Action Point state `#define` macros have been converted to enums.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+No impact on behavior. Enums improve type-safety and ease debugging.
+
+**Contributor Info**
+Avi @thnkslprpt",,https://github.com/nasa/LC/pull/48
+"Fix #14, Refactor LC_SampleAPs to remove extraneous if statement","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #14 
+  - `LC_SampleAPs()` has been refactored to remove the extraneous `if` statement.
+  - Action points are still sampled in the same way, and if `StartIndex == EndIndex`, the `for` loop will only run once (i.e. the same as before).
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+Intent of the code remains basically unchanged, although the logic has changed slightly.
+Main change is that `CurrentAPState` is checked as valid before any sampling of action points, whereas previously this was only checked in the single action point sample condition - i.e. `if (StartIndex == EndIndex)`
+
+**Contributor Info**
+Avi @thnkslprpt","enhancement, CCB:Approved",https://github.com/nasa/LC/pull/47
+"Fix #45, Apply consistent Event ID names to common events","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #45 
+  - Consistent event IDs have been applied to the inconsistent cases to align them with a common Event ID naming convention.
+
+**Testing performed**
+Only GitHub CI actions.
+
+**Expected behavior changes**
+No impact on code behavior (no logic changes).
+Consistent Event ID names for the events which are common to all/most cFS components and apps will improve consistency and ease make code review/debugging easier.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/LC/pull/46
+Inconsistent Event ID naming,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/cFE/issues/2175
+After finding that there were 9 different Event IDs to indicate the same thing (Invalid Message ID) in https://github.com/nasa/CF/issues/262, I scrubbed the other common commands (e.g. Task Initialisation [INIT], NOOP, Reset Counters etc.) and found the same issue there - almost every component/app had their own variation of the Event ID name for the exact same event.
+
+**Expected behavior**
+Apply consistent Event ID names to the events which are common to all/most components and apps.
+
+**Code snips**
+Invalid Message ID:
+`CFE_EVS_ERR_MSGID_EID`
+`CFE_SB_BAD_MSGID_EID`
+`CFE_TIME_ID_ERR_EID`
+`CS_MID_ERR_EID`
+`TO_LAB_MSGID_ERR_EID`
+`SAMPLE_APP_INVALID_MSGID_ERR_EID`
+`BP_INVALID_MID_ERR_EID`
+`SCH_MD_ERR_EID`
+`CI_LAB_COMMAND_ERR_EID`
+
+Initialization:
+`CFE_TIME_INIT_EID`
+`CFE_TBL_INIT_INF_EID`
+`CFE_EVS_STARTUP_EID`
+`CF_EID_INF_INIT`
+`BP_INIT_APP_INFO_EID`
+`SCH_INITSTATS_INF_EID`
+`CI_LAB_STARTUP_INF_EID`
+
+NOOP:
+`CFE_TIME_NOOP_EID`
+`CFE_TBL_NOOP_INF_EID`
+`CFE_SB_CMD0_RCVD_EID`
+`CF_EID_INF_CMD_NOOP`
+`FM_NOOP_CMD_EID`
+`CI_LAB_COMMANDNOP_INF_EID`
+
+Reset Counters:
+`CFE_TIME_RESET_EID`
+`CFE_TBL_RESET_INF_EID`
+`CFE_EVS_RSTCNT_EID`
+`CFE_SB_CMD1_RCVD_EID`
+`CF_EID_INF_CMD_RESET`
+`SC_RESET_DEB_EID`
+`HS_RESET_DBG_EID`
+`FM_RESET_CMD_EID`
+`HK_RESET_CNTRS_CMD_EID`
+`MD_RESET_CNTRS_DBG_EID`
+`CI_LAB_COMMANDRST_INF_EID`
+
+etc.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",enhancement,https://github.com/nasa/LC/issues/45
+"Fix #43, Remove redundant/inconsistent comments (/* end of function */, /* end if */ etc.) and clean up empty lines.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #43
+Removes redundant and inconsistent comments (e.g. `/* end of function */`)
+There were also a few cases of unnecessary empty lines (e.g. on the last line before the closing brace of a function) and also missing empty lines (e.g. between functions) which were corrected. Some of these empty lines trigger the CI format checks.
+I've left the commits separated for now to make life easier for whoever reviews this. I can squash them if/when this is ready for merge.
+
+**Testing performed**
+None (comment and whitespace changes only).
+
+**Expected behavior changes**
+No impact on behavior.
+These updates will reduce clutter and inconsistency in the code, improving readability.
+
+**Contributor Info**
+@thnkslprpt ","CCB:Approved, draco-rc4",https://github.com/nasa/LC/pull/44
+"Redundant comments (/* end of function */, /* end if */ etc.) and clean up empty lines.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/to_lab/issues/68 and https://github.com/nasa/sample_app/issues/111
+There are quite a few redundant comments in the code, such as:
+- `/* end of function */`-type comments
+- `/* end if */`-type comments
+- function header comments which include the function name
+
+Another minor issue has to do with empty lines:
+a) _unnecessary_ empty lines (e.g. first line after the opening brace of a function/struct, or the last line before the closing brace - the latter apparently sometimes triggers the CI format checks).
+b) _missing_ empty lines between functions (i.e. closing brace of last function, then next function beginning on the immediately next line without an empty line in between)
+
+The unnecessary empty lines (at the beginning or end of a function, for example) represent a low single-digit percentage of the cases (the vast majority of functions/structs do not have these extra empty lines), so there is an argument to remove them purely for consistency, not just due to them being redundant and triggering the CI format checks.
+
+**Expected behavior**
+Remove redundant comments to reduce clutter and inconsistency in the code, and improve readability.
+
+**Reporter Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/LC/issues/43
+"Fix #41, Remove 'return;' from last line of void functions.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #41
+Removes all cases of redundant ""return;"" statements on the last line of void functions.
+Corrected a few typos in the comments that were noticed along the way.
+
+**Testing performed**
+None, prior to submission.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info**
+@thnkslprpt ","CCB:Approved, draco-rc4",https://github.com/nasa/LC/pull/42
+"Remove ""return;"" from last line of void functions","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+""return;"" at last line in void function is redundant.
+Copy of https://github.com/nasa/cFE/issues/1540
+
+**Describe the solution you'd like**
+Remove
+
+**Reporter Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/LC/issues/41
+"Fix #39, Remove unnecessary parentheses around return values.","**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #39 
+Removes parentheses in return statements in LC that return a single value/term.
+This is aligns these return statements with the predominant style of cFS.
+
+**Testing performed**
+None, prior to submission of the pull request.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt ","CCB:Approved, draco-rc4",https://github.com/nasa/LC/pull/40
+Scrub use of () in return statements,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Unnecessary parentheses around return values in LC
+Copy of https://github.com/nasa/osal/issues/866
+
+**Reporter Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/LC/issues/39
+"Fix #21, removed mentions of ASIST from documentation","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #21, removed all mentions of ASIST from comments
+
+**Testing performed**
+n/a
+
+**Expected behavior changes**
+no impact to behavior
+
+**System(s) tested on**
+n/a
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA","CCB:Approved, draco-rc3",https://github.com/nasa/LC/pull/38
+"Fix #17 #22, Code coverage improvements","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #17 
+- Fix #22
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just eliminates redundant conditions
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/LC/pull/37
+Multiple return statements in LC_CreateTaskCDS and LC_TableInit,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/LC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Multiple returns are a coding style violation, and the implementation is challenging to follow (see #12 and others).
+https://github.com/nasa/LC/blob/bb910369436b80b48bd098e8a987e2b0ad4cd1cf/fsw/src/lc_app.c#L332-L493
+https://github.com/nasa/LC/blob/bb910369436b80b48bd098e8a987e2b0ad4cd1cf/fsw/src/lc_app.c#L735-L855
+
+**Describe the solution you'd like**
+Single entry/exit point from functions.  Refactor to simplify flow.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Could group w/ multiple issues or tackle by file. 
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/LC/issues/36
+"Fix #34, Updates CLA information for Apache 2.0","Deletes old LC CLAs, Removes language in contributing.md of app-specific CLA,
+Adds link to new CLAs in pull_request_template.md and contributing.md
+
+**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #34
+- Fixes https://github.com/nasa/cFS/issues/495
+
+**Testing performed**
+Visually inspected links in fork and in PR template.
+
+**Expected behavior changes**
+All references to CLAs should be updated to the cFS app CLA.
+
+**System(s) tested on**
+Google Chrome browser
+
+**Additional context**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, ASRC Federal","docs, CCB:Approved, draco-rc2",https://github.com/nasa/LC/pull/35
+Update CLA Information,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [cFS README.md file](https://github.com/nasa/cFS/blob/main/README.md) to see if the feature is in the major future work.
+* [ ] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Have new CLAs given the change in https://github.com/nasa/cFS/pull/491 with the combined CLA, 
+
+**Describe the solution you'd like**
+
+- [ ] Update the instructions in each app's Contributing.md
+- [ ] Delete old CLA pdfs
+- [ ] Update PR and Issue templates as needed
+
+
+**Describe alternatives you've considered**
+
+None
+
+**Additional context**
+None
+
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz
+","docs, draco-rc2",https://github.com/nasa/LC/issues/34
+"Fix #32, Remove CFE_PSP_MemSet use for addresses in RAM","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #32 
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just removes unnecessary API dependence
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/LC/pull/33
+Remove CFE_PSP_MemSet use for addresses in RAM,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/CS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Should just use memset/memcpy for addresses in RAM.  The PSP functions serve no use in this context.
+
+**Describe the solution you'd like**
+Replace with memset/memcpy.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, draco-rc2",https://github.com/nasa/LC/issues/32
+"Fix #20 #25, Add requirements rationale and clarify event message limit requirement","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #20 
+- Fix #25
+
+**Testing performed**
+NA - requirements updates only
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+NA
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/LC/pull/31
+"Fix #29, Added codeql-build.yml","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+Describe the contribution
+A clear and concise description of what the contribution is.
+Added CodeQL to GitHub workflows
+Fix #29 
+
+Testing performed
+
+Pushed to branch
+Checked CodeQL ran successfully
+Expected behavior changes
+no impact to behavior
+
+System(s) tested on
+Browser
+
+Additional context
+Depends on https://github.com/nasa/cFS/pull/501 to run successfully
+
+Third party code
+If included, identify any third party code and provide text file of license
+
+Contributor Info - All information REQUIRED for consideration of pull request
+Full name and company/organization/center of all contributors (""Personal"" if individual work)
+
+Note CLA's apply to software contributions.","CCB:Approved, dependency, draco-rc2",https://github.com/nasa/LC/pull/30
+Add CodeQL to repository,"**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [X] I reviewed the [README file](https://github.com/nasa/LC/blob/main/README.md) to see if the feature is in the major future work.
+* [X] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Use CodeQL for continuous integration
+
+**Describe the solution you'd like**
+Add CodeQL workflow
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Add any other context about the feature request here.
+
+**Requester Info**
+Haven Carlson","continuous-integration, draco-rc2",https://github.com/nasa/LC/issues/29
+"Fix #23 #24, Resolve static analysis warnings","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CF/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #24
+- Fix #23
+
+**Testing performed**
+CI + static analysis run
+
+**Expected behavior changes**
+None, just squashes static analysis warnings
+
+**System(s) tested on**
+ - Hardware: VM
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + apps + related static analysis resolution branches
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/LC/pull/28
+"Fix #26, Resolve strict cppcheck style warnings","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #26 
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+Nothing, just squashes warnings
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/LC/pull/27
+Static analysis workflow failure due to style warnings,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/LC/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/LC/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Strict cppcheck warnings cause static analysis workflow to fail, see https://github.com/nasa/LC/runs/6356575973?check_suite_focus=true
+```
+[fsw/src/lc_cmds.h:86] -> [fsw/src/lc_cmds.c:852]: (style, inconclusive) Function 'LC_ResetResultsAP' argument 3 names different: declaration 'ResetCmd' definition 'ResetStatsCmd'.
+[fsw/src/lc_cmds.h:103] -> [fsw/src/lc_cmds.c:932]: (style, inconclusive) Function 'LC_ResetResultsWP' argument 3 names different: declaration 'ResetCmd' definition 'ResetStatsCmd'.
+[fsw/src/lc_utils.c:234] -> [fsw/src/lc_utils.c:240]: (style) Variable 'Result' is reassigned a value before the old one has been used.
+```
+
+**Describe the solution you'd like**
+Fix
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, draco-rc2",https://github.com/nasa/LC/issues/26
+Fill in missing requirements rationale,"There's a handful of missing requirements rationale.  Add.
+
+Imported from GSFCCFS-2019","requirements, draco-rc2",https://github.com/nasa/LC/issues/25
+Static analysis issues relative to flight code,"Handful of static analysis issues in the ""red"" identified (non-Style issues).  Need to resolve these.
+
+Filter: -file:elf -file:ut -file:cfe -file:os -file:cf_ -file:_lab_app.c !(significance:style)
+
+should resolve and/or disposition the higher ranked ones at minimum.
+
+Note license restricts publishing issues.
+
+Imported from GSFCCFS-1958","bug, draco-rc2",https://github.com/nasa/LC/issues/24
+Resolve static analysis issues relative to unit tests,"Many actual code issues (uninitialized variables, buffer overruns, etc) identified via static analysis in the unit tests.  All actual ""bugs"" should be resolved.
+
+Imported from GSFCCFS-1936","unit-test, draco-rc2",https://github.com/nasa/LC/issues/23
+"Revisit coverage, update to 100% code/branch or write issues where unreachable","**Failure: Coverage lc lines 99.6% functions 100.0% branches 94.3%**
+
+Other coverage failures:
+Failure: Coverage cs lines 99.9% functions 100.0% branches 99.1%
+Failure: Coverage ds lines 99.6% functions 100.0% branches 97.7%
+Failure: Coverage fm lines 93.8% functions 94.0% branches 89.1%
+Failure: Coverage hs lines 100.0% functions 100.0% branches 98.1%
+Failure: Coverage md lines 98.4% functions 100.0% branches 96.7%
+Failure: Coverage sc lines 99.9% functions 100.0% branches 99.0%
+
+Fix where possible, elsewise Issues should document all uncovered lines/branches and disposition (why it's ok as-is)
+
+Imported from GSFCCFS-1935","coverage, unit-test, draco-rc2",https://github.com/nasa/LC/issues/22
+Remove all mentions of ASIST or ITOS artifacts from documentation,"Some of our doxygen docs still reference ASIST or ITOS artifacts. 
+
+See 
+cfs_mm repo: fsw/src/mm_msgdefs.h:l28
+
+
+
+Imported from GSFCCFS-1929","docs, draco-rc3",https://github.com/nasa/LC/issues/21
+App Requirement Issues,"1. LC3002.1.1 & LC3002.2.1 - Don’t see where event filter is able to be specified in Action Point or Watchpoint definition tables.
+2.  DS8000 – DS HK packet 
+3.  FM4000 – FM HK packet
+4. DS3000 - Requirement Incomplete
+
+
+Imported from GSFCCFS-1917","requirements, draco-rc2",https://github.com/nasa/LC/issues/20
+Apps should use CFE_MSG_PTR macro instead of cast or local unwrapping,"Apps typically cast to a CFE_MSG_Message_t or use *.Msg.  Better to use abstracted CFE_MSG_PTR. NOTE - Not backwards compatible with Caelum so recommend not addressing in Draco.
+
+Imported from GSFCCFS-1900",enhancement,https://github.com/nasa/LC/issues/19
+LC Hash logic comments only applicable to V1 Message IDs,"If the V1 Message ID isn't used, theoretically the hash could collide up to the entire length of the linked list.
+
+At minimum the comments should reflect the possibility for more hash collisions, but might be worth reconsidering implementation or reporting collision depth.
+
+Imported from GSFCCFS-1881",docs,https://github.com/nasa/LC/issues/18
+LC has duplicate conditions leading to untestable branches,"LC_ValidateWDT has duplicate conditions in its switch statement for both DataType and OperatorID.  This leads to branches that cannot be covered by unit testing.
+
+Imported from GSFCCFS-1731
+
+EDIT:
+Duplicate conditional in PUSH_RPN_DATA, since the limit is checked before the push and can never be exceeded
+https://github.com/nasa/LC/blob/bb910369436b80b48bd098e8a987e2b0ad4cd1cf/fsw/src/lc_action.c#L298
+
+Setting `Done` to true when `IllegalOperand` is true makes the checks redundant
+https://github.com/nasa/LC/blob/bb910369436b80b48bd098e8a987e2b0ad4cd1cf/fsw/src/lc_action.c#L416-L423
+https://github.com/nasa/LC/blob/bb910369436b80b48bd098e8a987e2b0ad4cd1cf/fsw/src/lc_action.c#L450
+https://github.com/nasa/LC/blob/bb910369436b80b48bd098e8a987e2b0ad4cd1cf/fsw/src/lc_action.c#L321
+
+**Recommended resolutions:**
+Remove duplicate condions in LC_ValidateWDT, replace `PUSH_RPN_DATA` with simple push, don't set `Done` when `IllegalOperand`.
+
+","coverage, draco-rc2",https://github.com/nasa/LC/issues/17
+LC: Consider making states into enums,"In lc_msgdefs.h, LC states could be made into enums
+
+Imported from GSFCCFS-1370",enhancement,https://github.com/nasa/LC/issues/16
+Refactor LC_SampleAPReq and LC_HousekeepingReq,"The functions LC_SampleAPReq and LC_Housekeeping Req could be refactored to use a loop instead of the multiple switch statements.
+
+The final if condition in LC_SampleAPReq could also be refactored to reduce the nesting.
+
+Imported from GSFCCFS-1368",enhancement,https://github.com/nasa/LC/issues/15
+Refactor LC_SampleAPs,"The function LC_SampleAPs can be refactored - the ""if(StartIndex == EndIndex)"" condition can be removed.
+
+Imported from GSFCCFS-1358",enhancement,https://github.com/nasa/LC/issues/14
+Suggest reversing order in which AP/WP telemetry is stored,"LC builds AP/WP status/results starting with most significant bits first.  i.e. AP 1 state in most significant 2 bits, then AP 1 results, then AP 0 state, and AP 0 results in least significant bits.  When doing an array of bit fields, would be nice to have AP 0 in the most significant bits.
+
+Imported from GSFCCFS-1119",enhancement,https://github.com/nasa/LC/issues/13
+LC_TableInit has an if/else if without an else clause and its behavior is undefined,"So at the end of the LC_TableInit function there is an odd branching
+<pseudo coded here>
+if (LC_CDS_ENABLED)
+{
+    if (LC_CDS_RESTORED)
+    {  
+         restored event
+    }
+    else if (LC_CDS_UPDATED)
+    {	
+        default event
+    }
+    // nothing else here !!!
+}
+else
+{
+    CDS disabled event
+}
+
+So, the question is: Can we have a scenario where LC_CDS_ENABLED is TRUE, but both LC_CDS_RESTORED and LC_CDS_UPDATED are FALSE? And IF SO: What is the desired behavior here??  This is a situation where the lack of an else clause on an ""else if"" most definitively is cause for concern.  If that scenario cannot exist, then it would seem an ""else if"" is not required.  Unfortunately, due to the convoluted nature of this function and those that it calls, it is would be difficult to determine if the above scenario is a possibility. 
+
+Imported from GSFCCFS-1104",invalid,https://github.com/nasa/LC/issues/12
+Should results tables be critical tables instead of stored to CDS,"The Watchpoint Results Table and Actionpoint Results Table are currently saved to the CDS on the housekeeping request interval (see functions  LC_UpdateTaskCDS and LC_HousekeepingReq).  Should these tables be critical tables instead?  
+
+Imported from GSFCCFS-1103",enhancement,https://github.com/nasa/LC/issues/11
+LC_TableInit helper functions should be moved to their own file,"LC_TableInit has several helper functions that it calls while running.  These calls have many different variations and effects upon what happens in LC_TableInit.  This makes it very difficult to unit test because there is too much variation in the helper functions to attempt to keep adequate track of what may or may not be happening.  If these helper functions were moved to their own .c file they could be wrapped and stubbed for testing LC_TableInit.  This would simplify the unit testing process. 
+
+Imported from GSFCCFS-1102",enhancement,https://github.com/nasa/LC/issues/10
+LC_SbInit casts every Status to unsigned int in every event message,"LC_SbInit is casting the Status in every event send to an unsigned int.  The cast appears unnecessary, CFE_EVS_SendEvent takes a variable length of arguments because it does a formatting of the string with the values sent AND the format in the send events is %08X (print 8 characters in upper case hex).   
+
+Imported from GSFCCFS-1099",invalid,https://github.com/nasa/LC/issues/9
+LC Sets the TtoFValue when it transitions from STALE to FALSE,"While testing LC against cFE 6.6, the lc_noaction test procedure failed because values were contained in the TtoFValue when they were not expected. The transition from STALE to FALSE seemed to set these values.
+
+Imported from GSFCCFS-1075",bug,https://github.com/nasa/LC/issues/8
+Support platform-endian byte order in WDT,"LC should support numerical telemetry data types that are platform-endian. While it would be possible to get the same effect with an #if macro block, it would make the table very hard to read.
+
+Imported from GSFCCFS-770",enhancement,https://github.com/nasa/LC/issues/7
+LC - more deterministic behavior," Currently LC will process messages when they are received, which is fine, generally. Also, currently, LC uses a single pipe for commands and for watchpoint telemetry. LC doesn't process action points until it receives a command message.
+
+But in deterministic environments it may be better to have LC be commanded to read telemetry as well as be commanded to process action points. This will necessitate having a separate message pipe for commanding (which the main loop would block on) and a telemetry pipe (which would accumulate telemetry until the command to read.)
+
+The default LC behavior should remain the same (process messages as they arrive.) This should be a compile-time option, or perhaps run-time command-able.
+
+Imported from GSFCCFS-769",enhancement,https://github.com/nasa/LC/issues/6
+LC: support 64-bit types,"LC currently does not support 64-bit integers or floats (doubles).
+
+Imported from GSFCCFS-768",enhancement,https://github.com/nasa/LC/issues/5
+LC Transitions Active Action Points to Passive When Application is in Passive Mode," During a stakeholder rehearsal there were several APs that were commanded ""active"" while the LC application state was in ""passive"" mode. Before operations could command the application state to ""active"" mode, some of the APs that were activated and had ""tripped"" causing the AP to transition back to passive mode. The purpose of changing a ""tripped"" APs state from active to passive is to prevent an RTS from getting initiated more than once. In ""passive"" mode, LC performs all limit tests as in ""active"" mode, but no stored command sequences are invoked as the result of AP failures. Having the AP's state transition while the application is in passive mode will make enabling APs with a low threshold while LC is in passive mode very difficult. The rational for this design feature needs to be clearly understood and documented. The LC user's guides (both doxygen and word/pdf) do not make this design feature clear. If no rational exists this design feature should be removed from LC.
+
+Imported from GSFCCFS-744",bug,https://github.com/nasa/LC/issues/4
+LC does not support double precision watchpoints,"LC does not currently support [defining a watchpoint](https://github.com/nasa/LC/blob/82bd57b541f313fba238ba3f191dda607b097656/fsw/src/lc_tbl.h) for a double precision value. Doubles are commonly used in GNC applications, and it would be helpful for LC to support monitoring those telemetry points, rather than requiring the upstream app to provide special telemetry for LC to monitor.",duplicate,https://github.com/nasa/LC/issues/3
+ADT table size limit,"Hello, 
+
+I would like to know if it is possible to increase the WDT table size (LC_MAX_ACTIONPOINTS). How much I can extend the size of WDT table ? How many AP I can define? Is there any limit?
+
+Thanks.",question,https://github.com/nasa/LC/issues/2
+Updated version to 2.1.1,,,https://github.com/nasa/LC/pull/1

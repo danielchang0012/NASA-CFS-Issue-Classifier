@@ -1,0 +1,2115 @@
+Title,Body,Labels,URL
+CSV File Import Failure,"When trying to import CSV files through the command line and GUI, the files fail to fully import. The CSV files have been created by C_struct_to_CSV_conversion, and the issues seem to stem around structs that have arrays as parameters.
+
+### Command Line
+Structs in the CSV file will import properly up until the first struct to contain an array. Once a struct with an array is reached, a table will be created for it but no data will be imported. Any structs in the file listed afterwards will not be imported at all.
+
+The following examples are errors that have appeared when attempting to import a CSV file through the command line: 
+> CCDD : Invalid Input : Invalid characters in table 'CS_TableNameCmd_t' for column 'Array Size'; characters consistent with input type 'Array index' expected
+
+> CCDD : Invalid Input : Index: 13, Size: 13
+
+The command used: 
+`$ java -jar CCDD_beta.jar -project myproject -host localhost -user myuser -password mypassword -import 'importFileType CSV -filename myfile' -shutdown`
+
+### GUI
+When attempting to import through the GUI,  a table is created for each struct. However, with structs containing arrays, all parameters will be imported up to the array itself and any parameters afterwards fail to import. Structs without arrays are imported normally.
+
+Example data for an import:
+<img width=""413"" alt=""image"" src=""https://github.com/nasa/CCDD/assets/128635337/ac17d150-e98b-4082-8bb7-7dc889e69e0b"">
+
+Actual import:
+<img width=""498"" alt=""image"" src=""https://github.com/nasa/CCDD/assets/128635337/1fd31888-3ccf-4889-841d-a8bcc3543e14"">
+",,https://github.com/nasa/CCDD/issues/102
+Error when exporting XTCE files from command line,"When attempting to export XTCE files from the command line, the following error occurs:
+
+```
+CCDD : CCDD Error : An unanticipated error occurred; cause 'java.lang.String cannot be cast to CCDD.CcddConstants$EndianType'  Error trace:   CcddXTCEHandler: exportTables() line 2656   CcddFileIOHandler: exportSelectedTables() line 3748   CcddCommandLineHandler: doCommand() line 1665   CcddCommandLineHandlerCommandHandler: handler() line 391   CcddCommandLineHandler: parseCommand() line 2795   CcddCommandLineHandler: parseCommand() line 2690   CcddMain: parseDbSpecificCommandLineCommands() line 978   CcddDbControlHandler: openDatabase() line 2760   CcddDbControlHandler: openDatabase() line 2516   CcddDbControlHandler: openDatabase() line 2500   CcddMain: () line 422   CcddMain: run() line 450
+```
+
+This is the command that generates the above error:
+`$ java -jar CCDD.jar -project myproject -host localHost -user ccdduser -password ccdd -export ""-format xtce -tablepaths test_table -filepath test_xtce_output -version 1.0"" -shutdown`
+
+This seems to only occur for XTCE format, and not when exporting csv or json files. Exporting from the GUI presents no issues.",,https://github.com/nasa/CCDD/issues/101
+Fixed permissions for *nix systems.,Many of the .java files and various documents had an executable bit set. This update simply resets the permissions to a more appropriate 644 on *nix systems.,,https://github.com/nasa/CCDD/pull/100
+"I mistakenly thought this was an update to a codelab, instead of an update to the actual test framework. Android DevRel doesn't own this repository, so I'm not sure we should be the ones to update it.","អ្នកប្រហែលជាចូលចិត្ត ស្បែក នេះ៖ ""iOS 14.5 by NT ""។ ទាញយកវានៅទីនេះ៖ https://www.realme.com ពី @Theme Stores Uploading - [ ] - 2022-06-22-214548188.mp4 …@```
+
+```",,https://github.com/nasa/CCDD/issues/99
+Options click ,https://github.com/pettarin/fsfs3/releases/download/v1.0.0/fsfs3_ebooks_v1.0.0.zip,,https://github.com/nasa/CCDD/issues/98
+> https://github.com/pypa/packaging.python.org/blob/main/source/key_projects.rst#L97-L97,"> https://github.com/pypa/packaging.python.org/blob/main/source/key_projects.rst#L97-L97
+
+Start 
+
+_Originally posted by @raksme in https://github.com/raksme/Facebook-social-/issues/3#issuecomment-1159745035_",,https://github.com/nasa/CCDD/issues/97
+EDS Format?,"This is more of a question than an issue.
+
+The EDS export appears to refer to the CCSDS standard: <DataSheet xmlns=""http://www.ccsds.org/schema/sois/seds"" ... >
+But the format does not comply with the current version of the Blue Book: [CCSDS 876.0-B-1](https://public.ccsds.org/Pubs/876x0b1.pdf) 
+Most notably, the <Namespace> element is not in that spec, and it doesn't appear to handle PackageFile and Package elements.
+
+I'm new to this, so maybe I'm using it wrong.
+I'm trying to use CCDD to import/export EDS files compatible with:
+https://github.com/jphickey/cfe-eds-framework
+as embedded in:
+https://github.com/OpenSatKit/cfsat/
+
+The cfsat project does not have any DataSheet EDS documents, just packages, and CCDD doesn't like those files. 
+
+Is there some other tool that is being used to convert CCDD generated XTCE or EDS file into a cFS build?",,https://github.com/nasa/CCDD/issues/96
+Export Full DB and Import to New Project Fails (CSV and JSON),"**Version:**
+![version](https://user-images.githubusercontent.com/101198782/157273928-bc15535b-9906-4326-9db8-c4c773d8e45b.PNG)
+Git commit: f58e1f4b6ce12d2d2 Version 2.0.29.  Added back Halt dialog...
+
+**Expected:**
+If I export a full database in CSV or JSON, I expect to be able to create a new project, import the file, and restore the database to the same state without errors.
+
+**Result:**
+Using CSV files, there are errors that result in the new project being different than the original database.
+Using JSON files, the import fails completely.
+
+**Steps:**
+1. Create and open a new project
+2. Run through the steps in the tutorial (except the CSV table import) to create a project with macros and structures and commands
+3. Export to CSV with 'Export Full Database' and 'Single File' and select all Tables. Full settings shown below.
+![export](https://user-images.githubusercontent.com/101198782/157270381-5acb7af8-24cf-4e0a-9ede-a49d68189190.png)
+[Step3.csv](https://github.com/nasa/CCDD/files/8207512/tutorial.csv)
+4. Repeat export with JSON using same settings.
+[tutorial.json.txt](https://github.com/nasa/CCDD/files/8207546/tutorial.json.txt)
+5. Create and open a new project for CSV Import.
+6. Import the CSV file generated in Step 3 and check 'Importing and Entire Database'
+7. The following errors are seen:
+![lowerlimit](https://user-images.githubusercontent.com/101198782/157271182-13324d29-422a-4917-a9c5-19de3c4234fe.png)
+![macro](https://user-images.githubusercontent.com/101198782/157271183-6c386ce8-320e-4edd-abaf-d7f19740ea8b.png)
+8. Export the full database with the same settings as above to generate files to compare. Files are attached.
+[Step3.csv](https://github.com/nasa/CCDD/files/8207512/tutorial.csv)
+[Step8.csv](https://github.com/nasa/CCDD/files/8207513/import_csv.csv)
+9. Create and open a new project for JSON Import.
+10. Import the JSON file generated in Step 4 and check 'Importing and Entire Database'
+11. The following error is seen:
+![json](https://user-images.githubusercontent.com/101198782/157271756-a5c2dd92-d4ae-4afc-b2bf-fca18e5f9805.PNG)
+12. Unable to export new JSON file because no tables are present.
+13. Log file is attached
+[CCDD.log](https://github.com/nasa/CCDD/files/8207592/CCDD.log)
+",,https://github.com/nasa/CCDD/issues/95
+Cannot Import/Export EDS/XTCE,"Hello,
+
+I was able to complete the tutorial (thank you again for the help with #93) and am now trying to interface CCDD with my cFS repository.
+
+I first attempted to import a provided EDS from the cFS repo, [base_types.xml](https://github.com/nasa/cFE/blob/b66661cc6e8f695d5ca9fa56217f58a291d5884d/modules/core_api/eds/base_types.xml), which resulted in nothing happening. I can see in logs it attempts to import but I do not get any indication of errors. (Note: I tried with both .xml and .eds extensions)
+```
+localhost:5432|cFS|tstern|11/10/2021 09:56:20.453|Status|Importing table(s) from '/home/tstern/NASA/cFS/cfe/fsw/cfe-core/eds/base_types.eds'
+localhost:5432|cFS|tstern|11/10/2021 09:56:20.453|Command|SELECT 1 FROM pg_tables WHERE tablename ~* E'^__groups$';
+localhost:5432|cFS|tstern|11/10/2021 09:56:20.454|Command|SELECT * FROM __groups ORDER BY OID;
+```
+I see the exact same behavior when trying to import XTCE as well.
+
+Trying to export XTCE or EDS, I do not get any output to logs at all and no indication of a failure. 
+
+C_Headers and CSV both work without issue on import/export. I have not tested JSON import but export works there as well.
+
+I did notice that the default schema locations in the Preferences->Other tab for both XTCE and EDS were 404 links so I updated those to live xsd pages which could be part of my issue if I did incorrectly. For reference I used ""https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd"" as my XTCE xsd. 
+
+I also noticed this is very similar to the behavior seen in #91
+
+I would greatly apricate any and all help and am happy to assist in whatever way possible. 
+",,https://github.com/nasa/CCDD/issues/94
+Missing Primitive Data Types,"Still working through the provided tutorial. 
+
+I got to step 3.5.1, where you have to select a primitive data type for your new variable; however I do not have any data types available in my tool.
+
+Going to manage data types also shows no available data types, primitive or otherwise. 
+
+Do we have to create the primitive data types by hand or should they be automatically populated?
+
+If populated, is that something I might have missed during the install or maybe a misplaced environment variable that could be causing this?
+
+Any and all help is greatly appreciated. Thank you.",,https://github.com/nasa/CCDD/issues/93
+"Invalid SQL command; ERROR: syntax error at or near ""OIDS"" when opening project","Hello,
+
+I am new to CCDD and PostgreSQL in general. Working through the provided tutorial I get the following error attempting to open the project in my terminal. 
+
+```
+Command that failed: CREATE TABLE __dbu_info (database_lock text, database_name text, database_users text, database_description text) WITH OIDS; INSERT INTO __dbu_info VALUES ('Core Flight Software Command and Data Dictionary0', 'MyProject', 'tstern', 'Test'); ALTER TABLE __dbu_info OWNER TO tstern; GRANT ALL PRIVILEGES ON TABLE __dbu_info TO GROUP tstern; 
+Command that failed: DELETE FROM __dbu_info;
+Command that failed: CREATE TABLE __dbu_info (database_lock text, database_name text, database_users text, database_description text) WITH OIDS; INSERT INTO __dbu_info VALUES ('Core Flight Software Command and Data Dictionary0', 'myproject', 'tstern', 'Test'); ALTER TABLE __dbu_info OWNER TO tstern; GRANT ALL PRIVILEGES ON TABLE __dbu_info TO GROUP tstern; 
+```
+
+Digging into logs I see the following complaints as well 
+```
+|Fail|Cannot create tables and functions in project database 'myproject' as user 'tstern'; cause 'Invalid SQL command; ERROR: syntax error at or near ""OIDS""  Position: 119'
+```
+
+I am running on a linux VM and have the following versions:
+- Java: 11.0.11
+- CCDD: 2.0.27 (10-1-2021)
+- PostGreSQL: 12.8  *** JDBC: PostgreSQL 9.4.1207.jre7 
+
+After doing some digging it appears that the use of OIDS was removed in version 12 of PostGreSQL. I will roll back and try again. Apologies if this is already documented somewhere. 
+",,https://github.com/nasa/CCDD/issues/92
+Problems exporting and importing XTCE,"Hello,
+
+First of all, thank you for creating this tool. We are evaluating CCDD in combination with COSMOS and NASA cFS.
+
+At this point, we are running CCDD from `CCDD.jar` and also we have set up running CCDD from Intellij IDEA (we can step through the code with a debugger). The commit is f1641de.
+
+**Problem 1: Importing and exporting XTCE does not work when running CCDD from jar**
+
+- We take an XTCE example from the `CCDD-2/Docs/CCDD_Users_Guide.pdf` (page 200).
+- We save the XTCE content to an .xtce file.
+- We open the CCDD program and try to import the file via ""Data / Import data / XTCE"".
+- We select the file and click ok.
+- The dialog disappears and then nothing happens in the user interface, nothing is printed to the message log except:
+
+> Importing table(s) from `.../guide.xtce`
+
+- We see no tables in the `Data / Edit table(s)`
+
+The exporting does not work - after we click ok on the Export dialog - the dialog box closes and nothing happens (file is not created, no log message).
+
+**Problem 2: Running CCDD from IDEA IDE**
+
+- The steps are the same as in the description above but the manifestation is different:
+- We are getting an SQL error `CCDD : Database Error : Cannot retrieve TABLE_DATA_VAR_NAMES list`
+- The file contents seem to be imported even though we cannot say if the imported data is consistent.
+
+---
+
+We are ready to assist you in the investigation of this issue.
+
+---
+
+The stack trace from IDEA:
+
+```
+Command that failed: SELECT * from find_command_arguments('{Structure: Cmd Arg Ref,XTCE Structure,XTCE Command}');
+CCDD : Database Error : Cannot retrieve TABLE_DATA_VAR_NAMES list
+Command that failed: SELECT key FROM mycommand WHERE key = (SELECT MAX(key) FROM mycommand);
+Command that failed: INSERT INTO mycommand (key, index, command_name, command_code, description, command_argument) VALUES (1, '1', 'NoOp', '', 'No operation', ''), (2, '2', 'EngineArmEnableDisable', '', 'Arm main engine', ''), (3, '3', 'EngineFireEnableDisable', '', 'Fire main engine', ''), (4, '4', 'EngineThrustLevel', '', 'Engine thrust level', ''); 
+java.sql.SQLException: Invalid SQL command; ERROR: relation ""mycommand"" does not exist
+  Position: 19
+    at CCDD.CcddDbCommandHandler.executeDbStatement(CcddDbCommandHandler.java:263)
+    at CCDD.CcddDbCommandHandler.executeDbQuery(CcddDbCommandHandler.java:117)
+    at CCDD.CcddDbTableCommandHandler.buildAndExecuteAdditionCommand(CcddDbTableCommandHandler.java:2882)
+    at CCDD.CcddDbTableCommandHandler.modifyTableData(CcddDbTableCommandHandler.java:2556)
+    at CCDD.CcddFileIOHandler.createImportedTable(CcddFileIOHandler.java:2522)
+    at CCDD.CcddFileIOHandler.createTablesFromDefinitions(CcddFileIOHandler.java:2255)
+    at CCDD.CcddFileIOHandler.importFiles(CcddFileIOHandler.java:1680)
+    at CCDD.CcddFileIOHandler$3.execute(CcddFileIOHandler.java:1440)
+    at CCDD.CcddBackgroundCommand$1.doInBackground(CcddBackgroundCommand.java:148)
+    at CCDD.CcddBackgroundCommand$1.doInBackground(CcddBackgroundCommand.java:141)
+    at javax.swing.SwingWorker$1.call(SwingWorker.java:295)
+    at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+    at javax.swing.SwingWorker.run(SwingWorker.java:334)
+    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+    at java.lang.Thread.run(Thread.java:748)
+```
+
+![Screenshot from 2021-07-28 14-37-45](https://user-images.githubusercontent.com/452547/127325606-42581dea-8a4d-4d31-90c6-91f049b7e4dc.png)
+
+```xml
+<?xml version=""1.0"" encoding=""UTF-8"" standalone=""no""?> 
+<SpaceSystem xmlns=""http://www.omg.org/space/xtce"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" 
+name=""User_s_Guide"" shortDescription=""User's Guide"" 
+xsi:schemaLocation=""https://www.omg.org/spec/XTCE/20061101 https://www.omg.org/spec/XTCE/20061101/06-11-
+06.xsd"">
+  <LongDescription>Project used for the import and export example in Appendix C of the user's 
+guide</LongDescription> 
+   <AncillaryDataSet> 
+      <AncillaryData name=""XML: Application ID"">applicationID</AncillaryData> 
+      <AncillaryData name=""XML: Function Code"">functionCode</AncillaryData> 
+   </AncillaryDataSet> 
+   <Header classification=""DOMAIN"" date=""Mon Apr 15 12:49:03 CDT 2019"" validationStatus=""Working"" 
+version=""1.0""> 
+      <AuthorSet> 
+         <Author>rmcclune</Author> 
+      </AuthorSet> 
+      <NoteSet> 
+         <Note>CCDD Version: 1.5.2 (4-15-2019)</Note> 
+         <Note>Date: Mon Apr 15 12:49:03 CDT 2019</Note> 
+         <Note>Project: User's Guide</Note> 
+         <Note>Host: localhost:5432</Note> 
+         <Note>Endianess: big</Note> 
+      </NoteSet> 
+   </Header> 
+   <SpaceSystem name=""MyCommand"" shortDescription=""MyCommand""> 
+      <Header classification=""INTERFACE"" validationStatus=""Working"" version=""1.0""/> 
+      <CommandMetaData> 
+         <ArgumentTypeSet> 
+            <EnumeratedArgumentType name=""ARM_Type""> 
+               <UnitSet/> 
+               <IntegerDataEncoding bitOrder=""mostSignificantBitFirst"" encoding=""unsigned"" sizeInBits=""1""/> 
+               <EnumerationList> 
+                  <Enumeration label=""Enable"" value=""0""/> 
+                  <Enumeration label=""Disable"" value=""1""/> 
+               </EnumerationList> 
+            </EnumeratedArgumentType> 
+            <EnumeratedArgumentType name=""FIRE_Type""> 
+               <UnitSet/> 
+               <IntegerDataEncoding bitOrder=""mostSignificantBitFirst"" encoding=""unsigned"" sizeInBits=""1""/> 
+               <EnumerationList> 
+                  <Enumeration label=""Enable"" value=""0""/> 
+                  <Enumeration label=""Disable"" value=""1""/> 
+               </EnumerationList> 
+            </EnumeratedArgumentType> 
+            <FloatArgumentType name=""THRUST_LEVEL_Type"" sizeInBits=""32""> 
+               <LongDescription>Set thrust level</LongDescription>
+               <UnitSet> 
+                  <Unit>percent</Unit> 
+               </UnitSet> 
+               <FloatDataEncoding encoding=""IEEE754_1985"" sizeInBits=""32""/> 
+               <ValidRangeSet> 
+                  <ValidRange maxExclusive=""100.0"" minExclusive=""0.0""/> 
+               </ValidRangeSet> 
+            </FloatArgumentType> 
+         </ArgumentTypeSet> 
+         <MetaCommandSet> 
+            <MetaCommand name=""NoOp""> 
+               <LongDescription>No operation</LongDescription> 
+            </MetaCommand> 
+            <MetaCommand name=""EngineArmEnableDisable""> 
+               <LongDescription>Arm main engine</LongDescription> 
+               <ArgumentList> 
+                  <Argument argumentTypeRef=""ARM_Type"" name=""ARM""/> 
+               </ArgumentList> 
+               <CommandContainer name=""EngineArmEnableDisable""> 
+                  <EntryList> 
+                     <ArgumentRefEntry argumentRef=""ARM""/> 
+                  </EntryList> 
+               </CommandContainer> 
+            </MetaCommand> 
+            <MetaCommand name=""EngineFireEnableDisable""> 
+               <LongDescription>Fire main engine</LongDescription> 
+               <ArgumentList> 
+                  <Argument argumentTypeRef=""FIRE_Type"" name=""FIRE""/> 
+               </ArgumentList> 
+               <CommandContainer name=""EngineFireEnableDisable""> 
+                  <EntryList> 
+                     <ArgumentRefEntry argumentRef=""FIRE""/> 
+                  </EntryList> 
+               </CommandContainer> 
+            </MetaCommand> 
+            <MetaCommand name=""EngineThrustLevel""> 
+               <LongDescription>Engine thrust level</LongDescription> 
+               <ArgumentList> 
+                  <Argument argumentTypeRef=""THRUST_LEVEL_Type"" name=""THRUST_LEVEL""/> 
+               </ArgumentList> 
+               <CommandContainer name=""EngineThrustLevel"">
+                  <EntryList> 
+                     <ArgumentRefEntry argumentRef=""THRUST_LEVEL""/> 
+                  </EntryList> 
+               </CommandContainer> 
+            </MetaCommand> 
+         </MetaCommandSet> 
+      </CommandMetaData> 
+   </SpaceSystem> 
+   <SpaceSystem name=""MyStructure"" shortDescription=""MyStructure""> 
+      <Header classification=""INTERFACE"" validationStatus=""Working"" version=""1.0""/> 
+      <TelemetryMetaData> 
+         <ParameterTypeSet> 
+            <FloatParameterType name=""latitude_Type"" sizeInBits=""32""> 
+               <LongDescription>Location: north-south</LongDescription> 
+               <UnitSet/> 
+               <FloatDataEncoding encoding=""IEEE754_1985"" sizeInBits=""32""/> 
+            </FloatParameterType> 
+            <FloatParameterType name=""longitude_Type"" sizeInBits=""32""> 
+               <LongDescription>Location: east-west</LongDescription> 
+               <UnitSet/> 
+               <FloatDataEncoding encoding=""IEEE754_1985"" sizeInBits=""32""/> 
+            </FloatParameterType> 
+            <IntegerParameterType name=""width_Type"" signed=""false"" sizeInBits=""16""> 
+               <UnitSet> 
+                  <Unit>meters</Unit> 
+               </UnitSet> 
+               <IntegerDataEncoding bitOrder=""mostSignificantBitFirst"" encoding=""unsigned"" 
+sizeInBits=""16""/> 
+            </IntegerParameterType> 
+            <IntegerParameterType name=""depth_Type"" signed=""false"" sizeInBits=""16""> 
+               <UnitSet> 
+                  <Unit>meters</Unit> 
+               </UnitSet> 
+               <IntegerDataEncoding bitOrder=""mostSignificantBitFirst"" encoding=""unsigned"" 
+sizeInBits=""16""/> 
+            </IntegerParameterType> 
+            <IntegerParameterType name=""height_Type"" signed=""false"" sizeInBits=""16""> 
+               <UnitSet> 
+                  <Unit>meters</Unit> 
+               </UnitSet>
+               <IntegerDataEncoding bitOrder=""mostSignificantBitFirst"" encoding=""unsigned"" 
+sizeInBits=""16""/> 
+            </IntegerParameterType> 
+            <ArrayParameterType arrayTypeRef=""velocity_Type"" name=""velocity_Array"" numberOfDimensions=""1""/> 
+            <FloatParameterType name=""velocity_Type"" sizeInBits=""64""> 
+               <UnitSet/> 
+               <FloatDataEncoding encoding=""IEEE754_1985"" sizeInBits=""64""/> 
+            </FloatParameterType> 
+            <EnumeratedParameterType name=""engine_arm_Type""> 
+               <LongDescription>Engine armed status</LongDescription> 
+               <UnitSet/> 
+               <IntegerDataEncoding bitOrder=""mostSignificantBitFirst"" encoding=""unsigned"" sizeInBits=""1""/> 
+               <EnumerationList> 
+                  <Enumeration label=""Off"" value=""0""/> 
+                  <Enumeration label=""Arm"" value=""1""/> 
+               </EnumerationList> 
+            </EnumeratedParameterType> 
+            <EnumeratedParameterType name=""engine_fire_Type""> 
+               <LongDescription>Engine fire status</LongDescription> 
+               <UnitSet/> 
+               <IntegerDataEncoding bitOrder=""mostSignificantBitFirst"" encoding=""unsigned"" sizeInBits=""1""/> 
+               <EnumerationList> 
+                  <Enumeration label=""Off"" value=""0""/> 
+                  <Enumeration label=""Fire"" value=""1""/> 
+               </EnumerationList> 
+            </EnumeratedParameterType> 
+            <IntegerParameterType name=""thrust_level_Type"" signed=""false"" sizeInBits=""16""> 
+               <LongDescription>Engine thrust level</LongDescription> 
+               <UnitSet> 
+                  <Unit>percent</Unit> 
+               </UnitSet> 
+               <IntegerDataEncoding bitOrder=""mostSignificantBitFirst"" encoding=""unsigned"" 
+sizeInBits=""16""/> 
+               <ValidRange maxInclusive=""100"" minInclusive=""0""/> 
+            </IntegerParameterType> 
+         </ParameterTypeSet> 
+         <ParameterSet> 
+            <Parameter name=""latitude"" parameterTypeRef=""latitude_Type""/> 
+            <Parameter name=""longitude"" parameterTypeRef=""longitude_Type""/> 
+            <Parameter name=""width"" parameterTypeRef=""width_Type""/> 
+            <Parameter name=""depth"" parameterTypeRef=""depth_Type""/>
+            <Parameter name=""height"" parameterTypeRef=""height_Type""/> 
+            <Parameter name=""velocity"" parameterTypeRef=""velocity_Array""/> 
+            <Parameter name=""engine_arm"" parameterTypeRef=""engine_arm_Type""/> 
+            <Parameter name=""engine_fire"" parameterTypeRef=""engine_fire_Type""/> 
+            <Parameter name=""thrust_level"" parameterTypeRef=""thrust_level_Type""/> 
+         </ParameterSet> 
+         <ContainerSet> 
+            <SequenceContainer name=""MyStructure""> 
+               <EntryList> 
+                  <ParameterRefEntry parameterRef=""latitude""/> 
+                  <ParameterRefEntry parameterRef=""longitude""/> 
+                  <ParameterRefEntry parameterRef=""width""/> 
+                  <ParameterRefEntry parameterRef=""depth""/> 
+                  <ParameterRefEntry parameterRef=""height""/> 
+                  <ArrayParameterRefEntry parameterRef=""velocity""> 
+                     <DimensionList> 
+                        <Dimension> 
+                           <StartingIndex> 
+                              <FixedValue>0</FixedValue> 
+                           </StartingIndex> 
+                           <EndingIndex> 
+                              <FixedValue>2</FixedValue> 
+                           </EndingIndex> 
+                        </Dimension> 
+                     </DimensionList> 
+                  </ArrayParameterRefEntry> 
+                  <ParameterRefEntry parameterRef=""engine_arm""/> 
+                  <ParameterRefEntry parameterRef=""engine_fire""/> 
+                  <ParameterRefEntry parameterRef=""thrust_level""/> 
+               </EntryList> 
+            </SequenceContainer> 
+         </ContainerSet> 
+      </TelemetryMetaData> 
+   </SpaceSystem> 
+</SpaceSystem>
+```
+
+
+",,https://github.com/nasa/CCDD/issues/91
+Table import failed to complete while importing ccsds.h,"I was trying to import [ccsds.h](https://github.com/nasa/cFE/blob/ef5291ac3887ba59c0e02f2d486cceaabf768b61/fsw/cfe-core/src/inc/ccsds.h) using the CCDD GUI application, but the process failed with the following error and exception:
+
+Parsing error; cause 'Macro name 'CFE_MAKE_BIG16(n)' invalid'
+
+Macro values or formulae for a variable's array size or bit length are
+converted to CCDD macros. However, the value of these macros is set to
+""2"" - the user may edit the CSV file to update the macro values
+(or edit them in CCDD after importing).  Note that the default macro
+value can lead to import errors if a macro formula used as an array
+size evaluates to less than 2 (array size must be >= 2).
+java.lang.ArrayIndexOutOfBoundsException: 1
+	at CCDD.CcddFileIOHandler.processCSVConversionFile(CcddFileIOHandler.java:3926)
+	at CCDD.CcddFileIOHandler.prepareJSONOrCSVImport(CcddFileIOHandler.java:320)
+	at CCDD.CcddFileIOHandler$3.execute(CcddFileIOHandler.java:1417)
+	at CCDD.CcddBackgroundCommand$1.doInBackground(CcddBackgroundCommand.java:148)
+	at CCDD.CcddBackgroundCommand$1.doInBackground(CcddBackgroundCommand.java:1)
+	at javax.swing.SwingWorker$1.call(SwingWorker.java:295)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at javax.swing.SwingWorker.run(SwingWorker.java:334)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+Here's where/how the macro is defined:
+/* Macro to convert 16/32 bit types from platform ""endianness"" to Big Endian */
+#ifdef SOFTWARE_BIG_BIT_ORDER
+  #define CFE_MAKE_BIG16(n) (n)
+  #define CFE_MAKE_BIG32(n) (n)
+#else
+  #define CFE_MAKE_BIG16(n) ( (((n) << 8) & 0xFF00) | (((n) >> 8) & 0x00FF) )
+  #define CFE_MAKE_BIG32(n) ( (((n) << 24) & 0xFF000000) | (((n) << 8) & 0x00FF0000) | (((n) >> 8) & 0x0000FF00) | (((n) >> 24) & 0x000000FF) )
+#endif
+
+I'm using CCDD version 2.0.26 and [ccsds.h](https://github.com/nasa/cFE/blob/ef5291ac3887ba59c0e02f2d486cceaabf768b61/fsw/cfe-core/src/inc/ccsds.h) from cFS Bootes RC2 ",,https://github.com/nasa/CCDD/issues/90
+Cannot export to XTCE in 2.0.25,"When trying to export project data to XTCE using release 2.0.25, I get this exception:
+
+```
+Exception in thread ""AWT-EventQueue-0"" java.lang.NullPointerException
+	at CCDD.CcddTableManagerDialog$1.complete(CcddTableManagerDialog.java:597)
+	at CCDD.CcddBackgroundCommand$1.done(CcddBackgroundCommand.java:174)
+	at javax.swing.SwingWorker$5.run(SwingWorker.java:737)
+	at javax.swing.SwingWorker$DoSubmitAccumulativeRunnable.run(SwingWorker.java:832)
+	at sun.swing.AccumulativeRunnable.run(AccumulativeRunnable.java:112)
+	at javax.swing.SwingWorker$DoSubmitAccumulativeRunnable.actionPerformed(SwingWorker.java:842)
+	at javax.swing.Timer.fireActionPerformed(Timer.java:313)
+	at javax.swing.Timer$DoPostEvent.run(Timer.java:245)
+	at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:311)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:758)
+	at java.awt.EventQueue.access$500(EventQueue.java:97)
+	at java.awt.EventQueue$3.run(EventQueue.java:709)
+	at java.awt.EventQueue$3.run(EventQueue.java:703)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:74)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:728)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:205)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
+```
+
+The exception occurs when accessing `exportEntireDatabaseCb` on line 597:
+
+    if (exportEntireDatabaseCb.isSelected()) {
+
+If you search through the code you will notice that that variable is only initialized if the dialog type is CSV or JSON:
+
+            /* Check if exporting in CSV or JSON format */
+            if (dialogType == ManagerDialogType.EXPORT_CSV || dialogType == ManagerDialogType.EXPORT_JSON) {
+                ... lines omitted ...
+                exportEntireDatabaseCb = new JCheckBox(""Export full database"");
+                ... lines omitted ...
+            }
+
+Suggest either always initializing this variable, perhaps in the declaration, but only including it in the panel if it is needed, maybe setting it to ""checked"" always if XTCE, or always add it to the panel, but pre-check it and disable it if XTCE.",,https://github.com/nasa/CCDD/issues/89
+"getStructureTablesByReferenceOrder not returning tables with type ""Structure: Cmd Args Ref""","The `getStructureTablesByReferenceOrder` function from the` CcddScriptDataAccessHandler` class no longer seems to return tables where the type is ""Structure: Cmd Args Ref"".
+
+You can see this when trying to run the typesHeader.js script against a command that include a command args structure. The data type for the command args structure does not appear in the header file output.",,https://github.com/nasa/CCDD/issues/88
+Feature Request: Toggle expanding of groups/parents so that you can collapse them,"The ""Expand All"" checkbox does it's job well. It would be nice if this acted more like a toggle though and would collapse the groups/parents making it easier to navigate to a particular group/parent. So check ""Expand All"" to expand all and uncheck it to collapse all. This is just one way to add in the collapse feature using an existing piece of user interface.",,https://github.com/nasa/CCDD/issues/87
+Question about automatic message ID assignments,"Sorry, this isn't really a bug and more of a question. If this isn't the right avenue to ask this, let me know and I will redirect this question to another place.
+
+I'm a bit confused by the Assign IDs functionality. After reading the tutorial, it seems like this functionality gets applied to the ""Message ID"" field. But in reality, this field seems to be the ""Telemetry message name & ID"" and ""Command  name & ID"" fields.
+
+Is there a way to provide a group which represents a CFS application, a message ID prefix. Say I have 2 groups which represent app1 and app2. I want the message IDs for app1 to start with 0x09a and app2 to start with 0x0aa. Is there a way to set prefixes like that for individual groups?
+
+Also what about if I have a structure that I don't want to get an assigned message ID? Should I just put a # in that field to avoid the automatic assignment?",,https://github.com/nasa/CCDD/issues/86
+Enum tables are returned by some CcddScriptDataAccessHandler structure table calls,"The newly added Enum tables seem to be included in a couple of the CcddScriptDataAccessHandler calls that return information for Structures, specifically the `getStructureTablesByReferenceOrder` and `getStructureTableNumRows` functions.
+
+I tested this out by doing the following:
+1. Updating an existing project to use CCDD v2.0.24
+2. Adding a new ENUM table
+3. Replacing a row in a structure table to use the new enum table I created.
+4. Running the typesHeader.js script that is included in the CCDD scripts folder.
+
+
+I initially get some errors about variables not existing, but after fixing those errors it includes an empty enum as a structure. This script would need to be updated to handle enum tables, but the `getStructureTablesByReferenceOrder` seems to be returning an enum table along with the other structure tables.
+",,https://github.com/nasa/CCDD/issues/85
+Ensure a Command Argument can be added to a Command,"Inserting a new row in a command and selecting a command argument will
+cause an error when storing the changes. This occurs in the function
+modifyInternalFieldsTable when checking the data type column of the
+table. However, the Command table does not have a data type column, and
+an exception gets thrown.
+
+Address this specific issue by checking if the data type column exists
+before trying get the row data.
+
+Fixes #83",,https://github.com/nasa/CCDD/pull/84
+Unanticipated error when storing a Command Argument on a Command,"### Description
+I'm getting an error when I'm attempting to store a new row of a command with a command argument. This seems to be caused by the code looking for a data type column when there is no data type column for the Command type.
+
+I initially saw this on an existing project which I had converted over to CCDD v2, but I have been able to recreate it on a brand new table that uses CCDD v2.
+
+### Version of software
+Occurs in CCDD v2 or specifically v2.0.23.
+
+### Exact error message
+> An unanticipated error occurred; cause ""Index -1 out of bounds for length 6""
+
+### Stacktrace
+```
+CcddDbTableCommandHandler: modifyInternalFieldsTable() line 5135
+CcddDbTableCommandHandler: modifyTableData() line 2372
+CcddDbTableCommandHandler: execute() line 2238
+CcddBackgroundCommand: doInBackground() line 131
+CcddBackgroundCommand: doInBackground() line 1
+```
+
+Here is a screenshot of the error:
+![error_screenshot](https://user-images.githubusercontent.com/1009364/94751481-58f95600-034e-11eb-8b47-0c4a614dcb52.PNG)
+
+### Steps to Reproduce
+
+1. Create a new table of type ""Command""
+2. Create a new table of type ""Structure: Cmd Arg Ref""
+3. Edit the ""Command"" table you just created.
+4. Click Ins Row to add a new row
+5. Enter in a Command Name
+6. Enter in a Command Code
+7. Select your Cmd Arg Ref structure from the dropdown on the Command Argument column.
+8. Click the Store button
+9. Click the Okay button
+10. See error
+
+
+
+
+",,https://github.com/nasa/CCDD/issues/83
+BaseContainers are ignored on XTCE import,"# Description
+It seems that `BaseContainer`'s are ignored with XTCE import. 
+
+# Steps to Reproduce
+1. Attempt to import the XTCE provided below
+2. Check the ""Parents and Children"" tables
+
+<details>
+
+<summary>
+<b>Example XTCE (click to expand)</b>
+</summary>
+
+```xml
+<?xml version=""1.0"" encoding=""UTF-8""?>
+<SpaceSystem xmlns=""http://www.omg.org/space/xtce"" name=""Main"" shortDescription=""Orion"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xsi:schemaLocation=""http://www.omg.org/space/xtce SpaceSystemV1.1.xsd"">
+  <SpaceSystem name=""Foo"">
+    <TelemetryMetaData>
+      <ParameterTypeSet>
+        <IntegerParameterType name=""NumType"" signed=""false"" sizeInBits=""32"">
+          <IntegerDataEncoding sizeInBits=""32"" />
+        </IntegerParameterType>
+      </ParameterTypeSet>
+      <ParameterSet>
+        <Parameter name=""Num"" parameterTypeRef=""NumType"" />
+      </ParameterSet>
+      <ContainerSet>
+        <SequenceContainer name=""Foo"">
+          <EntryList>
+            <ParameterRefEntry parameterRef=""Num"">
+            </ParameterRefEntry>
+          </EntryList>
+          <BaseContainer containerRef=""Bar/Bar"">
+            <RestrictionCriteria>
+              <ComparisonList>
+                <Comparison parameterRef=""Bah"" value=""1"" />
+              </ComparisonList>
+            </RestrictionCriteria>
+          </BaseContainer>
+        </SequenceContainer>
+      </ContainerSet>
+    </TelemetryMetaData>
+    <SpaceSystem name=""Bar"">
+      <TelemetryMetaData>
+        <ParameterTypeSet>
+          <IntegerParameterType name=""BahType"" signed=""false"" sizeInBits=""32"">
+            <IntegerDataEncoding sizeInBits=""32"" />
+          </IntegerParameterType>
+        </ParameterTypeSet>
+        <ParameterSet>
+          <Parameter name=""Bah"" parameterTypeRef=""BahType"" />
+        </ParameterSet>
+        <ContainerSet>
+          <SequenceContainer name=""Bar"">
+            <EntryList>
+              <ParameterRefEntry parameterRef=""Bah"" />
+            </EntryList>
+          </SequenceContainer>
+        </ContainerSet>
+      </TelemetryMetaData>
+    </SpaceSystem>
+  </SpaceSystem>
+</SpaceSystem>
+```
+</details>
+
+**Expected Behavior**
+Foo should extend Bar
+
+**Observed Behavior**
+Foo does not extend Bar
+
+# Additional Info
+Also, if you export Foo and Bar after importing them, the BaseContainer node is no-longer present in the exported XTCE
+",,https://github.com/nasa/CCDD/issues/82
+Wiki CCDD API Page Broken: X-Frame-Options,"Trying to view [the wiki CCDD API page](http://htmlpreview.github.io/?https://github.com/nasa/CCDD/blob/master/Javadoc/index.html) results in each iframe showing ""raw.githubusercontent.com refused to connect.""
+
+Viewing JavaScript console shows:
+```
+Refused to display 'https://raw.githubusercontent.com/nasa/CCDD/master/Javadoc/overview-frame.html' in a frame because it set 'X-Frame-Options' to 'deny'.
+Refused to display 'https://raw.githubusercontent.com/nasa/CCDD/master/Javadoc/allclasses-frame.html' in a frame because it set 'X-Frame-Options' to 'deny'.
+Refused to display 'https://raw.githubusercontent.com/nasa/CCDD/master/Javadoc/overview-summary.html' in a frame because it set 'X-Frame-Options' to 'deny'.
+Uncaught TypeError: top.loadFrames is not a function
+    at onload (?https://github.com/nasa/CCDD/blob/master/Javadoc/index.html:1)
+```
+
+Investigating, it seems this is [a common issue for pages that use iframes](https://github.com/htmlpreview/htmlpreview.github.com/issues/68). If this previously worked, then I suspect GitHub changed their header setting for X-Frame-Options at some point.
+
+To fix this, you would either need to stop using iframes, or find a way to change that header setting. I don't believe the latter is possible since that's configured by the GitHub webserver directly.",,https://github.com/nasa/CCDD/issues/81
+Ensure the bat file will work on Windows,"The bat file previously used colons to separate class path arguments,
+however Windows uses semi-colons to separate class path arguments.
+Change the colons to semi-colons to address this issue since bat files
+were meant to run on Windows. Also remove some of the arguments since
+the paths probably don't make sense for a Windows machine.
+
+Additionally, add a sh file to be used to run CCDD on non-Windows
+machines.
+
+This commit addresses issue #79",,https://github.com/nasa/CCDD/pull/80
+bat file does not work on Windows,"The .bat file in the root of the project does not work on Windows because Windows uses semi-colons and not colons to delimit class path arguments. This file is probably meant as an example, but it was causing issues for a few new users who were running this software on Windows.",,https://github.com/nasa/CCDD/issues/79
+Project->New does not create tables,"Project->New completes successfully and I can see in psql that the database was created but it has no tables:
+
+postgres=# \c test6
+You are now connected to database ""test6"" as user ""postgres"".
+test6=# \dt
+Did not find any relations.
+test6=# 
+
+When I try to open this project, I get a bunch of errors:
+
+
+18 | localhost5432 | test7 | tklaus | 06/26/202014:22:44.127 | Command | SELECT obj_description('public.__tlm_scheduler'::regclass, 'pg_class');
+-- | -- | -- | -- | -- | -- | --
+19 | localhost5432 | test7 | tklaus | 06/26/202014:22:44.352 | Fail | Cannot obtain comment for table '__tlm_scheduler'; cause 'Invalid SQL command; ERROR: relation ""public.__tlm_scheduler"" does not exist  Position: 24'
+20 | localhost5432 | test7 | tklaus | 06/26/202014:22:48.847 | Fail | Invalid rate parameter(s): using default values instead; cause 'missing rate value'
+
+
+It seems that CCDD never creates the schema? ",,https://github.com/nasa/CCDD/issues/78
+Import XTCE data error,"When importing an XTCE file that was generated using the XTCE_export.js script, I receive the following CCDD Error:
+
+> An unanticipated error occurred; cause 'For input string: ""System Path""'
+> 
+> Error trace:
+> CcddFieldHandler: getFieldInformationFromData() line 599
+> CcddFileIOHandler: importSelectedFileIntoTable() line 2540
+> CcddTableEditorDialog: performAction() line 742
+> CcddClassesComponentValidateCellActionListener: actionPerformed() line 181
+
+CCDD Version 2.0.16
+Ubuntu 18.04.2 LTS
+Java 8
+PostgreSQL 10.12
+
+The XTCE file used:
+
+```
+<?xml version=""1.0"" encoding=""UTF-8"" standalone=""no""?>
+<SpaceSystem xmlns=""http://www.omg.org/space/xtce"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" name=""myproject"" shortDescription=""myproject"" xsi:schemaLocation=""http://www.omg.org/spec/XTCE/20061101 06-11-06.xsd"">
+   <LongDescription>Project containing interface definitions</LongDescription>
+   <AncillaryDataSet>
+      <AncillaryData name=""XML: Application ID"">applicationID</AncillaryData>
+      <AncillaryData name=""XML: Function Code"">functionCode</AncillaryData>
+   </AncillaryDataSet>
+   <Header classification=""DOMAIN"" date=""Fri May 01 09:36:13 PDT 2020"" validationStatus=""Working"" version=""1.0"">
+      <AuthorSet>
+         <Author>hakuho</Author>
+      </AuthorSet>
+      <NoteSet>
+         <Note>CCDD Version: 2.0.16 (5-1-2020)</Note>
+         <Note>Date: Fri May 01 09:36:13 PDT 2020</Note>
+         <Note>Project: myproject</Note>
+         <Note>Host: localhost:5432</Note>
+         <Note>Endianess: big</Note>
+      </NoteSet>
+   </Header>
+   <SpaceSystem name=""MyStructure"" shortDescription=""MyStructure"">
+      <Header classification=""INTERFACE"" validationStatus=""Working"" version=""1.0""/>
+      <TelemetryMetaData>
+         <ParameterTypeSet>
+            <EnumeratedParameterType name=""engine_arm_Type"">
+               <LongDescription>Engine armed Status</LongDescription>
+               <UnitSet/>
+               <IntegerDataEncoding bitOrder=""mostSignificantBitFirst"" encoding=""unsigned"" sizeInBits=""1""/>
+               <EnumerationList>
+                  <Enumeration label=""Off"" value=""0""/>
+                  <Enumeration label=""Arm"" value=""1""/>
+               </EnumerationList>
+            </EnumeratedParameterType>
+            <EnumeratedParameterType name=""engine_fire_Type"">
+               <LongDescription>Engine fire status</LongDescription>
+               <UnitSet/>
+               <IntegerDataEncoding bitOrder=""mostSignificantBitFirst"" encoding=""unsigned"" sizeInBits=""1""/>
+               <EnumerationList>
+                  <Enumeration label=""Off"" value=""0""/>
+                  <Enumeration label=""Fire"" value=""1""/>
+               </EnumerationList>
+            </EnumeratedParameterType>
+         </ParameterTypeSet>
+         <ParameterSet>
+            <Parameter name=""engine_arm"" parameterTypeRef=""engine_arm_Type""/>
+            <Parameter name=""engine_fire"" parameterTypeRef=""engine_fire_Type""/>
+         </ParameterSet>
+         <ContainerSet>
+            <SequenceContainer name=""MyStructure"">
+               <EntryList>
+                  <ParameterRefEntry parameterRef=""engine_arm""/>
+                  <ParameterRefEntry parameterRef=""engine_fire""/>
+               </EntryList>
+            </SequenceContainer>
+         </ContainerSet>
+      </TelemetryMetaData>
+   </SpaceSystem>
+</SpaceSystem>
+```",,https://github.com/nasa/CCDD/issues/77
+Backup cannot be restored on an empty database,"Running CCDD in a docker environment, and was trying to downgrade to an older version, i made a backup before from a postgreSQL 11 instance, and when the I couldn't downgrade, I switched back to 11, tried to restore the attached file, and it failed.
+[test_dbu.zip](https://github.com/nasa/CCDD/files/4473038/test_dbu.zip)
+user = testuser",,https://github.com/nasa/CCDD/issues/76
+C_Struct_To_CSV output cannot be imported in CCDD-2,"I have setup CCDD 2.0 locally on a system here, and am using the
+struct parser to parse a cFS project. When I try to import the CSV
+files generated in CCDD it fails consistently. I have attached a
+sample file and the relevant error log.
+This is running against a PostgreSQL 11 instance.
+
+[error.log](https://github.com/nasa/CCDD/files/4461990/error.log)
+
+[cFS_CS_tables.txt](https://github.com/nasa/CCDD/files/4461994/cFS_CS_tables.txt)
+
+It complains about 'Structure'",,https://github.com/nasa/CCDD/issues/75
+CRITICAL: Filesystem Directory Deletion possible,"I installed CCDD locally on my Linux Desktop, in order to add TLM/CMD data. Then I tried a export it to a file (it was either JSON or CSV, i don't remember) and browsed to my home directory. I forgot to add a filename at the end, and started the operation (my mistake). The app started deleting the contents of my home directory. I'll work on some fixes once my machine is back operational.
+",,https://github.com/nasa/CCDD/issues/74
+Images,"![image](https://user-images.githubusercontent.com/35711309/74608562-bb476400-50a7-11ea-9557-00a7b3f1b270.png)
+",,https://github.com/nasa/CCDD/issues/73
+[Bug Fix] Assign Message IDs,"Assigning Message IDs, no matter the structure, does not assign new starting MsgIDs. No Error message is given and is assumed to work, but feature does not work. ",,https://github.com/nasa/CCDD/issues/72
+Modify json export,Changed the way that the JSON import and export works. The user now has more options for configuring how to import/export and can even export an entire database to individual files for easier version control.,,https://github.com/nasa/CCDD/pull/71
+Modify json export,The way that JSON files are imported and exported has been updated. You can now configure how you want to export files and even export an entire database to individual files for easier version control.,,https://github.com/nasa/CCDD/pull/70
+[Feature Request] Replace Existing Script Associtation Flag,It would be helpful if there was a command line flag to replace any imported script association configuration,,https://github.com/nasa/CCDD/issues/69
+Enumerations cannot be used as data types in Structure tables,"This may be more of a feature request than a bug. It would be nice to have the ability to make reference to enumerations as data types for entries in Structure/Command tables in CCDD.
+
+Currently, an error similar to the following occurs if you do so:
+
+CCDD : Database Error : Cannot load table 'MD_CmdHandlerTblRec_t,MD_MsgType_t.MsgTypes'; cause 'Table doesn't exist'
+CCDD : Script Error : Cannot execute script '/home/scripts/createHeader.py' using table(s) 'Group:CFS_LIB + Group:CI_LAB + Group:CS + Group:DS + Group:FM + Group:HK + Group:HS + Group:IO_LIB + Group:LC + Group:MD + Group:MM + Group:SAMPLE_APP + Group:SC + Group:SCH + Group:TO_LAB'; cause 'Table 'MD_CmdHandlerTblRec_t' (or one of its children) failed to load'
+",,https://github.com/nasa/CCDD/issues/68
+CCDD v2 doesn't work with Java 11,It's not currently mentioned in the documentation that Java 8 is required for CCDD v2 and newer versions of Java won't work. This should be included somewhere in the readme for the project.,,https://github.com/nasa/CCDD/issues/67
+Importing XTCE Issues,"I am trying to import command and telemetry into CCDD from an XTCE file.  I have successfully  validated the file using the XTCE 1.1 schema ([XTCE 1.1](https://www.omg.org/spec/XTCE/20061101/06-11-06.xsd)).  The following XTCE imports without error (though not the same command specifications):
+
+`<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>
+<SpaceSystem xmlns=""http://www.omg.org/space/xtce"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" name=""Trial"" shortDescription=""Trial"" xsi:schemaLocation=""http://www.omg.org/spec/XTCE/20061101 06-11-06.xsd"">
+    <AncillaryDataSet>
+        <AncillaryData name=""XML: Application ID"">applicationID</AncillaryData>
+        <AncillaryData name=""XML: Function Code"">functionCode</AncillaryData>
+    </AncillaryDataSet>
+    <Header classification=""DOMAIN"" date=""Tue Aug 13 13:34:26 MDT 2019"" validationStatus=""Working"" version=""1.0"">
+        <AuthorSet>
+            <Author>e392889</Author>
+        </AuthorSet>
+        <NoteSet>
+            <Note>CCDD Version: 1.5.27 (7-16-2019)</Note>
+            <Note>Date: Tue Aug 13 13:34:26 MDT 2019</Note>
+            <Note>Project: Trial</Note>
+            <Note>Host: localhost:5432</Note>
+            <Note>Endianess: big</Note>
+        </NoteSet>
+    </Header>
+    <SpaceSystem name=""CFS_CMD"" shortDescription=""cFS Command"">
+        <Header classification=""INTERFACE"" validationStatus=""Working"" version=""1.0""/>
+        <CommandMetaData>
+            <ParameterTypeSet>
+                <IntegerParameterType name=""UINT08Type"" initialValue=""0"" sizeInBits=""8"" signed=""false"">
+                    <UnitSet />
+                    <IntegerDataEncoding encoding=""unsigned"" sizeInBits=""8"" bitOrder=""leastSignificantBitFirst"" />
+                </IntegerParameterType>
+                <IntegerParameterType name=""TestDynamicValueType"" initialValue=""200"" sizeInBits=""8"" signed=""false"">
+                    <UnitSet/>
+                    <IntegerDataEncoding encoding=""unsigned"" sizeInBits=""8"" bitOrder=""leastSignificantBitFirst""/>
+                </IntegerParameterType>
+                <ArrayParameterType name=""Array_UINT08Type"" numberOfDimensions=""1"" arrayTypeRef=""UINT08Type"" />
+            </ParameterTypeSet>
+            <ParameterSet>
+                <Parameter name=""TestDynamicValue""   parameterTypeRef=""TestDynamicValueType"" shortDescription=""Test Dynamic Value""/>
+            </ParameterSet>
+            <ArgumentTypeSet>
+                <IntegerArgumentType name=""UINT08Type"" sizeInBits=""8"" signed=""false"">
+                    <UnitSet />
+                    <IntegerDataEncoding encoding=""unsigned"" sizeInBits=""8"" bitOrder=""leastSignificantBitFirst"" />
+                </IntegerArgumentType>
+                <ArrayArgumentType name=""Array_UINT08Type"" numberOfDimensions=""1"" arrayTypeRef=""UINT08Type"" />
+            </ArgumentTypeSet>
+            <MetaCommandSet>
+                <!--<MetaCommand name=""TestCommand1"" abstract=""true"">-->
+                <MetaCommand name=""TestCommand1"">
+                    <LongDescription>Example Test Command 1</LongDescription>
+                    <CommandContainer name=""TestCommand1Container"">
+                        <LongDescription>Example Test Command Container</LongDescription>
+                        <EntryList/>
+                        <BaseContainer containerRef=""TestContainer"">
+                            <RestrictionCriteria>
+                                <ComparisonList>
+                                    <Comparison value=""0"" parameterRef=""TestParameter1""/>
+                                    <Comparison value=""1"" parameterRef=""TestParameter2""/>
+                                </ComparisonList>
+                            </RestrictionCriteria>
+                        </BaseContainer>
+                    </CommandContainer>
+                </MetaCommand>
+                <!--<MetaCommand name=""TestCommand2"" abstract=""true"">-->
+                <MetaCommand name=""TestCommand2"">
+                    <LongDescription>Example Test Command 2</LongDescription>
+                    <!--<BaseMetaCommand metaCommandRef=""TestCommand1""/>-->
+                    <BaseMetaCommand metaCommandRef=""TestCommand1"">
+                        <ArgumentAssignmentList/>
+                    </BaseMetaCommand>
+                    <ArgumentList>
+                        <Argument name=""TestArgument1"" argumentTypeRef=""UINT08Type""/>
+                        <Argument name=""TestArgument2"" argumentTypeRef=""UINT08Type""/>
+                    </ArgumentList>
+                    <CommandContainer name=""C_CommandHeader"">
+                        <EntryList>
+                            <ArgumentRefEntry argumentRef=""TestArgument1""/>
+                            <ArgumentRefEntry argumentRef=""TestArgument2""/>
+                        </EntryList>
+                        <BaseContainer containerRef=""TestCommand1Container""/>
+                    </CommandContainer>
+                </MetaCommand>
+                <MetaCommand name=""TestCommand3"">
+                    <LongDescription>Example Test Command 3</LongDescription>
+                    <BaseMetaCommand metaCommandRef=""TestCommand2"">
+                        <ArgumentAssignmentList>
+                            <ArgumentAssignment argumentName=""TestArgument3"" argumentValue=""4""/>
+                        </ArgumentAssignmentList>
+                    </BaseMetaCommand>
+                    <ArgumentList>
+                        <Argument name=""TestArgument4"" argumentTypeRef=""UINT08Type"" shortDescription=""Short Description 1""/>
+                        <Argument name=""TestArgument5"" argumentTypeRef=""Array_UINT08Type"" shortDescription=""Short Description 2""/>
+                        <Argument name=""TestArgument6"" argumentTypeRef=""UINT08Type"" shortDescription=""Short Description 3""/>
+                        <Argument name=""TestArgument7"" argumentTypeRef=""UINT08Type"" shortDescription=""Short Description 4""/>
+                        <Argument name=""TestArgument8"" argumentTypeRef=""Array_UINT08Type"" shortDescription=""Short Description 5""/>
+                    </ArgumentList>
+                    <CommandContainer name=""TestCommand3Container"">
+                        <EntryList>
+                            <ArgumentRefEntry argumentRef=""TestArgument4""/>
+                            <ArrayArgumentRefEntry parameterRef=""TestArgument5"">
+                                <DimensionList>
+                                    <Dimension>
+                                        <StartingIndex>
+                                            <FixedValue>0</FixedValue>
+                                        </StartingIndex>
+                                        <EndingIndex>
+                                            <FixedValue>2</FixedValue>
+                                        </EndingIndex>
+                                    </Dimension>
+                                </DimensionList>
+                            </ArrayArgumentRefEntry>
+                            <ArgumentRefEntry argumentRef=""TestArgument6""/>
+                            <ContainerRefEntry containerRef=""TestCommand3ContainerRef""/>
+                            <ArrayArgumentRefEntry parameterRef=""TestArgument8"">
+                                <DimensionList>
+                                    <Dimension>
+                                        <StartingIndex>
+                                            <FixedValue>0</FixedValue>
+                                        </StartingIndex>
+                                        <EndingIndex>
+                                            <!--<DynamicValue>
+                                                <ParameterInstanceRef parameterRef=""TestDynamicValue""/>
+                                                <LinearAdjustment intercept=""-1""/>
+                                            </DynamicValue>-->
+                                            <FixedValue>2</FixedValue>
+                                        </EndingIndex>
+                                    </Dimension>
+                                </DimensionList>
+                            </ArrayArgumentRefEntry>
+                        </EntryList>
+                        <BaseContainer containerRef=""TestCommand3Header"">
+                            <RestrictionCriteria>
+                                <ComparisonList>
+                                    <Comparison value=""1"" parameterRef=""TestComparison1""/>
+                                    <Comparison value=""2"" parameterRef=""TestComparison2""/>
+                                    <Comparison value=""3"" parameterRef=""TestComparison3""/>
+                                    <Comparison value=""4"" parameterRef=""TestComparison4""/>
+                                </ComparisonList>
+                            </RestrictionCriteria>
+                        </BaseContainer>
+                    </CommandContainer>
+                </MetaCommand>
+            </MetaCommandSet>
+        </CommandMetaData>
+    </SpaceSystem>
+</SpaceSystem>`
+
+This XTCE imports with errors:
+
+`<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>
+<SpaceSystem xmlns=""http://www.omg.org/space/xtce"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" name=""Trial"" shortDescription=""Trial"" xsi:schemaLocation=""http://www.omg.org/spec/XTCE/20061101 06-11-06.xsd"">
+    <AncillaryDataSet>
+        <AncillaryData name=""XML: Application ID"">applicationID</AncillaryData>
+        <AncillaryData name=""XML: Function Code"">functionCode</AncillaryData>
+    </AncillaryDataSet>
+    <Header classification=""DOMAIN"" date=""Tue Aug 13 13:34:26 MDT 2019"" validationStatus=""Working"" version=""1.0"">
+        <AuthorSet>
+            <Author>e392889</Author>
+        </AuthorSet>
+        <NoteSet>
+            <Note>CCDD Version: 1.5.27 (7-16-2019)</Note>
+            <Note>Date: Tue Aug 13 13:34:26 MDT 2019</Note>
+            <Note>Project: Trial</Note>
+            <Note>Host: localhost:5432</Note>
+            <Note>Endianess: big</Note>
+        </NoteSet>
+    </Header>
+    <SpaceSystem name=""CFS_CMD"" shortDescription=""cFS Command"">
+        <Header classification=""INTERFACE"" validationStatus=""Working"" version=""1.0""/>
+        <CommandMetaData>
+            <ParameterTypeSet>
+                <IntegerParameterType name=""UINT08Type"" initialValue=""0"" sizeInBits=""8"" signed=""false"">
+                    <UnitSet />
+                    <IntegerDataEncoding encoding=""unsigned"" sizeInBits=""8"" bitOrder=""leastSignificantBitFirst"" />
+                </IntegerParameterType>
+                <IntegerParameterType name=""TestDynamicValueType"" initialValue=""200"" sizeInBits=""8"" signed=""false"">
+                    <UnitSet/>
+                    <IntegerDataEncoding encoding=""unsigned"" sizeInBits=""8"" bitOrder=""leastSignificantBitFirst""/>
+                </IntegerParameterType>
+                <ArrayParameterType name=""Array_UINT08Type"" numberOfDimensions=""1"" arrayTypeRef=""UINT08Type"" />
+            </ParameterTypeSet>
+            <ParameterSet>
+                <Parameter name=""TestDynamicValue""   parameterTypeRef=""TestDynamicValueType"" shortDescription=""Test Dynamic Value""/>
+            </ParameterSet>
+            <ArgumentTypeSet>
+                <IntegerArgumentType name=""UINT08Type"" sizeInBits=""8"" signed=""false"">
+                    <UnitSet />
+                    <IntegerDataEncoding encoding=""unsigned"" sizeInBits=""8"" bitOrder=""leastSignificantBitFirst"" />
+                </IntegerArgumentType>
+                <ArrayArgumentType name=""Array_UINT08Type"" numberOfDimensions=""1"" arrayTypeRef=""UINT08Type"" />
+            </ArgumentTypeSet>
+            <MetaCommandSet>
+                <MetaCommand name=""TestCommand1"" abstract=""true"">
+                <!--<MetaCommand name=""TestCommand1"">-->
+                    <LongDescription>Example Test Command 1</LongDescription>
+                    <CommandContainer name=""TestCommand1Container"">
+                        <LongDescription>Example Test Command Container</LongDescription>
+                        <EntryList/>
+                        <BaseContainer containerRef=""TestContainer"">
+                            <RestrictionCriteria>
+                                <ComparisonList>
+                                    <Comparison value=""0"" parameterRef=""TestParameter1""/>
+                                    <Comparison value=""1"" parameterRef=""TestParameter2""/>
+                                </ComparisonList>
+                            </RestrictionCriteria>
+                        </BaseContainer>
+                    </CommandContainer>
+                </MetaCommand>
+                <MetaCommand name=""TestCommand2"" abstract=""true"">
+                <!--<MetaCommand name=""TestCommand2"">-->
+                    <LongDescription>Example Test Command 2</LongDescription>
+                    <BaseMetaCommand metaCommandRef=""TestCommand1""/>
+                    <!--<BaseMetaCommand metaCommandRef=""TestCommand1"">
+                        <ArgumentAssignmentList/>
+                    </BaseMetaCommand>-->
+                    <ArgumentList>
+                        <Argument name=""TestArgument1"" argumentTypeRef=""UINT08Type""/>
+                        <Argument name=""TestArgument2"" argumentTypeRef=""UINT08Type""/>
+                    </ArgumentList>
+                    <CommandContainer name=""C_CommandHeader"">
+                        <EntryList>
+                            <ArgumentRefEntry argumentRef=""TestArgument1""/>
+                            <ArgumentRefEntry argumentRef=""TestArgument2""/>
+                        </EntryList>
+                        <BaseContainer containerRef=""TestCommand1Container""/>
+                    </CommandContainer>
+                </MetaCommand>
+                <MetaCommand name=""TestCommand3"">
+                    <LongDescription>Example Test Command 3</LongDescription>
+                    <BaseMetaCommand metaCommandRef=""TestCommand2"">
+                        <ArgumentAssignmentList>
+                            <ArgumentAssignment argumentName=""TestArgument3"" argumentValue=""4""/>
+                        </ArgumentAssignmentList>
+                    </BaseMetaCommand>
+                    <ArgumentList>
+                        <Argument name=""TestArgument4"" argumentTypeRef=""UINT08Type"" shortDescription=""Short Description 1""/>
+                        <Argument name=""TestArgument5"" argumentTypeRef=""Array_UINT08Type"" shortDescription=""Short Description 2""/>
+                        <Argument name=""TestArgument6"" argumentTypeRef=""UINT08Type"" shortDescription=""Short Description 3""/>
+                        <Argument name=""TestArgument7"" argumentTypeRef=""UINT08Type"" shortDescription=""Short Description 4""/>
+                        <Argument name=""TestArgument8"" argumentTypeRef=""Array_UINT08Type"" shortDescription=""Short Description 5""/>
+                    </ArgumentList>
+                    <CommandContainer name=""TestCommand3Container"">
+                        <EntryList>
+                            <ArgumentRefEntry argumentRef=""TestArgument4""/>
+                            <ArrayArgumentRefEntry parameterRef=""TestArgument5"">
+                                <DimensionList>
+                                    <Dimension>
+                                        <StartingIndex>
+                                            <FixedValue>0</FixedValue>
+                                        </StartingIndex>
+                                        <EndingIndex>
+                                            <FixedValue>2</FixedValue>
+                                        </EndingIndex>
+                                    </Dimension>
+                                </DimensionList>
+                            </ArrayArgumentRefEntry>
+                            <ArgumentRefEntry argumentRef=""TestArgument6""/>
+                            <ContainerRefEntry containerRef=""TestCommand3ContainerRef""/>
+                            <ArrayArgumentRefEntry parameterRef=""TestArgument8"">
+                                <DimensionList>
+                                    <Dimension>
+                                        <StartingIndex>
+                                            <FixedValue>0</FixedValue>
+                                        </StartingIndex>
+                                        <EndingIndex>
+                                            <DynamicValue>
+                                                <ParameterInstanceRef parameterRef=""TestDynamicValue""/>
+                                                <LinearAdjustment intercept=""-1""/>
+                                            </DynamicValue>
+                                            <!--<FixedValue>2</FixedValue>-->
+                                        </EndingIndex>
+                                    </Dimension>
+                                </DimensionList>
+                            </ArrayArgumentRefEntry>
+                        </EntryList>
+                        <BaseContainer containerRef=""TestCommand3Header"">
+                            <RestrictionCriteria>
+                                <ComparisonList>
+                                    <Comparison value=""1"" parameterRef=""TestComparison1""/>
+                                    <Comparison value=""2"" parameterRef=""TestComparison2""/>
+                                    <Comparison value=""3"" parameterRef=""TestComparison3""/>
+                                    <Comparison value=""4"" parameterRef=""TestComparison4""/>
+                                </ComparisonList>
+                            </RestrictionCriteria>
+                        </BaseContainer>
+                    </CommandContainer>
+                </MetaCommand>
+            </MetaCommandSet>
+        </CommandMetaData>
+    </SpaceSystem>
+</SpaceSystem>`
+
+When running CCDD Version Version 1.5.27:
+
+1. When abstract is implemented, it returns:
+
+*Duplicate Table(s)*
+
+Ignored the following duplicate table definitioin(s): CFS_CMD (file: error.xtce)
+
+If both abstract commands in the file include the token then it brings in TestArgument1 and TestArgument2.
+
+
+2. When BaseMetaCommand is implemented without an empty 'ArgumentAssignmentList' underneath, it returns:
+
+*CCDD Error*
+
+An unanticipated error occurred; cause 'null'
+
+Error trace:
+  CcddXTCEHanler: importCommandTable() line 1498
+  CcddXTCEHanler: unbuildSpaceSystems() line 1146
+  CcddXTCEHanler: importFromFile() line 687
+  CcddFileIOHandler: importFile() line 1044
+  CcddFileIOHandler: execute() line 846
+  CcddBackgroundCommand: doInBackground() line 144
+  CcddBackgroundCommand: doInBackground() line 1
+  
+The implementation with an empty 'ArgumentAssignmentList' underneath (while working with the import tool) appears to fail validation when checked against the XTCE 1.1 schema.
+  
+  
+3. When the DynamicValue is implemented, it returns:
+
+*CCDD Error*
+
+An unanticipated error occurred; cause 'null'
+
+Error trace:
+  CcddXTCEHanler: processArgumentReference() line 2367
+  CcddXTCEHanler: importCommandTable() line 1606
+  CcddXTCEHanler: unbuildSpaceSystems() line 1146
+  CcddFileIOHandler: importFromFile() line 687
+  CcddFileIOHandler: importFile() line 1044
+  CcddFileIOHandler: execute() line 846
+  CcddBackgroundCommand: doInBackground() line 144
+  CcddBackgroundCommand: doInBackground() line 1 ",,https://github.com/nasa/CCDD/issues/66
+Importing XTCE causes project fields to duplicate,"## Description
+When importing XTCE that has the XML AncillaryData fields, the project fields are appended regardless of the import options selected. This occurs for every XTCE import, so you can very quickly have a ton of duplicate project fields if you import frequently.
+
+## Versions affected
+v1.5.27
+v2.0.2
+
+## Steps to reproduce
+1. Import an XTCE file (One is provided below)
+2. Navigate to `Data > Manage project fields`
+3. The project fields are appended even if they are duplicates.
+
+## Example XTCE
+<details>
+<summary>
+Click to expand
+</summary>
+
+```xml
+<?xml version=""1.0"" encoding=""UTF-8"" standalone=""no""?>
+<SpaceSystem xmlns=""http://www.omg.org/space/xtce"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" name=""test_project"" shortDescription=""test_project"" xsi:schemaLocation=""http://www.omg.org/spec/XTCE/20061101 06-11-06.xsd"">
+   <AncillaryDataSet>
+      <AncillaryData name=""XML: Telemetry Header"">CCSDS_TLM_HDR</AncillaryData>
+      <AncillaryData name=""XML: Command Header"">CCSDS_CMD_HDR</AncillaryData>
+      <AncillaryData name=""XML: Application ID"">MsgID</AncillaryData>
+      <AncillaryData name=""XML: Function Code"">SecHdrFuncCode</AncillaryData>
+   </AncillaryDataSet>
+   <Header classification=""DOMAIN"" date=""Thu Aug 15 10:31:09 CDT 2019"" validationStatus=""Working"" version=""1.0"">
+      <AuthorSet>
+         <Author>jbanks</Author>
+      </AuthorSet>
+      <NoteSet>
+         <Note>CCDD Version: 1.5.27 (7-16-2019)</Note>
+         <Note>Date: Thu Aug 15 10:31:09 CDT 2019</Note>
+         <Note>Project: test_project</Note>
+         <Note>Host: localhost:5434</Note>
+         <Note>Endianess: big</Note>
+      </NoteSet>
+   </Header>
+   <SpaceSystem name=""test"" shortDescription=""test"">
+      <Header classification=""INTERFACE"" validationStatus=""Working"" version=""1.0""/>
+      <TelemetryMetaData>
+         <ParameterTypeSet>
+            <IntegerParameterType name=""foo_Type"" signed=""true"" sizeInBits=""8"">
+               <UnitSet/>
+               <IntegerDataEncoding bitOrder=""mostSignificantBitFirst"" encoding=""signMagnitude"" sizeInBits=""8""/>
+            </IntegerParameterType>
+         </ParameterTypeSet>
+         <ParameterSet>
+            <Parameter name=""foo"" parameterTypeRef=""foo_Type""/>
+         </ParameterSet>
+         <ContainerSet>
+            <SequenceContainer name=""test"">
+               <EntryList>
+                  <ParameterRefEntry parameterRef=""foo""/>
+               </EntryList>
+            </SequenceContainer>
+         </ContainerSet>
+      </TelemetryMetaData>
+   </SpaceSystem>
+</SpaceSystem>
+```
+</details>",,https://github.com/nasa/CCDD/issues/65
+CCDD will not start if directory specified by logpath argument doesn't exist,"When attempting to start CCDD with the logpath CLI argument specifying a directory that doesn't exist, CCDD with emit the following error and fail to open:
+
+`Log Error : Cannot create event log file`
+
+I think more user-friendly behavior would be to create the folder if it doesn't exist (or perhaps provide a CLI argument that tells it to create if missing, if that behavior is undesirable for some set of users) and only fail if it cannot create that folder.
+
+Observed on version 1.5.24.",,https://github.com/nasa/CCDD/issues/64
+XTCE import multiplies ending index of array dimensions by 10,"## Summary
+When importing an XTCE into CCDD, the `EndingIndex` of an `ArrayParameterRefEntry` is multiplied by 10.
+
+## Details
+<details>
+<summary>
+Example XTCE (Click to expand)
+</summary>
+
+```xml
+<?xml version=""1.0"" encoding=""UTF-8"" standalone=""no""?>
+<SpaceSystem xmlns=""http://www.omg.org/space/xtce"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" name=""test_project"" shortDescription=""test_project"" xsi:schemaLocation=""http://www.omg.org/spec/XTCE/20061101 06-11-06.xsd"">
+   <AncillaryDataSet>
+      <AncillaryData name=""XML: Telemetry Header"">CCSDS_TLM_HDR</AncillaryData>
+      <AncillaryData name=""XML: Command Header"">CCSDS_CMD_HDR</AncillaryData>
+      <AncillaryData name=""XML: Application ID"">StreamID</AncillaryData>
+      <AncillaryData name=""XML: Function Code"">SecHdrFuncCode</AncillaryData>
+   </AncillaryDataSet>
+   <Header classification=""DOMAIN"" date=""Mon Jun 03 15:13:58 CDT 2019"" validationStatus=""Working"" version=""1.0"">
+      <AuthorSet>
+         <Author>jbanks</Author>
+      </AuthorSet>
+      <NoteSet>
+         <Note>CCDD Version: 1.5.8 (5-2-2019)</Note>
+         <Note>Date: Mon Jun 03 15:13:58 CDT 2019</Note>
+         <Note>Project: test_project</Note>
+         <Note>Host: localhost:5434</Note>
+         <Note>Endianess: big</Note>
+      </NoteSet>
+   </Header>
+   <SpaceSystem name=""adad"" shortDescription=""adad"">
+      <Header classification=""INTERFACE"" validationStatus=""Working"" version=""1.0""/>
+      <TelemetryMetaData>
+         <ParameterTypeSet>
+            <ArrayParameterType arrayTypeRef=""a_Type"" name=""a_Array"" numberOfDimensions=""1""/>
+            <IntegerParameterType name=""a_Type"" signed=""true"" sizeInBits=""8"">
+               <UnitSet/>
+               <IntegerDataEncoding bitOrder=""mostSignificantBitFirst"" encoding=""signMagnitude"" sizeInBits=""8""/>
+            </IntegerParameterType>
+            <ArrayParameterType arrayTypeRef=""b_Type"" name=""b_Array"" numberOfDimensions=""1""/>
+            <FloatParameterType name=""b_Type"" sizeInBits=""32"">
+               <UnitSet/>
+               <FloatDataEncoding encoding=""IEEE754_1985"" sizeInBits=""32""/>
+            </FloatParameterType>
+         </ParameterTypeSet>
+         <ParameterSet>
+            <Parameter name=""a"" parameterTypeRef=""a_Array""/>
+            <Parameter name=""b"" parameterTypeRef=""b_Array""/>
+         </ParameterSet>
+         <ContainerSet>
+            <SequenceContainer name=""adad"">
+               <EntryList>
+                  <ArrayParameterRefEntry parameterRef=""a"">
+                     <DimensionList>
+                        <Dimension>
+                           <StartingIndex>
+                              <FixedValue>0</FixedValue>
+                           </StartingIndex>
+                           <EndingIndex>
+                              <FixedValue>4</FixedValue>
+                           </EndingIndex>
+                        </Dimension>
+                     </DimensionList>
+                  </ArrayParameterRefEntry>
+                  <ArrayParameterRefEntry parameterRef=""b"">
+                     <DimensionList>
+                        <Dimension>
+                           <StartingIndex>
+                              <FixedValue>0</FixedValue>
+                           </StartingIndex>
+                           <EndingIndex>
+                              <FixedValue>30</FixedValue>
+                           </EndingIndex>
+                        </Dimension>
+                     </DimensionList>
+                  </ArrayParameterRefEntry>
+               </EntryList>
+            </SequenceContainer>
+         </ContainerSet>
+      </TelemetryMetaData>
+   </SpaceSystem>
+</SpaceSystem>
+
+```
+</details>
+
+After importing this example XTCE the UI shows the following:
+![image](https://user-images.githubusercontent.com/51341489/58833303-58479700-8616-11e9-9589-35cb0c1767a2.png)
+
+(The lengths of a and b should be 5 and 31 respectively)
+
+## Other notes
+* Exporting does not multiply, only the importing does.
+* The provided example file was created within CCDD and then exported to XTCE
+
+Hope this helps!
+",,https://github.com/nasa/CCDD/issues/63
+CCDD returns success when failing to parse import file,"When attempting to import an invalidly-formatted json file, I'm getting the following from CCDD:
+
+```
+File Warning : Cannot parse import file 'C:\path\to\my\file.json'; cause 'null'
+```
+
+which is expected, however CCDD exits with a return code of 0 (success), which makes it difficult to detect and respond to the error in scripts.",,https://github.com/nasa/CCDD/issues/62
+File description in JSON export causes merge conflicts,"The JSON file exported by CCDD contains a `File Description` field which contains a timestamp, username, and project name. The values of these fields tends to change within a distributed development environment and is flagged as a conflict within this file each time it's part of a merge  (requiring the developer to manually resolve the differences in the File Description, even though they don't affect the contents/import of this file).
+
+It would be useful if CCDD provided an option (accessible via at least the CLI) to omit the File Description field from the export.",,https://github.com/nasa/CCDD/issues/61
+All javadoc files modified in recent commits,"In some recent commits it appears that every JavaDoc file has changes because the timestamps within them are updated when they're regenerated. This might not be desirable because it makes it harder to identify real changes in the code while examining a particular commit (ex, commit 173775acffc has 691 changes files, almost all of which appear to be JavaDoc timestamp changes).
+
+It looks like JavaDoc supports a `-notimestamp` argument that would omit that timestamp, which should result in only the files containing actual changes containing diffs, making it easier to find real changes in the commits. 
+
+I found reference to this option here: https://stackoverflow.com/questions/5613847/remove-the-comment-generated-by-javadoc-on-date-time-in-generated-javadoc",,https://github.com/nasa/CCDD/issues/60
+CCDD exception while unable to open log file,"I'm unable to launch newer versions of CCDD. The following exception is observed on version 1.4.96:
+```
+Log Error : Cannot create event log file
+java.lang.NullPointerException
+        at CCDD.CcddEventLogDialog$4.loadAndFormatData(CcddEventLogDialog.java:401)
+        at CCDD.CcddJTableHandler.setFixedCharacteristics(CcddJTableHandler.java:1229)
+        at CCDD.CcddEventLogDialog.createEventLogWindow(CcddEventLogDialog.java:489)
+        at CCDD.CcddEventLogDialog.initialize(CcddEventLogDialog.java:211)
+        at CCDD.CcddEventLogDialog.<init>(CcddEventLogDialog.java:139)
+        at CCDD.CcddEventLogDialog.<init>(CcddEventLogDialog.java:153)
+        at CCDD.CcddMain.<init>(CcddMain.java:279)
+        at CCDD.CcddMain.<init>(CcddMain.java:238)
+        at CCDD.CcddMain$1.run(CcddMain.java:402)
+        at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+        at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+        at java.awt.EventQueue.access$500(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.security.AccessController.doPrivileged(Native Method)
+        at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+        at java.awt.EventQueue.dispatchEvent(Unknown Source)
+        at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.run(Unknown Source)
+```
+
+logPath argument is the same that I've been using previously and I've confirmed that the folder exists (and is populated with log files from prior versions), so I don't see any reason that it should be unable to create the log file. The exception is the same whether the `-shutdown` argument is provided or not, despite the event log window (referenced in the stack track) not being present when the GUI is not shown.
+
+I had upgraded from version 1.4.79 and on that version if the path doesn't exist it will emit 
+```
+Log Error : Cannot create event log file
+```
+but still launch CCDD. ",,https://github.com/nasa/CCDD/issues/59
+Non-existent JSON fields should be default initialized ,"Elements of ['Table Definition'][*]['Table Data'] shouldn't be required to contain all fields not detailed as ""Required"" when loading JSON files. For example, if I provide a definition for 'Description' with:
+```
+        {
+          ""Column Name"": ""Description"",
+          ""Enable if Pointer"": true, 
+          ""Enable if Structure"": true, 
+          ""Required"": false,
+          ""Unique"": false 
+        }
+```
+If a description isn't provided within the JSON object for 'Table Data' this should be parsed as either NULL (indicating it wasn't provided) or default initialized (which if it didn't exist in the data, would most likely be it's default value anyway).",,https://github.com/nasa/CCDD/issues/58
+Project name case-sensitive in delete subcommand,"CCDD appears to require an all-lowercase version of the project name when using the delete subcommand, as demonstrated below.
+```
+>java -cp ""C:\Programs\CCDD\CCDD.jar"" CCDD.CcddMain -logPath ""C:\Programs\CCDD\logs""  -create ""-name 'TestCapitals'"" -shutdown
+>java -cp ""C:\Programs\CCDD\CCDD.jar"" CCDD.CcddMain -logPath ""C:\Programs\CCDD\logs""  -delete ""-name 'TestCapitals'"" -shutdown
+Error: Delete project failed; project 'TestCapitals' does not exist
+>java -cp ""C:\Programs\CCDD\CCDD.jar"" CCDD.CcddMain -logPath ""C:\Programs\CCDD\logs""  -delete ""-name 'testcapitals'"" -shutdown
+```
+It looks like CCDD may be expecting the database name, rather than the project name, which appears to always be lowercase.
+
+Also, the failed command in the sequence above is not reflected in the log file generated from that session... I only see command and success entries.
+",,https://github.com/nasa/CCDD/issues/57
+Version number in export,"Currently it does not appear that CCDD includes the version from which an export was generated in the resulting file. It would be helpful for debugging changes to the export format (like the ones which changed the ordering with version 1.4.75) on multiple users setups (who are on various versions, depending on when they last pulled) to be able to tell what version the export was derived from. Could just be part of the existing File Description elements.
+
+Thanks",,https://github.com/nasa/CCDD/issues/56
+Changing applicability of field deletes all values,"When changing the applicability of a table field, all values from all existing instances of that field are cleared. This is undesirable and causes unnecessary loss of data.
+
+For example, when a field with scope 'All Tables' is changed to 'Roots Only', the field is (properly) no longer displayed on child tables but the field is also cleared for all root tables, requiring the user to re-enter the values for the root tables (whose field hasn't changed). 
+
+The same happens in the opposite direction. For example, when a field with scope 'Roots Only' is changed to 'All Tables' the field is (properly) created for all child tables and is blank (because it previously didn't exist), however the field is now also blank for all root tables, even though they didn't change.
+
+Observed on 1.4.62.",,https://github.com/nasa/CCDD/issues/55
+Macro definitions cleared when running script from CLI,"When running a script via the CLI, I'm observing that all macro definitions are cleared. 
+
+After importing a project which has macro definitions, I'm able to run a script (through the GUI) and generate the artifact without issue. If I close CCDD and re-run that same script via the CLI, when I reopen CCDD the macro definitions are no longer present. The clearing appears to take place before the script is run because scripts which depend on those macros will error.
+
+So far this has been observed on OSX and Linux with v1.4.55. Can provide logs if that's helpful.
+",,https://github.com/nasa/CCDD/issues/54
+Table not removed from group on deletion,"When deleting a table CCDD does not remove the table from any groups of which it was a member, requiring the user to then open the group editor to manually remove it. Failing to do so will cause errors (due to missing tables) when attempting to use that group with scripts in the future.
+
+It would be helpful for CCDD to automatically remove a deleted table from any groups of which it was a part.",,https://github.com/nasa/CCDD/issues/53
+Imported table not matching json file,"I'm seeing an issue where the table definition imported by CCDD does not match the table definition in the json file being imported. The json file was created via export from CCDD. This issue is reproduceable through both the CLI and GUI. The log files contains no 'Fail' entries and contains a successful import entry at the end.
+
+As far as I've noticed, this is only affecting one table hierarchy (root and children) in my project right now. I'm not sure what details are relevant here, so here's a description of the table hierarchy in question:
+
+The root table contains several elements, all of which are child tables (no base datatypes). The child tables each have several elements, all of which have descriptions, several of which have units defined, and several of which have enumerations (defined as macros). I see all of these attributes in the exported json file, however when my coworker imports the file, CCDD has only imported the name, data type, and array size of the elements of the each of the tables (root and children). Coincidentally the missing fields are ones that I added recently (which is how this was discovered), but I can't find anything about the contents of these fields that would cause this issue. 
+
+Observed on CCDD 1.4.49 on Windows, Ubuntu, and OSX.",,https://github.com/nasa/CCDD/issues/52
+Type-dependent fields not disabled in custom table type,"For an instance of the default structure table type, when a non-integer type is selected for a row, the Bit Length and Enumeration are disabled (grayed out) for that row since they're not meaningful for non-integer types. The same behavior is not observed for custom table types with those same conditions, despite using the same input types for each of those columns... they continue to accept user input.
+
+I'm not sure if this is due to the Structure/Command table types being treated specially or if this is a bug. For consistency, it seems that these input types should behave the same for both default and user-defined table types.",,https://github.com/nasa/CCDD/issues/51
+CCDD returns 0 (Success) with database errors,"When I attempt to connect to a project which is already open, I (correctly) get the following error message:
+```
+Database Error : Cannot delete project database 'localhost:1234/myproject'; cause 'ERROR: database ""myproject"" is being accessed by other users
+  Detail: There is 1 other session using the database.'
+```
+however CCDD still exits with exit code 0 (Success). It would be helpful if it returned a non-zero exit code so that calling program can handle the error. This is a similar issue to #47 where it was noted that CCDD (used to) return 0 on a password authentication failure.",,https://github.com/nasa/CCDD/issues/50
+Feature Request: Add table to group during creation,"It would be helpful if the New Table dialog allowed adding the new table to a group during its creation. 
+
+Currently, the process of creating a grouped table requires creating the table (via `Data > New Table`) and then going back into the Data menu to access `Manage Groups` and add the table to a group. 
+
+This process could be streamlined by having a dropdown menu on the New Table dialog which would default to `No Group` (current functionality) but allow the user to select any existing group to automatically add the table to that group.",,https://github.com/nasa/CCDD/issues/49
+Exception while importing,"When attempting to import via the CLI, I'm receiving the following exception:
+
+```
+An unanticipated error occurred; cause 'null'  Error trace:   
+CcddDbCommandHandler: executeDbUpdate() line 123   
+CcddDbTableCommandHandler: createTable() line 1171   
+CcddFileIOHandler: createImportedTable() line 1482   
+CcddFileIOHandler: createTablesFromDefinitions() line 1254   
+CcddFileIOHandler: importFile() line 880   
+CcddCommandLineHandler: doCommand() line 1060   
+CcddCommandLineHandlerCommandHandler: handler() line 385   
+CcddCommandLineHandler: parseCommand() line 2119   
+CcddCommandLineHandler: parseCommand() line 1985   
+CcddMain: parseDbSpecificCommandLineCommands() line 848   
+CcddDbControlHandler: complete() line 2657   
+CcddBackgroundCommand: done() line 192 
+```
+The file being imported is successfully imported from the GUI. The following are the last couple lines (out of the ~1600 lines) of the log file:
+```
+localhost:5432|myproject|myuser|11/08/2018 13:11:40.064|Success|Connected to project 'myproject' as user 'myuser'
+localhost:5432|myproject|myuser|11/08/2018 13:11:40.066|Status|PostgreSQL: 9.5  *** JDBC: PostgreSQL 9.4.1207.jre7 (type 4)
+localhost:5432|myproject|myuser|11/08/2018 13:11:40.068|Command|SELECT * FROM get_table_members_by_name();
+localhost:5432|*none*|myuser|11/08/2018 13:11:40.077|Fail|Cannot load table members; cause 'Connection to server lost'
+```
+This particular sequence of connecting to the database and then running a command occurs successfully ~100 times earlier in the log file... I'm not sure what causes this one to fail.
+
+The command being run is:
+`java -cp ""my/Path/CCDD.jar"" CCDD.CcddMain -logPath ""/my/Path/logs"" -create ""-name 'myproject' -owner myuser -description 'Project containing interface definitions'"" -project myProject -user myuser -import ""-fileName '/my/path/to/data/interfaces.json' -replaceExisting true"" -shutdown`.
+
+Observed in 1.4.44 on Ubuntu.",,https://github.com/nasa/CCDD/issues/48
+No feedback with password authentication issue,"When CCDD is started without a user specified, the user is prompted for a database username and password. I'm attempting to setup a new CCDD machine and am stuck at this prompt (ie, username and password are entered, click 'okay', and prompt reappears). I've checked the log and there's only one entry (echoing the arguments CCDD was started with), but nothing relating to a login attempt. 
+
+When I start CCDD with the `user` argument (set to the user I would enter into the dialog) and `shutdown`, I get the following error in the log:
+`FATAL: password authentication failed `
+I suspect that's the same issue I'm seeing through the GUI, but can't tell without additional feedback from CCDD. It would be very helpful if CCDD could provide more information, preferably through a log message (and a dialog if using the GUI).
+
+Observed with 1.4.44 on Ubuntu.",,https://github.com/nasa/CCDD/issues/47
+Hotkeys in table editing window not responding,"Each button at the bottom of the table editing window and each dropdown menu along the top has a letter underlined, which implies that they're able to be used by hitting that letter as a hotkey. The only place that this works for me is if I've already opened one of the menus at the top (at which point if I hit one of the selected letters it will execute that command). I'm unable to open any of the menus (ex open File by hitting `F`) nor use any of the buttons along the bottom (ex, Store by hitting `S`) via hotkey. 
+
+As far as I can tell, neither case of the letter works nor is it dependent on what I have selected (ie I'm not editing one of the table fields while attempting to use a hotkey). Hitting ctrl and the letter also doesn't activate the hotkey.
+
+The users guide doesn't appear to have any info on these hotkeys (nothing comes up when I search for hotkey or shortcut) so I'm not sure if this is a bug or if I'm misunderstanding how to use the hotkeys. Observed on 1.4.41 on win10.",,https://github.com/nasa/CCDD/issues/46
+Unable to add table to group,"When using the 'Manage Groups' dialog, I'm able to select a table, select a group, and then click the right arrow to move the table into the group and see that its now listed under that group. When I click the store button no database queries show up in the main window but I'm able to exit the dialog without a warning about unsaved changes. The next time I open the dialog the table I added is not longer present in the group, indicating its not being stored in the database correctly.",,https://github.com/nasa/CCDD/issues/45
+Inconsistent structure table fields,"My structure table type has a field 'Telemetry message name & ID' with applicability 'Roots Only'. When I edit the prototype of some of my structure tables I'm finding that some of them don't have that field defined. Is this supposed to be possible? My understanding was that all tables of a particular type would have the same columns and fields.
+
+Edit: Observed on 1.4.38",,https://github.com/nasa/CCDD/issues/44
+Unable to delete redundant macro definitions,"I've ended up in a situation where I have duplicate macro definitions (through the import process, though I'm unsure if it may have been my fault). I'm unable to delete any of the duplicate definitions because the gui says that they're referenced by a table (which is true). 
+
+It would be helpful if the import process could merge completely identical macro definitions and either prompt or throw an error for different macro definitions with the same name (to allow the user to sort it out). It would also be helpful for the GUI to allow deleting macros (even if they're referenced by a table) as long as at least one macro with that name still exists.
+
+Thanks!",,https://github.com/nasa/CCDD/issues/43
+Exception when attempting to import file - filename?,"Observed following exception when attempting to import a file named `interfaces (1).json`:
+
+```
+Exception in thread ""AWT-EventQueue-0"" java.lang.ClassCastException: javax.swing.filechooser.FileNameExtensionFilter cannot be cast to CCDD.CcddDialogHandler$ExtensionFilter
+    at CCDD.CcddDialogHandler.choosePathFile(CcddDialogHandler.java:1231)
+    at CCDD.CcddTableManagerDialog$1.complete(CcddTableManagerDialog.java:616)
+    at CCDD.CcddBackgroundCommand$1.done(CcddBackgroundCommand.java:192)
+    at javax.swing.SwingWorker$5.run(SwingWorker.java:737)
+    at javax.swing.SwingWorker$DoSubmitAccumulativeRunnable.run(SwingWorker.java:832)
+    at sun.swing.AccumulativeRunnable.run(AccumulativeRunnable.java:112)
+    at javax.swing.SwingWorker$DoSubmitAccumulativeRunnable.actionPerformed(SwingWorker.java:842)
+    at javax.swing.Timer.fireActionPerformed(Timer.java:313)
+    at javax.swing.Timer$DoPostEvent.run(Timer.java:245)
+    at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:311)
+    at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:758)
+    at java.awt.EventQueue.access$500(EventQueue.java:97)
+    at java.awt.EventQueue$3.run(EventQueue.java:709)
+    at java.awt.EventQueue$3.run(EventQueue.java:703)
+    at java.security.AccessController.doPrivileged(Native Method)
+    at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:74)
+    at java.awt.EventQueue.dispatchEvent(EventQueue.java:728)
+    at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:205)
+    at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
+    at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
+    at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+    at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
+    at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
+```
+
+Observed in 1.4.34 on OSX.",,https://github.com/nasa/CCDD/issues/42
+Bit Length field not disabled for command arguments with float datatype,"When defining a command with an argument with a floating point type (float, double) the bit length field remains active and accepts input. This behavior is different than the structure tables which disable the bit length column for rows which use a float type.",,https://github.com/nasa/CCDD/issues/41
+All Tables pseudo-group not available when no other groups defined,"When no groups have been defined by the user, the 'Filter by group' option is grayed out in windows which allow a selection of tables (ie, export menu, scripts menu). This prevents prevents usage of the All tables pseudo-group. It would be handy to be able to use that group regardless of if the user has defined other groups. ",,https://github.com/nasa/CCDD/issues/40
+Feature Request: Support for longer project fields,"Currently it appears that there's a limit of 100 characters on project field widths (though that appears to be a limit on the displayed entry field, rather than a limit on the size of the contents). It would be useful to be able to use longer fields to store project metadata (for example, an overview of the mission and/or subsystem) that doesn't belong in the current CCDD project description field.
+
+The content I'm looking to store is ~7,000 characters long, which would probably be unreasonable for the GUI to support, but something longer than 100 would be useful.
+
+",,https://github.com/nasa/CCDD/issues/39
+Installation/configuration on mac,"One of the machines I'm attempting to use CCDD on is a mac (running OSX 10.12.6). We've cloned the CCDD repo and can start CCDD, and have installed Postgres, and CCDD can connect to the database. We're unable to create a CCDD project. When we attempt to create a project through the menu option, several commands are issued, shown below:
+```
+ Command | SELECT r.rolname FROM pg_catalog.pg_roles r ORDER BY r.rolname ASC;
+ Command | SELECT datname \|\| E';' \|\| split_part(description, ';', 2) \|\| E';' \|\| split_part(split_part(description, ';', 1), 'Core Flight Software Command and Data Dictionary', 2) \|\| E';' \|\| substr(description, length(datName \|\| 'Core Flight Software Command and ... (247)
+```
+On other systems there's a CREATE DATABASE command issued after these two, that we're not observing on the mac. CCDD doesn't seem to issue the command to actually create the database, but also doesn't error or provide any feedback as to what's happening.
+
+If you have any mac users, could they provide more detailed installation/configuration directions? We first tried the postgres installer (https://www.enterprisedb.com/downloads/postgres-postgresql-downloads, version 10.5) but kept getting the error:
+```
+Problem running post install step … the Database Cluster Initialisation failed
+```
+We did manually initialize a database (using initdb) and create users, but were unable to get CCDD to create a project.
+
+We then tried the PostgresApp (https://postgresapp.com/) (postgres versions 9.6 and 10.5) but are observing no errors and the same behavior from CCDD.
+
+I'm not sure this is a CCDD issue. a postgres issue, or a mac issue, but will be happy to try to isolate it if you can provide some guidance. Any guidance would be appreciated. Thanks!",,https://github.com/nasa/CCDD/issues/38
+Exception when attempting to import via CLI,"I'm seeing the following exception when I attempt to import via the `-import` subcommand. The user I specify with the `-user` option does have write privileges and is able to import without issue through the GUI.
+
+This was observed on 1.4.27
+
+```
+CCDD : CCDD Error : An unanticipated error occurred; cause 'null'  Error trace:   CcddFileIOHandler: createTablesFromDefinitions() line 1291   CcddFileIOHandler: importFile() line 868   CcddCommandLineHandler: doCommand() line 1025   CcddCommandLineHandlerCommandHandler: handler() line 363   CcddCommandLineHandler: parseCommand() line 1739   CcddCommandLineHandler: parseCommand() line 1605   CcddMain: parseDbSpecificCommandLineCommands() line 847   CcddDbControlHandler: complete() line 2631   CcddBackgroundCommand: done() line 192
+Error: Import disabled; user lacks write access
+```",,https://github.com/nasa/CCDD/issues/37
+Feature Request: Export/Import group information,"It would be useful to have the ability to automatically import/export groups into/out of CCDD.
+
+I'm attempting to setup CCDD such that when a developer checks out a git branch it loads the correct version of the database into CCDD for them. I'm using groups to organize sets of tables by application to make it easy to execute scripts on the set of tables describing that application. Its currently possible to import table types, input types, data types, tables, and macros but not groups, which means grouping information is lost through an export/import cycle.
+",,https://github.com/nasa/CCDD/issues/36
+Feature Request: Create/Delete projects from CLI,"It would be useful to have the ability to create and delete projects from the command line interface to facilitate using CCDD as a background database. 
+
+I'm attempting to setup CCDD such that when a developer checks out a git branch it loads the correct version of the database into CCDD for them. Currently, if importing tables into an existing project, there's no option which allows for deleting tables not found in the imported file. This means that while tables present in the import can be updated (using 'replaceExisting' option), any tables present in the project (but not in the import) will remain in the project after import.
+
+I believe the easiest solution for this workflow (and in terms of implementation) is to create a new project each time a branch is checked out, which requires the ability to create a project from the CLI and preferably a method of deleting them from the CLI.",,https://github.com/nasa/CCDD/issues/35
+Exception when attempting to import ,"I'm seeing the following exception when attempting to import a json file:
+
+![image](https://user-images.githubusercontent.com/18016749/45839821-7026f700-bce3-11e8-9e76-0e8e85a96dd9.png)
+
+I'm observing this on version 1.4.24. The json file was exported by the same version. Happy to provide additional information if needed.
+
+Thanks
+
+Edit: To clarify, this appears to only occur when importing into the same project from which it was exported. It does import correctly into a new project.",,https://github.com/nasa/CCDD/issues/34
+Export 'All Tables' group from command line,"I'm attempting to use the command line interface to export all the tables in the database. I've listed the export commands I've attempted below. 
+
+```
+-export ""-filePath ./ -format json -tablePaths Group:All Tables -singleFile true""
+```
+Results in:
+```
+Error: Unrecognized delimiter for command 'Tables'
+```
+
+Both
+```
+-export ""-filePath ./ -format json -tablePaths 'Group:All Tables' -singleFile true""
+```
+and
+```
+-export ""-filePath ./ -format json -tablePaths Group:'All Tables' -singleFile true""
+```
+result in:
+```
+CCDD : Database Error : Cannot load table ' '
+```
+
+Since `All Tables` has a space in it, I presume I'm supposed to quote the name, but I haven't been able to figure out how to correctly specify the command and am unsure if this is user-error or a bug.
+
+Thanks!
+
+",,https://github.com/nasa/CCDD/issues/33
+Cannot load project,"With CCDD 1.4.7 I've been unable to load either projects created with older versions of CCDD nor new projects created with this version. When I attempt to load a project I see a long list of queries (~2200 repetitive sets of queries) and after ~10-20sec am presented with:
+
+Cannot obtain command information:
+![image](https://user-images.githubusercontent.com/18016749/44607088-371b6580-a7bd-11e8-8826-b94f8b08a652.png)
+
+acknowledging the dialog yields:
+![image](https://user-images.githubusercontent.com/18016749/44607077-2a970d00-a7bd-11e8-82ed-bc108797ddee.png)
+
+After these dialogs CCDD displays the project name as if I'm connects but won't allow creation of new tables and attempting to edit existing tables (of which I wouldn't expect there to be any) yields an error due to being unable to load table members.
+
+![image](https://user-images.githubusercontent.com/18016749/44607849-b6aa3400-a7bf-11e8-97e7-96153fecd9e7.png)
+
+and the log viewer displays: 
+```
+Cannot load table members; cause 'Connection to server lost'
+```
+After this I'm forced to restart CCDD because all the project options are disabled.
+
+
+
+
+",,https://github.com/nasa/CCDD/issues/32
+Feature Request: Command Reference/Table Column Reference Input Type,"Similar to the Variable Reference input type, it would be helpful to have a Command Reference input type for which the valid values are the name of an existing Command Name from a defined Command table. This may be more generally handled by an input type which references a particular column in a particular table type (both defined by the user). It would be helpful if the same autofill that works for the variable reference also worked for this input type to prompt the user with the valid options.
+
+This command reference would be useful for the definition of RTS/ATS tables for which its important that the command the user selects already exists in the database. I don't currently have a specific use case for the general table column reference input type, other than as a more general implementation for the use case of the Command Reference described above. 
+
+",,https://github.com/nasa/CCDD/issues/31
+Feature Request: Variable Reference validation,"As described in the issue describing its implementation, the variable reference field turns yellow if the reference is not valid (ie, if the referenced variable has changed since the field was selected), which is useful for identifying invalid fields in the table the user is editing. As far as I'm aware, there is currently no way to tell if a change to a structure results in invalid references without opening each table containing a reference and checking for yellow cells.
+
+It would be useful to have a reference validator utility (maybe accessible from the Data menu) which would check all of the variable reference fields in all tables and inform the user if any need to be updated.",,https://github.com/nasa/CCDD/issues/30
+Feature Request: Numeric input type,"In would be useful to have an input type which only accepts numeric characters and a single optional period. This is similar to the current Floating Point input, however the floating point input will add a trailing decimal even if the user does not enter one. This numeric input type should preserve the user's input with respect if the decimal exists or not. 
+
+The following regex describes the requested validation:
+```
+\d*\.?\d*
+```
+
+While this can be achieved via the input type editor, this seems like a generic-enough type that it may be worth including by default. I'm looking to use this input type to store literal values of command arguments and variable field, for use in scripts. While it would be ideal to check the value the user entered is consistent with the specified command argument/variable type, I think that ensuring the user enters a numeric value (and preserving what they entered) is sufficient for now.",,https://github.com/nasa/CCDD/issues/29
+Clarify CCDD API import in scripts,"All of the example python scripts shipped with CCDD include the following line at the top of the file:
+```
+from CCDD import CcddScriptDataAccessHandler
+```
+however, the module imported (CcddScriptDataAccessHandler) doesn't appear to be used in any of the scripts. Further, the `ccdd` variable appears to be defined by default no matter if the import is used or not. The script shown here:
+```
+with open(""init.txt"",""w"") as file:
+    file.write("","".join(dir()))
+    file.write(""\n"")
+    file.write(str(ccdd))
+    file.write(""\n"")
+    file.write(ccdd.getScriptName())
+```
+
+produces the following output:
+```
+__builtins__,ccdd,ccdds,file
+CCDD.CcddScriptDataAccessHandler@3c874e39
+C:\myCCDDpath\CCDD\scripts\testImport.py
+```
+and demonstrates that the variables ccdd and ccdds are created without the need for the import.
+
+Could you clarify the purpose of the CcddScriptDataAccessHandler import? 
+
+Additionally, could you provide details on how to import the ccdd variable into other user-provided modules? Some of my scripts have reached a size where it would be preferable to organize them in multiple files, but I haven't been able to figure out what I need to import in the support files to have access to the same ccdd variable that the main script gets automatically. 
+
+It would be much preferable to be able to use something like 
+```
+from CCDD.CcddScriptHandler import accessHandler as ccdd
+```
+and be able to use it in any module called by the script than to have the ccdd variable defined implicitly only in the main script. From my (limited) knowledge of jython, the above statement would work if accessHandler was a public variable in the CcddScriptHandler class and would provide the same ccdd variable as currently defined.
+",,https://github.com/nasa/CCDD/issues/28
+Unhandled exception using -shutdown argument,"In CCDD 1.3.6, I get the following exception when using the -shutdown command with the -execute command. I have not tested all cases, but the exception does not occur if only the execute command is used (ie, if I allow the GUI to remain open after script execution), if only the shutdown command is used, or if the shutdown command is used with export. 
+
+```
+Exception in thread ""AWT-EventQueue-0"" java.lang.NullPointerException
+        at CCDD.CcddScriptHandler.getDataAndExecuteScript(CcddScriptHandler.java:1347)
+        at CCDD.CcddCommandLineHandler$22.doCommand(CcddCommandLineHandler.java:953)
+        at CCDD.CcddCommandLineHandler$CommandHandler.handler(CcddCommandLineHandler.java:366)
+        at CCDD.CcddCommandLineHandler.parseCommand(CcddCommandLineHandler.java:1721)
+        at CCDD.CcddCommandLineHandler.parseCommand(CcddCommandLineHandler.java:1589)
+        at CCDD.CcddMain.parseDbSpecificCommandLineCommands(CcddMain.java:778)
+        at CCDD.CcddDbControlHandler$2.complete(CcddDbControlHandler.java:2282)
+        at CCDD.CcddBackgroundCommand$1.done(CcddBackgroundCommand.java:192)
+        at javax.swing.SwingWorker$5.run(Unknown Source)
+        at javax.swing.SwingWorker$DoSubmitAccumulativeRunnable.run(Unknown Source)
+        at sun.swing.AccumulativeRunnable.run(Unknown Source)
+        at javax.swing.SwingWorker$DoSubmitAccumulativeRunnable.actionPerformed(Unknown Source)
+        at javax.swing.Timer.fireActionPerformed(Unknown Source)
+        at javax.swing.Timer$DoPostEvent.run(Unknown Source)
+        at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+        at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+        at java.awt.EventQueue.access$500(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.security.AccessController.doPrivileged(Native Method)
+        at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+        at java.awt.EventQueue.dispatchEvent(Unknown Source)
+        at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.run(Unknown Source)
+```",,https://github.com/nasa/CCDD/issues/27
+Changes to input type definitions don't take effect until reapplied,"When designing my own input type field for a column with an enumerated value (ie a set of 'Valid Selections), I noticed that changing the definition of an input field doesn't seem to take effect until that custom input type is reapplied to the column.
+
+Steps to reproduce:
+
+1. Define a custom input datatype with values in the Valid Selections column via the input types editor, store changes
+2. Apply that custom input type to a column via the table type editor, store changes
+3. Open a table which uses that column, and confirm that the 'Valid Selections' are listed in a dropdown menu and are selectable
+4. Back in the input types editor, add additional Valid Selections, store the changes
+5. Open same table again, dropdown with Valid Selections doesn't appear, input field appears to just be a standard text input which will accept any value
+6. In table type editor, assign that column to any built-in input type, store changes
+7. Then, assign column back to custom input type, store changes
+8. While editing table, once again able to again see and select from the Valid Selections dropdown
+",,https://github.com/nasa/CCDD/issues/26
+Method to terminate script execution,"Most of the built-in scripts provide some form of error checking in the main program (ex: checking structure rows exist) and use the showErrorDialog() method to present the error to the user. The flow control in those scripts appear to have been engineered such that showErrorDialog is called just before the script exits, however, for complicated scripts there can be error checking which is not easy to structure in this manner (ex: error checking values of structure columns which are not accessible until much later in the program). 
+
+It would be useful to have a way to cancel/terminate execution of the current script via the API. At least in jython, I've tried using a return statement and sys.exit to terminate the script with no luck.
+
+This give script-writers the ability to decide if an error is recoverable and if not just inform the user and terminate the script, rather than having the user sit through and acknowledge any additional errors during the remaining execution.",,https://github.com/nasa/CCDD/issues/25
+Unhandled exception when opening Script > Execute window,"When attempting to open Script > Execute I get the following exception printed to the command line and the Execute Scripts window appears but only contains the text `Select script association(s) to execute` with none of the normal selection boxes or buttons.
+
+Script > Manage window opens correctly and scripts can be executed from there, so not urgent. 
+
+Please let me know if there's additional information I can provide. This was observed on version 1.2.50.
+
+```
+Exception in thread ""AWT-EventQueue-0"" java.lang.NullPointerException
+        at javax.swing.text.DefaultStyledDocument.getParagraphElement(Unknown Source)
+        at javax.swing.text.StyledEditorKit$AttributeTracker.updateInputAttributes(Unknown Source)
+        at javax.swing.text.StyledEditorKit$AttributeTracker.caretUpdate(Unknown Source)
+        at javax.swing.text.JTextComponent.fireCaretUpdate(Unknown Source)
+        at javax.swing.text.JTextComponent$MutableCaretEvent.fire(Unknown Source)
+        at javax.swing.text.JTextComponent$MutableCaretEvent.stateChanged(Unknown Source)
+        at javax.swing.text.DefaultCaret.fireStateChanged(Unknown Source)
+        at javax.swing.text.DefaultCaret.changeCaretPosition(Unknown Source)
+        at javax.swing.text.DefaultCaret.handleSetDot(Unknown Source)
+        at javax.swing.text.DefaultCaret.setDot(Unknown Source)
+        at javax.swing.text.DefaultCaret$Handler.removeUpdate(Unknown Source)
+        at javax.swing.text.AbstractDocument.fireRemoveUpdate(Unknown Source)
+        at javax.swing.text.AbstractDocument.handleRemove(Unknown Source)
+        at javax.swing.text.AbstractDocument.remove(Unknown Source)
+        at javax.swing.JEditorPane.setText(Unknown Source)
+        at CCDD.CcddJTableHandler$HTMLCellRenderer.getTableCellRendererComponent(CcddJTableHandler.java:1927)
+        at javax.swing.JTable.prepareRenderer(Unknown Source)
+        at CCDD.CcddJTableHandler.updateRowHeights(CcddJTableHandler.java:3976)
+        at CCDD.CcddJTableHandler.tableChanged(CcddJTableHandler.java:3948)
+        at CCDD.CcddJTableHandler$11.run(CcddJTableHandler.java:4086)
+        at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+        at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+        at java.awt.EventQueue.access$500(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.security.AccessController.doPrivileged(Native Method)
+        at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+        at java.awt.EventQueue.dispatchEvent(Unknown Source)
+        at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.run(Unknown Source)
+Exception in thread ""AWT-EventQueue-0"" java.lang.NullPointerException
+        at javax.swing.text.DefaultStyledDocument$ElementBuffer.create(Unknown Source)
+        at javax.swing.text.DefaultStyledDocument.create(Unknown Source)
+        at javax.swing.text.html.HTMLDocument.create(Unknown Source)
+        at javax.swing.text.html.HTMLDocument$HTMLReader.flushBuffer(Unknown Source)
+        at javax.swing.text.html.HTMLDocument$HTMLReader.flush(Unknown Source)
+        at javax.swing.text.html.HTMLEditorKit.read(Unknown Source)
+        at javax.swing.JEditorPane.setText(Unknown Source)
+        at CCDD.CcddJTableHandler$HTMLCellRenderer.getTableCellRendererComponent(CcddJTableHandler.java:1927)
+        at javax.swing.JTable.prepareRenderer(Unknown Source)
+        at CCDD.CcddJTableHandler.updateRowHeights(CcddJTableHandler.java:3976)
+        at CCDD.CcddJTableHandler.tableChanged(CcddJTableHandler.java:3948)
+        at CCDD.CcddJTableHandler$11.run(CcddJTableHandler.java:4086)
+        at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+        at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+        at java.awt.EventQueue.access$500(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.security.AccessController.doPrivileged(Native Method)
+        at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+        at java.awt.EventQueue.dispatchEvent(Unknown Source)
+        at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.run(Unknown Source)
+Exception in thread ""AWT-EventQueue-0"" java.lang.NullPointerException
+        at javax.swing.text.Utilities.isComposedTextElement(Unknown Source)
+        at javax.swing.text.AbstractDocument.handleRemove(Unknown Source)
+        at javax.swing.text.AbstractDocument.remove(Unknown Source)
+        at javax.swing.JEditorPane.setText(Unknown Source)
+        at CCDD.CcddJTableHandler$HTMLCellRenderer.getTableCellRendererComponent(CcddJTableHandler.java:1927)
+        at javax.swing.JTable.prepareRenderer(Unknown Source)
+        at CCDD.CcddJTableHandler.updateRowHeights(CcddJTableHandler.java:3976)
+        at CCDD.CcddJTableHandler.tableChanged(CcddJTableHandler.java:3948)
+        at CCDD.CcddJTableHandler$11.run(CcddJTableHandler.java:4086)
+        at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+        at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+        at java.awt.EventQueue.access$500(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.security.AccessController.doPrivileged(Native Method)
+        at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+        at java.awt.EventQueue.dispatchEvent(Unknown Source)
+        at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.run(Unknown Source)
+Exception in thread ""AWT-EventQueue-0"" java.lang.NullPointerException
+        at javax.swing.text.Utilities.isComposedTextElement(Unknown Source)
+        at javax.swing.text.AbstractDocument.handleRemove(Unknown Source)
+        at javax.swing.text.AbstractDocument.remove(Unknown Source)
+        at javax.swing.JEditorPane.setText(Unknown Source)
+        at CCDD.CcddJTableHandler$HTMLCellRenderer.getTableCellRendererComponent(CcddJTableHandler.java:1927)
+        at javax.swing.JTable.prepareRenderer(Unknown Source)
+        at CCDD.CcddJTableHandler.updateRowHeights(CcddJTableHandler.java:3976)
+        at CCDD.CcddJTableHandler.tableChanged(CcddJTableHandler.java:3948)
+        at CCDD.CcddJTableHandler$11.run(CcddJTableHandler.java:4086)
+        at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+        at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+        at java.awt.EventQueue.access$500(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.security.AccessController.doPrivileged(Native Method)
+        at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+        at java.awt.EventQueue.dispatchEvent(Unknown Source)
+        at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.run(Unknown Source)
+Exception in thread ""AWT-EventQueue-0"" java.lang.NullPointerException
+        at javax.swing.text.Utilities.isComposedTextElement(Unknown Source)
+        at javax.swing.text.AbstractDocument.handleRemove(Unknown Source)
+        at javax.swing.text.AbstractDocument.remove(Unknown Source)
+        at javax.swing.JEditorPane.setText(Unknown Source)
+        at CCDD.CcddJTableHandler$HTMLCellRenderer.getTableCellRendererComponent(CcddJTableHandler.java:1927)
+        at javax.swing.JTable.prepareRenderer(Unknown Source)
+        at CCDD.CcddJTableHandler.updateRowHeights(CcddJTableHandler.java:3976)
+        at CCDD.CcddJTableHandler.tableChanged(CcddJTableHandler.java:3948)
+        at CCDD.CcddJTableHandler$11.run(CcddJTableHandler.java:4086)
+        at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+        at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+        at java.awt.EventQueue.access$500(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.security.AccessController.doPrivileged(Native Method)
+        at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+        at java.awt.EventQueue.dispatchEvent(Unknown Source)
+        at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.run(Unknown Source)
+Exception in thread ""AWT-EventQueue-0"" java.lang.NullPointerException
+        at javax.swing.text.Utilities.isComposedTextElement(Unknown Source)
+        at javax.swing.text.AbstractDocument.handleRemove(Unknown Source)
+        at javax.swing.text.AbstractDocument.remove(Unknown Source)
+        at javax.swing.JEditorPane.setText(Unknown Source)
+        at CCDD.CcddJTableHandler$HTMLCellRenderer.getTableCellRendererComponent(CcddJTableHandler.java:1927)
+        at javax.swing.JTable.prepareRenderer(Unknown Source)
+        at CCDD.CcddJTableHandler.updateRowHeights(CcddJTableHandler.java:3976)
+        at CCDD.CcddJTableHandler.tableChanged(CcddJTableHandler.java:3948)
+        at CCDD.CcddJTableHandler$11.run(CcddJTableHandler.java:4086)
+        at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+        at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+        at java.awt.EventQueue.access$500(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.security.AccessController.doPrivileged(Native Method)
+        at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+        at java.awt.EventQueue.dispatchEvent(Unknown Source)
+        at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.run(Unknown Source)
+```",,https://github.com/nasa/CCDD/issues/24
+Feature Request: Methods to query global structure tables,"According to the documentation, the getStructureTableNumRows() scripting method is intended to return the number of rows in the structure table. In the built-in scripts this method is used to get the structure rows for the tables passed as arguments to the current script execution. It might be helpful to clarify this in the documentation (ie, that this methods does not returns the global number of structure rows, just the ones passed to the script). 
+
+It would be helpful to have script methods which are capable of querying the whole database, rather than just the elements passed to the script. This could be achieved either via specialized methods or optional arguments to existing methods.
+
+I'm prototyping generating cFS HK tables via a custom table type which includes the name/path of the variables (in the CCDD database) which should be included in a particular HK-generated packet. Using the variable name to retrieve the Message ID and Byte Offset via scripts requires access to the rest of the database, which can currently only be achieved by calling the script on every available structure table. Global database query methods (and input validations such as issue #21) enable workflows in which tables refer to other elements in the database (such as for Limit Checker and HK tables).
+",,https://github.com/nasa/CCDD/issues/23
+Identifiers in invalid column import error message,"Currently if a file being imported contains an invalid array size specification (specifically invalid characters, in my case) an error is issued saying so, however that error message does not contain the location the invalid definition was encountered, making it difficult to track down. It would be useful if the error message contained some identifier (line number, table name, field name, etc) to more quickly locate the problem in the file being imported.
+
+Thanks!",,https://github.com/nasa/CCDD/issues/22
+Feature Request: Input datatype for existing structure rows,"It would be useful to have a input data type which validated that the input is a structure row which already exists in the database. The use case is for defining data products which depend on existing definitions (or properties of those definitions) in the database, such as:
+
+-  defining CCDD table types which describe CFS limit checker tables. Limit checker tables define the value to be checked in terms of the apid and packet offset, both of which are already available from CCDD given a valid structure row. 
+- defining CCDD table types which describe CFS HK tables. HK tables define the value to place in a new packet by Apid and packet offset, similar to above.
+
+Having the entry field validate the entry is an existing row in the database greatly simplifies the error checking necessary in the scripts to generate these products.
+
+As a user-convenience feature, it would also be great if the input field could prompt/autocomplete a user typing the name/path of the mnemonic to make it easier to enter this data.
+
+Thanks for the consideration.",,https://github.com/nasa/CCDD/issues/21
+Feature Request: Enumerated Value input type,"It would be useful to have an enumerated input type to constrain user inputs to one of a set of predefined values, preferably via a drop-down menu of options. This would be distinct from the current `Enumerated` input type, which is simply validated as an alphanumeric field.
+
+I'm looking at tracking CFS event messages via a custom table type and need to track the event type (which is either 'Debug', 'Info', 'Error', or 'Critical'). It would be useful to have an input type which could validate the input is one of the items in a list of acceptable values. Otherwise, an unacceptable input cannot be caught until a script which depends on that value runs and throw an error.
+
+Another potential use case may be in defining CFS limit tracker watchpoints where the user must select one of a pre-defined list of operations to be performed (LessThan, EqualTo, GreaterThan, etc) by the watchpoint.
+",,https://github.com/nasa/CCDD/issues/20
+MsgIDs applied to non-root tables,"When using the Message IDs > Assign IDs menu to apply message IDs to structure tables, Message IDs are applied to all structure tables, not just root tables. This results in child tables being assigned Message IDs.
+
+Structure tables (by default) have two fields, `Telemetry Message ID` and `Telemetry Message ID Name`. These fields have applicability set to `Root Only`. This setting seems to control whether the Data > Edit Tables editor displays the Message ID field for editing. It seems like the Assign IDs menu should respect the Root Only setting of that field.
+",,https://github.com/nasa/CCDD/issues/19
+Fields with boolean type not displayed as check box,"When adding custom columns to the default structure table, the user's guide indicates that a check box will be used to represent boolean fields when editing tables. In practice a text field is present to the user which only accepts `true` or `false`. This works, but doesn't appear to be consistent with the user guide and results in having to handle an additional option (true, false, or empty) in script logic.
+
+In built-in tables such as the Table Type Editor, the Unique and Required fields do correctly display as check boxes, so perhaps just user-defined fields are not being formatted?
+
+
+",,https://github.com/nasa/CCDD/issues/18
+Execute command output path subcommand,"The scriptOutPath command is provided to control the placement of files created by scripts via the command line interface (CLI), which works as intended, however that command also changes the output path for users interacting with CCDD via the GUI (which may not be desirable).
+
+To support workflows in which CCDD is used both as an editing/development interface (via the GUI) and as a data producer (via the CLI), it would be desirable to be able to set the output of scripts for a particular session, which wouldn't affect later GUI users. Currently, if scripts are called in between GUI sessions the output path may have unexpectedly (to the GUI user) changed.
+
+Additionally, the CLI supports multiple execute commands, which effectively means that all outputs from a given session must be placed in a single output directory. This may be undesirable if several scripts producing different output are called during a single CCDD command. 
+
+It would be useful if the execute command took (an optional) subcommand allowing the specification of a path which overrides the CCDD global script output path set by setOutPath for a particular execute command. This allows organization of the outputs of multiple script calls and allows CLI users to execute CCDD scripts without modifying the state of CCDD, which may be confusing for GUI users. This would maintain the current functionality of scriptOutPath command but also support the points above. This also mirrors the functionality of the filePath subcommand of the export command.
+
+Thanks
+
+",,https://github.com/nasa/CCDD/issues/17
+Export does not export macro definitions ,"The current export format (at least for CSV and JSON) does not contain a definition of the project macros. The dialog contains an option to substitute macro values for macro names, however this doesn't preserve the definition of the macro.
+
+I'm using macros to define and ensure that enumeration values stay in sync. For example, if two packets telemeter the same type of enumeration, its desirable to have a single definition for that enumeration to eliminate the possibility of them accidentally being defined differently. This is achievable via macros (ie, define a macro containing the definition of the enumeration and then use the macro in the enumeration field of both table rows), however the value of the enumeration is not exported unless the substitute option has been checked, in which case the single definition of both enumerations is lost when imported.
+
+I think it would be useful to export the definition of the macro if the substitute option is not selected (so that the user has access to the macro values) and to import macro definitions if found in the file being imported. 
+
+",,https://github.com/nasa/CCDD/issues/16
+Methods of inspecting script values at runtime,"It would be very useful to be able to inspect values within CCDD scripts at runtime, which I don't believe is currently possible. This capability could be utilized for script development/debugging and could also be used for archiving the status/state/results of scripts beyond the success/fail that is currently logged.
+
+Exposing a method in the scripting API to allow writing a message to the CCDD log file may be one way to provide this capability. Its currently possible to write short strings to the showErrorDialog/showWarningDialog methods, but dismissing those dialogs requires user interaction and does not appear to result in a log entry.
+
+Thanks
+",,https://github.com/nasa/CCDD/issues/15
+Longer stack trace for errors in scripts,"The error handling for the scripting interface only logs the top of the stack trace, which complicates script debugging.
+
+The following are an examples of error messages printed to the log upon encountering an error in a script:
+
+```
+localhost:5432|myProject|myUser|06/18/2018 12:18:58.002|Fail|Cannot execute script 'C:\my\path\to\script\myScript.py' using table(s) 'Group:myGroup'; cause 'script file 'C:\my\path\to\script\myScript.py' error 'TypeError: 'str' object is not callable in <script> at line number 432''
+```
+```
+localhost:5432|myProject|myUser|06/18/2018 12:22:08.366|Fail|Cannot execute script 'C:\my\path\to\script\myScript.py' using table(s) 'Group:myGroup'; cause 'script file 'C:\my\path\to\script\myScript.py' error 'AttributeError: 'array.array' object has no attribute 'length' in <script> at line number 432''
+```
+
+In both cases the error is reported as having occurred on line 432, which (for this script) is the top-level parent function in the call stack in which the error occurred. In my case, this is a large helper function which implements the entire algorithm and these errors occurred in two different child functions, which can be complicated to track down. It would be very helpful to log longer/deeper stack traces. 
+
+Thanks
+",,https://github.com/nasa/CCDD/issues/14
+execute interprets absolute path as association name,"For robustness against where the user runs and/or places CCDD on their machine, I'd like to use absolute paths. When attempting to specify an absolute path to the script file, as shown in the command below:
+
+```java -cp C:\My\Absolute\CCDD\Path\CCDD.jar CCDD.CcddMain -logPath C:\My\Absolute\Log\Path -project myProject -user myUser -password #### -execute 'C:\My\Absolute\Script\Path\myScript.js:Group:myGroup' -scriptOutPath C:\My\Absolute\Out\Path```
+
+I get the error:
+`CCDD : Database Error : Unrecognized association name 'C'`
+
+at the command line. It appears that it may be parsing the colon in the path as the separator in the script definition. Using a relative path to the script (which doesn't include a colon) works as intended.",,https://github.com/nasa/CCDD/issues/13
+CCDD hangs when running script via -execute,"The command shown below is intended to run a script on a group to generate outputs. The documentation states that the -execute argument should result in a headless run of the script, however the CCDD Gui window pops up unexpectedly. Many queries are run and then the output freezes. After several minutes I ended up terminating CCDD due to apparent inactivity.
+
+Command:
+```java -cp C:\My\Absolute\CCDD\Path\CCDD.jar CCDD.CcddMain -logPath C:\My\Absolute\Log\Path -project myProject -user myUser -password #### -execute 'myScript.js:Group:myGroup' -scriptOutPath C:\My\Absolute\Out\Path```
+
+Running the same database/same user/same script/same group/same paths via the GUI completes successfully in several seconds. I also observe this behavior when attempting to call one of the standard scripts, itosRecFile.js.
+
+Not sure if its relevant/equatable, but starting the Gui, running the script, and closing the Gui resulted in 249 entries in the log file whereas running the script via the -execute argument results in ~50,000 entries in the log file before it stops updating and I terminate CCDD. I haven't closely examined the logs, but that seems to indicate that its doing vastly different things in each case.
+
+Not sure if its relevant, but when letting the script run until the log stops updating (after several minutes), I notice that the last two entries are always:
+```
+localhost:5432|myProject|myUser|06/08/2018 08:57:43.015|Success|Project 'myProject' unlocked
+localhost:5432|myProject|myUser|06/08/2018 08:57:43.016|Success|Project database 'myProject' closed
+```
+
+This was demonstrated on:
+OS: Win10
+CCDD: 1.2.37 6-7-2018
+Java: 1.8.0_171 (64-bit)
+PostgreSQL: 10.4
+JDBC: PostgreSQL 9.4.1207.jre7 (type 4)
+Jetty 9.2.18.v20160721
+",,https://github.com/nasa/CCDD/issues/12
+Java exception when unlocking database,"When opening CCDD, receive message: 
+`Cannot connect to project database '######' as user '######'; cause 'database is locked'`
+
+In response, I go to the menu and select Project > Unlock and click the 'Unlock' button. Gui doesn't respond and terminal shows the error message below. Restarting CCDD/repeating the process yields the same message.
+
+Below is an image of the unlock dialog. According to the user guide, the dialog is supposed to list projects which may be unlocked, but mine is not.
+![image](https://user-images.githubusercontent.com/18016749/41064550-dcfb3018-69a9-11e8-973c-0b5c73ab880f.png)
+
+This may explain why the dialog validation is failing.
+
+System Info:
+OS: Win10
+Java: Java 8 Update 171 (64 bit)
+PostgreSQL: PostgreSQL 10
+
+```
+Exception in thread ""AWT-EventQueue-0"" java.lang.NullPointerException
+        at CCDD.CcddDialogHandler.getCheckBoxSelected(CcddDialogHandler.java:322)
+        at CCDD.CcddDbManagerDialog.verifySelection(CcddDbManagerDialog.java:776)
+        at CCDD.CcddDialogHandler$1.closeWindow(CcddDialogHandler.java:220)
+        at CCDD.CcddButtonPanelHandler$1.actionPerformed(CcddButtonPanelHandler.java:305)
+        at javax.swing.AbstractButton.fireActionPerformed(Unknown Source)
+        at javax.swing.AbstractButton$Handler.actionPerformed(Unknown Source)
+        at javax.swing.DefaultButtonModel.fireActionPerformed(Unknown Source)
+        at javax.swing.DefaultButtonModel.setPressed(Unknown Source)
+        at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(Unknown Source)
+        at java.awt.Component.processMouseEvent(Unknown Source)
+        at javax.swing.JComponent.processMouseEvent(Unknown Source)
+        at java.awt.Component.processEvent(Unknown Source)
+        at java.awt.Container.processEvent(Unknown Source)
+        at java.awt.Component.dispatchEventImpl(Unknown Source)
+        at java.awt.Container.dispatchEventImpl(Unknown Source)
+        at java.awt.Component.dispatchEvent(Unknown Source)
+        at java.awt.LightweightDispatcher.retargetMouseEvent(Unknown Source)
+        at java.awt.LightweightDispatcher.processMouseEvent(Unknown Source)
+        at java.awt.LightweightDispatcher.dispatchEvent(Unknown Source)
+        at java.awt.Container.dispatchEventImpl(Unknown Source)
+        at java.awt.Window.dispatchEventImpl(Unknown Source)
+        at java.awt.Component.dispatchEvent(Unknown Source)
+        at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+        at java.awt.EventQueue.access$500(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.security.AccessController.doPrivileged(Native Method)
+        at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+        at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+        at java.awt.EventQueue$4.run(Unknown Source)
+        at java.awt.EventQueue$4.run(Unknown Source)
+        at java.security.AccessController.doPrivileged(Native Method)
+        at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+        at java.awt.EventQueue.dispatchEvent(Unknown Source)
+        at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+        at java.awt.WaitDispatchSupport$2.run(Unknown Source)
+        at java.awt.WaitDispatchSupport$4.run(Unknown Source)
+        at java.awt.WaitDispatchSupport$4.run(Unknown Source)
+        at java.security.AccessController.doPrivileged(Native Method)
+        at java.awt.WaitDispatchSupport.enter(Unknown Source)
+        at java.awt.Dialog.show(Unknown Source)
+        at java.awt.Component.show(Unknown Source)
+        at java.awt.Component.setVisible(Unknown Source)
+        at java.awt.Window.setVisible(Unknown Source)
+        at java.awt.Dialog.setVisible(Unknown Source)
+        at CCDD.CcddDialogHandler.createDialog(CcddDialogHandler.java:2221)
+        at CCDD.CcddDialogHandler.showOptionsDialog(CcddDialogHandler.java:778)
+        at CCDD.CcddDbManagerDialog$1.complete(CcddDbManagerDialog.java:474)
+        at CCDD.CcddBackgroundCommand$1.done(CcddBackgroundCommand.java:156)
+        at javax.swing.SwingWorker$5.run(Unknown Source)
+        at javax.swing.SwingWorker$DoSubmitAccumulativeRunnable.run(Unknown Source)
+        at sun.swing.AccumulativeRunnable.run(Unknown Source)
+        at javax.swing.SwingWorker$DoSubmitAccumulativeRunnable.actionPerformed(Unknown Source)
+        at javax.swing.Timer.fireActionPerformed(Unknown Source)
+        at javax.swing.Timer$DoPostEvent.run(Unknown Source)
+        at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+        at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+        at java.awt.EventQueue.access$500(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.security.AccessController.doPrivileged(Native Method)
+        at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+        at java.awt.EventQueue.dispatchEvent(Unknown Source)
+        at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.run(Unknown Source)
+```",,https://github.com/nasa/CCDD/issues/11
+Possible Command Import Bug? ,"I'm currently integrating a C2 system called COSMOS with CCDD for use with CubeSats. The telemetry configuration file integration has gone smoothly and is now automated. However, when importing commands into CCDD using CSV format I have noticed the Arg 1 Minimum and Arg 1 Maximum fields, when given column values, seem to stymie importation. It's almost certainly isolated to these two fields as I added a custom ""Endianness"" field at the end using the Table Type Editor and this was rendered fine into CCDD whenever I deleted any values for Arg 1 Minimum and Arg 1 Maximum. Any addition of these values causes the entire table to fail to load.  I was wondering if you're aware of any outstanding bug.  I cannot attach any example files I have been working with as they may contain classified information, but you can e-mail me at matthew.t.prelich@nasa.gov if you wish to speak further about this issue. Your name did not have an associated e-mail listed with it in the internal global address book.",,https://github.com/nasa/CCDD/issues/10
+Git-based CCDD Workflow - Request for Import/Export commands,"I'm looking at using CCDD for a project which utilizes git as its code's CM system. The goal is to use CCDD to generate the interface artifacts (header files, ground system definitions, ICDs, etc) using the CCDD scripting interfaces. By git's nature, there may be multiple branches of the code which have different versions of an interface and it may be necessary to generate the interface artifacts for a particular branch. Can you suggest how to best utilize CCDD in this scenario?
+
+My understanding is that the import/export when using the JSON and CSV formats is lossless (ie, its an exact definition of the database). My thought is to export the CCDD database and commit that to the git branch it describes. When a developer needs to make an interface change to a particular branch they'd import the database from that branch into CCDD, make the change, generate their artifacts, and then export the database and commit the new version of the database to their branch. 
+
+I believe this workflow offers the best of both worlds... managing the interface definition with the code that it represents while utilizing CCDD as the editing interface (to maintain database consistency) and leveraging it's scripting interfaces to generate the required artifacts.
+
+I don't currently see a way to automate importing and exporting databases... this workflow could be almost entirely automated if the CCDD executable supported an 'import' and 'export' command which provided similar functionality to the respective dialogs. Is this something that is on the development roadmap?
+
+Thanks
+
+",,https://github.com/nasa/CCDD/issues/9
+isStructureShared returns true for structure with only one parent,"I'm not sure if I'm misunderstanding the documentation for the isStructureShared method, or if there is a bug with the implementation. The documentation for isStructureShared states: ""Determine if the specified structure is referenced by more than one parent structure"". 
+
+In my database, I have a structure 'PriHdr' which is a field in 'TlmHdr' which is a field in multiple other structures. PriHdr only has one parent (TlmHdr) whereas TlmHdr has many parents, however isStructureShared returns true for both. 
+
+I also have a structure 'TestData' which is a field in 'TestPkt'. TestPkt has no parents and TestData only has TestPkt as a parent. As expected, isStructureShared returns false for both.
+
+The current implementation appears to determine if a structure has multiple root tables as ancestors, not multiple parents (based on the terminology defined in section 4.5.1). It would be helpful to clarify the documentation so that its consistent with the definitions earlier in the guide. 
+
+My application is that I am attempting to generate a database for COSMOS (http://cosmosrb.com/). For data structures which are utilized within multiple packets, they recommend defining the structure once in a separate file and using render (http://cosmosrb.com/news/2016/09/12/erb-config/) to include in where needed in the packet definition. Only in the case that a structure has multiple parents is it necessary to create a new file, which I was attempting to use isStructureShared to detect. In this application, its undesirable to detect if a structure has multiple ancestors because it only needs to be placed in a separate file if it has multiple parents. If isStructureShared is not the appropriate method to detect a single parent, could you suggest an alternative method?",,https://github.com/nasa/CCDD/issues/8
+Incorrect documentation for isDataTypePrimitive and isStructureShared,"The contents of the 'Description' and 'Input(s)' columns of the table on page 174 of the users guide appears to be swapped for rows describing the methods isDataTypePrimitive and isStructureShared.
+
+The description/input for isStructureShared references datatypes and the description/input for isDataTypePrimitive references structures. Appears that swapping the rows would solve the issue.
+
+Noted in user guide Version 1.1.50.",,https://github.com/nasa/CCDD/issues/7
+Command-line script execution documentation appears to be inaccurate,"Section 4.6.10 of the user guide documents how to execute a script from the command line. Documentation states that the argument format of `-execute <script_name>:<table>` or  `-execute <script_name>:Group:<group_name>`. Argument format appears to actually be `-execute <script_association_name>:<script_name>:<table>` or `-execute <script_association_name>:<script_name>:Group:<group_name>`.
+
+Attempting to run `-execute myScript:myTable` results in `Cannot execute script ‘myTable’ using table(s) ' '`. Running `-execute myAssociation:myScript:myTable` completes successfully. Using a myAssociation not in the database results in an error ""Unrecognized association name"".
+
+Also, documentation states that script path is required if they’re not stored in the same location as the CCDD executes, however commands without path succeed for scripts located in the /scripts directory (did not test with other locations).
+
+Observed on CCDD version ""1.1.46 1-11-2018"" cloned from git on 1/16/18.",,https://github.com/nasa/CCDD/issues/6
+Cannot register database driver,"Hi,
+
+I got an error, when I create new project BITSE, and then open the project.
+I attached a screenshot for this.
+
+I used postgres95 at this time, but have same error on postgres84.
+
+Thanks.
+
+OS: Ubuntu 16.04LTS 64bit
+dpkg -l | grep postgres
+ii  postgresql                                 9.5+173ubuntu0.1                             all          object-relational SQL database (supported version)
+ii  postgresql-9.5                             9.5.10-0ubuntu0.16.04                        amd64        object-relational SQL database, version 9.5 server
+ii  postgresql-client-9.5                      9.5.10-0ubuntu0.16.04                        amd64        front-end programs for PostgreSQL 9.5
+ii  postgresql-client-common                   173ubuntu0.1                                 all          manager for multiple PostgreSQL client versions
+ii  postgresql-common                          173ubuntu0.1                                 all          PostgreSQL database-cluster manager
+ii  postgresql-contrib-9.5                     9.5.10-0ubuntu0.16.04                        amd64        additional facilities for PostgreSQL
+
+
+![2017-12-29 11 14 48](https://user-images.githubusercontent.com/5885949/34427838-ba086974-ec89-11e7-81d0-803bf993c99c.png)
+",,https://github.com/nasa/CCDD/issues/5
+Table creation error,"Hello,
+
+I installed CCDD on Ubuntu 16.04 64bit, Postgresql 8.4.
+
+When I open my project first, there is an error message.
+
+localhost:5432|-|-|12/28/2017 17:19:07.820|Fail|Cannot load table members; cause 'ERROR: function get_table_members_by_index() does not exist  Hint: No function matches the given name and argument types. You might need to add explicit type casts.  Position: 15'
+
+I attached an error screen.
+
+![2017-12-28 5 51 46](https://user-images.githubusercontent.com/5885949/34405687-faccb9c0-ebf7-11e7-8ce3-e468ed369039.png)
+",,https://github.com/nasa/CCDD/issues/4
+Database Name,"I am trying to implement a feature on the CCDD_Viewer GUI that displays what database each user is logged into alongside what user name each user is ""Signed in As"".
+
+I don't see any 'meta' project data that I can pull from the CCDD Tool's web server API. Would it be possible to add an API call that will allow me to pull the project details such as ""AA2"" so that I can display it on the Viewer's GUI?
+
+Thanks!",,https://github.com/nasa/CCDD/issues/3
+License File,can you please add a License file to the root of the repo when you get a chance? Thanks.,,https://github.com/nasa/CCDD/issues/2
+GUI for CCDD in JS,I will be working at JSC and the instructions I was sent regarding my assignment is to develop a GUI in JavaScript for a Command & Data Dictionary. I am interested in learning as much as possible about this project and would like to get involved sooner than later. Is this the same CCDD referred to in my assignment? What would be a good way to get started? What tasks or issues can I help you work on now? Thanks and I look forward to working with you.,,https://github.com/nasa/CCDD/issues/1

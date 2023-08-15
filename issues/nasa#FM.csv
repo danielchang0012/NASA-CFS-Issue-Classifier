@@ -1,0 +1,2468 @@
+Title,Body,Labels,URL
+"Fix #109, Uninitialized FileStats in FM_GetVolumeFreeSpace","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #109
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+No static analysis uninitialized variable warnings
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, Equuleus-rc2",https://github.com/nasa/FM/pull/110
+Uninitialized FileStats in FM_GetVolumeFreeSpace,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Uninitialized variable warning in CodeSonar:
+https://github.com/nasa/FM/blob/98283b6f71122dc9b3ecfe4be966b5b282ba22ae/fsw/src/fm_cmd_utils.c#L536
+
+from:
+https://github.com/nasa/FM/blob/98283b6f71122dc9b3ecfe4be966b5b282ba22ae/fsw/src/fm_cmd_utils.c#L541
+
+**To Reproduce**
+Run static analysis
+
+**Expected behavior**
+No uninitialized variable warnings
+
+**System observed on:**
+Static analysis
+
+**Additional context**
+None
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/FM/issues/109
+"Fix #86, Removes extraneous boolean logic in concat command","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #86
+  - Removes boolean logic tracking file status which results in reduction of cyclomatic complexity to 9 from 17 by bundling logic in one single nested if/else according to file status.
+ 
+**Testing performed**
+- lcov
+- build
+- cert_testbed cFE_EVS_ConcatFilesCmd.json functional test successful
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+ - OS: Ubuntu 22.04
+
+**Additional context**
+Could be argued that the concat function is more readable as-is, but this way, the NASA recommendation of 15 max cyclomatic complexity per function is satisfied. 
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, Vantage Systems
+","enhancement, CCB:Approved, Equuleus-rc1",https://github.com/nasa/FM/pull/108
+"Fix #106, Consolidate HK variables that are duplicated in the global struct","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #106 
+  - Consolidates the variables common to both the global struct and the housekeeping packet to only exist (and be updated/accessed) in the housekeeping struct
+
+**Testing performed**
+GitHub CI actions all passing successfully (incl. Build + Run, Unit/Functional Tests etc.).
+
+**Expected behavior changes**
+No change to behavior other than storage location of the variables as outlined above.
+
+Simpler pattern, reduces duplication and eases future maintenance.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/FM/pull/107
+HK struct members that are duplicated in the Global struct could be consolidated,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+All of the housekeeping struct members except `NumOpenFiles` are duplicated (identically) in the global struct.
+
+**Code snips**
+https://github.com/nasa/FM/blob/e7afedcfdf9ba50eac8a9bdda6ce70a4d1ef709d/fsw/inc/fm_msg.h#L547-L563
+https://github.com/nasa/FM/blob/e7afedcfdf9ba50eac8a9bdda6ce70a4d1ef709d/fsw/src/fm_app.h#L66-L79
+
+**Expected behavior**
+Consolidate duplicated struct members to only exist (and be updated/accessed) in the housekeeping struct.
+
+This more parsimonious approach is taken by several of the apps (CF, CS, MM, SC) as well as EVS and SB in the cFE.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/FM/issues/106
+"Fix #104, Make padding explicit in `FM_MonitorReportEntry_t` & `FM_ChildQueueEntry_t`","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #104
+  - Implicit padding being added in `FM_MonitorReportEntry_t` & `FM_ChildQueueEntry_t` has been made explicit
+
+**Testing performed**
+GitHub CI actions all passing successfully (incl. Build + Run, Unit/Functional Tests etc.).
+
+**Expected behavior changes**
+No change.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/FM/pull/105
+Compiler-added implicit padding in `FM_MonitorReportEntry_t` & `FM_ChildQueueEntry_t`,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+It seems that there is implicit padding being added by the compiler in `FM_MonitorReportEntry_t` & `FM_ChildQueueEntry_t`.
+
+**Code snips**
+https://github.com/nasa/FM/blob/e7afedcfdf9ba50eac8a9bdda6ce70a4d1ef709d/fsw/inc/fm_msg.h#L512-L518
+https://github.com/nasa/FM/blob/e7afedcfdf9ba50eac8a9bdda6ce70a4d1ef709d/fsw/inc/fm_msg.h#L656-L669
+
+**Expected behavior**
+Make implicit padding explicit.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/FM/issues/104
+"Fix #102, Move variables declared mid-function to the top","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #102
+A few stray variables in the test code that were declared mid-function were moved to the top of their respective functions.
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+
+**Expected behavior changes**
+All variables declared top of function as per cFS conventions/guidelines - eases future maintenance and improves consistency.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/FM/pull/103
+Variables declared mid-function in test code,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+A few cases of variables declared mid-function in the test code.
+
+**Expected behavior**
+All variables should be declared at the top of the function - eases future maintenance and improves consistency.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",Equuleus-rc1,https://github.com/nasa/FM/issues/102
+Split header files into external and internal components,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Configuration and header files for this app currently have mixed scope - some items apply globally (mission) and some only affect the internal app behavior.  
+
+**Describe the solution you'd like**
+Split headers into single scope, so they contain only public/global items (i.e. those that affect CMD/TLM/Table definitions) or they contain private/internal items.  The latter would be things that are only used within the local application code and do not affect the interface.
+
+**Additional context**
+Similar to nasa/HS#84.   This helps stabilize the interface, so configuration items that do change the interface are clearly marked in a separate file and the user is more aware of the impact the changes will have.  It's also important for EDS, where some of these files are generated - keeping a single scope allows for simple source selection vs. `#ifdef`s.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+",enhancement,https://github.com/nasa/FM/issues/101
+"Fix #99, Convert `int32` return codes and variables to `CFE_Status_t`","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #99
+  - most `int32` return codes converted over to `CFE_Status_t`
+  - `int32` `status`/`return` variables holding cFE return codes converted to `CFE_Status_t`
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+
+**Expected behavior changes**
+No change to behavior.
+`CFE_Status_t` is more expressive and improves consistency with cFE/cFS.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","enhancement, CCB:Approved, Equuleus-rc1",https://github.com/nasa/FM/pull/100
+FM `int32` return codes and variables should be converted to `CFE_Status_t`,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+FM has quite a few return codes (as well as local `status`/`return` variables which hold CFE return codes) that can be easily converted over to the `CFE_Status_t` typedef.
+
+**Expected behavior**
+Use the more expressive `CFE_Status_t` and improve consistency with cFS.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt","enhancement, Equuleus-rc1",https://github.com/nasa/FM/issues/99
+"Fix #97, Remove redundant use of ""dummy"" in test code","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #97
+  - Redundant use of the word ""dummy"" in test code variables/text has been removed
+
+**Testing performed**
+GitHub CI actions all passing successfully (incl. unit tests etc.)
+
+**Expected behavior changes**
+No change to behavior.
+Test code is simpler and cleaner when redundant qualifiers are removed.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/FM/pull/98
+"Remove redundant use of ""dummy"" in test code","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+- Similar to https://github.com/nasa/CF/issues/105
+  - Redundant use of the word ""dummy"" in some variables/text in the test code.
+
+All test code variables are 'dummy' variables - no need to label them as such.
+
+**Expected behavior**
+Simplify test code by removing redundant qualifiers.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",Equuleus-rc1,https://github.com/nasa/FM/issues/97
+"Fix #95, Update command handler function message pointers and return","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #95
+  - Updated the command handler functions to use their specific command message types `(FM_NoopCmd_t,` `FM_ResetCountersCmd_t` etc.) rather than the generic `CFE_SB_Buffer_t.`
+  - Converted return types of the command handler functions and other relevant functions to `CFE_Status_t` (also changed their `status`/`result` variables to `CFE_Status_t)`
+  - Added a general error return code `FM_ERROR`
+  - Used some of the new, more specific, CFE error return types:
+    - Converted the previous `false` returns from failures during `FM_IsValidCmdPktLength()` in the dispatch routines to the new CFE return code `CFE_STATUS_VALIDATION_FAILURE`
+    - `CFE_STATUS_INCORRECT_STATE` and `CFE_STATUS_RANGE_ERROR` in suitable locations instead of just using `FM_ERROR`
+
+Question: _Does something need to be done in terms of deprecation due to the change to the API (the `FM_SendHkCmd()` `BufPtr` parameter type has changed)?_
+
+**Testing performed**
+GitHub CI actions (incl. Build and Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+Behavior largely unchanged.
+Compiler error is now thrown if the command handler functions are invoked with *any* type other than their own specific command type.
+Using a defined set of error return macros and the `CFE_Status_t` return type improves code clarity and makes FM more consistent with cFE and the other cFS apps.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/FM/pull/96
+Use CFE pattern for command handler functions,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+CFE has an established pattern for message dispatch routines in that:
+1. It returns a `CFE_Status_t` (standard return value)
+2. It accepts a single argument which is a const pointer to the message, of the actual/unique message type (e.g. `CFE_ES_NoopCmd_t`, etc).
+
+FM does not follow this pattern, its message processor functions return `bool` and they accept the generic CFE SB message buffer rather than the specific message type.
+
+**Describe the solution you'd like**
+Make FM follow the CFE pattern
+
+**Additional context**
+This makes every command handler prototype unique, so they cannot be inadvertently interchanged without a compile error (this is a good thing).
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+",,https://github.com/nasa/FM/issues/95
+"Fix #89, separate msg size verify","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Move the CMD message input size validation to a separate function, so the command handler does not do this itself.  This allows the handler to focus on the real message action as opposed to the structure of the message itself.
+
+Fixes #89
+
+**Testing performed**
+Build and run all tests.  Run FM in CFE and send commands to check behavior.
+
+**Expected behavior changes**
+No impact to behavior - improve source code structure/unit separation only
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/FM/pull/94
+"Fix #92, Use size_t for 'size' variables","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #92 
+Easy-to-find size variables converted to `size_t` type.
+
+All except the local variables in `FM_ChildDirListPktCmd()` and `FM_ChildDirListFileLoop()` were already of type `uint32`, so no real risk of signedness issues popping up.
+
+Note: I did not scrub the entire app - if someone can suggest some additional variables to convert over to `size_t` I can add them to this PR.
+
+A few typos and spacing issues cleared up in the same files.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+Variables representing size should use `size_t` where possible - more expressive and more compliant with the various (relevant) coding guidelines.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/FM/pull/93
+Use size_t for 'size' variables,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Most variables representing sizes in FM use size_t.
+There are a few that do not follow this custom and could be transitioned over.
+
+**Code snips**
+https://github.com/nasa/FM/blob/2be3511211e756058236b30abe40b0de372bd2f1/fsw/src/fm_child.c#L1396
+https://github.com/nasa/FM/blob/2be3511211e756058236b30abe40b0de372bd2f1/fsw/src/fm_cmd_utils.c#L161
+
+**Expected behavior**
+All size variables that can use size_t should do so - size_t is more expressive and more consistent with the relevant coding guidelines.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",Equuleus-rc1,https://github.com/nasa/FM/issues/92
+"Fix #15, use CFE_MSG_PTR macro","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Use of CFE_MSG_PTR requires objects and members to be named correctly per CFE_MSG definitions. Includes other remaining cleanup items.  Mainly:
+
+1. Consistency in naming of header objects 
+2. Consistency in naming between command names and command handler functions (fix missing words, fix mismatch abbreviations, etc)
+
+Fixes #15
+
+**Testing performed**
+Build and run all tests
+
+**Expected behavior changes**
+No impact to behavior.  More future proof code.
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/FM/pull/91
+FM should use generated stubs directly,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+FM appears to use generated stubs that have been modified or added to by hand.  This makes it difficult when APIs need to change and the stubs need an update, as the hand-edits will need manual propagation after regenerating the stubs.
+
+**Describe the solution you'd like**
+Use generated stubs directly and do not edit or modify the outputs if possible.  Move any extra stub objects into separate source files instead of editing the generated file.
+
+**Additional context**
+This way, invoking the regenerate stubs script will not step on any of the hand-written files.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",Equuleus-rc1,https://github.com/nasa/FM/issues/90
+Apps should check/verify msg BEFORE calling handler,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+This remains an area with coding pattern discrepancies between CFE core and CFS apps, and also different between CFS apps to some degree as well. 
+
+The CFE core and sample app (which is supposed to be the example of ""best practice"") do validation on the message before calling the handler.  For example:
+```
+        case SAMPLE_APP_NOOP_CC:
+            if (SAMPLE_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(SAMPLE_APP_NoopCmd_t)))
+            {
+                SAMPLE_APP_Noop((SAMPLE_APP_NoopCmd_t *)SBBufPtr);
+            }
+```
+
+This is different from FM, which does a similar check, but done inside each handler, for example:
+
+https://github.com/nasa/FM/blob/2be3511211e756058236b30abe40b0de372bd2f1/fsw/src/fm_cmds.c#L61-L69
+
+**Describe the solution you'd like**
+CFS Apps should follow the best practices/patterns set forth in the framework code.  (there are reasons for the pattern being recommended practice)
+
+**Additional context**
+The pattern recommended in the framework (checking before calling, as done in sample_app) has several advantages:
+
+1. Each command handler function has a unique type-safe prototype, that cannot be interchanged with another handler without triggering a type mismatch compiler error.
+2. All typecasting/conversions are confined to one place, and it is nearby to the place that the verification is done - which eases maintainability because check and conversion are all in close proximity and any mismatches will be more visible.
+3. It spreads out the cyclomatic complexity.  In the non-recommended pattern, there is a case where the length check fails, and the entire handler is essentially skipped.  This adds to the cyclomatic complexity of every handler.  In the recommended pattern, those checks are done prior to the invocation of the handler, so the handler can focus solely on its intended purpose - doing the command itself.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",Equuleus-rc1,https://github.com/nasa/FM/issues/89
+"Fix #87, Change EVS_Register failure from SendEvent to WriteToSysLog","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #87
+`CFE_EVS_SendEvent` replaced by `CFE_ES_WriteToSysLog` on failure of `CFE_EVS_Register`.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+Coverage maintained at 100%:
+```
+  lines......: 100.0% (1443 of 1443 lines)
+  functions..: 100.0% (72 of 72 functions)
+  branches...: 100.0% (525 of 525 branches)
+```
+
+**Expected behavior changes**
+Failure can be successfully recorded somewhere even without the EVS now.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/FM/pull/88
+FM tries to send an event message on failure of registering with EVS,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/DS/issues/85
+FM and DS are the only apps to (attempt to) utilize `CFE_EVS_SendEvent` even though the call to `CFE_EVS_Register` failed.
+Better update to `CFE_ES_WriteToSysLog` so failure can be recorded somewhere. This brings FM (and DS) in line with the other cFS apps.
+
+**Code snips**
+https://github.com/nasa/FM/blob/2be3511211e756058236b30abe40b0de372bd2f1/fsw/src/fm_app.c#L175-L182
+
+**Expected behavior**
+`CFE_ES_WriteToSysLog` on failure.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",Equuleus-rc1,https://github.com/nasa/FM/issues/87
+FM_ChildConcatCmd - cyclomatic complexity of 17,"**Checklist (Please check before submitting)**
+
+* [x ] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x ] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x ] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+NASA guidelines in NPR 7150.2D recommends maintaining a cyclomatic complexity in software, in particular flight software of 15.
+
+fm_app.c::FM_ChildConcatCmd unnecessarily violates the recommendation with a cyclomatic complexity of 17.  
+
+**Describe the solution you'd like**
+Clean up FM_ChildConcatCmd such that it has a cyclomatic complexity of 15 or less.
+
+**Requester Info**
+Dan Knutsen
+NASA Goddard
+",enhancement,https://github.com/nasa/FM/issues/86
+"Fix #84, Remove superfluous assignments at the top of functions","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #84 
+Extraneous assignments at the top of functions were removed.
+Code is cleaner, and future maintainability is improved.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+No change to behavior.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",Equuleus-rc1,https://github.com/nasa/FM/pull/85
+Superfluous assignments at the top of functions,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+FM has a many extraneous assignments at the top of functions that are immediately (or definitely before first use) reassigned a value - many to `CFE_SUCCESS` as in https://github.com/nasa/HS/issues/10, but also other to `0`, `OS_SUCCESS` etc.
+
+**Code snips**
+https://github.com/nasa/FM/blob/5c9d4e8893bb038ee8675c68954cf2fc26470b83/fsw/src/fm_child.c#L61-L65
+https://github.com/nasa/FM/blob/5c9d4e8893bb038ee8675c68954cf2fc26470b83/fsw/src/fm_child.c#L1270-L1273
+https://github.com/nasa/FM/blob/5c9d4e8893bb038ee8675c68954cf2fc26470b83/fsw/src/fm_cmd_utils.c#L535-L537
+https://github.com/nasa/FM/blob/5c9d4e8893bb038ee8675c68954cf2fc26470b83/fsw/src/fm_cmds.c#L75-L78
+
+**Expected behavior**
+Remove/combine assignments - unnecessary code.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/FM/issues/84
+"Fix #74, add payload submember for all cmd/tlm","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Adds a ""Payload"" submember to all cmd/tlm structs.  The message content is found in this sub-structure.  This matches the patterns currently implemented in CFE.
+
+Fixes #74
+
+**Testing performed**
+Build and run all tests
+
+**Expected behavior changes**
+None expected.  This _may_ affect the padding in some circumstances, but should not change anything if the headers were properly aligned to begin with.
+
+**System(s) tested on**
+Debian
+
+**Additional context**
+This pattern of using a payload sub-structure matches CFE and keeps things more consistent.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/FM/pull/83
+"Fix #66, remove static from table definition","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+This is not needed, and it ends up also needing a compiler-specific attribute to avoid a warning.  Much simpler without it.
+
+Fixes #66
+
+**Testing performed**
+Build and run all tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Debian
+
+**Additional context**
+FSB coding standards restrict use of compiler-specific attributes - should limit to standard ANSI/ISO C.  This makes it comply.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/FM/pull/82
+"Fix #73, compression selectable at source file level","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Adds a cmake option for compression sub-component implementation.  This replaces the FM_INCLUDE_DECOMPRESS option in fm_platform_cfg.h.
+
+Currently available options are:
+ - fslib (should be equivalent to FM_INCLUDE_DECOMPRESS set)
+ - none (should be equivalent to FM_INCLUDE_DECOMPRESS unset)
+ - zlib (stub for future work)
+
+This lays the groundwork to support compression in addition to decompression, using an external 3rd part library if desired.
+
+Fixes #73
+
+**Testing performed**
+Build and run all tests
+
+**Expected behavior changes**
+Compression option no longer in header file - now in a CMake option with source selection.  Basically equivalent though.
+
+**System(s) tested on**
+Debian
+
+**Additional context**
+All conditional compilation (`#ifdef`) around compression has been removed.  This comprised a fair bit of code in FM that was not being tested in any workflow because compression is usually disabled.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/FM/pull/81
+"Fix #79, generate stubs for internal functions","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Regenerate the stubs for fm_child, fm_cmds, and fm_tbl internal units using the UT assert stub generator tool.
+
+Fixes #79
+
+**Testing performed**
+Build and run all tests
+
+**Expected behavior changes**
+None (but see notes)
+
+**System(s) tested on**
+Debian
+
+**Additional context**
+Other APIs have been changed in parallel PRs so those stubs are NOT updated here.  Those stubs will be updated with their respective PRs (avoids merge conflict).
+
+This also requires the changes from nasa/osal#1352 in order to deal with the differently-sized return values.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/FM/pull/80
+Use generated stubs for all internal functions,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+FM divides its coverage test into separate units and uses stubs for all units other than the unit under test.  However, this appears to be a mixture of hand-written and some generated stubs, and the hand written stubs can diverge from the implementation.
+
+**Describe the solution you'd like**
+Re-run the UT assert generate stubs script and use the generated stubs only.
+
+**Additional context**
+This makes the UT stubs easier to maintain - any time a header file changes, just re-run the tool and re-commit the stubs.  It is best not to modify the generated stub in any way, if it can be avoided.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+","enhancement, Equuleus-rc1",https://github.com/nasa/FM/issues/79
+"Fix #75, move app global to internal include","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Global data structures should not be defined in the public include files, they should be private to the local source directory.
+
+Unit test is justified in accessing this file directly, so provisions are also made to permit this.
+
+Fixes #75
+
+**Testing performed**
+Build and run all tests.  Sanity check on FM running in CFE.
+
+**Expected behavior changes**
+No impact to behavior.
+Private struct that was in public_inc is now back in a private header.
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/FM/pull/78
+"Fix #76, Update const-ness of inputs","
+**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Correct the const qualifiers on functions in fm_cmd_utils.c. Most of these functions do not modify their inputs, but were not const, except for the one function that _was_ marked const and _did_ modify its inputs (backwards).
+
+Fixes #76
+
+**Testing performed**
+Build and run tests
+
+**Expected behavior changes**
+Nothing visible externally.  Message processors no longer modify input buffers.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/FM/pull/77
+Internal API calls are not const-correct (possible race condition),"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Functions that accept a pointer as an input only, and do not modify that structure, should be qualified as `const`.
+
+In particular, this is true of the software bus messages - these could be distributed to multiple subscribers, and these must not be modified by receivers or else race conditions are introduced.  
+
+There is at least one case of FM where the buffer is modified.  This should be corrected along with adding `const` to all messages.
+
+**To Reproduce**
+Possible race condition if multiple entities subscribe to the same message (config-dependent)
+
+**Expected behavior**
+Should not modify input.  Non-modified input structs should be `const` in the declarations.
+
+**Code snips**
+Possible case of input buffer getting modified is here: https://github.com/nasa/FM/blob/c8569975ba4d0a4ab656565b22511812385ad0bb/fsw/src/fm_cmd_utils.c#L350-L354
+
+**System observed on:**
+N/A
+
+**Additional context**
+Pretty much most/all of the functions in `fm_cmd_utils.h` should accept `const` string inputs.
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+","bug, Equuleus-rc1",https://github.com/nasa/FM/issues/76
+"Move ""FM_GlobalData"" back into private/local data structures","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+The `FM_GlobalData` object is only used within the FM app for private data storage.  It should not be visible externally.  However, it is currently defined here in the public `fm_msg.h` file:
+
+https://github.com/nasa/FM/blob/c8569975ba4d0a4ab656565b22511812385ad0bb/fsw/inc/fm_msg.h#L542-L594
+
+**Describe the solution you'd like**
+This should be defined in one of the internal header files, not in a public interface file.
+
+**Additional context**
+Public API should generally only be constants / `#define`'s, and typedefs.  API calls only for libraries - apps do not have public API calls.  Extern data structs / globals should not be exposed in either apps or libs for a variety of reasons.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+","enhancement, Equuleus-rc1",https://github.com/nasa/FM/issues/75
+"All CMD/TLM message should put content in a ""Payload"" sub-structure","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+To match the patterns used in CFE and other modules, all CMD/TLM message definitions should put the content (non-header) parts into a separate struct called ""Payload"".
+
+**Describe the solution you'd like**
+Separate message content into a sub structure called ""Payload"".
+
+**Additional context**
+This is benefit to tooling that can use the presence of this field to identify where the actual content starts (e.g. something like `offsetof(MsgType, Payload)` would work and be correct, as opposed to checking `sizeof(CFE_MSG_CommandHeader_t)` which may not actually reflect where the content starts due to possible compiler-added padding between them).
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+","enhancement, Equuleus-rc1",https://github.com/nasa/FM/issues/74
+Conditional compile of Decompress File Cmd,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+There is a substantial amount of code that is conditionally compiled based on the `FM_INCLUDE_DECOMPRESS` platform config option.  While the intent is reasonable - to not require the dependency on (large) compression routines for users that do not need this feature - the problem is that this is disabled in the default config thus in all build and test workflows - and a significant chunk of code goes untested as a result.
+
+The `FM_INCLUDE_DECOMPRESS` option disables two entire FSW functions, plus 5-6 more UT functions, which is quite substantial.  Code in any of these functions can become stale/invalid due to changes elsewhere in the FSW as FM is maintained.  GSFC coding practices discourage large chunks of ""compiled-out"" code for this reason.  
+
+**Describe the solution you'd like**
+Reduce the amount of code that is disabled by `FM_INCLUDE_DECOMPRESS`.  When this is disabled, dispatch tables probably should still include the CC and go through the basic motions, call the handler, put it in the work queue, etc.  Generally, only the actual call to `FS_LIB_Decompress()` needs to be disabled.
+
+**Describe alternatives you've considered**
+This could potentially be done as a CMake compile-time option, with a source file selection.   This is the way many optional components are implemented in other modules such as OSAL (e.g. network sockets).
+
+**Additional context**
+Trying a basic compile of FM with `FM_INCLUDE_DECOMPRESS` enabled looks like its already broken.  FM itself seems OK but the FS_Lib is already stale and does not compile with Draco.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",Equuleus-rc1,https://github.com/nasa/FM/issues/73
+"Fix #71, Replace quotes with angle brackets in /inc","**Checklist (Please check before submitting)**
+
+* [ ] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [ ] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #71   - replace quotes with angle brackets in /inc files.
+
+**Testing performed**
+1. Performed build verification testing
+2. CI
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Dan Knutsen
+NASA Goddard
+","CCB:Approved, draco-rc4",https://github.com/nasa/FM/pull/72
+Replace quotes with angle brackets in #include statements within /inc,"Describe the solution you'd like
+Quotes should be replaced with angle brackets in #include statements that reside in the /inc location. This will ensure that the preprocessor selects the files pre-designated to override the default files contained within the open source cFS build release - as opposed to selecting those located in the same directory.
+
+Requester Info
+Dan Knutsen
+NASA Goddard",draco-rc4,https://github.com/nasa/FM/issues/71
+"Fix #69, Adds fsw/src to app target","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+-Fixes #69
+
+**Testing performed**
+make install
+
+**Expected behavior changes**
+Successful cert_testbed build
+
+**System(s) tested on**
+- Ubuntu 20.04
+
+**Additional context**
+N/A
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, Vantage Systems
+","invalid, CCB:Ignore",https://github.com/nasa/FM/pull/70
+Add fsw/src to app target,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Cannot build cert_testbed. `target_include_directories(xx PUBLIC fsw/src)` is needed to build tables, etc. Revise CMakeLists.txt
+
+**To Reproduce**
+Build in cert_testbed
+
+**Expected behavior**
+Error-free build
+
+**Code snips**
+If applicable, add references to the software.
+
+**System observed on:**
+ - Ubuntu 20.04
+
+**Additional context**
+N/A
+
+**Reporter Info**
+Justin Figueroa, Vantage Systems
+
+**Reporter Info**
+Full name and company/organization if applicable
+",invalid,https://github.com/nasa/FM/issues/69
+"Fix #67, Moves interface definition files to inc","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #67
+
+**Testing performed**
+make install
+lcov
+
+**Expected behavior changes**
+No expected behavior change.
+
+**System(s) tested on**
+-Ubuntu 18.04
+
+**Additional context**
+N/A
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+-Justin Figueroa, Vantage
+","CCB:Approved, draco-rc4",https://github.com/nasa/FM/pull/68
+"Move interface definition files to ""inc"" location","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+The interface definition files of all open source apps currently exist in the ""src"" directory.
+
+**Describe the solution you'd like**
+Create an ""inc"" dir to go with the ""src"" dir.  Move the interface definitions into this location: ""_msg.h"", ""_msgdefs.h"", ""_tbldefs.h"", and ""_events.h"". Consider moving header files in both ""platform_inc"" and ""mission_inc"" to ""inc""
+
+**Describe alternatives you've considered**
+Leaving as is.
+
+**Additional context**
+N/A
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+",draco-rc4,https://github.com/nasa/FM/issues/67
+Remove `static` designation from CFE_TBL_FileDef objects,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Having a global declared as `static` is supposed to be for cases where the symbol is not to be referenced outside of that compilation unit (that is, it makes the symbol ""hidden"", so to speak).  It prevents other compilation units being linked with this unit from seeing the symbol.
+
+Somewhere along the way, this keyword got applied to table definitions in many CFS apps.  This is not required and even a bad idea for several reasons:
+1. Technically, the `elf2cfetbl` tool does need to find the symbol.  (Thus if it is truly ""hidden"" it will not work - this seems to rely on the name still appearing in the ELF but simply as a different type of symbol)
+2. Tables are not linked with other compilation units (and thus no reason/justification on why the symbol name would ever need to be hidden)
+3. **The compiler warns about it** (because it is a global that does not appear to be used anywhere, at least in the compiler's view)
+4. In order to get around the previous issue and fix the warning, an `__attribute__((__used__))` was added.  Attributes like this are a non-standardized extension, and these are not supposed to be used in FSW code.
+
+**Describe the solution you'd like**
+Just make it a regular (non-static) symbol with no special attributes - everything ""just works"" this way.
+
+**Additional context**
+See https://github.com/nasa/FM/blob/c4063cc9db54c505d1029c2e1460142f97da26f5/fsw/tables/fm_monitor.c#L41-L42
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/FM/issues/66
+"Fix #63, clean up strncpy calls","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Call ""strncpy"" with the size parameter indicating the size of the destination buffer, rather than the input string length.
+
+A buffer overflow was avoided due to a length check already in the code, but calling the function properly should avoid a warning.
+
+Fixes #63 
+
+**Testing performed**
+Build and run all tests
+Send the `FM_GET_DIR_FILE_CC` and `FM_GET_DIR_PKT_CC` and confirm correct behavior.
+
+**Expected behavior changes**
+No compiler warnings.  
+No change to functionality.
+
+**System(s) tested on**
+Ubuntu 22.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, draco-rc4",https://github.com/nasa/FM/pull/65
+"Fix #62, Remove initializations causing Cppcheck errors","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #62 
+Both seem fine to change from initialization at the top of the function to a plain declaration.
+`StringLength` is used in only one `if` block, and it is assigned a value at its first use in the init-statement of the `for` loop on line 172.
+Subsequent references to `StringLength` all logically follow this assignment, so the initialization at the top of the function block (line 165) is redundant and can safely be converted to a plain declaration.
+
+The same goes for `NameLength`. It is used in only one `if` block, and is assigned a value there at its first use in the init-statement of the `for` loop on line 110. The initialization on line 74 can thus be converted to a simple declaration.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully if separate issue https://github.com/nasa/FM/issues/63 is suppressed
+![image](https://user-images.githubusercontent.com/9024662/200171664-29c67fe8-6b19-4f8f-a244-6088506532d9.png)
+The log from the successful build (with the GCC suppressions that can't be included in this PR) can be viewed here:
+https://github.com/thnkslprpt/FM/actions/runs/3404338406/jobs/5661598438
+
+**Expected behavior changes**
+No impact on code behavior.
+Cppcheck now passes without error again.
+
+**Contributor Info**
+Avi @thnkslprpt","CCB:Approved, CCB:FastTrack, draco-rc4",https://github.com/nasa/FM/pull/64
+New GCC warnings causing build failure [-Werror=stringop-overflow=],"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+I believe these are newly triggered GCC warnings (treated as errors) that are now causing the standard FM Build + Run workflow to fail.
+```
+In function ‘strncpy’,
+    inlined from ‘FM_ChildDirListPktCmd’ at /home/runner/work/FM/FM/apps/fm/fsw/src/fm_child.c:1227:25:
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:106:10: error: ‘__builtin___strncpy_chk’ specified bound depends on the length of the source argument [-Werror=stringop-overflow=]
+  106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/FM/FM/apps/fm/fsw/src/fm_child.c: In function ‘FM_ChildDirListPktCmd’:
+/home/runner/work/FM/FM/apps/fm/fsw/src/fm_child.c:1221:35: note: length computed here
+ 1221 |                     EntryLength = strlen(OS_DIRENTRY_NAME(DirEntry));
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+...
+In function ‘strncat’,
+    inlined from ‘FM_ChildDirListPktCmd’ at /home/runner/work/FM/FM/apps/fm/fsw/src/fm_child.c:1234:25:
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:136:10: error: ‘__builtin___strncat_chk’ specified bound depends on the length of the source argument [-Werror=stringop-overflow=]
+  136 |   return __builtin___strncat_chk (__dest, __src, __len, __bos (__dest));
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/FM/FM/apps/fm/fsw/src/fm_child.c: In function ‘FM_ChildDirListPktCmd’:
+/home/runner/work/FM/FM/apps/fm/fsw/src/fm_child.c:1221:35: note: length computed here
+ 1221 |                     EntryLength = strlen(OS_DIRENTRY_NAME(DirEntry));
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+...
+In function ‘strncpy’,
+    inlined from ‘FM_ChildDirListFileLoop’ at /home/runner/work/FM/FM/apps/fm/fsw/src/fm_child.c:1450:21:
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:106:10: error: ‘__builtin___strncpy_chk’ specified bound depends on the length of the source argument [-Werror=stringop-overflow=]
+  106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/FM/FM/apps/fm/fsw/src/fm_child.c: In function ‘FM_ChildDirListFileLoop’:
+/home/runner/work/FM/FM/apps/fm/fsw/src/fm_child.c:1434:31: note: length computed here
+ 1434 |                 EntryLength = strlen(OS_DIRENTRY_NAME(DirEntry));
+      |                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
+```
+
+**To Reproduce**
+Run the Build + Run GitHub Action on the current main branch FM source code.
+
+**Expected behavior**
+Build + Run workflow should run without errors.
+
+**Reporter Info**
+Avi @thnkslprpt",draco-rc4,https://github.com/nasa/FM/issues/63
+New Cppcheck errors: '[unreadVariable]',"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Latest version of Cppcheck is issuing the following failures for FM:
+```
+fsw/src/fm_cmd_utils.c:165:32: style: Variable 'StringLength' is assigned a value that is never used. [unreadVariable]
+    int32      StringLength    = 0;
+                               ^
+fsw/src/fm_tbl.c:74:22: style: Variable 'NameLength' is assigned a value that is never used. [unreadVariable]
+    int32 NameLength = 0;
+                     ^
+```
+
+**To Reproduce**
+Run the current version of Cppcheck on the current main branch FM source code.
+
+**Expected behavior**
+Cppcheck should pass without raising any errors.
+
+**Reporter Info**
+Avi @thnkslprpt",draco-rc4,https://github.com/nasa/FM/issues/62
+"Fix #51, add monitor table","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Replace the ""free space"" table with a more general disk monitoring table, which can have entries for volume free space (which is what was there) as well as an estimate of directory usage.
+
+Table and TLM was renamed accordingly.  This changes the definition of the TLM report to include the extra info, so it requires a ground system update.
+
+Fixes #51
+
+**Testing performed**
+Build and run FM in CFE, issue ""monitor"" command (16) and confirm correct/expected TLM is sent
+Run all tests, confirm 100% coverage
+
+**Expected behavior changes**
+The ""free space"" command is replaced with a more general ""monitor"" command that allows for multiple types/flavors of monitoring.  The VOLUME_FREE_SPACE type implements the same logic as the original free space table/command, and the newly added DIRECTORY_ESTIMATE type implements the request in #51.
+
+**System(s) tested on**
+Ubuntu 22.04
+
+**Additional context**
+This is effectively replacing the old free space TLM packet (FM_FREE_SPACE_TLM_MID) with a monitor report TLM that is more general.  Notably, it contains a type indicator, and it can report either space used or space free depending on type.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, draco-rc4",https://github.com/nasa/FM/pull/61
+"Fix #59, Apply consistent Event ID names to common events","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #59 
+  - Consistent event IDs have been applied to the inconsistent cases to align them with a common Event ID naming convention.
+
+**Testing performed**
+Only GitHub CI actions.
+
+**Expected behavior changes**
+No impact on code behavior (no logic changes).
+Consistent Event ID names for the events which are common to all/most cFS components and apps will improve consistency and ease make code review/debugging easier.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/FM/pull/60
+Inconsistent Event ID naming,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/cFE/issues/2175
+After finding that there were 9 different Event IDs to indicate the same thing (Invalid Message ID) in https://github.com/nasa/CF/issues/262, I scrubbed the other common commands (e.g. Task Initialisation [INIT], NOOP, Reset Counters etc.) and found the same issue there - almost every component/app had their own variation of the Event ID name for the exact same event.
+
+**Expected behavior**
+Apply consistent Event ID names to the events which are common to all/most components and apps.
+
+**Code snips**
+Invalid Message ID:
+`CFE_EVS_ERR_MSGID_EID`
+`CFE_SB_BAD_MSGID_EID`
+`CFE_TIME_ID_ERR_EID`
+`CS_MID_ERR_EID`
+`TO_LAB_MSGID_ERR_EID`
+`SAMPLE_APP_INVALID_MSGID_ERR_EID`
+`BP_INVALID_MID_ERR_EID`
+`SCH_MD_ERR_EID`
+`CI_LAB_COMMAND_ERR_EID`
+
+Initialization:
+`CFE_TIME_INIT_EID`
+`CFE_TBL_INIT_INF_EID`
+`CFE_EVS_STARTUP_EID`
+`CF_EID_INF_INIT`
+`BP_INIT_APP_INFO_EID`
+`SCH_INITSTATS_INF_EID`
+`CI_LAB_STARTUP_INF_EID`
+
+NOOP:
+`CFE_TIME_NOOP_EID`
+`CFE_TBL_NOOP_INF_EID`
+`CFE_SB_CMD0_RCVD_EID`
+`CF_EID_INF_CMD_NOOP`
+`FM_NOOP_CMD_EID`
+`CI_LAB_COMMANDNOP_INF_EID`
+
+Reset Counters:
+`CFE_TIME_RESET_EID`
+`CFE_TBL_RESET_INF_EID`
+`CFE_EVS_RSTCNT_EID`
+`CFE_SB_CMD1_RCVD_EID`
+`CF_EID_INF_CMD_RESET`
+`SC_RESET_DEB_EID`
+`HS_RESET_DBG_EID`
+`FM_RESET_CMD_EID`
+`HK_RESET_CNTRS_CMD_EID`
+`MD_RESET_CNTRS_DBG_EID`
+`CI_LAB_COMMANDRST_INF_EID`
+
+etc.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",enhancement,https://github.com/nasa/FM/issues/59
+"Fix #57, Remove redundant/inconsistent comments (/* end of function */, /* end if */ etc.) and clean up empty lines.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #57
+Removes redundant and inconsistent comments (e.g. `/* end of function */`, `/* end if */`, function name in function header comments).
+There were also a few cases of unnecessary empty lines (e.g. on the last line before the closing brace of a function) and also missing empty lines (e.g. between functions) which were corrected. Some of these empty lines trigger the CI format checks.
+I've left the commits separated for now to make life easier for whoever reviews this. I can squash them if/when this is ready for merge.
+
+**Testing performed**
+None (comment and whitespace changes only).
+
+**Expected behavior changes**
+No impact on behavior.
+These updates will reduce clutter and inconsistency in the code, improving readability.
+
+**Contributor Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/FM/pull/58
+"Redundant comments (/* end of function */, /* end if */ etc.) and clean up empty lines.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/to_lab/issues/68 and https://github.com/nasa/sample_app/issues/111
+There are quite a few redundant comments in the code, such as:
+- `/* end of function */`-type comments
+- `/* end if */`-type comments
+- function header comments which include the function name
+
+Another minor issue has to do with empty lines:
+a) _unnecessary_ empty lines (e.g. first line after the opening brace of a function/struct, or the last line before the closing brace - the latter apparently sometimes triggers the CI format checks).
+b) _missing_ empty lines between functions (i.e. closing brace of last function, then next function beginning on the immediately next line without an empty line in between)
+
+The unnecessary empty lines (at the beginning or end of a function, for example) represent a low single-digit percentage of the cases (the vast majority of functions/structs do not have these extra empty lines), so there is an argument to remove them purely for consistency, not just due to them being redundant and triggering the CI format checks.
+
+**Expected behavior**
+Remove redundant comments to reduce clutter and inconsistency in the code, and improve readability.
+
+**Reporter Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/FM/issues/57
+"Fix #55, Remove unnecessary parentheses around return values.","**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #55
+Removes parentheses in return statements in FM that return a single value/term.
+This is aligns these return statements with the predominant style of cFS.
+
+**Testing performed**
+None, prior to submission of the pull request.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt ","CCB:Approved, draco-rc4",https://github.com/nasa/FM/pull/56
+Scrub use of () in return statements,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Unnecessary parentheses around return values in FM
+Copy of https://github.com/nasa/osal/issues/866
+
+**Reporter Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/FM/issues/55
+"Fix #7, added function to verify the given state of a file","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #7, created function to verify the given state of a file or sends an error event message.
+
+**Testing performed**
+Unit testing
+
+**Expected behavior changes**
+no impact to behavior
+
+**System(s) tested on**
+ Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA
+","CCB:Approved, draco-rc4",https://github.com/nasa/FM/pull/54
+"Fix #52, use CFE_FS_InitHeader() to initialize CFE header","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #52 
+
+**Testing performed**
+Unit testing
+
+**Expected behavior changes**
+no impact to behavior
+
+**System(s) tested on**
+ - OS: Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA
+","CCB:Approved, draco-rc4",https://github.com/nasa/FM/pull/53
+FM should use CFE_FS_InitHeader,"**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [X] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [X] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+FM initializes and populates the CFE FS header itself 
+This requires FM to understand the details of the header structure and could break if that structure changes.
+
+**Describe the solution you'd like**
+FM should instead use the CFE_FS_InitHeader function which is designed to do exactly this.
+
+**Requester Info**
+Haven Carlson","enhancement, draco-rc4",https://github.com/nasa/FM/issues/52
+Gateway Managed Storage support telemetry,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+We need to maintain current usage tracking on a directory-by-directory bases.  If FM is used to modify the contents of our directories, our tracking would not be accurate which could lead to a loss of data.   
+
+For most commands to FM, we can gain the needed information by subscribing to the FM commands and querying OSAL directly.  However, FM_DELETE_CC, FM_DELETE_ALL_CC, and FM_DECOMPRESS_CC commands are a problem because we would not have foreknowledge of the files size before the command is executed by FM.  This would cause us to traverse an entire directory to correct the usage tracking.
+
+We will have multiple remote drives.  With potentially Terabyte drives, traversing the directories on a remote drives is too CPU and network intensive.
+
+
+**Describe the solution you'd like**
+FM_DELETE_CC:  
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
+    uint32 FileSize;                     /**< \brief Size of the file deleted*/
+    char Filename[OS_MAX_PATH_LEN];      /**< \brief Delete filename */
+
+} FM_DeleteFileTel_t;
+
+
+FM_DELETE_CC: 
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
+    uint64 Freed;                     /**< \brief Bytes freed in directory*/
+    char Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
+
+} FM_DeleteAllTel_t;
+
+
+FM_DECOMPRESS_CC:
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
+    uint32 SourceSize;                   /**< \brief Size of the compressed file*/
+    uint32 TagetSize;                    /**< \brief Size of the uncompressed file*/
+    char Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
+    char Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
+} FM_DecompressTel_t;
+
+**Describe alternatives you've considered**
+Similar feedback telemetry on following would be nice but not required
+FM_COPY_CC
+FM_MOVE_CC
+FM_CONCAT_CC
+
+Maybe there a way to have a common telemetry packet that include function code.
+
+**Additional context**
+Add any other context about the feature request here.
+
+**Requester Info**
+Nathan Lynch JSC-ER611
+",draco-rc4,https://github.com/nasa/FM/issues/51
+"Fix #49, Resolve usersguide issues with doxygen 1.8.17","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/SC/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #49
+
+**Testing performed**
+Build doc with Ubuntu 20.04
+
+**Expected behavior changes**
+Successful doc build
+
+**System(s) tested on**
+ - Hardware: i5/Docker
+ - OS: Ubuntu 20.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc4",https://github.com/nasa/FM/pull/50
+Resolve issues building users guide with Ubuntu 20.04/Doxygen 1.8.17,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CF/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [CF README.md file](https://github.com/nasa/CF/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Doxygen `warnings for documented empty return type`
+
+**Describe the solution you'd like**
+Remove unnecessary documentation
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","docs, draco-rc4",https://github.com/nasa/FM/issues/49
+"Fix #14, initialize DirListData with zeros before using","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #14, zero out DirListData buffer in FM_ChildDirListFileLoop
+
+**Testing performed**
+Unit testing
+
+**Expected behavior changes**
+DirListData.EntryName won't have garbage values.
+
+**System(s) tested on**
+ - OS:  Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA","CCB:Approved, draco-rc4",https://github.com/nasa/FM/pull/48
+"Fix #8, remove return statements from void functions","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #8 removed unnecessary return statements from void functions 
+**Testing performed**
+Build and run unit tests
+
+**Expected behavior changes**
+no impact to behavior
+
+**System(s) tested on**
+ - OS: Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA","CCB:Approved, draco-rc3",https://github.com/nasa/FM/pull/47
+"Fix #41, Remove unrequired internal delete command handling","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #41
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+No longer supports FM_DELETE_INT_CC or the related strange (out of family) logic.  FM is operator interface to file management (even the design document says it doesn't do ""automated"" actions).
+
+**System(s) tested on**
+CI
+
+**Additional context**
+Could have deprecated, but can't find any external references to it so put in this PR to see if there is support for a direct removal.  It didn't behave as described to begin with.
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc3",https://github.com/nasa/FM/pull/46
+"Fix #34 #37 #43 #44, UT cleanup, remove unreachable code, initialize FileMode on OS_stat failure","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #34 
+- Fix #37 
+- Fix #43 
+- Fix #44 
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+Will now initialize FileMode on OS_stat failure (won't write uninitialized data)
+
+**System(s) tested on**
+CI
+
+**Additional context**
+Can break up if needed, but easier to submit together since they resolve related coverage and UT issues.
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc3",https://github.com/nasa/FM/pull/45
+"Unreachable code in fm_child.c, EntryLength never larger than sizeof(DirListData.EntryName)","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Since both DirListData.EntryName and TempName are both OS_MAX_PATH_LENGTH, and and the os_dirent_t FileName is limited by OS_MAX_FILE_NAME, the first condition below can never be false:
+https://github.com/nasa/FM/blob/9210c2d314d3506fb50560d9bc6513c2b7fb4983/fsw/src/fm_child.c#L1496
+
+**Describe the solution you'd like**
+Remove, the second condition is sufficient (add comment)
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","coverage, draco-rc3",https://github.com/nasa/FM/issues/44
+FM_ChildSizeTimeMode doesn't clear FileMode on OS_stat failure,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+FileMode could be uninitilized when written if there's an OS_stat failure since it's not cleared:
+https://github.com/nasa/FM/blob/9210c2d314d3506fb50560d9bc6513c2b7fb4983/fsw/src/fm_child.c#L1587-L1610
+
+**To Reproduce**
+Pass in uninitialized FileMode, observe not cleared on OS_stat failure.
+
+**Expected behavior**
+Should clear all values.
+
+**System observed on:**
+Observation
+
+**Additional context**
+Low likelihood of ever seeing this (maybe file deleted between directory read and OS_stat?), and just would write uninitialized data to the output.
+
+**Reporter Info**
+Jacob Hageman - NASA/GSFC","bug, draco-rc3",https://github.com/nasa/FM/issues/43
+Directory entries are read even after packet is full (not necessary),"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Could simplify logic and avoid looping through entire directory even after packet is full:
+https://github.com/nasa/FM/blob/9210c2d314d3506fb50560d9bc6513c2b7fb4983/fsw/src/fm_child.c#L1247-L1266
+
+**Describe the solution you'd like**
+```
+        while (Status == OS_SUCCESS && FM_GlobalData.DirListPkt.PacketFiles < FM_DIR_LIST_PKT_ENTRIES)
+        {
+            /* Read next directory entry */
+            Status = OS_DirectoryRead(DirId, &DirEntry);
+
+            if (Status == OS_SUCCESS && (strcmp(OS_DIRENTRY_NAME(DirEntry), FM_THIS_DIRECTORY) != 0) &&
+                     (strcmp(OS_DIRENTRY_NAME(DirEntry), FM_PARENT_DIRECTORY) != 0))
+            {
+                /* Do not count the ""."" and "".."" directory entries */
+                FM_GlobalData.DirListPkt.TotalFiles++;
+
+                /* Start collecting directory entries at command specified offset */
+                /* Stop collecting directory entries when telemetry packet is full */
+                if (FM_GlobalData.DirListPkt.TotalFiles > FM_GlobalData.DirListPkt.FirstFile)
+                {
+```
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",wontfix,https://github.com/nasa/FM/issues/42
+"Internal delete command support not in requirements, doesn't match description","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+FM_DELETE_INT_CC is out of family.  FM is operator interface to the file system, not what other elements should use to delete files.  Also strange handling in that it updates command counters but doesn't send the event message, so it would break normal/simple command counter confirmation approach for ground commands.
+
+**Describe the solution you'd like**
+Deprecate and/or directly remove support of this command. Other apps should use OS_remove directly instead of relying on FM.  Goal is to reduce interdependency.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Replaces:
+- #9 
+- #6 
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","bug, draco-rc3",https://github.com/nasa/FM/issues/41
+"Fix #39, updated code coverage limits","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #39, recomputed coverage and updated the limits in the code-coverage workflow
+
+**Testing performed**
+Pushed changes and observed results from unit test and coverage workflow
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+Browser
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA","CCB:Approved, draco-rc3",https://github.com/nasa/FM/pull/40
+Update code-coverage count and add to workflow,"**Checklist (Please check before submitting)**
+
+* [ ] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [ ] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [ ] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+N/a
+
+**Describe the solution you'd like**
+When #35 and #38 are merged, recompute coverage and update the limits in the code-coverage workflow
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz, NASA","coverage, draco-rc3",https://github.com/nasa/FM/issues/39
+"Fix #36, Remove redundant conditional to support full coverage","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #36 
+
+Removes the redundant length check.
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, the element sizes are already sufficient to fit... can't fail check without overflowing local variables.
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/FM/pull/38
+Remove random numbers from unit tests,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Several unit tests use the UT_Utils_Any_* function to introduce randomness to tests that do not need it (and might actually be hurt by it). 
+
+See for example: 
+https://github.com/nasa/FM/blob/51707f20350e4ea909842acb3597fff8da3ab18e/unit-test/fm_app_tests.c#L457-L464
+
+And following searches
+https://github.com/nasa/FM/search?q=UT_Utils_Any_uint8&type=code
+https://github.com/nasa/FM/search?q=UT_Utils_Any_uint32&type=code
+https://github.com/nasa/FM/search?q=UT_Utils_Any_uint32_GreaterThan%280%29%3B&type=code
+https://github.com/nasa/FM/search?q=UT_Utils_Any_uint8_BetweenInclusive%3B&type=code
+https://github.com/nasa/FM/search?q=UT_Utils_Any_uint8_LessThan%3B&type=code
+
+**Describe the solution you'd like**
+Remove use of these macros where unnecessary
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz | NASA
+","unit-test, draco-rc3",https://github.com/nasa/FM/issues/37
+fm_child.c has an unreachable branch,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+`OS_MAX_FILE_NAME` is immutable in testing code coverage. Therefore, full branch coverage starting on line 1275 below is not possible. 
+
+Example Code Coverage result:
+```
+    1274                 :            :                     /* Verify combined directory plus filename length */
+    1275 [ +  - ][ -  + ]:          1 :                     if ((EntryLength < sizeof(ListEntry->EntryName)) && ((PathLength + EntryLength) < OS_MAX_PATH_LEN))
+    1276                 :            :                     {
+    1277                 :            :                         /* Add filename to directory listing telemetry packet */
+    1278                 :          0 :                         strncpy(ListEntry->EntryName, OS_DIRENTRY_NAME(DirEntry), EntryLength);
+    1279                 :          0 :                         ListEntry->EntryName[EntryLength] = '\0';
+    1280                 :            : 
+    1281                 :            :                         /* Build filename - Directory already has path separator */
+    1282                 :          0 :                         strncpy(LogicalName, CmdArgs->Source2, PathLength);
+    1283                 :          0 :                         LogicalName[PathLength] = '\0';
+    1284                 :            : 
+    1285                 :          0 :                         strncat(LogicalName, OS_DIRENTRY_NAME(DirEntry), (OS_MAX_PATH_LEN - PathLength));
+    1286                 :            : 
+    1287                 :          0 :                         FM_ChildSleepStat(LogicalName, ListEntry, &FilesTillSleep, CmdArgs->GetSizeTimeMode);
+    1288                 :            : 
+    1289                 :            :                         /* Add another entry to the telemetry packet */
+    1290                 :          0 :                         FM_GlobalData.DirListPkt.PacketFiles++;
+    1291                 :            :                     }
+```
+
+**To Reproduce**
+The following expression can't be achieved:
+`EntryLength > sizeof(ListEntry->EntryName`)
+
+https://github.com/nasa/FM/blob/51707f20350e4ea909842acb3597fff8da3ab18e/fsw/src/fm_child.c#L1275-L1291
+
+**Expected behavior**
+100% coverage.
+
+**Code snips**
+See code snip above
+
+**System observed on:**
+Continuous Integration
+
+**Additional context**
+Add any other context about the problem here.
+
+**Reporter Info**
+Justin Figueroa, ASRC Federal
+","coverage, draco-rc2",https://github.com/nasa/FM/issues/36
+"Part #17, update code coverage","Increases code coverage for fm_child_tests.c and fm_cmds_tests.c
+
+**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+A clear and concise description of what the contribution is.
+- Part #17 
+
+**Testing performed**
+1. lcov --capture --rc lcov_branch_coverage=1 --directory build --output-file coverage_test.info
+2. lcov --rc lcov_branch_coverage=1 --add-tracefile coverage_base.info --add-tracefile coverage_test.info --output-file coverage_total.info
+3. genhtml coverage_total.info --branch-coverage --output-directory lcov
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - OS: Ubuntu 18.04
+
+**Additional context**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Full name and company/organization/center of all contributors (""Personal"" if individual work)
+ - Note CLA's apply to software contributions.
+","coverage, unit-test, CCB:Approved, draco-rc2",https://github.com/nasa/FM/pull/35
+fm_cmd_utils.c has branches that can't be reached (7/7),"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Looking at code coverage for https://github.com/nasa/FM/issues/17, there are several functions in fm_cmd_utils.c that have else statements that can never be reached. These functions check the return value of FM_GetFilenameState.
+
+Total uncovered here is 7 lines 7 branches.
+
+**To Reproduce**
+Functions with else statements that can never be reached:
+- FM_VerifyFileClosed
+https://github.com/nasa/FM/blob/51707f20350e4ea909842acb3597fff8da3ab18e/fsw/src/fm_cmd_utils.c#L315-L320
+
+- FM_VerifyFileExists
+https://github.com/nasa/FM/blob/51707f20350e4ea909842acb3597fff8da3ab18e/fsw/src/fm_cmd_utils.c#L361-L366
+
+- FM_VerifyFileNoExists
+https://github.com/nasa/FM/blob/51707f20350e4ea909842acb3597fff8da3ab18e/fsw/src/fm_cmd_utils.c#L407-L412
+
+- FM_VerifyFileNotOpen
+https://github.com/nasa/FM/blob/51707f20350e4ea909842acb3597fff8da3ab18e/fsw/src/fm_cmd_utils.c#L458-L462
+
+- FM_VerifyDirExists
+https://github.com/nasa/FM/blob/51707f20350e4ea909842acb3597fff8da3ab18e/fsw/src/fm_cmd_utils.c#L503-L510
+
+- FM_VerifyDirNoExists
+https://github.com/nasa/FM/blob/51707f20350e4ea909842acb3597fff8da3ab18e/fsw/src/fm_cmd_utils.c#L549-L556
+
+Function if an if statement that can't be reached
+- SearchOpenFileData
+https://github.com/nasa/FM/blob/51707f20350e4ea909842acb3597fff8da3ab18e/fsw/src/fm_cmd_utils.c#L150-L153
+
+**Expected behavior**
+100% coverage
+
+**Code snips**
+See above
+
+**System observed on:**
+CI
+
+**Additional context**
+None
+
+**Reporter Info**
+Haven Carlson, NASA","coverage, draco-rc3",https://github.com/nasa/FM/issues/34
+"Fix #17, update code coverage for fm_cmd_utils.c","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- part #17 
+Updated unit tests for fm_cmd_utils.c to cover LoadOpenFileData, SearchOpenFileData, and branches.
+
+**Testing performed**
+Steps taken to test the contribution:
+1. lcov --capture --rc lcov_branch_coverage=1 --directory build --output-file coverage_test.info
+2. lcov --rc lcov_branch_coverage=1 --add-tracefile coverage_base.info --add-tracefile coverage_test.info --output-file coverage_total.info
+3. genhtml coverage_total.info --branch-coverage --output-directory lcov
+
+**Expected behavior changes**
+no impact to behavior
+
+**System(s) tested on**
+ - OS: Ubuntu 18.04
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Full name and company/organization/center of all contributors (""Personal"" if individual work)
+ - Note CLA's apply to software contributions.
+","CCB:Approved, draco-rc2",https://github.com/nasa/FM/pull/33
+"Fix #31, Updates CLA information for Apache 2.0","Deletes old FM CLAs, Removes language in contributing.md of app-specific CLA,
+Adds link to new CLAs in pull_request_template
+
+**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+A clear and concise description of what the contribution is.
+- Fixes #31
+- Fixes https://github.com/nasa/cFS/issues/495
+
+**Testing performed**
+Visually inspected links in fork and in PR template.
+
+**Expected behavior changes**
+All references to CLAs should be updated to the cFS app CLA.
+
+**System(s) tested on**
+Google Chrome browser
+
+**Additional context**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, ASRC Federal
+","docs, CCB:Approved, draco-rc2",https://github.com/nasa/FM/pull/32
+Update CLA Information,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [cFS README.md file](https://github.com/nasa/cFS/blob/main/README.md) to see if the feature is in the major future work.
+* [ ] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Have new CLAs given the change in https://github.com/nasa/cFS/pull/491 with the combined CLA, 
+
+**Describe the solution you'd like**
+
+- [ ] Update the instructions in each app's Contributing.md
+- [ ] Delete old CLA pdfs
+- [ ] Update PR and Issue templates as needed
+
+
+**Describe alternatives you've considered**
+
+None
+
+**Additional context**
+None
+
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz
+","docs, draco-rc2",https://github.com/nasa/FM/issues/31
+"Fix #29, Remove CFE_PSP_MemSet use on RAM","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #29
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just removes unnecessary API dependence
+
+**System(s) tested on**
+ - CI
+ - Versions: Bundle main + this commit + added app
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/FM/pull/30
+Remove CFE_PSP_MemSet and CFE_PSP_MemCpy use on addresses in RAM,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/CS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Should just use memset/memcpy for addresses in RAM.  The PSP functions serve no use in this context.
+
+**Describe the solution you'd like**
+Replace with memset/memcpy.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, draco-rc2",https://github.com/nasa/FM/issues/29
+"Fix #4 #20, Add missing rationale and allow for multiple command counters in requirements","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #4 
+- Fix #20
+
+**Testing performed**
+NA, requirements updates only
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+NA
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/FM/pull/28
+Potential Truncation of Number of Open Files,"The number of open files is treated as a uint32 by FSW, but is telemetered as a uint8 such that truncation may result if the number of open files allowed by OSAL grows.",enhancement,https://github.com/nasa/FM/issues/27
+"Fix #25, Added codeql-build.yml","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+Describe the contribution
+A clear and concise description of what the contribution is.
+Added CodeQL to GitHub workflows
+Fix #25 
+
+Testing performed
+
+Pushed to branch
+Checked CodeQL ran successfully
+Expected behavior changes
+no impact to behavior
+
+System(s) tested on
+Browser
+
+Additional context
+Depends on https://github.com/nasa/cFS/pull/501 to run successfully
+
+Third party code
+If included, identify any third party code and provide text file of license
+
+Contributor Info - All information REQUIRED for consideration of pull request
+Full name and company/organization/center of all contributors (""Personal"" if individual work)
+
+Note CLA's apply to software contributions.","CCB:Approved, dependency, draco-rc2",https://github.com/nasa/FM/pull/26
+Add CodeQL to repository,"**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [X] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [X] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Use CodeQL for continuous integration
+
+**Describe the solution you'd like**
+Add CodeQL workflow
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Add any other context about the feature request here.
+
+**Requester Info**
+Haven Carlson","continuous-integration, draco-rc2",https://github.com/nasa/FM/issues/25
+"Fix #18 #19, Resolve static analysis warnings","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CF/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #18
+- Fix #19
+
+**Testing performed**
+CI + static analysis run
+
+**Expected behavior changes**
+None, just squashes static analysis warnings
+
+**System(s) tested on**
+ - Hardware: VM
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + apps + related static analysis resolution branches
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/FM/pull/24
+"Fix #22, Resolve strict cppcheck warnings","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #22
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just resolves workflow failures
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/FM/pull/23
+Style warnings in strict cppcheck analysis,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Currently fails cppcheck strict checking in static analysis workflow:
+https://github.com/nasa/FM/actions/runs/2282818788
+
+```
+[fsw/src/fm_cmd_utils.h:214] -> [fsw/src/fm_cmd_utils.c:372]: (style, inconclusive) Function 'FM_VerifyFileNoExist' argument 1 names different: declaration 'Name' definition 'Filename'.
+[fsw/src/fm_cmd_utils.h:236] -> [fsw/src/fm_cmd_utils.c:418]: (style, inconclusive) Function 'FM_VerifyFileNotOpen' argument 1 names different: declaration 'Name' definition 'Filename'.
+[fsw/src/fm_tbl.c:43] -> [fsw/src/fm_tbl.c:49]: (style) Variable 'Status' is reassigned a value before the old one has been used.
+[fsw/src/fm_tbl.c:191] -> [fsw/src/fm_tbl.c:197]: (style) Variable 'Status' is reassigned a value before the old one has been used.
+[fsw/src/fm_tbl.h:73] -> [fsw/src/fm_tbl.c:72]: (style, inconclusive) Function 'FM_ValidateTable' argument 1 names different: declaration 'TableData' definition 'TablePtr'.
+Error: Process completed with exit code 255.
+```
+
+**Describe the solution you'd like**
+Fix
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","enhancement, draco-rc2",https://github.com/nasa/FM/issues/22
+Either FM unit testing is incorrect or an OSAL enumeration is incorrect,"@mbenson1 commented on [Fri Jun 19 2020](https://github.com/nasa/cFS/issues/104)
+
+**Describe the bug**
+I don't know if this an FM bug or an OSAL bug.  I don't know what the intent on either side was.  FM is failing unit tests.  The first error indicates before OSAL 5.0.3-bv, FM determined if a directory entry was a directory by using the S_IFDIR macro directly, but had an #ifdef that allowed it to use an OSAL defined macro instead.  
+
+```
+#ifdef OS_FILESTAT_ISDIR
+            if (OS_FILESTAT_ISDIR(FileStatus))
+#else
+            if (S_ISDIR(FileStatus.FileModeBits))
+#endif
+```
+
+With OSAL 5.0.3-bv, the OS_FILESTAT_ISDIR macro is defined and FM is using the OS_FILESTAT_ISDIR macro.  The unit test sets the FileStatus.FileModeBits to 0040000 (0x4000), but the OS_FILESTAT_ISDIR tests equality against OS_FILESTAT_MODE_DIR (0x10000) so the unit tests fail.  I don't know if the OSAL developer intended to use the value expected by FM (0x4000), or if the FM should be:
+
+from:
+`filestats->FileModeBits = S_IFDIR;`
+
+to:
+```
+#ifdef OS_FILESTAT_ISDIR
+    filestats->FileModeBits = OS_FILESTAT_MODE_DIR;
+#else
+    filestats->FileModeBits = S_IFDIR;
+#endif
+```
+
+Making the change above fixes these errors, but so does changing the enumeration from:
+OS_FILESTAT_MODE_DIR =   0x10000
+to
+OS_FILESTAT_MODE_DIR =   0x4000
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Build FM unit tests with the ut_assert, hooks, and stubs from cFE 6.5.0a
+2. Run FM unit tests
+
+**Expected behavior**
+FM unit tests should pass.
+
+**System observed on:**
+ - VirtualBox
+ - Ubuntu 16.04
+ - FM 2.5.2, OSAL 5.0.3-bv, app ut_assert, hooks, and stubs from cFE 6.5.0a
+
+**Reporter Info**
+Mathew Benson
+Windhover Labs, LLC
+mbenson@windhoverlabs.com
+
+
+---
+
+@skliper commented on [Mon Jun 29 2020](https://github.com/nasa/cFS/issues/104#issuecomment-651188971)
+
+@ejtimmon Is this resolved with the latest FM release?
+
+","bug, unit-test",https://github.com/nasa/FM/issues/21
+Fill in missing requirements rationale,"There's a handful of missing requirements rationale.  Add.
+
+Imported from GSFCCFS-2019","requirements, draco-rc2",https://github.com/nasa/FM/issues/20
+Static analysis issues relative to flight code,"Handful of static analysis issues in the ""red"" identified (non-Style issues).  Need to resolve these.
+
+Filter: -file:elf -file:ut -file:cfe -file:os -file:cf_ -file:_lab_app.c !(significance:style)
+
+should resolve and/or disposition the higher ranked ones at minimum.
+
+Note license restricts publishing issues.
+
+Imported from GSFCCFS-1958","bug, draco-rc2",https://github.com/nasa/FM/issues/19
+Resolve static analysis issues relative to unit tests,"Many actual code issues (uninitialized variables, buffer overruns, etc) identified via static analysis in the unit tests.  All actual ""bugs"" should be resolved.
+
+Imported from GSFCCFS-1936","unit-test, draco-rc2",https://github.com/nasa/FM/issues/18
+"Revisit coverage, update to 100% code/branch or write issues where unreachable","Failure: Coverage cs lines 99.9% functions 100.0% branches 99.1%
+Failure: Coverage ds lines 99.6% functions 100.0% branches 97.7%
+Failure: Coverage fm lines 93.8% functions 94.0% branches 89.1%
+Failure: Coverage hs lines 100.0% functions 100.0% branches 98.1%
+Failure: Coverage lc lines 99.6% functions 100.0% branches 94.3%
+Failure: Coverage md lines 98.4% functions 100.0% branches 96.7%
+Failure: Coverage sc lines 99.9% functions 100.0% branches 99.0%
+
+Fix where possible, elsewise Issues should document all uncovered lines/branches and disposition (why it's ok as-is)
+
+Imported from GSFCCFS-1935","coverage, draco-rc2",https://github.com/nasa/FM/issues/17
+App Requirement Issues,"1. LC3002.1.1 & LC3002.2.1 - Don’t see where event filter is able to be specified in Action Point or Watchpoint definition tables.
+2.  DS8000 – DS HK packet 
+3.  FM4000 – FM HK packet
+4. DS3000 - Requirement Incomplete
+
+
+Imported from GSFCCFS-1917","requirements, draco-rc2",https://github.com/nasa/FM/issues/16
+Apps should use CFE_MSG_PTR macro instead of cast or local unwrapping,"Apps typically cast to a CFE_MSG_Message_t or use *.Msg.  Better to use abstracted CFE_MSG_PTR. NOTE - Not backwards compatible with Caelum so recommend not addressing in Draco.
+
+Imported from GSFCCFS-1900",enhancement,https://github.com/nasa/FM/issues/15
+FM Dir List to file doesn't clean buffer,"FM Get Directory List to file (FM_GET_DIR_FILE_CC) currently isn't zeroing out the buffer of DirListData.EntryName so there can be a bunch of random stuff in there. 
+
+The DirListData that is written currently looks like this:
+EntryName: fm_dirlist.out\00\00/dev/shmw�\00\00hw�\00\00 j�\00\00�\00\007���
+EntrySize: 136
+ModifyTime: 1638892240
+Mode: 6
+ 
+When it it should look like this: 
+EntryName: fm_dirlist.out
+EntrySize: 136
+ModifyTime: 1638892240
+Mode: 6
+
+The code looks like this, the commented out part is what is missing and would fix the problem. 
+
+/* Populate directory list file entry */
+//CFE_PSP_MemSet(&DirListData, 0, sizeof(FM_DirListEntry_t));
+strncpy(DirListData.EntryName, OS_DIRENTRY_NAME(DirEntry), EntryLength);
+DirListData.EntryName[EntryLength] = '\0';
+
+Imported from GSFCCFS-1815",enhancement,https://github.com/nasa/FM/issues/14
+DS and FM use the same default subtype,"DS and FM both use ""12345"" as the default file subtype
+
+ds/fsw/platform_inc/ds_platform_cfg.h:#define DS_FILE_HDR_SUBTYPE 12345
+fm/fsw/platform_inc/fm_platform_cfg.h:#define FM_DIR_LIST_FILE_SUBTYPE 12345
+
+Imported from GSFCCFS-1735",enhancement,https://github.com/nasa/FM/issues/13
+Add Signature Checking Command to FM,"Stakeholder request - add a command to check the signature of a file.  
+
+In the open source version of the app, this will call an empty stub in fs_lib that will always succeed (allows external users to fill in their own implementation).
+
+Imported from GSFCCFS-1407",enhancement,https://github.com/nasa/FM/issues/12
+Add untar command to FM,"Stakeholder requested that untar capability be added in cFE.  In design discussions with the framework team, it was decided that it made sense to pull the decompress capability out of the framework and into a library, and to then add an untar command to the FM app.  
+
+Imported from GSFCCFS-1083",enhancement,https://github.com/nasa/FM/issues/11
+FM configuration parameter limits need clarification,"A number of FM configuration parameters have limits for which the reason is obscure at best.  Limits need to be re-evaluated and comments should give clear reasoning for the limit.
+
+Imported from GSFCCFS-1062",enhancement,https://github.com/nasa/FM/issues/10
+FM_DELETE_INT_CC appears to be redundant with FM_DELETE_CC,"The doxygen comment for FM_DELETE_INT_CC states: ""This is a special version of the #FM_DELETE_CC command for use when the command is sent by another application, rather than from the ground.  This version of the command will not generate a success event, nor will the command increment the command success counter.  The intent is to avoid confusion resulting from telemetry representing the results of delete commands sent by other applications and those sent from the ground.""
+
+However, this does not appear to be the case.  Both FM_DELETE_INT_CC and FM_DELETE_CC call the same functions.  It appears that FM_DELETE_INT_CC does increment the command success counter, but does not send an event message from the child task.  
+
+I think that the need for FM_DELETE_INT_CC needs to be reevaluated and if it is needed, it should be updated to match its description.
+
+
+Imported from GSFCCFS-1058",wontfix,https://github.com/nasa/FM/issues/9
+FM return statements not needed for void function,"Finding from code review
+
+Imported from GSFCCFS-1032","enhancement, draco-rc3",https://github.com/nasa/FM/issues/8
+Reduce redundant code in fm_cmd_utils.c,"Most verify functions in fm_cmd_utils contain several instances of checking the FilenameState.  Could that code be refactored into its own function that receives the set of valid return codes, and is able to validate the return code or report the errors (maybe a bitmap). This would eliminate a big portion of redundant code.  Or could it use switch statements?
+
+Imported from GSFCCFS-1026","enhancement, draco-rc4",https://github.com/nasa/FM/issues/7
+Replace FM Internal Command Code with Internal MID instead,"Currently, the FM app has an ""internal"" command code defined for a delete file request that originates from another app instead of the ground.  However, the definition for that command code (FM_DELETE_INT_CC) is located in a the header file fm_msgdefs.h, which is located in the app's ""fsw/src"" directory, and strictly speaking, not accessible by other apps.  
+
+Instead of using an internal command code, FM could use an internal message ID (e.g., FM_INTERNAL_CMD_MID) that can be defined in fm_msgids.h, which is located in the platform_inc directory.  Other cFS apps could then access that command MID and send the internal delete command to the FM app without reaching into what should be an FM-local header file.
+
+Imported from GSFCCFS-965",wontfix,https://github.com/nasa/FM/issues/6
+Unrepeatable queue full error during FM File Info Command,"The FM main task has an internal queue to pass commands to the FM child task.  Most command are executed by the child task since the command execution time is unknown or variable. 
+
+A stakeholder has experience two cases where an FM command somehow broke the FM main task and FM child task communication.  The FM main task says the internal queue is full and the child task says it's waiting for the next command.   
+
+In flight, this problem seemed to go away after 20 minutes and the FM child task reported the 3 queued commands had warnings.  When it happened on the ground we didn't wait long enough to see if it would clear up.
+
+It appears the sem give/take got confused.  Not sure how this can happen.  
+
+Observed on system using Vxworks 6.7, CFE 6.4.2, FM 2.4.2.
+
+
+
+Imported from GSFCCFS-941",bug,https://github.com/nasa/FM/issues/5
+Clarify command counter requirements allow for multiple contexts (tasks),"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Some of the command acceptance check requirements are implemented at in the child task.  For those requirements, it's the child task command error counter that increments instead of the main task command error counter.  This isn't really clear in FM1004 which implies a single error counter.
+
+**Describe the solution you'd like**
+Since the concept is the same and it's somewhat implementation dependent (there's no requirement for a child task) the suggestion is to update the rationale to state this can be the case.
+
+**Describe alternatives you've considered**
+Could update each requirement that is handled by the child task, but also could result in over-specifying the design.
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","requirements, draco-rc2",https://github.com/nasa/FM/issues/4
+FM is incompatible with recent OSAL API changes,"This is regarding OSAL 5.0.3-bv.  FM calls OS_opendir, OS_readdir, and OS_closedir which were removed in favor of OS_DirectoryOpen, OS_DirectoryRead, and OS_DirectoryClose.  I expect to see other issues as I make fixes to pass unit testing.  I will post them here.",bug,https://github.com/nasa/FM/issues/3
+cFE 6.7.1 (OSAL 5.0.1) Comparability Issues,"While integrating File Manager app 2.5.2 with cFE 6.7.1 (OSAL 5.0.1) I ran into an issue. FM has a
+command that allows users to receive a telemetry packet listing all of the open files. In order to do this FM needs to be able to query OSAL's file stream resource objects. The current OSAL implementation only allows a creator to query all of the resources objects by using OS_ForEachObject(). I wrote OSAL ticket #65 to recommend a more general query feature would be helpful. In OpenSatKit I added a new function OS_QueryObjectType() that allows anyone (not restricted to the creator) to query a resource type. The specific OSAL changes are below followed by the FM code that uses the function. These changes were made for OpenStaKit 2.1 that can be found at https://github.com/OpenSatKit/OpenSatKit.
+
+This ticket can only be implemented once the OSAL is updated with a new feature that allows FM to query the resources objects.
+
+## osapi-os-core.h:
+
+/* 
+** Typedef for object query OSAL callback functions. A query does not
+** have to be performed by  the object creator. All fields of the 
+** query_record are completed.
+**
+** This may be used by multiple APIs
+*/
+
+typedef struct
+{
+   const char *name_entry;
+   uint32     creator;
+   uint16     refcount;
+} OS_query_record_t;
+
+typedef void (*OS_ObjQueryCallback_t)(OS_query_record_t *query_rec, void *callback_arg); //dcm - Added for OSK
+
+/*-------------------------------------------------------------------------------------*/
+/**
+ * @brief Query an object resource type maintained by the OSAL  
+ *
+ * User supplied callback is called for all active resources of a particular type
+ * regardless of whether the caller created the object.
+ *
+ */
+uint32 OS_QueryObjectType (uint32 obj_type, OS_ObjQueryCallback_t callback_ptr, OS_query_record_t *query_rec, void *callback_arg);  // dcm - Added for OSK
+
+
+## osapi-idmap.c:
+
+/*----------------------------------------------------------------
+ *
+ * Function: OS_QueryObjectType
+ *
+ * Purpose: Implemented per public OSAL API
+ *          See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+uint32 OS_QueryObjectType (uint32 obj_type, OS_ObjQueryCallback_t callback_ptr, OS_query_record_t *query_rec, void *callback_arg)
+{
+
+    uint32 obj_index;
+    uint32 obj_max;
+    uint32 obj_id;
+    uint32 active_obj_cnt = 0;
+    OS_common_record_t  *obj_rec;
+    
+    obj_max = OS_GetMaxForObjectType(obj_type);
+    if (obj_max > 0)
+    {
+        OS_Lock_Global_Impl(obj_type);
+        obj_index = OS_GetBaseForObjectType(obj_type);
+        while (obj_max > 0)
+        {
+            obj_rec = &OS_common_table[obj_index];
+            obj_id = obj_rec->active_id;
+            if (obj_id != 0) 
+            {
+
+                query_rec->name_entry = obj_rec->name_entry;
+                query_rec->creator    = obj_rec->creator;
+                query_rec->refcount   = obj_rec->refcount;
+                
+                /*
+                 * Handle the object - Note that we must UN-lock before callback.
+                 * The callback function might lock again in a different manner.
+                 */
+                 OS_Unlock_Global_Impl(obj_type);
+                 (*callback_ptr)(query_rec, callback_arg);
+                 OS_Lock_Global_Impl(obj_type);
+                 
+                 ++active_obj_cnt;
+
+            }
+            ++obj_index;
+            --obj_max;
+        }
+        OS_Unlock_Global_Impl(obj_type);
+    }
+
+   return active_obj_cnt;
+
+} /* End OS_QueryObjectType() */
+
+
+
+## fm_cmd_utils.c:
+
+static uint32 open_file_cnt = 0;
+static void LoadOpenFileData(OS_query_record_t *query_rec, void *callback_arg)
+{
+
+    FM_OpenFilesEntry_t *OpenFilesData = (FM_OpenFilesEntry_t *)callback_arg;
+    CFE_ES_TaskInfo_t   TaskInfo;
+ 
+    if (OpenFilesData != (FM_OpenFilesEntry_t *) NULL)
+    {
+        /* FDTableEntry.Path has logical filename saved when file was opened */
+        strcpy(OpenFilesData[open_file_cnt].LogicalName, query_rec->name_entry);
+
+        /* Get the name of the application that opened the file */
+        CFE_PSP_MemSet(&TaskInfo, 0, sizeof(CFE_ES_TaskInfo_t));
+        if (CFE_ES_GetTaskInfo(&TaskInfo, query_rec->creator) == CFE_SUCCESS)
+        {
+            strcpy(OpenFilesData[open_file_cnt].AppName, (char *) TaskInfo.AppName);
+        } 
+    }
+    ++open_file_cnt;
+       
+} /* End LoadOpenFileData() */
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM utility function -- get open files data                      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+uint32 FM_GetOpenFilesData(FM_OpenFilesEntry_t *OpenFilesData)
+{
+
+    OS_query_record_t query_rec;
+   
+    open_file_cnt = 0;
+    OS_QueryObjectType (OS_OBJECT_TYPE_OS_STREAM, LoadOpenFileData, &query_rec, (void *)OpenFilesData);
+       
+    return open_file_cnt;
+    
+} /* End FM_GetOpenFilesData */
+
+",bug,https://github.com/nasa/FM/issues/2
+cFE core services can create files FM can't delete,"**Describe the bug**
+A few commands to the cFE core services, and possibly some cFS applications, are able to create files that cannot then be moved, renamed, deleted, or otherwise by FM. One example is `EVS_WRITELOG2FILE` (`CFE_EVS_FILE_WRITE_LOG_DATA_CC`). This command (and all others that take filenames in the cFE core) don't check the validity of a filename; they simply pull the filename from the command and call `OS_creat()` or `OS_open()` immediately.
+
+FM, on the other hand, calls `CFS_IsValidFilename()` to check for validity of provided filenames in all commands. So, if a command like `EVS_WRITELOG2FILE` is used to create a file with an invalid filename, FM cannot then access that file in any way.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Use `EVS_WRITELOG2FILE` to create a log file in `/ram` with a `?` in its filename.
+2. Attempt to delete this file with FM.
+
+**Expected behavior**
+I would expect that no cFE application, or cFE itself, should be able to create files with invalid filenames.
+
+My suggested fix, and how we've fixed this in our local copies of cFE and OSAL, is to move the `CFS_IsValidFilename()` function into the OSAL, and have all OSAL file API functions perform the check before operating on files. This guarantees that nothing above the OSAL can create a file with an invalid name.
+
+**Code snips**
+* [EVS creation of log data files without validating filename](https://github.com/nasa/cFE/blob/6aaf5a3244e02af43c8ebb893ef413916dff5ef2/fsw/cfe-core/src/evs/cfe_evs_log.c#L178)
+* [FM check on valid filenames](https://github.com/nasa/FM/blob/a1ebbc8b48a90764837cd083fae6d00f8967d46f/fsw/src/fm_cmd_utils.c#L159)
+* [cfs_lib filename validation](https://github.com/nasa/cfs_lib/blob/871ce1e8cc1e597464923029e04f2ff3aa47e64e/fsw/src/cfs_utils.c#L170)
+
+**System observed on:**
+ - Capella flight computer
+ - OS: FreeRTOS 9.0.0
+ - Versions: cFE 6.5.0, OSAL 4.2.1 (plus in-house FreeRTOS port), cfs_lib 2.2.0, FM 2.5.2
+
+**Additional context**
+This is another one we discovered accidentally operationally. One of our operators created an EVS log with a question mark in the name, and then we realized that we couldn't do anything with that file with FM. We ended up patching the filename check in cfs_lib with MM so it would allow for us to delete the file.
+
+**Reporter Info**
+Mike Stewart, Capella Space.
+","bug, requirements, draco-rc1",https://github.com/nasa/FM/issues/1

@@ -1,0 +1,1245 @@
+Title,Body,Labels,URL
+"Fix #55, Refactor `HK_AppInit()` and `HK_TableInit()` to remove multiple returns","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #55
+  - `HK_AppInit()` and `HK_TableInit()` refactored to have a single exit point
+
+**Testing performed**
+GitHub CI actions all passing successfully (incl. Build + Run, Unit/Coverage Tests etc.).
+
+**Expected behavior changes**
+No change to function logic/behavior other than removing the early returns.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/HK/pull/56
+Multiple returns in `HK_AppInit()` and `HK_TableInit()` can be refactored out,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+The only places multiple returns remain in HK are in `HK_AppInit()` and `HK_TableInit()`. This is unnecessary.
+
+**Expected behavior**
+Refactor to a single exit point.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/HK/issues/55
+"Fix #4, Add PacketNotFoundCtr to HK AppData/Tlm","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #4
+  - Adds a new struct member (`PacketNotFoundCtr`) to `HK_HkTlm_Payload_t` and `HK_AppData_t` that tracks the number of times a packet was not found during traversal of the copy table in `HK_SendCombinedHkPacket()`.
+  - Split the `MissingDataCtr` in half to create this counter, but could also just utilize the padding that is already there for this new member, and keep both sized at `uint16` if needed
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+
+**Expected behavior changes**
+Additional information tracking number of times packet not found available in tlm packets now.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/HK/pull/54
+HK missing CFE_ES_PerfLogEntry(HK_APPMAIN_PERF_ID) calls after CFE_SB_ReceiveBuffer in HK_AppMain,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Looks like HK is missing a couple of `CFE_ES_PerfLogEntry(HK_APPMAIN_PERF_ID);` calls after the `CFE_SB_ReceiveBuffer` in `void HK_AppMain(void)`.
+
+**To Reproduce**
+Code inspection
+
+**Expected behavior**
+Every time the app wakes up, it should have an `CFE_ES_PerfLogEntry` call.
+Every time the app wakes is about to block, it should have an `CFE_ES_PerfLogExit` call.
+
+**Code snips**
+
+```c
+    while (CFE_ES_RunLoop(&HK_AppData.RunStatus) == true)
+    {
+        /*
+        ** Performance Log Exit Stamp.
+        */
+        CFE_ES_PerfLogExit(HK_APPMAIN_PERF_ID);
+
+        /*
+        ** Pend on the arrival of the next Software Bus message.
+        */
+        Status = CFE_SB_ReceiveBuffer(&BufPtr, HK_AppData.CmdPipe, HK_SB_TIMEOUT);
+
+        if (Status == CFE_SUCCESS)
+        {
+            /*
+            ** Performance Log Entry Stamp.
+            */
+            CFE_ES_PerfLogEntry(HK_APPMAIN_PERF_ID);
+
+            /* Perform Message Processing */
+            HK_AppPipe(BufPtr);
+        }
+        else if (Status == CFE_SB_TIME_OUT)
+        {
+            /* Check for copy table load and runtime dump request. This is
+             * generally done during the housekeeping cycle.  If we are
+             * getting routine messages at a rate of less than 1Hz we do
+             * the routine maintenance here. */
+            if (HK_CheckStatusOfTables() != HK_SUCCESS)
+            {
+                HK_AppData.RunStatus = CFE_ES_RunStatus_APP_ERROR;
+            }
+        }
+        else
+        {
+            CFE_EVS_SendEvent(HK_RCV_MSG_ERR_EID, CFE_EVS_EventType_ERROR,
+                              ""HK_APP Exiting due to CFE_SB_RcvMsg error 0x%08X"", (unsigned int)Status);
+
+            /* Write to syslog in case there is a problem with event services */
+            CFE_ES_WriteToSysLog(""HK_APP Exiting due to CFE_SB_RcvMsg error 0x%08X\n"", (unsigned int)Status);
+
+            HK_AppData.RunStatus = CFE_ES_RunStatus_APP_ERROR;
+        }
+    } /* end while */
+```
+
+
+**System observed on:**
+ - Hardware: any
+ - OS: any
+ - Versions: I'm looking at the draco rc4 release, but it looks like this is HK v2.5.1
+
+**Additional context**
+Add any other context about the problem here.
+
+**Reporter Info**
+Keegan Moore
+NASA/GSFC
+",,https://github.com/nasa/HK/issues/53
+"Fix #51, Convert `int32` return codes and variables to `CFE_Status_t`","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #51
+  - most `int32` return codes converted over to `CFE_Status_t`
+  - `int32` `status`/`return` variables holding cFE return codes converted to `CFE_Status_t`
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+
+**Expected behavior changes**
+No change to behavior.
+`CFE_Status_t` is more expressive and improves consistency with cFE/cFS.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/HK/pull/52
+HK `int32` return codes and variables should be converted to `CFE_Status_t`,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+HK has quite a few return codes (as well as local `status`/`return` variables which hold CFE return codes) that can be easily converted over to the `CFE_Status_t` typedef.
+
+**Expected behavior**
+Use the more expressive `CFE_Status_t` and improve consistency with cFS.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",Equuleus-rc1,https://github.com/nasa/HK/issues/51
+"Split ""platform_cfg"" into external and internal components","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/HS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Currently, all configurable items for the app are contained in a single `hk_platform_cfg.h` header file.  This contains macro definitions that affect both the internal operation of the application (such as operational limits) as well as the external interface in CMD/TLM and table files.
+
+**Describe the solution you'd like**
+Split this header into two components, one that contains only public items (i.e. those that affect CMD/TLM/Table definitions) and one that contains private/internal items that are only used within the local application code and do not affect the interface.
+
+**Additional context**
+Mainly a scoping concern, separate files for separate scopes.  These files could also be generated in the future, but scope still needs to be consistent.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+",,https://github.com/nasa/HK/issues/50
+"Fix #45, use separate dispatcher for messages","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Isolate the message verification and dispatch from the general message processing.  Functions in the ""cmds"" file now strictly handle the command content, and do not get involved in general validation.
+
+The ""Custom"" code isolation is also in a separate dispatcher.  There is a separate issue to address this.
+
+Fixes #45
+
+**Testing performed**
+Build and run HK in CFE and run all tests
+
+**Expected behavior changes**
+No change in actual implementation, splits up source files into smaller units only
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/HK/pull/49
+"Fix #42, use payload structure","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Puts the CMD/TLM content in a member struct called ""Payload"".  This makes it consistent with other CFE modules and provides a predictably named member for determining the position of non-header content.
+
+Fixes #42
+
+**Testing performed**
+Build and run all tests, sanity check app in CFE
+
+**Expected behavior changes**
+None.
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/HK/pull/48
+"Fix #46, use generated stubs","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Separate the global variables into separate stub source units, then re-run the stub generator for all internal APIs. The committed result here is the exact output of the tool, unmodified.
+
+This eases future maintenance, when an internal API changes one just needs to re-run the stub generator tool to update it
+
+Fixes #46
+
+**Testing performed**
+Build and run all tests.  (Affects UT only)
+
+**Expected behavior changes**
+Stubs easier to maintain going forward.  No changes in behavior.
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/HK/pull/47
+Use Generated Stubs,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/HS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+HK unit testing currently uses a set of stubs for its internal units that are not generated by the tool
+
+**Describe the solution you'd like**
+Use the generated stubs directly whenever possible, as this makes future maintenance easier - when an API changes, just re-run the generator tool to update the stubs.
+
+**Additional context**
+This requires some additional separation of items - global variable stubs should be in a separate compilation unit, as the tool does not generate these.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+","enhancement, Equuleus-rc1",https://github.com/nasa/HK/issues/46
+Apps should check/verify msg BEFORE calling handler,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+This remains an area with coding pattern discrepancies between CFE core and CFS apps, and also different between CFS apps to some degree as well. 
+
+The CFE core and sample app (which is supposed to be the example of ""best practice"") do validation on the message before calling the handler.  For example:
+```
+        case SAMPLE_APP_NOOP_CC:
+            if (SAMPLE_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(SAMPLE_APP_NoopCmd_t)))
+            {
+                SAMPLE_APP_Noop((SAMPLE_APP_NoopCmd_t *)SBBufPtr);
+            }
+```
+
+This is different from HK, which does a similar check, but done inside each handler, for example:
+
+https://github.com/nasa/HK/blob/71fe47aa17a9ec41c55fd29f634d38a8f962eab2/fsw/src/hk_app.c#L448-L453
+
+**Describe the solution you'd like**
+CFS Apps should follow the best practices/patterns set forth in the framework code.  (there are reasons for the pattern being recommended practice)
+
+**Additional context**
+The pattern recommended in the framework (checking before calling, as done in sample_app) has several advantages:
+
+1. Each command handler function has a unique type-safe prototype, that cannot be interchanged with another handler without triggering a type mismatch compiler error.
+2. All typecasting/conversions are confined to one place, and it is nearby to the place that the verification is done - which eases maintainability because check and conversion are all in close proximity and any mismatches will be more visible.
+3. It spreads out the cyclomatic complexity.  In the non-recommended pattern, there is a case where the length check fails, and the entire handler is essentially skipped.  This adds to the cyclomatic complexity of every handler.  In the recommended pattern, those checks are done prior to the invocation of the handler, so the handler can focus solely on its intended purpose - doing the command itself.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",Equuleus-rc1,https://github.com/nasa/HK/issues/45
+"Fix #43, Remove use of 'dummy' in test code","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #43 
+'Dummy' removed from test code/text. Redundant.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+No change to behavior. Simplifies test code.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt","CCB:Approved, Equuleus-rc1",https://github.com/nasa/HK/pull/44
+"Remove redundant use of ""dummy"" in test code","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Redundant use of the word ""dummy"" in some variables/text in the test code. All test variables code are 'dummy' variables - no need to label it as such.
+
+**Code snips**
+https://github.com/nasa/HK/blob/71fe47aa17a9ec41c55fd29f634d38a8f962eab2/unit-test/hk_app_tests.c#L1095
+https://github.com/nasa/HK/blob/71fe47aa17a9ec41c55fd29f634d38a8f962eab2/unit-test/hk_app_tests.c#L1223
+
+**Expected behavior**
+Simplifies test code.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",Equuleus-rc1,https://github.com/nasa/HK/issues/43
+"All CMD/TLM message should put content in a ""Payload"" sub-structure","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/FM/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/FM/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+To match the patterns used in CFE and other modules, all CMD/TLM message definitions should put the content (non-header) parts into a separate struct called ""Payload"".
+
+**Describe the solution you'd like**
+Separate message content into a sub structure called ""Payload"".
+
+**Additional context**
+This is benefit to tooling that can use the presence of this field to identify where the actual content starts (e.g. something like `offsetof(MsgType, Payload)` would work and be correct, as opposed to checking `sizeof(CFE_MSG_CommandHeader_t)` which may not actually reflect where the content starts due to possible compiler-added padding between them).
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",Equuleus-rc1,https://github.com/nasa/HK/issues/42
+"Fix #6, use CFE_MSG_PTR macro","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+This includes various naming convention updates to match patterns used elsewhere in CFE.
+
+Fixes #6
+
+**Testing performed**
+Build and run all tests, sanity check
+
+**Expected behavior changes**
+No impact to behavior, updates symbol naming patterns to match other modules
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/HK/pull/41
+Default InputOffset in HK Copy Table Needs Update for New Tlm Hdr Size,"**Checklist (Please check before submitting)**
+
+* [z] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+The default copy table looks at byte offset 12 of the cFE messages. The new Tlm secondary header padding for 64-bit alignment causes the start of data to be at 16 bytes into the packet.
+
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error
+
+**Expected behavior**
+A clear and concise description of what you expected to happen.
+
+**Code snips**
+Currently:
+
+```
+    /*   0 */ {
+        CFE_SB_MSGID_WRAP_VALUE(CFE_EVS_HK_TLM_MID),
+        12,
+        CFE_SB_MSGID_WRAP_VALUE(HK_COMBINED_PKT1_MID),
+        12,
+        4,
+    },
+    /*   1 */
+    {
+        CFE_SB_MSGID_WRAP_VALUE(CFE_TIME_HK_TLM_MID),
+        12,
+        CFE_SB_MSGID_WRAP_VALUE(HK_COMBINED_PKT1_MID),
+        16,
+        4,
+    },
+    /*   2 */
+    {
+        CFE_SB_MSGID_WRAP_VALUE(CFE_SB_HK_TLM_MID),
+        12,
+        CFE_SB_MSGID_WRAP_VALUE(HK_COMBINED_PKT1_MID),
+        20,
+        4,
+    },
+    /*   3 */
+    {
+        CFE_SB_MSGID_WRAP_VALUE(CFE_ES_HK_TLM_MID),
+        12,
+        CFE_SB_MSGID_WRAP_VALUE(HK_COMBINED_PKT1_MID),
+        24,
+        4,
+    },
+    /*   4 */
+    {
+        CFE_SB_MSGID_WRAP_VALUE(CFE_TBL_HK_TLM_MID),
+        12,
+        CFE_SB_MSGID_WRAP_VALUE(HK_COMBINED_PKT1_MID),
+        28,
+        4,
+    },
+```
+
+The input offset for each should be 16, and the output offset should start at 16 (16, 20, 24, 28, 32).
+
+
+
+**System observed on:**
+ - Hardware: x64 (but should work for any)
+ - OS: PC-Linux (but should work for any)
+ - Versions cFE Draco rc4
+
+**Additional context**
+
+Additionally (optionally), the current table reads the first 4 bytes out of each packet. I think it would make more sense to only read the command count and command error count (the first 2 bytes) of each packet. If this also gets implemented, remember to update the numBytes accordingly.
+
+**Reporter Info**
+Keegan Moore
+NASA/GSFC
+",,https://github.com/nasa/HK/issues/40
+"Fix #38, correct uninitialized variable in UT","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Corrects an uninitialized variable warning - just `memset()` the object to zero.
+Fixes #38
+
+**Testing performed**
+Run all unit tests
+
+**Expected behavior changes**
+No impact to behavior (called API did not dereference the pointer, so it did not matter what was in it)
+
+**System(s) tested on**
+Debian Bookworm
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, Equuleus-rc1",https://github.com/nasa/HK/pull/39
+Uninitialized variable in unit tests,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Compiling the latest HK app with the latest GCC version (12.x) produces a warning about uninitialized variable in the unit test:
+
+```
+[ 93%] Building C object apps/hk/unit-test/CMakeFiles/coverage-hk-hk_app-testrunner.dir/hk_app_tests.c.o
+/home/joe/code/cfecfs/github/apps/hk/unit-test/hk_app_tests.c: In function ‘Test_HK_HousekeepingCmd’:
+/home/joe/code/cfecfs/github/apps/hk/unit-test/hk_app_tests.c:1235:5: error: ‘DummyMsg’ may be used uninitialized [-Werror=maybe-uninitialized]
+ 1235 |     HK_HousekeepingCmd(&DummyMsg);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/joe/code/cfecfs/github/apps/hk/unit-test/hk_app_tests.c:24:
+/home/joe/code/cfecfs/github/apps/hk/unit-test/../fsw/src/hk_app.h:181:6: note: by argument 1 of type ‘const CFE_MSG_CommandHeader_t *’ {aka ‘const struct CFE_MSG_CommandHeader *’} to ‘HK_HousekeepingCmd’ declared here
+  181 | void HK_HousekeepingCmd(const CFE_MSG_CommandHeader_t *Msg);
+      |      ^~~~~~~~~~~~~~~~~~
+```
+
+**To Reproduce**
+Add HK to latest CFS bundle, build using default config.  
+
+**Expected behavior**
+Should build cleanly
+
+**System observed on:**
+Debian (Latest version, with GCC 12.2)
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+","bug, Equuleus-rc1",https://github.com/nasa/HK/issues/38
+"Fix #36, Replace quotes with angle brackets in /inc","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+
+**Describe the contribution**
+Fixes #36 - replace quotes with angle brackets in /inc files.
+
+**Testing performed**
+1. Performed build verification testing
+2. CI
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Dan Knutsen
+NASA Goddard
+","CCB:Approved, draco-rc4",https://github.com/nasa/HK/pull/37
+Replace quotes with angle brackets in #include statements within /inc,"Describe the solution you'd like
+Quotes should be replaced with angle brackets in #include statements that reside in the /inc location. This will ensure that the preprocessor selects the files pre-designated to override the default files contained within the open source cFS build release - as opposed to selecting those located in the same directory.
+
+Requester Info
+Dan Knutsen
+NASA Goddard",draco-rc4,https://github.com/nasa/HK/issues/36
+"Fix #34, Adds fsw/src to app target","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+-Fixes #34
+
+**Testing performed**
+make install
+
+**Expected behavior changes**
+Successful cert_testbed build
+
+**System(s) tested on**
+- Ubuntu 20.04
+
+**Additional context**
+N/A
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, Vantage Systems
+
+","invalid, CCB:Ignore",https://github.com/nasa/HK/pull/35
+Add fsw/src to app target,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Cannot build cert_testbed. `target_include_directories(xx PUBLIC fsw/src)` is needed to build tables, etc. Revise CMakeLists.txt
+
+**To Reproduce**
+Build in cert_testbed
+
+**Expected behavior**
+Error-free build
+
+**Code snips**
+If applicable, add references to the software.
+
+**System observed on:**
+ - Ubuntu 20.04
+
+**Additional context**
+N/A
+
+**Reporter Info**
+Justin Figueroa, Vantage Systems
+",invalid,https://github.com/nasa/HK/issues/34
+"Fix #32, Moves interface definition files to inc","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #32
+
+**Testing performed**
+make install
+lcov
+
+**Expected behavior changes**
+No expected behavior change.
+
+**System(s) tested on**
+-Ubuntu 18.04
+
+**Additional context**
+N/A
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+-Justin Figueroa, Vantage","CCB:Approved, draco-rc4",https://github.com/nasa/HK/pull/33
+"Move interface definition files to ""inc"" location","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/HK/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+The interface definition files of all open source apps currently exist in the ""src"" directory.
+
+**Describe the solution you'd like**
+Create an ""inc"" dir to go with the ""src"" dir.  Move the interface definitions into this location: ""_msg.h"", ""_msgdefs.h"", ""_tbldefs.h"", and ""_events.h"". Consider moving header files in both ""platform_inc"" and ""mission_inc"" to ""inc""
+
+**Describe alternatives you've considered**
+Leaving as is.
+
+**Additional context**
+N/A
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+",draco-rc4,https://github.com/nasa/HK/issues/32
+"Fix #30, Move variables declared mid-function to the top","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #30
+A few stray variables that were declared mid-function were moved to the top of their respective functions.
+
+**Testing performed**
+GitHub CI actions all passing successfully (excl. cppcheck issues being addressed in https://github.com/nasa/HK/pull/29)
+
+**Expected behavior changes**
+All variables declared top of function as per cFS conventions/guidelines.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",CCB:Approved,https://github.com/nasa/HK/pull/31
+Variables declared mid-function,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+A few cases of variables declared mid-function left here.
+Copy of https://github.com/nasa/CF/issues/109
+
+**Expected behavior**
+All variables should be declared at the top of the function.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/HK/issues/30
+"Fix #28, Remove initializations causing Cppcheck failure","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #28 
+Note: all are local variables only.
+In order of the errors reported in the issue report:
+
+In the `HK_ProcessIncomingHkData()` function:
+`int32 LastByteAccessed = 0;`: `LastByteAccessed` is assigned a value on line 72, and is only used once on the line immediately after that, so the initialization at the top of the function is redundant.
+
+In the `HK_ProcessNewCopyTable()` function:
+`int32 Loop2 = 0;`: `Loop2` is used in 3 `for` loops, and it is assigned a value (of zero) each time in the init-statement. Therefore the initialization at the top of the function can safely be changed to a declaration-only.
+`CFE_SB_MsgId_t MidOfThisPacket = CFE_SB_INVALID_MSG_ID;`: `MidOfThisPacket` is assigned a value on line 167 and is used twice after that in 2 loops, both of which are covered by the assignment on line 167.
+`int32 SizeOfThisPacket = 0;`: `SizeOfThisPacket` is assigned a value on line 168 and is used twice after that in 2 loops, both of which are covered by the assignment on line 168.
+`int32 FurthestByteFromThisEntry = 0;`: `FurthestByteFromThisEntry` is assigned a value on line 180 and is only used immediately after that in a single `if` block.
+`CFE_SB_Buffer_t * NewPacketAddr = 0;`: `NewPacketAddr` is only used in the `if` block starting on line 192, and it is assigned a value (of `NULL`) immediately preceding that line, thus the initialization at the top of the function is redundant (and we can change it to a declaration-only).
+`int32 Result = CFE_SUCCESS;`: The assignment to `Result` on line 194 and line 229 cover its use in the `if` blocks immediately following those assignments.
+
+In the `HK_TearDownOldCopyTable()` function:
+`int32 Loop2 = 0;`: `Loop2` is used in 2 `for` loops, and it is assigned a value (of zero) each time in the init-statement. Therefore the initialization at the top of the function can safely be changed to a declaration-only.
+`CFE_SB_MsgId_t MidOfThisPacket = CFE_SB_INVALID_MSG_ID;`: `MidOfThisPacket` is only used once in this function (on line 313) and it is assigned a value preceding that use on line 301.
+`int32 Result = CFE_SUCCESS;`: The assignment to `Result` on line 304 covers its use in the mutually exclusive `if`/`else` block starting on the next line, which is the only place it is used in this function.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+No impact on behavior.
+Cppcheck now passes without error again.
+
+**Contributor Info**
+Avi @thnkslprpt","CCB:Approved, draco-rc4",https://github.com/nasa/HK/pull/29
+New Cppcheck errors: '[unreadVariable]',"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Latest version of Cppcheck is issuing the following failures for HK:
+```
+fsw/src/hk_utils.c:57:46: style: Variable 'LastByteAccessed' is assigned a value that is never used. [unreadVariable]
+    int32                   LastByteAccessed = 0;
+                                             ^
+fsw/src/hk_utils.c:126:55: style: Variable 'Loop2' is assigned a value that is never used. [unreadVariable]
+    int32                   Loop2                     = 0;
+                                                      ^
+fsw/src/hk_utils.c:127:55: style: Variable 'MidOfThisPacket' is assigned a value that is never used. [unreadVariable]
+    CFE_SB_MsgId_t          MidOfThisPacket           = CFE_SB_INVALID_MSG_ID;
+                                                      ^
+fsw/src/hk_utils.c:128:55: style: Variable 'SizeOfThisPacket' is assigned a value that is never used. [unreadVariable]
+    int32                   SizeOfThisPacket          = 0;
+                                                      ^
+fsw/src/hk_utils.c:129:55: style: Variable 'FurthestByteFromThisEntry' is assigned a value that is never used. [unreadVariable]
+    int32                   FurthestByteFromThisEntry = 0;
+                                                      ^
+fsw/src/hk_utils.c:130:55: style: Variable 'NewPacketAddr' is assigned a value that is never used. [unreadVariable]
+    CFE_SB_Buffer_t *       NewPacketAddr             = 0;
+                                                      ^
+fsw/src/hk_utils.c:131:55: style: Variable 'Result' is assigned a value that is never used. [unreadVariable]
+    int32                   Result                    = CFE_SUCCESS;
+                                                      ^
+fsw/src/hk_utils.c:273:46: style: Variable 'Loop2' is assigned a value that is never used. [unreadVariable]
+    int32                   Loop2            = 0;
+                                             ^
+fsw/src/hk_utils.c:274:46: style: Variable 'MidOfThisPacket' is assigned a value that is never used. [unreadVariable]
+    CFE_SB_MsgId_t          MidOfThisPacket  = CFE_SB_INVALID_MSG_ID;
+                                             ^
+fsw/src/hk_utils.c:277:46: style: Variable 'Result' is assigned a value that is never used. [unreadVariable]
+    int32                   Result           = CFE_SUCCESS;
+                                             ^
+##[error]Process completed with exit code 255.
+```
+
+**To Reproduce**
+Run the current version of Cppcheck on the current main branch HK source code.
+
+**Expected behavior**
+Cppcheck should pass without raising any errors.
+
+**Reporter Info**
+Avi @thnkslprpt",draco-rc4,https://github.com/nasa/HK/issues/28
+"Fix #26, Apply consistent Event ID names to common events","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #26
+  - Consistent event IDs have been applied to the inconsistent cases to align them with a common Event ID naming convention.
+
+**Testing performed**
+Only GitHub CI actions.
+
+**Expected behavior changes**
+No impact on code behavior (no logic changes).
+Consistent Event ID names for the events which are common to all/most cFS components and apps will improve consistency and ease make code review/debugging easier.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/HK/pull/27
+Inconsistent Event ID naming,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/cFE/issues/2175
+After finding that there were 9 different Event IDs to indicate the same thing (Invalid Message ID) in https://github.com/nasa/CF/issues/262, I scrubbed the other common commands (e.g. Task Initialisation [INIT], NOOP, Reset Counters etc.) and found the same issue there - almost every component/app had their own variation of the Event ID name for the exact same event.
+
+**Expected behavior**
+Apply consistent Event ID names to the events which are common to all/most components and apps.
+
+**Code snips**
+Invalid Message ID:
+`CFE_EVS_ERR_MSGID_EID`
+`CFE_SB_BAD_MSGID_EID`
+`CFE_TIME_ID_ERR_EID`
+`CS_MID_ERR_EID`
+`TO_LAB_MSGID_ERR_EID`
+`SAMPLE_APP_INVALID_MSGID_ERR_EID`
+`BP_INVALID_MID_ERR_EID`
+`SCH_MD_ERR_EID`
+`CI_LAB_COMMAND_ERR_EID`
+
+Initialization:
+`CFE_TIME_INIT_EID`
+`CFE_TBL_INIT_INF_EID`
+`CFE_EVS_STARTUP_EID`
+`CF_EID_INF_INIT`
+`BP_INIT_APP_INFO_EID`
+`SCH_INITSTATS_INF_EID`
+`CI_LAB_STARTUP_INF_EID`
+
+NOOP:
+`CFE_TIME_NOOP_EID`
+`CFE_TBL_NOOP_INF_EID`
+`CFE_SB_CMD0_RCVD_EID`
+`CF_EID_INF_CMD_NOOP`
+`FM_NOOP_CMD_EID`
+`CI_LAB_COMMANDNOP_INF_EID`
+
+Reset Counters:
+`CFE_TIME_RESET_EID`
+`CFE_TBL_RESET_INF_EID`
+`CFE_EVS_RSTCNT_EID`
+`CFE_SB_CMD1_RCVD_EID`
+`CF_EID_INF_CMD_RESET`
+`SC_RESET_DEB_EID`
+`HS_RESET_DBG_EID`
+`FM_RESET_CMD_EID`
+`HK_RESET_CNTRS_CMD_EID`
+`MD_RESET_CNTRS_DBG_EID`
+`CI_LAB_COMMANDRST_INF_EID`
+
+etc.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/HK/issues/26
+"Fix #24, Remove redundant/inconsistent comments (/* end of function */, /* end if */ etc.) and clean up empty lines.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #24
+Removes redundant and inconsistent comments (e.g. `/* end of function */`, `/* end if */`, function name in function header comments).
+There were also a few cases of unnecessary empty lines (e.g. on the last line before the closing brace of a function) and also missing empty lines (e.g. between functions) which were corrected. Some of these empty lines trigger the CI format checks.
+I've left the commits separated for now to make life easier for whoever reviews this. I can squash them if/when this is ready for merge.
+
+**Testing performed**
+None (comment and whitespace changes only).
+
+**Expected behavior changes**
+No impact on behavior.
+These updates will reduce clutter and inconsistency in the code, improving readability.
+
+**Contributor Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/HK/pull/25
+"Redundant comments (/* end of function */, /* end if */ etc.) and clean up empty lines.","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/to_lab/issues/68 and https://github.com/nasa/sample_app/issues/111
+There are quite a few redundant comments in the code, such as:
+- `/* end of function */`-type comments
+- `/* end if */`-type comments
+- function header comments which include the function name
+
+Another minor issue has to do with empty lines:
+a) _unnecessary_ empty lines (e.g. first line after the opening brace of a function/struct, or the last line before the closing brace - the latter apparently sometimes triggers the CI format checks).
+b) _missing_ empty lines between functions (i.e. closing brace of last function, then next function beginning on the immediately next line without an empty line in between)
+
+The unnecessary empty lines (at the beginning or end of a function, for example) represent a low single-digit percentage of the cases (the vast majority of functions/structs do not have these extra empty lines), so there is an argument to remove them purely for consistency, not just due to them being redundant and triggering the CI format checks.
+
+**Expected behavior**
+Remove redundant comments to reduce clutter and inconsistency in the code, and improve readability.
+
+**Reporter Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/HK/issues/24
+"Fix #22, Remove unnecessary parentheses around return values.","**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #22  
+Removes parentheses in return statements in HK that return a single value/term.
+This is aligns these return statements with the predominant style of cFS.
+
+**Testing performed**
+None, prior to submission of the pull request.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt ","CCB:Approved, draco-rc4",https://github.com/nasa/HK/pull/23
+Scrub use of () in return statements,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Unnecessary parentheses around return values in HK
+Copy of https://github.com/nasa/osal/issues/866
+
+**Reporter Info**
+@thnkslprpt ",draco-rc4,https://github.com/nasa/HK/issues/22
+"Fix #3, change HK_INPUTMID_SUBSCRIBED to 1","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fix #3, change macro HK_INPUTMID_SUBSCRIBED from 0xFF to 1
+
+**Testing performed**
+Unit testing
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+ - OS: Ubuntu 18.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Haven Carlson - NASA",,https://github.com/nasa/HK/pull/21
+"Fix #18 #19, Remove TODOs and minor cleanup","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #18 
+- Fix #19 
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+Removes stray printf
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc3",https://github.com/nasa/HK/pull/20
+Simplify HK_SendCombinedHKCmd and remove stray printfs,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/HK/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Unnecessary variable:
+https://github.com/nasa/HK/blob/fbb231ebcdc31c84ab47129adcdff267789fda83/fsw/src/hk_app.c#L397-L406
+
+Stray printfs (leftover debugging?):
+https://github.com/nasa/HK/blob/fbb231ebcdc31c84ab47129adcdff267789fda83/fsw/src/hk_utils.c#L156
+https://github.com/nasa/HK/blob/fbb231ebcdc31c84ab47129adcdff267789fda83/fsw/src/hk_utils.c#L497
+
+**Describe the solution you'd like**
+Clean/remove.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, draco-rc3",https://github.com/nasa/HK/issues/19
+Remove UT TODOs and clean up related tests,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/HK/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+https://github.com/nasa/HK/blob/fbb231ebcdc31c84ab47129adcdff267789fda83/unit-test/hk_app_tests.c#L1192-L1208
+
+**Describe the solution you'd like**
+Remove TODO and clean
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","unit-test, draco-rc3",https://github.com/nasa/HK/issues/18
+"Fix #12, added codeql-build.yml","**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [X] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+Describe the contribution
+A clear and concise description of what the contribution is.
+Added CodeQL to GitHub workflows
+Fix #12 
+
+Testing performed
+
+Pushed to branch
+Checked CodeQL ran successfully
+Expected behavior changes
+no impact to behavior
+
+System(s) tested on
+Browser
+
+Additional context
+Depends on https://github.com/nasa/cFS/pull/501 to run successfully
+
+Third party code
+If included, identify any third party code and provide text file of license
+
+Contributor Info - All information REQUIRED for consideration of pull request
+Full name and company/organization/center of all contributors (""Personal"" if individual work)
+
+Note CLA's apply to software contributions.","CCB:Approved, dependency, draco-rc2",https://github.com/nasa/HK/pull/17
+"Fix #15, Updates CLA information for Apache 2.0","Deletes old HK CLAs, Removes language in contributing.md of app-specific CLA,
+Adds link to new CLAs in pull_request_template.md and contributing.md
+
+**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #15
+- Fixes https://github.com/nasa/cFS/issues/495
+
+**Testing performed**
+Visually inspected links in fork and in PR template.
+
+**Expected behavior changes**
+All references to CLAs should be updated to the cFS app CLA.
+
+**System(s) tested on**
+Google Chrome browser
+
+**Additional context**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Justin Figueroa, ASRC Federal","docs, CCB:Approved, draco-rc2",https://github.com/nasa/HK/pull/16
+Update CLA Information,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [cFS README.md file](https://github.com/nasa/cFS/blob/main/README.md) to see if the feature is in the major future work.
+* [ ] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Have new CLAs given the change in https://github.com/nasa/cFS/pull/491 with the combined CLA, 
+
+**Describe the solution you'd like**
+
+- [ ] Update the instructions in each app's Contributing.md
+- [ ] Delete old CLA pdfs
+- [ ] Update PR and Issue templates as needed
+
+
+**Describe alternatives you've considered**
+
+None
+
+**Additional context**
+None
+
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz
+","docs, draco-rc2",https://github.com/nasa/HK/issues/15
+"Fix #13, Remove CFE_PSP_MemSet use for addresses in RAM","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #13
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just removes unnecessary API dependence
+
+**System(s) tested on**
+ - CI
+ - Versions: Bundle main + this commit + addition of app to build
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/HK/pull/14
+Remove CFE_PSP_MemSet use for addresses in RAM,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CS/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/CS/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Should just use memset/memcpy for addresses in RAM.  The PSP functions serve no use in this context.
+
+**Describe the solution you'd like**
+Replace with memset/memcpy.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, draco-rc2",https://github.com/nasa/HK/issues/13
+Add CodeQL to repository,"**Checklist (Please check before submitting)**
+
+* [X] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [X] I reviewed the [README file](https://github.com/nasa/HK/blob/main/README.md) to see if the feature is in the major future work.
+* [X] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Use CodeQL for continuous integration
+
+**Describe the solution you'd like**
+Add CodeQL workflow
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Add any other context about the feature request here.
+
+**Requester Info**
+Haven Carlson","continuous-integration, draco-rc2",https://github.com/nasa/HK/issues/12
+"Fix #7, Resolve UT static analysis warnings","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CF/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #7
+
+**Testing performed**
+CI + static analysis run
+
+**Expected behavior changes**
+None, just squashes static analysis warnings
+
+**System(s) tested on**
+ - Hardware: VM
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + apps + related static analysis resolution branches
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/HK/pull/11
+"Fix #9, Resolve strict cppcheck warnings","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #9 
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, justs squashes warnings
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, draco-rc2",https://github.com/nasa/HK/pull/10
+Static analysis workflow style warnings,"**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/HK/blob/main/CONTRIBUTING.md).
+* [x] I reviewed the [README file](https://github.com/nasa/HK/blob/main/README.md) to see if the feature is in the major future work.
+* [x] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+Style warnings in strict cppcheck static analysis workflow causing workflow failure:
+```
+[fsw/src/hk_utils.c:47] -> [fsw/src/hk_utils.c:59]: (style) Variable 'StartOfCopyTable' is reassigned a value before the old one has been used.
+[fsw/src/hk_utils.c:49] -> [fsw/src/hk_utils.c:60]: (style) Variable 'StartOfRtTable' is reassigned a value before the old one has been used.
+[fsw/src/hk_utils.c:371] -> [fsw/src/hk_utils.c:378]: (style) Variable 'StartOfRtTable' is reassigned a value before the old one has been used.
+[fsw/src/hk_utils.c:437] -> [fsw/src/hk_utils.c:439]: (style) Variable 'HKStatus' is reassigned a value before the old one has been used.
+[fsw/src/hk_utils.c:457] -> [fsw/src/hk_utils.c:461]: (style) Variable 'Status' is reassigned a value before the old one has been used.
+[fsw/src/hk_utils.c:482] -> [fsw/src/hk_utils.c:485]: (style) Variable 'Status' is reassigned a value before the old one has been used.
+[fsw/src/hk_utils.c:556] -> [fsw/src/hk_utils.c:560]: (style) Variable 'Status' is reassigned a value before the old one has been used.
+[fsw/src/hk_utils.c:601] -> [fsw/src/hk_utils.c:606]: (style) Variable 'StartOfCopyTable' is reassigned a value before the old one has been used.
+[fsw/src/hk_utils.c:603] -> [fsw/src/hk_utils.c:607]: (style) Variable 'StartOfRtTable' is reassigned a value before the old one has been used.
+[fsw/src/hk_utils.c:640] -> [fsw/src/hk_utils.c:645]: (style) Variable 'StartOfCopyTable' is reassigned a value before the old one has been used.
+[fsw/src/hk_utils.c:642] -> [fsw/src/hk_utils.c:646]: (style) Variable 'StartOfRtTable' is reassigned a value before the old one has been used.
+```
+
+**Describe the solution you'd like**
+Fix
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+
+","enhancement, good first issue, draco-rc2",https://github.com/nasa/HK/issues/9
+Static analysis issues relative to flight code,"Handful of static analysis issues in the ""red"" identified (non-Style issues).  Need to resolve these.
+
+Filter: -file:elf -file:ut -file:cfe -file:os -file:cf_ -file:_lab_app.c !(significance:style)
+
+should resolve and/or disposition the higher ranked ones at minimum.
+
+Note license restricts publishing issues.
+
+Imported from GSFCCFS-1958",invalid,https://github.com/nasa/HK/issues/8
+Resolve static analysis issues relative to unit tests,"Many actual code issues (uninitialized variables, buffer overruns, etc) identified via static analysis in the unit tests.  All actual ""bugs"" should be resolved.
+
+Imported from GSFCCFS-1936","unit-test, draco-rc2",https://github.com/nasa/HK/issues/7
+Apps should use CFE_MSG_PTR macro instead of cast or local unwrapping,"Apps typically cast to a CFE_MSG_Message_t or use *.Msg.  Better to use abstracted CFE_MSG_PTR. NOTE - Not backwards compatible with Caelum so recommend not addressing in Draco.
+
+Imported from GSFCCFS-1900",enhancement,https://github.com/nasa/HK/issues/6
+Change HK_UNDEFINED_ENTRY to an actual undefined value,"The current value of HK_UNDEFINED_ENTRY in hk_utils.h is 0, which is a potentially valid entry value.  We should consider changing the definition to something that is actually an undefinable value, for example 0xFFFF.
+
+Imported from GSFCCFS-1076",duplicate,https://github.com/nasa/HK/issues/5
+HK Count track times packet is not found,"In file hk_utils.c function HK_SendCombinedHkPacket recommendation:
+
+HK app hk packet could keep track of number of times packet is not found. HK_AppData.MissingDataCtr could be repurposed for this.
+
+Finding from code review
+
+Imported from GSFCCFS-991",enhancement,https://github.com/nasa/HK/issues/4
+Change HK_INPUTMID_SUBSCRIBED to 1,"In hk_utils.h suggest setting HK_INPUTMID_SUBSCRIBED to 1 instead of 0xFF.
+
+Finding in code review.
+
+Imported from GSFCCFS-987",wontfix,https://github.com/nasa/HK/issues/3
+Add HK_UNDEFINED_ENTRY check to hk_verify.h,"hk_verify.h recommendation:
+
+HK_UNDEFINED_ENTRY is #define to 0 in hk_utils.h. I would consider, since any uninitialized entries in the table will be zeroed out, to put:
+#if HK_UNDEFINED_ENTRY != 0
+#error HK_UNDEFINED_ENTRY must be set to 0
+#endif
+
+
+Imported from GSFCCFS-986",wontfix,https://github.com/nasa/HK/issues/2
+"MemPoolHandle should be of type CFE_ES_MemHandle_t, not uint32","See https://github.com/nasa/HK/blob/cf59498983da2b82454e961844955a9a22a7a8a9/fsw/src/hk_app.h#L78
+
+This causes HK to exit while running on a 64 bit platform, as an 8byte pointer is written to this and overwrites the adjacent RunStatus field.",bug,https://github.com/nasa/HK/issues/1

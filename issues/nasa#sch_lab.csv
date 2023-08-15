@@ -1,0 +1,2662 @@
+Title,Body,Labels,URL
+[Question] Comparison of use cases of SCH x SCH_LAB,"**Usability and use-case questions:**
+- As far as I understood, the open issue https://github.com/nasa/SCH/issues/25 has no target date to be reached. How close is SCH to being CFE draco-rc4 compliant?
+- Could you explain the differences in approach between SCH and SCH_LAB?
+- Can the features of SCH_LAB fully comply with the capabilities of SCH 2.2.2?
+- Is SCH_LAB a test or mockup app? I mean, is it not supposed to be production compliant and only used for simulation purposes?
+- Is the SCH app required for draco-rc4 operation? I mean, is SCH_LAB the only one supposed to be working with draco-rc4? 
+
+**Describe the solution you'd like:**
+I would like a clear and objective description of the use-cases and usability of both apps, including guidance on when to use one over the other or if both are needed.
+
+",,https://github.com/nasa/sch_lab/issues/146
+sch_lab Integration candidate: Caelum-rc4+dev51,"**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/PSP/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- PR #144. Addresses Issue #143
+
+**Testing performed**
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/675/checks)
+[PSP Checks](https://github.com/nasa/sch_lab/pull/145/checks)
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 22.04
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@dmknutsen",,https://github.com/nasa/sch_lab/pull/145
+"Fix #143, Add support for cmds w/args","**Describe the contribution**
+Adds support for commands w/args.
+Fixes issue #143 
+
+**Testing performed**
+Tested LC sample action point command via build verification scripts.
+
+**Expected behavior changes**
+A clear and concise description of how this contribution will change behavior and level of impact.
+ - API Change: xxx (if applicable)
+ - Behavior Change: xxx (if applicable)
+ - Or no impact to behavior
+
+**System(s) tested on**
+ - OS: [e.g. Ubuntu 20.04
+
+
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Dan Knutsen
+NASA Goddard
+",CCB:Approved,https://github.com/nasa/sch_lab/pull/144
+SCH_LAB does not support sending commands with arguments,"**Is your feature request related to a problem? Please describe.**
+sch_lab does not support sending commands with arguments.  This is needed when scheduling messages such as LC's sample action point command & HK's send combined packet command.
+
+**Describe the solution you'd like**
+sch_lab supports sending commands with arguments.
+
+**Requester Info**
+Dan Knutsen
+NASA Goddard
+",enhancement,https://github.com/nasa/sch_lab/issues/143
+"Fix #141, Convert `int32` return codes and variables to `CFE_Status_t`","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #141 
+  - `int32` return codes converted over to `CFE_Status_t`
+
+edit: some formatting issues cropped up after a recent PR went through
+
+**Testing performed**
+GitHub CI actions all passing successfully.
+Local testing with full cFS suite passing all tests and showing not change to coverage.
+
+**Expected behavior changes**
+No change to behavior.
+`CFE_Status_t` is more expressive and improves consistency with cFE/cFS.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/sch_lab/pull/142
+sch_lab `int32` return codes and variables should be converted to `CFE_Status_t`,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+sch_lab has a couple of return codes that can be easily converted over to the `CFE_Status_t` typedef.
+
+**Expected behavior**
+Use the more expressive `CFE_Status_t` and improve consistency with cFS.
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/sch_lab/issues/141
+sch_lab Integration candidate: Caelum-rc4+dev46,"**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/PSP/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- PR #139. Addresses Issue #138
+
+**Testing performed**
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/668/checks)
+[PSP Checks](https://github.com/nasa/sch_lab/pull/140/checks)
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 22.04
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey",,https://github.com/nasa/sch_lab/pull/140
+"Fix #138, adjust table based on apps present","**Describe the contribution**
+Create an inclusion preprocessor macro for each app referred to in the subscription table, and only include that line if the app is present in the current configuration.
+
+In particular, do not assume that sample_app will always be there.
+
+Fixes #138
+
+**Testing performed**
+Build SCH_LAB without SAMPLE_APP and confirm successful
+
+**Expected behavior changes**
+Presence of other apps is not assumed/hardcoded in the table
+
+**System(s) tested on**
+Debian
+
+**Additional context**
+This should fix workflow errors where apps are built with SCH_LAB but without SAMPLE_APP.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/sch_lab/pull/139
+Default/Example table assumes presence of other apps,"**Describe the bug**
+The default value for the SCH_LAB table directly refers to `sample_app` Msg ID, assuming this these app will be present.  This is fine for a user who is cloning the http://github.com/nasa/cFS bundle repo, because it includes all submodules.  But in other cases if sample_app is not present, the table fails to build.
+
+This issue is now detected at configuration (CMake) time, if there is a reference to the include directories of a target that does not exist in this configuration.
+
+**To Reproduce**
+Notably, this change from compile to config time caused an unintended side effect- workflows for the other CFS apps seem to do this - it clones the CFS but modifies the `targets.cmake` configuration in such a way that it no longer includes the `sample_app`.
+
+**Expected behavior**
+Should not assume/require that `sample_app` will always be part of the config.
+
+**Code snips**
+Problematic assumption is here in the table:
+https://github.com/nasa/sch_lab/blob/74d112908a9671554e4126345e3a513c2bb72a72/fsw/tables/sch_lab_table.c#L57
+
+**System observed on:**
+Github workflow (see https://github.com/nasa/LC/actions/runs/4681105860/jobs/8293280167)
+
+**Additional context**
+Same issue in to_lab, see nasa/to_lab#152
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/sch_lab/issues/138
+sch_lab Integration candidate: Caelum-rc4+dev45,"**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/PSP/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- PR #136. Addresses Issue #135
+
+**Testing performed**
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/667/checks)
+[PSP Checks](https://github.com/nasa/sch_lab/pull/137/checks)
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 22.04
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey",,https://github.com/nasa/sch_lab/pull/137
+"Fix #135, update cmake recipe","**Describe the contribution**
+Prefer target-scope properties over directory scope where applicable
+
+Fixes #135
+
+**Testing performed**
+Build and run tests, sanity check
+
+**Expected behavior changes**
+No impact
+
+**System(s) tested on**
+Debian
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/sch_lab/pull/136
+Update cmake script to use current best practices,"**Is your feature request related to a problem? Please describe.**
+Build recipes should publish the module's include directories via the `INTERFACE_INCLUDE_DIRECTORIES` in property in cmake.  This is what CFE modules do, but some of the framework apps are still using directory-scope include directories (old way).
+
+Also, table names should match the app names they are associated with, unless there is a good reason not to.
+
+**Describe the solution you'd like**
+Change these to target-scope include directories (use `target_include_directories`, not `include_directories`)
+
+**Additional context**
+Notably this is important in order to be able to easily provide an alternative table content via the mission-provided files.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/sch_lab/issues/135
+"Fix #133, Remove component-specific cFE header #includes","**Describe the contribution**
+- Fixes #133
+  - Removes the component-specific cFE headers which are pulled in by the all-inclusive `cfe.h`.
+
+**Testing performed**
+Tested with local cFS Build + Run, confirmed successful start-up.
+
+**Expected behavior changes**
+None.
+
+**System(s) tested on**
+Intel(R) Celeron(R) N4100 CPU @ 1.10GHz x86_64
+Debian GNU/Linux 11 (bullseye)
+Current main of the cFS bundle.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/sch_lab/pull/134
+Component-specific cFE headers not required (all are pulled in by cfe.h),"**Describe the bug**
+Copy of https://github.com/nasa/sample_app/issues/194
+The component-specific cFE header files (`cfe_sb.h`, `cfe_es.h` etc.) are all already pulled by the all-inclusive `cfe.h`.
+
+**Expected behavior**
+Remove unnecessary header `#include`'s.
+
+**Code snips**
+https://github.com/nasa/sch_lab/blob/91d3b7d55098a232f330dcc4e280d0fdd9ea22fc/fsw/src/sch_lab_app.c#L29-L33
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/sch_lab/issues/133
+"Fix #131, Moves interface definition files to inc","**Describe the contribution**
+- Fixes #131
+
+**Testing performed**
+Github Workflows
+
+**Expected behavior changes**
+No expected behavior change.
+
+**System(s) tested on**
+-Ubuntu 18.04
+
+**Additional context**
+Depends on https://github.com/nasa/to_lab/pull/140
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+-Justin Figueroa, Vantage",CCB:Ignore,https://github.com/nasa/sch_lab/pull/132
+"Move interface definition files to ""inc"" location","**Is your feature request related to a problem? Please describe.**
+The interface definition files of all open source apps currently exist in the ""src"" directory.
+
+**Describe the solution you'd like**
+Create an ""inc"" dir to go with the ""src"" dir.  Move the interface definitions into this location: ""_msg.h"", ""_msgdefs.h"", ""_tbldefs.h"", and ""_events.h"". Consider moving header files in both ""platform_inc"" and ""mission_inc"" to ""inc""
+
+**Describe alternatives you've considered**
+Leaving as is.
+
+**Additional context**
+N/A
+
+**Requester Info**
+Justin Figueroa, Vantage Systems
+",,https://github.com/nasa/sch_lab/issues/131
+sch_lab Integration candidate: Caelum-rc4+dev26,"**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/sch_lab/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- PR #126. Addresses Issue #125
+
+**Testing performed**
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/597/checks)
+[sch_lab Checks](https://github.com/nasa/sch_lab/pull/130/checks)
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt",,https://github.com/nasa/sch_lab/pull/130
+"Fix #128, Standardize naming of SCH_LAB functions/macros","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fixes #128
+ - Standardize naming of SCH_LAB functions/macros to match predominant cFS style.
+
+Also requires a change to the [cfe startup script](https://github.com/nasa/cFE/pull/2168)
+
+**Testing performed**
+Only GitHub CI workflow actions.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/sch_lab/pull/129
+Apply standard naming convention (SCH_LAB...),"**Describe the bug**
+Copy of https://github.com/nasa/to_lab/issues/67
+A few cases also appear in sch_lab of inconsistent naming of macros and the main function.
+
+**Expected behavior**
+Apply standard pattern (SCH_LAB...)
+
+**Code snips**
+https://github.com/nasa/sch_lab/blob/7bb334284b673f918e186b6e7c3368560e200ede/fsw/src/sch_lab_app.c#L75
+https://github.com/nasa/sch_lab/blob/7bb334284b673f918e186b6e7c3368560e200ede/fsw/mission_inc/sch_lab_perfids.h#L26
+https://github.com/nasa/sch_lab/blob/7bb334284b673f918e186b6e7c3368560e200ede/fsw/platform_inc/sch_lab_table.h#L37
+
+**Reporter Info**
+Avi Weiss @thnkslprpt ",,https://github.com/nasa/sch_lab/issues/128
+sch_lab Integration candidate: Caelum-rc4+dev25,"**Describe the contribution**
+
+
+PR #123
+    
+- Fix #122, Create CHANGELOG.md
+
+
+**Testing performed**
+
+[sch_lab Checks](https://github.com/nasa/sch_lab/pull/127/checks)
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/590/checks)
+
+**Expected behavior changes**
+
+See PRs
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt",,https://github.com/nasa/sch_lab/pull/127
+"Fix #125, Remove redundant comments","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #125
+Removes redundant and inconsistent comments (e.g. `/* end of function */`, `/* end if */`, function name in function header comments).
+
+**Testing performed**
+None (comment changes only).
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/sch_lab/pull/126
+"Redundant comments (/* end of function */, /* end if */, function name in function header comments etc.)","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Copy of https://github.com/nasa/to_lab/issues/68 and https://github.com/nasa/sample_app/issues/111
+There are quite a few redundant comments in the code, such as:
+- `/* end of function */`-type comments
+- `/* end if */`-type comments
+- function header comments which include the function name
+
+**Expected behavior**
+Remove redundant comments to reduce clutter and inconsistency in the code, and improve readability.
+
+**Reporter Info**
+@thnkslprpt ",,https://github.com/nasa/sch_lab/issues/125
+sch_lab Integration candidate: Caelum-rc4+dev23,"**Describe the contribution**
+
+
+PR #121
+    
+- Fix #120, Remove unnecessary parentheses around return values.
+
+
+**Testing performed**
+
+[sch_lab Checks](https://github.com/nasa/sch_lab/pull/124/checks)
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/586/checks)
+
+**Expected behavior changes**
+
+See PRs
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt",,https://github.com/nasa/sch_lab/pull/124
+"Fix #122, Create CHANGELOG.md","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #122
+
+**Testing performed**
+None.
+
+**Expected behavior changes**
+Minimizes unnecessary clutter in README.md
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/sch_lab/pull/123
+Use a changelog to keep track of changes instead of having them in the Readme,"Copy of https://github.com/nasa/osal/issues/552
+
+**Is your feature request related to a problem? Please describe.**
+The version history in the Readme file clutters useful information
+
+**Describe the solution you'd like**
+Move the ""version history"" from `Readme.md` to `CHANGELOG.md`
+
+**Requester Info**
+@thnkslprpt 
+",,https://github.com/nasa/sch_lab/issues/122
+"Fix #120, Remove unnecessary parentheses around return values.","**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #120 
+Removes parentheses in return statements in sch_lab that return a single value/term.
+This is aligns these return statements with the predominant style of cFS.
+
+**Testing performed**
+None, prior to submission of the pull request.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/sch_lab/pull/121
+Scrub use of () in return statements,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Unnecessary parentheses around return values in sch_lab
+Copy of https://github.com/nasa/osal/issues/866
+
+**Reporter Info**
+@thnkslprpt ",,https://github.com/nasa/sch_lab/issues/120
+sch_lab Integration candidate: Caelum-rc4+dev12,"**Describe the contribution**
+
+
+PR #118
+    
+- Fix #117, update cmake_minimum_required
+
+
+**Testing performed**
+
+[sch_lab Checks](https://github.com/nasa/sch_lab/pull/119/checks)
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/523/checks)
+
+**Expected behavior changes**
+
+See PRs
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+jphickey",,https://github.com/nasa/sch_lab/pull/119
+"Fix #117, update cmake_minimum_required","**Describe the contribution**
+Fixes the warning that support for old versions will be removed
+The build does not actually expect such an old version
+
+Fixes #117 
+
+**Testing performed**
+Build using cmake 3.20
+
+**Expected behavior changes**
+No deprecation warning
+
+**System(s) tested on**
+RHEL 8
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/sch_lab/pull/118
+Update cmake mimimum required to something more recent,"**Is your feature request related to a problem? Please describe.**
+The `cmake_minimum_required` command currently lists a very old version.  In fact some of the CFE/CFS build scripts assume at least version 3.5 to support things like target-specific includes and flags.
+
+Notably, when using a recent version of cmake (e.g. 3.20) this generates a warning that says:
+
+```
+CMake Deprecation Warning at /home/jphickey/code/cfecfs/dtn/apps/sch_lab/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 2.8.12 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value or use a ...<max> suffix to tell
+  CMake that the project does not need compatibility with older versions.
+```
+
+**Describe the solution you'd like**
+Update the cmake_minimum_version to 3.5 (this would match CFE)
+
+**Describe alternatives you've considered**
+Disable warning?
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.",,https://github.com/nasa/sch_lab/issues/117
+sch_lab Integration candidate: Caelum-rc4+dev10,"**Describe the contribution**
+
+
+PR #115
+    
+- Fix #114, Resolve uninit var static analysis warnings
+
+
+**Testing performed**
+
+[sch_lab Checks](https://github.com/nasa/sch_lab/pull/116/checks)
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/492/checks)
+
+**Expected behavior changes**
+
+See PRs
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/492>
+Commit and PR format-check failure expected for Integration Candidates
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+skliper
+",,https://github.com/nasa/sch_lab/pull/116
+"Fix #114, Resolve uninit var static analysis warnings","**Checklist (Please check before submitting)**
+
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/CF/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate Contributor License agreement to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- Fix #114
+
+**Testing performed**
+CI + static analysis run
+
+**Expected behavior changes**
+None, just squashes static analysis warnings
+
+**System(s) tested on**
+ - Hardware: VM
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + apps + related static analysis resolution branches
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/sch_lab/pull/115
+Resolve static analysis uninitialized variable warnings,"**Is your feature request related to a problem? Please describe.**
+Warning from static analysis (license restricts publishing results)
+
+**Describe the solution you'd like**
+Fix
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/sch_lab/issues/114
+"Fix #108, Update codeql workflow for reusable updates","**Describe the contribution**
+- Fix #108
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just fixes codeql workflow
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:FastTrack, CCB:Approved",https://github.com/nasa/sch_lab/pull/113
+sch_lab Integration candidate: Caelum-rc4+dev7,"**Describe the contribution**
+
+PR #110 
+- Fix #109, Update copyright header
+
+PR #111 
+- HOTFIX #102, Standardize Version Information
+
+
+**Testing performed**
+sch_lab Checks <https://github.com/nasa/sch_lab/pull/112/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/445/checks>
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 
+RTEMS
+
+**Additional context**
+Part of nasa/cFS#445
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper 
+@astrogeco ",,https://github.com/nasa/sch_lab/pull/112
+"HOTFIX #102, Standardize version information","**Describe the contribution**
+
+Per conversation in CCB:2022-03-24 and in https://github.com/nasa/cFE/commit/e5be0612ad6bf9db09ddf640306a65292abce2d5#commitcomment-69358417
+
+Ensuring REVISION number is set to 99 and MISSION_REV = 0xFF
+
+**Testing performed**
+Text and documentation only
+
+**Expected behavior changes**
+No behavior change
+
+**System(s) tested on**
+n/a
+
+**Additional context**
+https://github.com/nasa/cFE/commit/e5be0612ad6bf9db09ddf640306a65292abce2d5#commitcomment-69358417
+
+**Third party code**
+none
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Gerardo E. Cruz-Ortiz, NASA",,https://github.com/nasa/sch_lab/pull/111
+"Fix#109, Update copyright header","**Describe the contribution**
+- Fix #109
+
+**Testing performed**
+Documentation only, but built/ran unit tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: i5/wsl
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/sch_lab/pull/110
+Apply latest copyright header,"**Is your feature request related to a problem? Please describe.**
+Updated copyright header
+
+**Describe the solution you'd like**
+Update
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",,https://github.com/nasa/sch_lab/issues/109
+Point CodeQL Workflow to correct source,"**Is your feature request related to a problem? Please describe.**
+
+The CodeQL workflow points to a forked repository. 
+
+https://github.com/nasa/sch_lab/blob/242fbe75b27ab4b090c4b6944c3a0ccf33fc267b/.github/workflows/codeql-build.yml#L8-L10
+
+**Describe the solution you'd like**
+
+Update the codeQL workflow to point at the nasa/cFS repository
+
+
+**Additional context**
+None
+
+**Reporter Info**
+Gerardo E. Cruz-Ortiz NASA",,https://github.com/nasa/sch_lab/issues/108
+"Fix #106, Apply header guard standard","**Describe the contribution**
+- Fix #106
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/sch_lab/pull/107
+Apply header guard standard formatting,"**Is your feature request related to a problem? Please describe.**
+Nonstandard guard used
+
+**Describe the solution you'd like**
+Apply standard
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/sch_lab/issues/106
+sch_lab IC:Caelum+dev2,"**Describe the contribution**
+
+sch_lab v2.5.0-rc4+dev13
+
+
+PR #104 
+- Fix #103, add option to configure base tick rate 
+
+**Testing performed**
+sch_lab Checks <https://github.com/nasa/sch_lab/pull/105/checks>
+cFS Bundle Checks <https://github.com/nasa/cFS/pull/410/checks>
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 18.04
+RTEMS
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/410>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey ",,https://github.com/nasa/sch_lab/pull/105
+"Fix #103, add option to configure base tick rate","**Describe the contribution**
+SCH_LAB was fixed at 1Hz because it bound to the 1Hz tick from CFE_TIME.  This creates an OSAL timer instead, which posts a semaphore, and this can serve as a much more flexible time source, with configurable rate.
+
+This still binds to 1Hz and the SCH does not start its first message until the first 1Hz is received, thereby keeping some form of 1Hz sync.
+
+Fixes #103
+
+**Testing performed**
+Used this feature to send wakeup events to CF at 10hz instead of 1hz.  (Locally configurable - other items in the table got changed from 4 to 40 to compensate and keep those at 0.25 Hz.)
+
+**Expected behavior changes**
+More configuration flexibility.
+
+**System(s) tested on**
+Ubuntu
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/sch_lab/pull/104
+Allow SCH_LAB to schedule faster than 1Hz,"**Is your feature request related to a problem? Please describe.**
+Some FSW apps require a wakeup event faster than 1Hz.  When debugging these apps it is not ideal to be forced to deploy the full SCH, since its configuration is much more involved.
+
+**Describe the solution you'd like**
+Keep using SCH LAB which is intended for debugging apps, but be able to send wakeups faster than 1Hz.
+
+**Describe alternatives you've considered**
+Deploy full SCH (complicated, and a distraction from the real objective of debugging some other app).
+
+**Additional context**
+If CF is run at only 1Hz wakeup it would take a long time to transfer files.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+",enhancement,https://github.com/nasa/sch_lab/issues/103
+sch_lab Integration candidate: Caelum+dev1,"**Describe the contribution**
+
+
+PR #94
+
+- Fix #93 
+- Updates conversions to CFE_Message_t to use the MSG macro
+- This also uses consistent naming - TelemetryHeader rather than TlmHeader
+
+PR #95
+- Fix #77, use separate address variable 
+- Avoids `(void**)` cast by using a separate `void*` local variable
+to hold the address.
+
+**Testing performed**
+
+sch_lab Checks <https://github.com/nasa/sch_lab/pull/102/checks>
+cFS Bundle Checks <https://github.com/nasa/cFS/pull/390/checks>
+
+**Expected behavior changes**
+See PRs 
+
+**System(s) tested on**
+Ubuntu 18.04
+RTEMS 4.11
+RTEMS 5
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/390/>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey 
+
+",,https://github.com/nasa/sch_lab/pull/102
+"Fix #100, Reuse CodeQL, Static Analyis, and Format Check","**Describe the contribution**
+Fixes #100 
+
+**Testing performed**
+sch_lab Format Check Reuse: https://github.com/ArielSAdamsNASA/sch_lab/actions/runs/1392115814
+sch_lab CodeQL Reuse: https://github.com/ArielSAdamsNASA/sch_lab/actions/runs/1392119385
+sch_lab Static Analysis Reuse: https://github.com/ArielSAdamsNASA/sch_lab/actions/runs/1392122607
+
+**Expected behavior changes**
+sch_lab will reuse CodeQL, Static Analysis, and Format Checker that are held in cFS. These workflows will not work until nasa/cFS#386 is merged.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal
+",continuous-integration,https://github.com/nasa/sch_lab/pull/101
+"Reuse CodeQL, Format Checker, and Static Analysis Workflows","**Is your feature request related to a problem? Please describe.**
+When needing to change workflows, one must create an issue and PR for each submodule. This feature would reduce duplication.
+
+**Describe the solution you'd like**
+To reuse workflows, the targeted workflow must include workflow_call and inputs as seen below. 
+```
+on:
+  push:
+  pull_request:
+  workflow_call:
+    inputs:
+      runs-on: 
+        description: Platform to execute on
+        type: string
+        default: ubuntu-latest
+```
+
+**Describe alternatives you've considered**
+Keep it as is. 
+
+**Additional context**
+Tested in OSAL, OSAL cFE CodeQL Reuse Build: https://github.com/ArielSAdamsNASA/osal/runs/4023159610?check_suite_focus=true
+Tested in OSAL, OSAL CodeQL Reuse Build: https://github.com/ArielSAdamsNASA/osal/actions/runs/1390702434
+cFS CodeQL Reuse: https://github.com/ArielSAdamsNASA/cFS-JSF-Rules/actions/runs/1390561827
+
+**Requester Info**
+Ariel Adams, ASRC Federal",continuous-integration,https://github.com/nasa/sch_lab/issues/100
+"Static analysis workflow missing duplicate check, overly restrictive on main push, remove --quiet flag","**Is your feature request related to a problem? Please describe.**
+Missing duplicate check, overly restrictive on push:
+https://github.com/nasa/sch_lab/blob/81240416fcc9a6601fa361602088b9f0fe1497ce/.github/workflows/static-analysis.yml#L4-L12
+
+Remove `--quiet` flag so cppcheck will report files analyzed:
+https://github.com/nasa/sch_lab/blob/81240416fcc9a6601fa361602088b9f0fe1497ce/.github/workflows/static-analysis.yml#L26
+
+**Describe the solution you'd like**
+Fix
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","duplicate, continuous-integration",https://github.com/nasa/sch_lab/issues/99
+"Format check workflow missing duplicate check, restricting to main push, job name incorrect","**Is your feature request related to a problem? Please describe.**
+Missing duplicate check, overly restrictive, incorrect job name:
+https://github.com/nasa/sch_lab/blob/81240416fcc9a6601fa361602088b9f0fe1497ce/.github/workflows/format-check.yml#L4-L12
+
+**Describe the solution you'd like**
+Fix
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","duplicate, continuous-integration",https://github.com/nasa/sch_lab/issues/98
+"Fix #96, Remove CodeQL workflow PR main branch restriction","**Describe the contribution**
+- Fix #96 
+
+Removed main branch restriction on PR
+
+**Testing performed**
+None
+
+**Expected behavior changes**
+Will run for all PRs.
+
+**System(s) tested on**
+None
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",duplicate,https://github.com/nasa/sch_lab/pull/97
+CodeQL analysis workflow restricting to main PR,"**Is your feature request related to a problem? Please describe.**
+Overly restrictive:
+https://github.com/nasa/sch_lab/blob/81240416fcc9a6601fa361602088b9f0fe1497ce/.github/workflows/codeql-build.yml#L3-L7
+
+**Describe the solution you'd like**
+Remove branch restriction
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","duplicate, continuous-integration",https://github.com/nasa/sch_lab/issues/96
+"Fix #77, use separate address variable","**Describe the contribution**
+Avoids `(void**)` cast by using a separate `void*` local variable to hold the address.
+
+Fixes #77
+
+**Testing performed**
+Build and sanity check CFE, run all tests
+
+**Expected behavior changes**
+No warnings when using strict aliasing
+
+**System(s) tested on**
+Ubuntu 21.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/sch_lab/pull/95
+"Fix #93, Use CFE_MSG_PTR conversion macro","**Describe the contribution**
+Updates conversions to CFE_Message_t to use the MSG macro
+This also uses consistent naming - TelemetryHeader rather than TlmHeader
+
+Fixes #93
+
+**Testing performed**
+Build and sanity check CFE, run all tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Ubuntu
+
+**Additional context**
+Depends on nasa/cfe#1966
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/sch_lab/pull/94
+Update CFE_MSG_Message_t conversions to use CFE_MSG_PTR macro,"**Is your feature request related to a problem? Please describe.**
+In nasa/cfe#1966 introduces a `CFE_MSG_PTR` macro which converts a cmd/tlm header object to a `CFE_MSG_Message_t*` pointer, which is intended to be used rather than assuming a specific member name (e.g. `.Msg`).
+
+**Describe the solution you'd like**
+Use the macro instead of assuming `.Msg` member name.
+
+**Additional context**
+Required when using generated headers, as the member name may not be ""Msg"" or may be further encapsulated.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/sch_lab/issues/93
+sch_lab Integration candidate: 2021-09-21,"**Describe the contribution**
+
+PR #91
+- Fix #90, apply CFE_SB_ValueToMsgId where required
+
+
+
+**Testing performed**
+sch_lab Checks <https://github.com/nasa/sch_lab/pull/92/checks> 
+cFS Bundle Checks <https://github.com/nasa/cFS/pull/359/checks>
+
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu
+RTEMS (qemu) 
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/359
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey ",,https://github.com/nasa/sch_lab/pull/92
+"Fix #90, apply CFE_SB_ValueToMsgId where required","**Describe the contribution**
+Whenever an integer value is used as a CFE_SB_MsgId_t, it should go through the explicit conversion using the supplied inline function.
+
+Fixes #90
+
+**Testing performed**
+Build and sanity check CFE
+
+**Expected behavior changes**
+Allows SCH_LAB to be built when CFE_SB_MsgId_t is an opaque/non-integer type.
+None with default config (where CFE_SB_MsgId_t is an integer type).
+
+**System(s) tested on**
+Ubuntu
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.",CCB:Approved,https://github.com/nasa/sch_lab/pull/91
+Improve consistency in application of CFE_SB_MsgIdToValue/ValueToMsgId conversions,"**Is your feature request related to a problem? Please describe.**
+A `CFE_SB_MsgId_t` value, like other IDs, is supposed to be a unique type/opaque value that identifies a message within the SB application context.   Although it is currently implemented using an integer (`uint32` specifically) application should not assume this.  Instead, a set of macros and inline conversion functions (CFE_SB_MsgIdToValue and CFE_SB_ValueToMsgId) are provided for when the application needs to interpret the value as an integer for a valid purpose.
+
+**Describe the solution you'd like**
+Add conversions where they are currently missing
+
+**Additional context**
+See nasa/cfe#1945 for full info.  A separate issue+PR will be submitted for each framework app.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/sch_lab/issues/90
+Typos in README.md and SECURITY.md,"**Is your feature request related to a problem? Please describe.**
+Found typos in documentation
+
+**Describe the solution you'd like**
+ Correct grammar and spelling errors
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Retroactive issue for #84
+
+",,https://github.com/nasa/sch_lab/issues/89
+"HotFix 2021-09-07, Fix missing typedef","**Describe the contribution**
+
+See build failure in nasa/cFS#351
+
+https://github.com/nasa/cFS/actions/runs/1214483451
+
+```
+[ 82%] Built target sch_lab
+[ 82%] Building C object apps/sch_lab/CMakeFiles/cpu1_sch_lab_table_sch_lab_table.dir/fsw/tables/sch_lab_table.c.o
+In file included from /home/runner/work/cFS/cFS/apps/sch_lab/fsw/tables/sch_lab_table.c:24:0:
+/home/runner/work/cFS/cFS/apps/sch_lab/fsw/platform_inc/sch_lab_table.h:51:5: error: unknown type name ‘CFE_MSG_FcnCode_t’
+     CFE_MSG_FcnCode_t FcnCode;    /* Command/Function code to set */
+     ^~~~~~~~~~~~~~~~~
+make[7]: *** [apps/sch_lab/CMakeFiles/cpu1_sch_lab_table_sch_lab_table.dir/fsw/tables/sch_lab_table.c.o] Error 1
+apps/sch_lab/CMakeFiles/cpu1_sch_lab_table_sch_lab_table.dir/build.make:75: recipe for target 'apps/sch_lab/CMakeFiles/cpu1_sch_lab_table_sch_lab_table.dir/fsw/tables/sch_lab_table.c.o' failed
+```
+
+**Testing performed**
+Works in cFS-bundle fork
+https://github.com/astrogeco/cFS/actions/runs/1214618910
+
+**Expected behavior changes**
+Clean build
+
+**System(s) tested on**
+Ubuntu CI
+
+**Additional context**
+Part of nasa/cFS#351
+
+**Third party code**
+None",,https://github.com/nasa/sch_lab/pull/88
+sch_lab Integration candidate: 2021-09-07,"**Describe the contribution**
+PR #86 
+
+- Fix #85, add CmdCode to sch_lab_table 
+
+PR #88
+
+HotFix 2021-09-07, Fix missing typedef 
+
+**Testing performed**
+sch_lab Checks <https://github.com/nasa/sch_lab/pull/87/checks>
+cFS Bundle Checks <https://github.com/nasa/cfs/pull/351/checks>
+
+**Expected behavior changes**
+See PRs 
+
+**System(s) tested on**
+Ubuntu
+
+**Additional context**
+Part of <https://github.com/nasa/cfs/issues/351>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey 
+",,https://github.com/nasa/sch_lab/pull/87
+"Fix #85, add CmdCode to sch_lab_table","**Describe the contribution**
+Allows the command/function code to be specified in the messages generated by SCH_LAB.  This allows it to be used for testing apps that require a specific function code in the internal wakeup message.
+
+Fixes #85
+
+**Testing performed**
+Validated that the feature works by using it to test BP app (which requires a specific code in it's wakeup MID)
+
+**Expected behavior changes**
+SCH_LAB now supports testing apps that require a specific function code in the generated wake up message
+
+**System(s) tested on**
+Ubuntu
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/sch_lab/pull/86
+Allow command codes to be specified in sch_lab_table,"**Is your feature request related to a problem? Please describe.**
+Some apps have multiple functions that to be regularly scheduled, and use a single internal MID with separate command codes to do this.  One example is BP, which has a ""WAKEUP"" internal MID that SCH needs to send, but has two separate items that can be woken by this - differentiated by the FC field in the command header.
+
+SCH_LAB, in current form, is only capable of sending CMD messages with FC set to 0.  
+
+It would be fairly trivial to add ""CmdCode"" to the sch_lab_table, such that a nonzero FC can be used, so SCH_LAB can be used to test apps that need a specific FC value in their scheduled wakeup events.
+
+**Describe the solution you'd like**
+Add ability to set/specify an FC/ CmdCode value for the command packets generated by SCH_LAB.
+
+**Describe alternatives you've considered**
+Use full-featured SCH (but this is considerably harder to configure when just looking to test an app).
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+",,https://github.com/nasa/sch_lab/issues/85
+"Fix #89, Correct typos in README and SECURITY docs","**Describe the contribution**
+
+- Fix #89
+
+Fixed a couple of minor typos in the _text_ of:
+- README.md
+- SECURITY.md
+
+**Testing performed**
+None (non-executable code).
+
+**Expected behavior changes**
+None (Markdown doc changes only).
+
+**System(s) tested on**
+n/a
+
+**Additional context**
+n/a
+
+**Code contributions**
+n/a",community,https://github.com/nasa/sch_lab/pull/84
+sch_lab Integration candidate: 2021-06-22,"## Context
+
+Part of <https://github.com/nasa/cfs/issues/270>
+
+## Author
+
+@ArielSAdamsNASA 
+
+## Description 
+
+### PR #79 
+
+Fix #78, Implement Coding Standard CodeQL
+
+
+",,https://github.com/nasa/sch_lab/pull/83
+sch_lab Integration candidate: 2021-06-01,"## Context
+
+Part of <https://github.com/nasa/cFS/pull/263/>
+
+## Tests 
+
+sch_lab tests <https://github.com/nasa/sch_lab/pull/82/checks>
+cFS Bundle tests <https://github.com/nasa/cFS/pull/263/checks>
+
+## Authors
+
+@jphickey 
+
+## Description
+
+### PR #81
+
+Fix #80, exit the main loop if init fails
+
+",,https://github.com/nasa/sch_lab/pull/82
+"Fix #80, exit the main loop if init fails","**Describe the contribution**
+Initialize the ""RunStatus"" to ERROR if initialization fails.  This causes the CFE_ES_RunLoop function to return false, and
+the app will exit with an error status.
+
+Fixes #80
+
+**Testing performed**
+Build and run CFE with missing SCH LAB table file
+
+**Expected behavior changes**
+SCH_LAB exits with error, does not loop infinitely
+
+**System(s) tested on**
+Ubuntu
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:Approved,https://github.com/nasa/sch_lab/pull/81
+Infinite loop if initialization fails for any reason,"**Describe the bug**
+SCH_LAB does not exit/abort if its initialization fails - it will continue into its main loop anyway.  In turn, it is possible that the ""CmdPipe"" was not initialized when this task calls `CFE_SB_ReceiveBuffer`.  This will return an error, but it just repeats the loop, forever.
+
+**To Reproduce**
+Delete or do not install the SCH LAB table file, so the loading of the table will fail.  SCH_LAB then enters an infinite loop, because the CmdPipe is not valid, continually generating this error event:
+
+`EVS Port1 42/1/CFE_SB 19: Rcv Err:PipeId 0 does not exist,app SCH_LAB_APP`
+
+**Expected behavior**
+If it did not successfully initialize itself, SCH LAB should skip the remainder of its main function, since behavior is non-deterministic if not fully and successfully initialized.
+
+**Code snips**
+The ""while"" loop here should probably be moved to an ""else"" block, so it will only be entered if initialized successfully.
+
+https://github.com/nasa/sch_lab/blob/4a1b72e5a3092369b49d5c65f325bc48e1f7f832/fsw/src/sch_lab_app.c#L91-L97
+
+**System observed on:**
+Ubuntu
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+",bug,https://github.com/nasa/sch_lab/issues/80
+"Fix #78, Implement Coding Standard CodeQL","**Describe the contribution**
+Fix #78
+Added the duplicate jobs action to avoid duplicate jobs from running. Added a separate job for coding standard queries. Created two configuration files, one for default queries and security queries and another for jpl rules. Removed push on main branch so when users push code to their forked repos, the workflow runs. Added main branch to pull request, so CodeQL runs on pull request made in the main branch. This is the same logic used in the cFS bundle repo. 
+
+**Testing performed**
+Testing done on cFE forked repository, ArielSAdamsNASA/cFE which used the same files, but with different configuration paths.
+
+Jobs were failing when the entire path of the configuration file were not used. Have to use nasa/cFE/.github/codeql/config-name@branch-name. The branch must be included in the path. 
+
+The CodeQL analysis workflow will fail for this PR since it is calling for a configuration file in main the main branch. It will not work until the configuration files are merged into main. 
+
+In the screenshot is the same workflow as in this pull request, but the configuration path is changed to the forked repo and tested branch. 
+
+![image](https://user-images.githubusercontent.com/69638935/119024913-36fa2580-b969-11eb-9aac-ede0002804a0.png)
+
+**Expected behavior changes**
+There should be one job for security queries and one job for JPL and MISRA queries. 
+
+**Describe alternatives you've considered**
+Can allow all branches to run CodeQL for pull requests as seen in cFE and PSP instead of just the main branch like cFS. 
+
+**Third party code**
+Skip duplicate workflows license: https://github.com/fkirc/skip-duplicate-actions/blob/master/LICENSE
+
+CodeQL license: https://github.com/github/codeql-action/blob/main/LICENSE
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","continuous-integration, CCB:Approved",https://github.com/nasa/sch_lab/pull/79
+Implement Coding Standard Rules in CodeQL,"**Is your feature request related to a problem? Please describe.**
+CodeQL does not use JPL rules, which is used in the upcoming coding standard. 
+
+**Describe the solution you'd like**
+Implement JPL rules for CodeQL. Continue using the security queries, but keep them separate from the JPL results. Can use two different workflows, one for the coding standard and one for the security queries. 
+
+**Describe alternatives you've considered**
+Might be able to use one workflow, as long as the results can be easily identified as a coding standard issue or security issue. 
+
+**Additional context**
+JPL queries are found here: https://github.com/github/codeql/tree/main/cpp/ql/src/JPL_C
+
+**Requester Info**
+Ariel Adams, ASRC Federal ",continuous-integration,https://github.com/nasa/sch_lab/issues/78
+Using void ** reference,"https://github.com/nasa/sch_lab/blob/4a1b72e5a3092369b49d5c65f325bc48e1f7f832/fsw/src/sch_lab_app.c#L179
+
+According to this [reference](http://c-faq.com/ptrs/genericpp.html), we should use the CFE_TBL_GetAddress like:
+
+```
+void * ConfigTableTmp = ConfigTable;
+Status = CFE_TBL_GetAddress(&ConfigTableTmp, SCH_LAB_Global.TblHandle); 
+ConfigTable = ConfigTableTmp;
+```
+
+The C reference recommends this instead of (void **) casting.",enhancement,https://github.com/nasa/sch_lab/issues/77
+sch_lab Integration candidate: 2021-03-30,"## Describe the contribution
+
+Fix #74, remove app registration
+
+## Testing performed
+sch_lab <https://github.com/nasa/sch_lab/pull/76/checks>
+bundle <https://github.com/nasa/cFS/pull/227/checks>
+
+## Expected behavior changes
+
+### PR #75 
+
+Removes app registration call, `CFE_ES_RegisterApp()` since applications do not need to register themselves.
+
+## Additional context
+Part of <https://github.com/nasa/cFS/pull/227>
+
+## Third party code
+None
+
+## Authors
+@jphickey ",,https://github.com/nasa/sch_lab/pull/76
+"Fix #74, remove app registration","**Describe the contribution**
+It is not necessary for applications to register themselves, this is all done automatically.
+
+Fixes #74
+
+**Testing performed**
+Build and sanity check, run unit tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Needs to be merged with nasa/cfe#1250
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:FastTrack,https://github.com/nasa/sch_lab/pull/75
+Remove references to CFE_ES_RegisterApp,"**Is your feature request related to a problem? Please describe.**
+As part of nasa/osal#853 and nasa/cfe#1215 the registration APIs are getting fully deprecated and removed.  Applications no longer need to call OS_TaskRegister, CFE_ES_RegisterApp, or CFE_ES_RegisterChildTask.
+
+**Describe the solution you'd like**
+Remove references to these functions.
+
+**Additional context**
+Will be required with nasa/osal#853 and nasa/cfe#1215
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/sch_lab/issues/74
+"Fix #72, Add Contributing Guide","**Describe the contribution**
+Fix #72 
+Added a contributing guide that links to the main cFS contributing guide. 
+
+**Expected behavior changes**
+Users should be able to view the contributing guide contents easily from the sch_lab repo. 
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","CCB:FastTrack, docs",https://github.com/nasa/sch_lab/pull/73
+Add Contributing Guide,"**Is your feature request related to a problem? Please describe.**
+Add a contributing guide for the sch_lab repo. 
+
+**Describe the solution you'd like**
+Create a contributing guide markdown file. In the guide, add a link to the cFS contributing guide. 
+
+**Requester Info**
+Ariel Adams, ASRC Federal
+",docs,https://github.com/nasa/sch_lab/issues/72
+Integration candidate: 2021-03-05,"**Describe the contribution**
+PR #68 
+PR #70
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+See #68
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@ArielSAdamsNASA @jphickey ",,https://github.com/nasa/sch_lab/pull/71
+"Fix #69, Add Testing Tools to the Security Policy","**Describe the contribution**
+Fix #69 
+Updated the Security Policy to include the type of testing done for sch_lab or the cFS bundle under a new section titled ""Testing"". Provided a disclaimer that under the Apache license, liability is not provided. 
+
+Added that security reports should be emailed. 
+
+**Expected behavior changes**
+Users should now be aware of the type of testing sch_lab or the cFS bundle undergoes. 
+
+**Additional context**
+References: 
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/phpMussel/phpMussel/security/policy
+https://github.com/timberio/vector/security/policy
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal 
+","CCB:FastTrack, docs",https://github.com/nasa/sch_lab/pull/70
+Add Testing Tools to the Security Policy,"**Is your feature request related to a problem? Please describe.**
+Users are unaware of how cFS/sch_lab is tested. By providing this information, transparency is provided to the community which promotes trust. 
+
+**Describe the solution you'd like**
+The security policy should inform users what tools are being used to test cFS/sch_lab while being cautious of liability issues. To do so, we can state explicitly that our software does not provide liability under the Apache license. The security policy should inform users that they may view the LGTM results. The policy would state that the alerts from LGTM may not be accurate, since they cannot be dismissed.  
+
+Add that security report should be emailed. 
+
+**Additional context**
+References: https://github.com/thanos-io/thanos/security/policy
+
+**Requester Info**
+Ariel Adams, ASRC Federal 
+",docs,https://github.com/nasa/sch_lab/issues/69
+"Fix #67, Update sequence count in transmitted messages","**Describe the contribution**
+Update the sequence counter in messages generated by SCH_LAB.
+
+Fixes #67
+
+**Testing performed**
+Build and run CFE, sanity check behavior.
+
+**Expected behavior changes**
+Generated SCH_LAB messages have properly incrementing sequence number.
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+",CCB:FastTrack,https://github.com/nasa/sch_lab/pull/68
+Transmit messages with sequence number updates,"**Is your feature request related to a problem? Please describe.**
+Currently the `SCH_LAB_AppMain()` function invokes `CFE_SB_TransmitMsg()` to send the messages but the `IncrementSequence` parameter is set to `false`.  This means that all commands generated from SCH_LAB have the same sequence number - whatever was in the table, probably 0.
+
+**Describe the solution you'd like**
+Should increment sequence counter so the recipient sees a properly incrementing count on each message.   This can be used to detect a missed message among other things.
+
+**Additional context**
+Suggesting just changing this line (2nd parameter) from false to true:
+https://github.com/nasa/sch_lab/blob/882846bb778432c8780555b9d4bef45535584174/fsw/src/sch_lab_app.c#L123
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/sch_lab/issues/67
+"Fix #65, Add CodeQL analysis to workflow","**Describe the contribution**
+Fix #65 - adds CodeQL analysis
+
+Differences from bundle - just builds sch_lab, has timeout
+
+**Testing performed**
+Ran on fork
+
+**Expected behavior changes**
+Adds Code QL analysis on push to main and pull requests (to main)
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:FastTrack, continuous-integration",https://github.com/nasa/sch_lab/pull/66
+Add CodeQL analysis to workflow,"**Is your feature request related to a problem? Please describe.**
+CodeQL analysis not implemented in submodules
+
+**Describe the solution you'd like**
+Add so alerts are generated on pull requests to submodules
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+CodeQL is run at the bundle (nasa/cFS) level, but link to code in submodules doesn't work.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, security, continuous-integration",https://github.com/nasa/sch_lab/issues/65
+"Fix #63, Add static analysis and format check","**Describe the contribution**
+Fix #63 - adds static analysis and format check into github workflow, includes badges in readme
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+Basic CI works again
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:FastTrack, continuous-integration",https://github.com/nasa/sch_lab/pull/64
+CI updates - add static analysis and format in workflow,"**Is your feature request related to a problem? Please describe.**
+Travis-CI not transitioned to github actions
+
+**Describe the solution you'd like**
+Transition CI
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, continuous-integration",https://github.com/nasa/sch_lab/issues/63
+sch_lab Integration candidate: 2021-01-19,"**Describe the contribution**
+Fix #60, Create Security Policy
+
+
+**Testing performed**
+See https://github.com/nasa/cfs/pull/177/checks
+
+**Expected behavior changes**
+
+PR #61 - Documentation: Add `Security.md` with instructions on reporting vulnerabilities
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of https://github.com/nasa/cfs/pull/177
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@ArielSAdamsNASA ",,https://github.com/nasa/sch_lab/pull/62
+"Fix #60, Create Security Policy","**Describe the contribution**
+Fix #60 
+Created a draft of a security policy markdown file for sch_lab. The purpose of a security policy is to inform users on how to submit bugs or vulnerabilities. It is ideal to include a section for supported versions.
+
+**Additional context**
+Optional sections that may be included:
+
+- What to expect security-wise such as what type of testing is done
+- Address privacy concerns
+- Supported versions
+- License
+- Known vulnerabilities
+
+References to Public Security Policies:
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/minhealthnz/nzcovidtracer-app/security/policy
+https://github.com/odoo/odoo/security/policy
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","CCB:FastTrack, docs, security",https://github.com/nasa/sch_lab/pull/61
+Implement a Security Policy,"**Describe the bug**
+Create a security policy for users on how to report security vulnerabilities.
+
+**Expected behavior**
+The security policy should instruct users on how to report security vulnerabilities and provide them additional contact information for questions and concerns.
+
+**Additional context**
+Additional sections that may be included:
+- What to expect security-wise such as what type of testing is done
+- Address privacy concerns
+- Supported versions
+- License
+- Known vulnerabilities
+
+References to Public Security Policies:
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/minhealthnz/nzcovidtracer-app/security/policy
+https://github.com/odoo/odoo/security/policy
+
+**Reporter Info**
+Ariel Adams, ASRC Federal","docs, security",https://github.com/nasa/sch_lab/issues/60
+sch_lab Integration Candidate: 2020-12-08,"**Describe the contribution**
+Fix #56, Apply message alignment pattern
+
+**Testing performed**
+See <https://github.com/nasa/cFS/pull/160/checks>
+
+**Expected behavior changes**
+PR #57 - Aligns messages according to changes in cFE <https://github.com/nasa/cFE/issues/1009>. Uses the ""raw"" message cmd/tlm types in definition
+
+**System(s) tested on**
+Ubuntu 18.04 
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/160>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper 
+",,https://github.com/nasa/sch_lab/pull/59
+sch_lab Integration Candidate: 2020-11-24,"**Describe the contribution**
+
+Fix #54, Use MSG APIs
+
+**Testing performed**
+See events for ""github actions test"" at <https://github.com/astrogeco/cFS/actions>
+
+**Expected behavior changes**
+PR #55 -  Update to use MSG module.  Replaces deprecated SB APIs with MSG
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/158>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper ",,https://github.com/nasa/sch_lab/pull/58
+"Fix #56, Apply alignment pattern","**Describe the contribution**
+Fix #56 
+
+- Use CFE_MSG_CommandHeader_t and CFE_MSG_TelemetryHeader_t in
+  command and telemetry type definitions
+- Use CFE_SB_TransmitMsg to copy the command and telemetry
+  into a CFE_SB_Buffer_t and send it where needed
+- Avoids need to create send buffers within the app (or union
+  the packet types with CFE_SB_Buffer_t)
+- Eliminates references to CFE_SB_CmdHdr_t and CFE_SB_TlmHdr_t
+  that formerly enforced alignment since these had potential
+  to change the actual packet sizes
+
+**Testing performed**
+Bundle CI, unit tests, spot checked cmd/tlm
+
+**Expected behavior changes**
+None, pattern applied
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle integration-candidates + nasa/cFE#1015 + #55, and the subject of this PR #56
+
+**Additional context**
+Depends on nasa/cFE#1015, #55
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",dependency,https://github.com/nasa/sch_lab/pull/57
+Update for suggested alignment enforcement pattern (nasa/cFE#1009),"**Is your feature request related to a problem? Please describe.**
+See nasa/cFE#1009, inconsistent pattern
+
+**Describe the solution you'd like**
+Match suggestion in nasa/cFE#1009, use the ""raw"" message cmd/tlm types in definition.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+nasa/cFE#1009
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, dependency",https://github.com/nasa/sch_lab/issues/56
+"Fix #54, Use MSG APIs","**Describe the contribution**
+Replaces deprecated SB API's with MSG
+Fix #54
+
+**Testing performed**
+Built and ran, enabled telemetry, checked noops
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+nasa/cFE#777
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/sch_lab/pull/55
+Remove dependencies on deprecated SB APIs,"**Is your feature request related to a problem? Please describe.**
+SB APIs deprecated in nasa/cFE#777
+
+**Describe the solution you'd like**
+Update to use MSG module.
+
+**Describe alternatives you've considered**
+None.
+
+**Additional context**
+None.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","enhancement, deprecate",https://github.com/nasa/sch_lab/issues/54
+Integration Candidate: 2020-08-26,"**Describe the contribution**
+Fix #20 
+
+**Testing performed**
+Bundle CI - https://github.com/nasa/cFS/pull/134/checks
+
+**Expected behavior changes**
+PR #51 - Adds header guard (the other warning on the ticket was already resolved)
+
+**System(s) tested on**
+Ubuntu - CI
+
+**Additional context**
+https://github.com/nasa/cFS/pull/134
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman, NASA-GSFC",,https://github.com/nasa/sch_lab/pull/53
+Integration Candidate: 2020-08-19,"Fix #49 
+
+**Testing performed**
+Bundle CI - https://github.com/nasa/cFS/pull/130/checks
+
+**Expected behavior changes**
+PR #50 - Reorganize the *sch_lab* table so it matches the *sample_app* usage and format.
+
+**System(s) tested on**
+Ubuntu - CI
+
+**Additional context**
+nasa/cFS#130
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Christopher Knight, NASA-ARC",,https://github.com/nasa/sch_lab/pull/52
+"Fix #20, Add header guard to sch_lab_sched_tab.h","**Describe the contribution**
+Fix #20 - add header guard (the other warning on the ticket was already resolved)
+
+**Testing performed**
+Built cleanly
+
+**Expected behavior changes**
+None, good coding practice
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: bundle main (+cfe/osal main) + this change
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:FastTrack",https://github.com/nasa/sch_lab/pull/51
+"Fix #49, reorg schedule table to conform with std","**Describe the contribution**
+Closes #49 
+
+This is a reorg and a ""normalization"" of the sch_lab table to be organized how the sample_app uses a table.
+
+**Testing performed**
+Built and tested with functional testing.
+
+**Expected behavior changes**
+Changing of the filenames and symbols for the table.
+
+**System(s) tested on**
+Debian 10.3 VM
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Christopher.D.Knight@nasa.gov",,https://github.com/nasa/sch_lab/pull/50
+"""standard"" table organization","**Is your feature request related to a problem? Please describe.**
+sch_lab should use cFS standard table organization, to better facilitate per-target tables, etc. Right now, the table source is in fsw/src and the table header definition includes CI and TO header files which are only needed by the table.
+
+**Describe the solution you'd like**
+1. Move the table source to fsw/tables
+2. Remove the #includes in sch_lab_sch_tab.h
+3. Rename sch_lab_sch_tab.h to sch_lab_table.h
+
+**Describe alternatives you've considered**
+none
+
+**Additional context**
+See https://github.com/nasa/sample_app for another example of how this would be structured.
+
+**Requester Info**
+Christopher.D.Knight@nasa.gov",bug,https://github.com/nasa/sch_lab/issues/49
+Integration candidate 2020-07-29,"**Describe the contribution**
+Fix #44 
+Close #46
+
+**Testing performed**
+Bundle CI - https://github.com/nasa/cFS/pull/119/checks
+
+**Expected behavior changes**
+PR #45 - Fixes schedule table documentation
+PR #47 - Add baseline and build number to version reporting
+
+**System(s) tested on**
+Ubuntu
+
+**Additional context**
+Part of nasa/cfs#119
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Gerardo E. Cruz-Ortiz, NASA-GSFC
+Jacob Hageman, NASA-GSFC",,https://github.com/nasa/sch_lab/pull/48
+"Close #46, Add build number and baseline","**Describe the contribution**
+Close #46 
+
+**Testing performed**
+Build bundle and confirm version report format
+
+**Expected behavior changes**
+Version report now includes development build information. See excerpt from cfs_log
+```
+SCH Lab Initialized. SCH Lab Development Build v2.3.0+dev34, Last Official Release: v2.3.0
+```
+
+**System(s) tested on**
+Ubuntu Docker on OSX
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Gerardo E. Cruz-Ortiz, NASA-GSFC",CCB:FastTrack,https://github.com/nasa/sch_lab/pull/47
+Add build number and baseline to version file,"**Is your feature request related to a problem? Please describe.**
+Need a better way to describe versions during development
+
+**Describe the solution you'd like**
+Add Build name and Build number to version.h
+As discussed, we will add a a build name string and a continuously incrementing build number to `version.h`
+
+**Additional context**
+See notes from CCB: <https://github.com/nasa/cFS/wiki/Community-CCB-Agenda:-July-01-2020>
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz, NASA-GSFC
+",enhancement,https://github.com/nasa/sch_lab/issues/46
+"Fix #44, Update table comments/instructions","**Describe the contribution**
+Fix #44
+
+**Testing performed**
+None (CI), comment update only.
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:FastTrack",https://github.com/nasa/sch_lab/pull/45
+Clarify schedule table guidance,"`sch_lab_table.c` has some guidance for creating the scheduling table, including [""Make sure the table is terminated by the SCH_LAB_END_OF_TABLE entry""](https://github.com/nasa/sch_lab/blob/fdc1ed1a18b12a70f512be6f6b95d0b309024aff/fsw/src/sch_lab_table.c#L30). But In looking at the file history, it doesn't look like the default schedule table has included a `SCH_LAB_END_OF_TABLE` entry ever in the past year, which is as far back as that file history goes. Should that guidance be removed?","bug, docs",https://github.com/nasa/sch_lab/issues/44
+"Fix #42, Use CFE_SB_CmdHdr_t for cmd sizing","**Describe the contribution**
+Eliminates unnecessary union and uses CFE_SB_CmdHdr_t for zero parameter command sizing
+Fix #42 
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Nominal build, confirmed HK's were sent
+
+**Expected behavior changes**
+None, but allows for updates in nasa/cFE#726
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",invalid,https://github.com/nasa/sch_lab/pull/43
+Packet sizing dependence on generic CFE_SB_Msg_t,"**Is your feature request related to a problem? Please describe.**
+Uses CFE_SB_Msg_t in a union typedef related to a command w/ no parameters.
+
+**Describe the solution you'd like**
+Use CFE_SB_CmdHdr_t for no parameter command
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Related to nasa/cFE#726 updates
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",duplicate,https://github.com/nasa/sch_lab/issues/42
+Integration Candidate: 2020-05-20,"**Describe the contribution**
+Fix #30 
+
+**Testing performed**
+See PR #40 
+Bundle CI - https://travis-ci.com/github/nasa/cFS/builds/168822512
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Ubuntu:Bioinic
+
+**Additional context**
+Part of nasa/cfs#91
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman, NASA-GSFC",,https://github.com/nasa/sch_lab/pull/41
+"Fix #30, Apply standard style","**Describe the contribution**
+Whitespace changes only.
+Fix #30
+
+**Testing performed**
+CI - https://travis-ci.com/github/skliper/cFS/builds/167637651
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: CI
+ - OS: Ubuntu 18.04
+ - Versions: Bundle w/ all whitespace change commits
+
+**Additional context**
+Note - not enforcing, just a single cleanup since there's no pending activity in this repo.
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:FastTrack",https://github.com/nasa/sch_lab/pull/40
+Integration Candidate COMBINED 2020-04-29 and 2020-05-06,"**Describe the contribution**
+Fixes #37
+
+**Testing performed**
+See PRs
+Bundle CI - https://travis-ci.com/github/nasa/cFS/builds/165726730
+
+**Expected behavior changes**
+PR #38 - Apply the CFE_SB_MsgIdToValue() and CFE_SB_ValueToMsgId() routines where compatibility with an integer MsgId is necessary - syslog prints, events, compile-time MID #define values.
+
+**System(s) tested on**
+See PRs
+
+**Additional context**
+Part of nasa/cfs#83
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+ Joseph Hickey, Vantage Systems, Inc.",,https://github.com/nasa/sch_lab/pull/39
+"Fix #37, Opaque CFE_SB_MsgId_t values","**Describe the contribution**
+Apply the `CFE_SB_MsgIdToValue()` and `CFE_SB_ValueToMsgId()` routines where compatibility with an integer MsgId is necessary - syslog prints, events, compile-time MID `#define` values.
+
+Fixes #37 
+
+**Testing performed**
+Unit test
+Execute CFE and sanity-check normal operation - send commands to app using `cmdUtil` and confirm commands are processed normally.
+
+**Expected behavior changes**
+No impact to behavior.
+
+**System(s) tested on**
+Ubuntu 18.04 LTS, 64-bit
+
+**Additional context**
+In future versions of CFE SB the MsgId type might not be a simple integer, so this is one step in the direction of avoiding this assumption in apps.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.",,https://github.com/nasa/sch_lab/pull/38
+App should treat CFE_SB_MsgId_t values as opaque,"**Is your feature request related to a problem? Please describe.**
+For compatibility going forward, code should not assume that `CFE_SB_MsgId_t` is an integer.
+
+**Describe the solution you'd like**
+When dealing with an integer, such as when printing in events/messages or for backward compatibility with MID `#define`'s, the code may use `CFE_SB_ValueToMsgId()` and `CFE_SB_MsgIdToValue()` conversion routines.  
+
+**Additional context**
+Architecturally, the `CFE_SB_MsgId_t` is supposed to be an opaque/abstract value that identifies an endpoint on the software bus routing domain.  The specific meaning of integer values is already different in an ""extended header"" (CCSDS v2) build vs. the standard header build.  Therefore apps should never make assumptions regarding the specific integer values, and all introspection of `CFE_SB_MsgId_t` values should be through the CFE SB API only.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc.
+",enhancement,https://github.com/nasa/sch_lab/issues/37
+Ic 20200304,"**Describe the contribution**
+Integration Candidate 20200304
+
+Fixes #27, #31, and #32 
+See PR #33 for more details.
+
+**Testing performed**
+CI Testing only
+
+**Expected behavior changes**
+#27 - Improved table handling, see Issue
+#31 - sch_lab now builds on Raspbian OS
+#32 - Consolidate globals
+
+**System(s) tested on**
+Ubuntu
+
+**Additional context**
+See PR #33 
+
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+Gerardo E. Cruz-Ortiz NASA/GSFC",,https://github.com/nasa/sch_lab/pull/36
+IC - 20200226,"Describe the contribution
+Fix #34  
+
+Testing performed
+Steps taken to test the contribution:
+
+    Current CI passes
+    Test 4 in Enhanced CI in https://github.com/nasa/cFS/pull/40
+
+Expected behavior changes
+PR #29 -  Clean build when OMIT_DEPRECATED = true
+
+System(s) tested on
+    CI: Ubuntu 18.04
+
+Additional context
+N/A
+
+Third party code
+N/A
+
+Contributor Info - All information REQUIRED for consideration of pull request
+Gerardo E. Cruz-Ortiz - NASA/GSFC",,https://github.com/nasa/sch_lab/pull/35
+Build fails with deprecated cFE/OSAL elements removed #35,"Describe the bug
+Build fails on 7 undeclared errors:
+Errors.txt
+
+To Reproduce
+make OMIT_DEPRECATED=true prep (requires nasa/cFE#457)
+
+Expected behavior
+Clean build
+
+System observed on:
+
+    cFS Dev Server 2
+    OS: Ubuntu 18.04
+    Versions: mostly 6.7 (+ commit above)
+
+Reporter Info
+Jacob Hageman - NASA/GSFC
+","bug, build-system",https://github.com/nasa/sch_lab/issues/34
+General SCH_LAB cleanup,"**Describe the contribution**
+
+Fixes #27
+Fixes #31
+Fixes #32
+
+Applies a consistent naming convention for all symbols in SCH_LAB to be consistent with the published CFE naming convention and other CFE/CFS modules.
+
+Updates the message buffer structures to ensure proper alignment
+
+Changes the table handling as described in #27 
+
+**Testing performed**
+Build code with `SIMULATION=native ENABLE_UNIT_TESTS=TRUE` and confirm no errors or warnings in build.  Also build on Raspberry Pi and confirm the cast align warnings are gone.
+
+Execute CFE and confirm nominal operation - all apps load and respond to basic commands as expected.
+
+Test cFS-GroundSystem python app to confirm that telemetry is being sent at the expected intervals.
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+Ubuntu 18.04 LTS, 64 bit
+Raspberry Pi 3B+
+
+**Additional context**
+This single pull requests addresses multiple issues because they cannot be parallelized without introducing conflicts (the latter depends on the former). The fixes are kept as separate commits for review purposes.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.",CCB:FastTrack,https://github.com/nasa/sch_lab/pull/33
+SCH_LAB should consolidate its globals into a single structure,"**Is your feature request related to a problem? Please describe.**
+Other CFE core apps all use a single global structure to keep its runtime state.  This is preferable because the structure acts as a ""namespace"" and keeps the globals separate from those of other apps.
+
+**Describe the solution you'd like**
+Replace individual globals with a single `SCH_LAB_Global` structure which contains all the global variables as members.
+
+**Additional context**
+This is particularly important on systems where globals go into a ""common"" section and strange behavior can happen if a name collision occurs.
+
+**Requester Info**
+Joseph Hickey, Vantage Systems, Inc
+",enhancement,https://github.com/nasa/sch_lab/issues/32
+fails to build on Raspbian,"**Describe the bug**
+Building sch_lab under Raspbian (a Debian variant for Raspberry Pi SBC's) fails due to alignment issues.
+
+```
+/home/pi/cFS/apps/sch_lab/fsw/src/sch_lab_app.c: In function ‘SCH_Lab_AppMain’:
+/home/pi/cFS/apps/sch_lab/fsw/src/sch_lab_app.c:115:42: error: cast increases required alignment of target type [-Werror=cast-align]
+                           CFE_SB_SendMsg((CFE_SB_MsgPtr_t)&SCH_CmdHeaderTable[i]);
+                                          ^
+```
+
+**To Reproduce**
+Build on Raspbian.
+
+**Expected behavior**
+Error-free compile.
+
+**Code snips**
+If applicable, add references to the software.
+
+**System observed on:**
+Raspberry Pi Zero W.
+
+**Additional context**
+Add any other context about the problem here.
+
+**Reporter Info**
+Christopher.D.Knight@nasa.gov",bug,https://github.com/nasa/sch_lab/issues/31
+Apply standard code style,"**Is your feature request related to a problem? Please describe.**
+Inconstant style
+
+**Describe the solution you'd like**
+See https://github.com/nasa/ci_lab/pull/30 and https://github.com/nasa/ci_lab/pull/28
+
+**Describe alternatives you've considered**
+N/A
+
+**Additional context**
+N/A
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, good first issue",https://github.com/nasa/sch_lab/issues/30
+"Fix #34, Build fails with deprecated cFE/OSAL elements removed","Describe the contribution
+Fixes #35, Build fails with deprecated cFE/OSAL elements removed
+
+Testing performed
+Nominal build process:
+
+    make distclean
+    make prep
+    make
+    make install
+    followed by building with OMIT_DEPRECATED = true
+    make distclean
+    make OMIT_DEPRECATED=true prep
+    make
+    make install
+
+Confirmed clean build in both cases.
+
+Expected behavior changes
+Clean build when OMIT_DEPRECATED = true
+
+System(s) tested on
+Oracle VM VirtualBox
+OS: ubuntu-18.04.3
+Versions: cFE 6.7.5.0, OSAL 5.0.5.0, PSP 1.4.3.0
+
+Additional context
+There is a total of three pull requests to address issue_35:
+nasa/to_lab
+nasa/sample_app
+nasa/sch_lab
+
+All three are intended to be delivered together.
+
+Contributor Info
+Dan Knutsen
+GSFC/NASA",,https://github.com/nasa/sch_lab/pull/29
+Integration Candidate 20200121,"**Describe the contribution**
+Fix #23, fix #24
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Current CI passes
+1. Enhanced CI in #40 passes debug/with deprecated elements testing
+
+**Expected behavior changes**
+- Corrected syslog writes
+- Fixed return handling from CFE_TBL_GitAddress
+
+**System(s) tested on**
+ - CI: Ubuntu 18.04
+
+**Additional context**
+N/A
+
+**Third party code**
+N/A
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/sch_lab/pull/28
+Improve table handling,"**Is your feature request related to a problem? Please describe.**
+Doesn't actually allow table management within the task loop
+
+**Describe the solution you'd like**
+Actually follow the table management pattern, allowing updates (should be a decent example)
+
+**Describe alternatives you've considered**
+N/A
+
+**Additional context**
+N/A
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/sch_lab/issues/27
+Accept CFE_SUCCESS from CFE_TBL_GetAddress(),"**Describe the contribution**
+
+Fix #24 
+
+CFE_SUCCESS is a valid return from the CFE_TBL_GetAddress() call. It should not be rejected as an error.
+
+**Testing performed**
+Build for RTEMS, sanity check that SCH_LAB starts and runs normally.
+
+**Expected behavior changes**
+Adhere to the documented behavior/return codes of the CFE_TBL_GetAddress() call
+
+**System(s) tested on:**
+i686-rtems4.11 target running in QEMU.
+
+**Contributor Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",,https://github.com/nasa/sch_lab/pull/26
+Correct writes to syslog,"**Describe the contribution**
+
+Fix #23
+
+1. Do not use the backslash to split string literal across lines.
+2. Add casting to make the code work on both 32-bit and 64-bit platforms.
+3. Correct misspelled ""SCHEULE APP"" - use ""SCH_LAB"" prefix instead.
+
+**Testing performed**
+Build for 32-bit RTEMS and confirm that warnings are fixed, and the SCH_LAB app starts and runs normally.
+
+**Expected behavior changes**
+Builds cleanly.  No changes to runtime except for string formatting, the strings written to syslog will no longer have unintended whitespace included.
+
+**System(s) tested on:**
+Ubuntu 18.04 LTS 64-bit building for i686-rtems4.11 target.
+
+**Contributor Info**
+Joseph Hickey, Vantage Systems, Inc.
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",,https://github.com/nasa/sch_lab/pull/25
+CFE_TBL_GetAddress() may return CFE_SUCCESS,"**Describe the bug**
+The code is testing the return code for only `CFE_TBL_INFO_UPDATED`.  However the `CFE_TBL_GetAddress()` function may return `CFE_SUCCESS` as well, per the documentation and implementation.
+
+**Expected behavior**
+Either `CFE_TBL_INFO_UPDATED` or `CFE_SUCCESS` should be accepted as valid returns.
+
+**Code snips**
+
+https://github.com/nasa/sch_lab/blob/d0e21d20aee4c1b4cdf8de7cf3ea2bd7c41caffe/fsw/src/sch_lab_app.c#L184-L191
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+",bug,https://github.com/nasa/sch_lab/issues/24
+Improper calls to CFE_ES_WriteSysLog,"**Describe the bug**
+At some point some extra writes to the syslog were added, for example:
+
+```
+       CFE_ES_WriteToSysLog(""SCHEULE APP: Error Releasing Table \
+                             SCH_LAB_SchTbl, RC = 0x%08X\n"", Status);
+```
+
+There are two issues:
+1. Use of the ""line-continuation"" backslash to split across lines -- note this does _not_ remove the leading whitespace on the next line, so the actual literal result will have a large space in it.
+2. Lack of a cast on the parameter.  This causes build failure on platforms where `int32` is actually a `long`, not `int`.
+
+**To Reproduce**
+Build for a 32-bit platform.  Triggers a warning about the incorrect argument type.
+
+**Expected behavior**
+Should build cleanly on a 32-bit platform.
+
+**System observed on:**
+Ubuntu 18.04 LTS 64-bit build host, building for i686-rtems4.11 target.
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+",bug,https://github.com/nasa/sch_lab/issues/23
+"Fix #21, Release Prep","***Describe the contribution**
+Fix #12
+ - Updated README
+ - removed custom license document
+ - added standard Apache 2.0
+ - Updated copyright release version cFE 6.6 -> 6.7
+
+**Testing performed**
+1. Standard build, unit test and execute
+
+**Expected behavior changes**
+ - No impact to behavior
+
+**System(s) tested on:**
+ - Hardware: cFS Dev Server 2
+ - OS: Ubuntu 18.04
+ - Versions: cFE 6.7.0 related versions and OSAL 5.0.0
+
+**Contributor Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/sch_lab/pull/22
+Release Prep,"**Is your feature request related to a problem? Please describe.**
+Updates for release:
+- Updated README
+- removed custom license document
+- added standard Apache 2.0
+- Updated copyright release version cFE 6.6 -> 6.7
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/sch_lab/issues/21
+Parameter MySchTBL hides a global variable with the same name [lgtm],"**Describe the bug**
+sch_lab_app.c
+
+```
+int32 SCH_LAB_TblValidation(void *MySchTBL)
+--
+  | Parameter MySchTBL hides a global variable with the same name.
+```
+
+sch_lab_sched_tab.h
+`This header file should contain a header guard to prevent multiple inclusion.`
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Build against lgtm
+
+**Reporter Info**
+Anh Van, NASA Goddard
+",,https://github.com/nasa/sch_lab/issues/20
+Fix #18: Include definition of CFE_SB_MsgId_t,"This type is provided by the cfe_sb_extern_typedefs.h file,
+so the table definition should include this header.
+
+**Describe the contribution**
+Fixes issue #18
+Add explicit inclusion of cfe_sb_extern_typedefs.h, which provides the definition of the `CFE_SB_MsgId_t` type.
+
+**Testing performed**
+Compile all code in the CFS bundle
+
+**Expected behavior changes**
+Build no longer fails due to unknown type when integrating the `ic-ccb-20191009` branch.
+
+**System(s) tested on:**
+Ubuntu 18.04.2 LTS, 64 bit (build host)
+
+**Contributor Info**
+Joseph Hickey, Vantage Systems Inc.
+",,https://github.com/nasa/sch_lab/pull/19
+SCH_Lab table definition uses CFE_SB_MsgId_t type without including header for it,"**Describe the bug**
+All Code compilation units should explicitly `#include` the headers for all types/macros/functions which are directly used by that unit.
+
+The ""sch_lab_sched_tab.h"" defines a structure that depends on `CFE_SB_MsgId_t`, but it does not include the header that provides this type.
+
+**To Reproduce**
+Compilation fails when building with the `ic-ccb-20191009` branch, which includes a change that causes the definition of `CFE_SB_MsgId_t` to no longer be implicitly included.
+```
+apps/sch_lab/fsw/platform_inc/sch_lab_sched_tab.h:63:5: error: unknown type name ‘CFE_SB_MsgId_t’
+     CFE_SB_MsgId_t  MessageID[SCH_LAB_MAX_SCHEDULE_ENTRIES];  /* Message ID for the table entry */
+     ^~~~~~~~~~~~~~
+```
+
+**Expected behavior**
+The build should complete successfully.
+
+**System observed on:**
+Ubuntu 18.04.2 LTS 64 bit (build host)
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems Inc.
+",bug,https://github.com/nasa/sch_lab/issues/18
+Simplify table path in CMakeList.txt,"**Is your feature request related to a problem? Please describe.**
+fsw/src is ignored in:
+
+https://github.com/nasa/sch_lab/blob/e226d55d76621a8247286ba150e20e2edd51111c/CMakeLists.txt#L14
+
+**Describe the solution you'd like**
+Remove path, since it implies a specific file, when the build system actually searches the *_defs first for a matching file.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+See the guide in elf2cfetbl
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",invalid,https://github.com/nasa/sch_lab/issues/17
+Integration Candidate 20191001,"**Describe the contribution**
+Covers the following pull request:
+- #15 - Use table services (was #12, just reopened)
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Followed standard build/run steps with permissive mode on cFS development server
+
+**Expected behavior changes**
+Now uses cFE table services for schedule table management
+
+**System(s) tested on:**
+ - cFS development server 
+ - Ubuntu 16.04.6 LTS, 4.4.0-164-generic
+ - Versions: ic-20191001 bundle (all ic-20191001 branches)
+
+**Additional context**
+NA
+
+**Contributor Info**
+Jacob Hageman - NASA/GSFC
+
+**Community contributors**
+CLA on file",,https://github.com/nasa/sch_lab/pull/16
+"fix #11, new table","**Describe the contribution**
+fix #11, new table, reference closed pull request #12, reopen of it version of it.  
+
+**Testing performed**
+references closed pull request #12, just a reopen version of it. 
+
+**Contributor Info**
+Anh Van, NASA Goddard
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",,https://github.com/nasa/sch_lab/pull/15
+Added auto build capabilities using Travis-CI,"**Describe the contribution**
+Auto build capabilities added using Travis-CI
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Verified auto build performed when new code is pushed to Github
+
+**Expected behavior changes**
+ - Auto build will be performed whenever new code is pushed to GitHub
+ 
+**System(s) tested on:**
+ - GitHub - Linux Xenial distribution
+
+**Additional context**
+A branch, specified by environment variables in the buildvars.sh file, will be checked out and this application will be build in the context of that cFS tree 
+
+**Contributor Info**
+Travis Wheatley - Emergent Space Technologies
+
+**Community contributors**
+Work performed for NASA ""Task 3015""",duplicate,https://github.com/nasa/sch_lab/pull/14
+Integration Candidate 20190906,"**Describe the contribution**
+Merge of CCB 20190904 approved commits.
+Fixes #1, fixes #3, fixes #4, fixes #6 
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Setup and build per README instructions (no build warnings observed)
+2. Start up cfe with sch_lab included by default and observed:
+```
+1980-012-14:03:20.25323 ES Startup: Loading file: /cf/sch_lab.so, APP: SCH_LAB_APP
+1980-012-14:03:20.25337 ES Startup: SCH_LAB_APP loaded and created
+SCH Lab Initialized.  Version 2.2.0.0
+```
+2. Sent tlm_enable command, verified HK packet telmetry reception, sent ES processor reset ('1') to exit cFE 
+
+**Expected behavior changes**
+A clear and concise description of how this contribution will change behavior and level of impact.
+ - Updated performance ID but no behavior updates
+
+**System(s) tested on:**
+ - cFS development server
+ - OS: Ubuntu/Linux 4.4.0-146-generic
+ - Versions: bundle rc-6.7.0
+
+**Additional context**
+None
+
+**Contributor Info**
+Jacob Hageman/NASA-GSFC
+
+**Community contributors**
+CLA on file.
+",,https://github.com/nasa/sch_lab/pull/13
+"Fix #11, Implemented cFE Table Service","**Describe the contribution**
+Fix #11, Implemented cFE table service
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Build 
+2. Used GroundSystem to enable telemetry
+3. Used Cosmos to verify package received:
+          a. CFE_ES  - HK_TLM_PKT
+          b. CFDP – CFDP_ENGINE_HK
+          c. CFE_EVS – HK_TML_PKT
+          d. CFE_SB – HK_TLM_PKT
+          e. CFE_TBL = HK_TLM_PKT
+          f. CFE_TIME – HK_TLM_PKT
+          g. KIT_CI – HK_TLM_PKT
+          h. KIT_TO – HK_TLM_PKT
+          i.  UNKOWN 
+
+4. Systematically removed each individual MID from table and verify:
+        a. Removed CFE_ES_SEND_HK_MID. Verify CFE_ES is not receiving
+        b. Removed CFE_EVS_SEND_HK_MID. Verify CFE_EVS is not receiving
+        c. Removed CFE_TIME_SEND_HK_MID. Verify CFE_TIME is not receiving
+        d. Removed CFE_SB_SEND_HK_MID. Verify CFE_SB is not receiving
+        e. Removed CFE_TBL_SEND_HK_MID. Verify CFE_TBL is not receiving
+        f. Removed CI_LAB_SEND_HK_MID. Verify Kit-CI is not receiving
+        g. Removed TO_LAB_SEND_HK_MID.  Verify Kit-To is not receiving any package
+        h. Removed SAMPLE_APP_SEND_HK_MID. Verify Unknown is not receiving any package
+
+*Note - Sample_App correspond to Unknown in Cosmos
+
+**Expected behavior changes**
+No impact to behavior.
+
+**System(s) tested on:**
+ - Hardware
+ - OS: Ubuntu 18.04.03
+ - Cosmos 4.4.0 (part of OpenSatKit), GroundSystem 2.0.90a , cFE 6.6.0a, OSAL 1.4.2a
+
+**Additional context**
+None
+
+**Contributor Info**
+Anh Van, NASA Goddard
+
+**Community contributors**
+You must attach a signed CLA (required for acceptance) or reference one already submitted
+",invalid,https://github.com/nasa/sch_lab/pull/12
+Schedule App not using CFE Table,"**Is your feature request related to a problem? Please describe.**
+No
+
+**Describe the solution you'd like**
+Schedule lab App is not using cFE table service. Recommend implementing cFE table service.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+none
+
+**Requester Info**
+Anh Van, NASA Goddard
+",enhancement,https://github.com/nasa/sch_lab/issues/11
+"Fix #1, Change Perfid",changed to 36,,https://github.com/nasa/sch_lab/pull/10
+"Fix #4, Remove Classic Build",remove for_build folder.,,https://github.com/nasa/sch_lab/pull/9
+"Fix #3, remove MKS flags",remove MKS flags,,https://github.com/nasa/sch_lab/pull/8
+"Replace deprecated cfe refs, #6","Fixes #6
+
+Submitted by @skliper , CLA on file
+
+Testing:
+- make ENABLE_UNIT_TESTS=TRUE SIMULATION=native prep
+- Built on linux with -DCFE_OMIT_DEPRECATED_6_6 with no build errors
+- make test passed (except osal_timer_UT which occasionally fails on linux)
+- cFS executes and loads apps with no issues",enhancement,https://github.com/nasa/sch_lab/pull/7
+Remove dependencies on deprecated cFE elements,"With:
+`cfe/CMakeLists.txt:add_definitions(""-D_ENHANCED_BUILD_ -DCFE_OMIT_DEPRECATED_6_6"")`
+build errors:
+
+```
+/home/jhageman/cFS/cFS-dev/apps/sch_lab/fsw/src/sch_lab_app.c: In function ‘SCH_Lab_AppMain’:
+/home/jhageman/cFS/cFS-dev/apps/sch_lab/fsw/src/sch_lab_app.c:75:34: error: ‘CFE_ES_APP_RUN’ undeclared (first use in this function)
+     uint32           RunStatus = CFE_ES_APP_RUN;
+```",enhancement,https://github.com/nasa/sch_lab/issues/6
+Enhanced version reporting,"Use SCH_LAB_VERSION from cfecfs_version_info.h if available and report on NOOP and startup (along with classic version numbering)
+
+Classic version numbering can then just be updated on release, vs for every commit.",enhancement,https://github.com/nasa/sch_lab/issues/5
+Remove classic build support,Only supporting cmake build going forward.,"enhancement, good first issue",https://github.com/nasa/sch_lab/issues/4
+Remove MKS flags from comments,"$Id, $Date, $Revision, $Log, etc all no longer useful and slightly misleading since they don't get updated.","enhancement, good first issue",https://github.com/nasa/sch_lab/issues/3
+"SCH_LAB unused ""taskId""","Originated by glimes (56 on babelfish):
+
+SCH_LAB application retrieves the Task ID for the current task at the top of its main loop, and never uses it.",invalid,https://github.com/nasa/sch_lab/issues/2
+Confirm valid PERF_ID use,"Originated by abrown4 (69 on babelfish):
+
+cFE reserves 0-31 perf-ids. Need to confirm ci_lab does not use these.",bug,https://github.com/nasa/sch_lab/issues/1

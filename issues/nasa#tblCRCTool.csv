@@ -1,0 +1,1502 @@
+Title,Body,Labels,URL
+tblCRCTool Integration candidate: Caelum-rc4+dev40,"**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+- PR #77. Addresses Issue #76
+
+**Testing performed**
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/654/checks)
+[tblCRCTool Checks](https://github.com/nasa/tblCRCTool/pull/78/checks)
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Add any other context about the contribution here.
+
+**Third party code**
+If included, identify any third party code and provide text file of license
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt",,https://github.com/nasa/tblCRCTool/pull/78
+"Fix #76, Replace exit(1) with preferred macro EXIT_FAILURE","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #76 
+`exit(1)` replaced in 5 locations with the equivalent, but more portable and expressive, `EXIT_FAILURE` macro.
+
+**Testing performed**
+GitHub CI actions (incl. Build + Run, Unit Tests etc.) all passing successfully.
+
+**Expected behavior changes**
+No change to code logic/behavior.
+
+**Contributor Info**
+Avi Weiss @thnkslprpt",CCB:Approved,https://github.com/nasa/tblCRCTool/pull/77
+Replace exit(1) statements with preferred macro EXIT_FAILURE ,"**Describe the bug**
+Use of `exit(1)` (or `exit(0)` for that matter) as input to exit() is less clear and less portable than using the standard macros `EXIT_SUCCESS` and `EXIT_FAILURE`.
+
+**Expected behavior**
+Recommend replacing with the more portable and less magic-numbery `EXIT_FAILURE` macro.
+
+**Code snips**
+https://github.com/nasa/tblCRCTool/blob/9abe3a7a50e8c0ecd1afeefe325403838d3579cc/cfe_ts_crc.c#L113-L128
+
+**Reporter Info**
+Avi Weiss @thnkslprpt",,https://github.com/nasa/tblCRCTool/issues/76
+tblCRCTool Integration candidate: Caelum-rc4+dev25,"**Describe the contribution**
+
+PR #73
+- Fix #72, Create CHANGELOG.md
+
+
+**Testing performed**
+cFS-GroundSystem Checks <https://github.com/nasa/sample_lib/pull/75/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/590/checks>
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt",,https://github.com/nasa/tblCRCTool/pull/75
+tblCRCTool Integration candidate: Caelum-rc4+dev23,"**Describe the contribution**
+
+
+PR #70
+    
+- Fix #69, Remove unnecessary parentheses around return values.
+
+
+**Testing performed**
+
+[sch_lab Checks](https://github.com/nasa/tblCRCTool/pull/74/checks)
+[cFS Bundle Checks](https://github.com/nasa/cFS/pull/586/checks)
+
+**Expected behavior changes**
+
+See PRs
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt",,https://github.com/nasa/tblCRCTool/pull/74
+"Fix #72, Create CHANGELOG.md","**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #72
+
+**Testing performed**
+None.
+
+**Expected behavior changes**
+Minimizes unnecessary clutter in README.md
+
+**Contributor Info**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/tblCRCTool/pull/73
+Use a changelog to keep track of changes instead of having them in the Readme,"Copy of https://github.com/nasa/osal/issues/552
+
+**Is your feature request related to a problem? Please describe.**
+The version history in the Readme file clutters useful information
+
+**Describe the solution you'd like**
+Move the ""version history"" from `Readme.md` to `CHANGELOG.md`
+
+**Requester Info**
+@thnkslprpt 
+",,https://github.com/nasa/tblCRCTool/issues/72
+Uncontrolled data used in path expression,"**Describe the bug**
+Accessing paths controlled by users can allow an attacker to access unexpected resources.
+
+**Expected behavior**
+Same behavior, fix warning. 
+
+**Code snips**
+https://github.com/nasa/tblCRCTool/blob/f569bf52e5e3ef3c51b59d367f8d404c05cf3180/cfe_ts_crc.c#L123
+
+**Additional context**
+From CodeQL.
+May use something like `const char *filename = argv[1];`
+
+**Reporter Info**
+Ariel Adams, MCSG Tech
+",,https://github.com/nasa/tblCRCTool/issues/71
+"Fix #69, Remove unnecessary parentheses around return values.","**Checklist (Please check before submitting)**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/osal/blob/main/CONTRIBUTING.md).
+* [x] I signed and emailed the appropriate [Contributor License Agreement](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md#contributor-license-agreement-cla) to GSFC-SoftwareRelease@mail.nasa.gov and copied cfs-program@lists.nasa.gov.
+
+**Describe the contribution**
+Fixes #69 
+Removes parentheses in return statements in tblCRCTool that return a single value/term.
+This is aligns these return statements with the predominant style of cFS.
+
+**Testing performed**
+None, prior to submission of the pull request.
+
+**Expected behavior changes**
+No impact on behavior.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@thnkslprpt ",CCB:Approved,https://github.com/nasa/tblCRCTool/pull/70
+Scrub use of () in return statements,"**Checklist**
+* [x] I reviewed the [Contributing Guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md).
+* [x] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+Unnecessary parentheses around return values in tblCRCTool
+Copy of https://github.com/nasa/osal/issues/866
+
+**Reporter Info**
+@thnkslprpt ",,https://github.com/nasa/tblCRCTool/issues/69
+"Fix #63, Update codeql workflow for reusable updates","**Describe the contribution**
+- Fix #63 
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+None, just fixes codeql workflow
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:Approved, CCB:FastTrack",https://github.com/nasa/tblCRCTool/pull/68
+tblCRCtool Integration candidate: Caelum-rc4+dev7,"**Describe the contribution**
+
+PR #65 
+- Fix #64, Update copyright header
+
+PR #66  
+- HOTFIX #60, Standardize Version Information
+
+
+**Testing performed**
+tblCRCTool Checks <https://github.com/nasa/tblCRCTool/pull/67/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/445/checks>
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+Ubuntu 
+RTEMS
+
+**Additional context**
+Part of nasa/cFS#445
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper 
+@astrogeco ",,https://github.com/nasa/tblCRCTool/pull/67
+"HOTFIX #60, Standardize version information","**Describe the contribution**
+
+Per conversation in CCB:2022-03-24 and in https://github.com/nasa/cFE/commit/e5be0612ad6bf9db09ddf640306a65292abce2d5#commitcomment-69358417
+
+Ensuring REVISION number is set to 99 and MISSION_REV = 0xFF
+
+**Testing performed**
+Text and documentation only
+
+**Expected behavior changes**
+No behavior change
+
+**System(s) tested on**
+n/a
+
+**Additional context**
+https://github.com/nasa/cFE/commit/e5be0612ad6bf9db09ddf640306a65292abce2d5#commitcomment-69358417
+
+**Third party code**
+none
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Gerardo E. Cruz-Ortiz, NASA",,https://github.com/nasa/tblCRCTool/pull/66
+"Fix #64, Update copyright header","**Describe the contribution**
+- Fix #64
+
+**Testing performed**
+Documentation only, but built/ran unit tests
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: i5/wsl
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",,https://github.com/nasa/tblCRCTool/pull/65
+Apply latest copyright header,"**Is your feature request related to a problem? Please describe.**
+Updated copyright header
+
+**Describe the solution you'd like**
+Update
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",docs,https://github.com/nasa/tblCRCTool/issues/64
+CodeQL Workflow Broken due to Name Change,"**Describe the bug**
+
+Merging https://github.com/nasa/cFS/pull/413 broke the components' CodeQL workflow as expected. 
+
+Need to update the codeQL workflows to match the patterns implemented in https://github.com/nasa/cFE/pull/2035
+
+**To Reproduce**
+
+See failed workflows 
+- https://github.com/nasa/tblCRCTool/actions/workflows/codeql-build.yml
+
+**Expected behavior**
+
+Workflow executes
+
+**Code snips**
+None
+
+**System observed on:**
+GitHub Actions
+
+**Additional context**
+None
+
+**Reporter Info**
+Gerardo E. Cruz-Ortiz NASA",continuous-integration,https://github.com/nasa/tblCRCTool/issues/63
+"Fix #61, Remove explicit filename doxygen comments","**Describe the contribution**
+- Fix #61 
+
+**Testing performed**
+Make doc, observe no filename warnings
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: i5/wsl
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this commit
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:Approved,https://github.com/nasa/tblCRCTool/pull/62
+Remove explicit file name references in doxygen file comments to avoid warnings,"**Is your feature request related to a problem? Please describe.**
+File comment without a filename implies the comments apply to the current file.  Adding the file name makes doxygen try to match that file.  The issue is there's multiple files with the same name, so doxygen gets confused unless you add full path.  Really it's just overhead since the point is to comment the current file.
+
+Sample warning if you `make doc` from the bundle:
+```
+/home/jhageman/cFS/cFS-GitHub/osal/src/os/posix/src/os-impl-binsem.c:22: warning: the name `os-impl-binsem.c' supplied as the second argument in the \file statement matches the following input files:
+   /home/jhageman/cFS/cFS-GitHub/osal/src/os/posix/src/os-impl-binsem.c
+   /home/jhageman/cFS/cFS-GitHub/osal/src/os/rtems/src/os-impl-binsem.c
+   /home/jhageman/cFS/cFS-GitHub/osal/src/os/vxworks/src/os-impl-binsem.c
+Please use a more specific name by including a (larger) part of the path!
+```
+
+**Describe the solution you'd like**
+Easiest to just remove the name since for every case the comment applies to the current file
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",docs,https://github.com/nasa/tblCRCTool/issues/61
+Update build baseline to cFS-Caelum-rc4,"**Describe the contribution**
+
+- Set baseline for cFS-Caelum-rc4: v1.3.0-rc4
+- Update mission rev to use 0xFF for development version
+
+**Testing performed**
+tblcrcrtool checks <https://github.com/nasa/tblCRCTool/pull/60/checks>
+cFS Bundle checks <https://github.com/nasa/cFS/pull/390/checks>
+
+**Expected behavior changes**
+Development version number now reports 
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/390>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@astrogeco ",,https://github.com/nasa/tblCRCTool/pull/60
+"Fix #58, Reuse CodeQL, Static Analysis, and Format Check","**Describe the contribution**
+Fixes #58 
+
+**Testing performed**
+tblCRCTool CodeQL Reuse: https://github.com/ArielSAdamsNASA/tblCRCTool/actions/runs/1395660303
+tblCRCTool Format Check Reuse: https://github.com/ArielSAdamsNASA/tblCRCTool/actions/runs/1395660302
+tblCRCTool Static Analysis Reuse: https://github.com/ArielSAdamsNASA/tblCRCTool/actions/runs/1395660301
+
+**Expected behavior changes**
+tblCRCTool will reuse CodeQL, Static Analysis, and Format Checker that are held in cFS. These workflows will not work until nasa/cFS#386 is merged.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal",continuous-integration,https://github.com/nasa/tblCRCTool/pull/59
+"Reuse CodeQL, Format Checker, and Static Analysis Workflows","**Is your feature request related to a problem? Please describe.**
+When needing to change workflows, one must create an issue and PR for each submodule. This feature would reduce duplication.
+
+**Describe the solution you'd like**
+To reuse workflows, the targeted workflow must include workflow_call and inputs as seen below. 
+```
+on:
+  push:
+  pull_request:
+  workflow_call:
+    inputs:
+      runs-on: 
+        description: Platform to execute on
+        type: string
+        default: ubuntu-latest
+```
+
+**Describe alternatives you've considered**
+Keep it as is. 
+
+**Additional context**
+Tested in OSAL, OSAL cFE CodeQL Reuse Build: https://github.com/ArielSAdamsNASA/osal/runs/4023159610?check_suite_focus=true
+Tested in OSAL, OSAL CodeQL Reuse Build: https://github.com/ArielSAdamsNASA/osal/actions/runs/1390702434
+cFS CodeQL Reuse: https://github.com/ArielSAdamsNASA/cFS-JSF-Rules/actions/runs/1390561827
+
+**Requester Info**
+Ariel Adams, ASRC Federal",continuous-integration,https://github.com/nasa/tblCRCTool/issues/58
+"Fix #55 #56, Remove action branch restrictions, add duplicate checks, fix format check job name, remove --quiet","**Describe the contribution**
+- Fix #55 
+- Fix #56 
+
+Remove action branch restrictions, add duplicate checks, fix format check job name, remove --quiet
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+- Runs on all push/pr
+- Skips on duplicate
+- Format check job name correct
+- Reports files analyzed by cppcheck
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC
+@astrogeco ","duplicate, continuous-integration",https://github.com/nasa/tblCRCTool/pull/57
+Remove `--quiet` flag from cppcheck,"**Is your feature request related to a problem? Please describe.**
+Remove `--quiet` so cppcheck reports files analyzed:
+https://github.com/nasa/tblCRCTool/blob/f96d481d149631d67a8c3927db7cb65c7366da5b/.github/workflows/static-analysis.yml#L26
+
+**Describe the solution you'd like**
+Remove.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","duplicate, continuous-integration",https://github.com/nasa/tblCRCTool/issues/56
+"Remove workflow branch restrictions, add duplicate check, fix format check job name","**Describe the bug**
+
+The format check and static analysis workflows only run on pushes to main or on pull requests so community users will not get the alerts on their forks.
+
+The CodeQL workflow may run on pull requests to branches other than main
+
+**To Reproduce**
+Fork repo, commit new branch: format check and static analysis workflows aren't triggered.
+
+
+**Expected behavior**
+
+All workflows run on fork branches, even those without pull requests.
+
+
+**Code snips**
+
+https://github.com/nasa/tblCRCTool/blob/86c54bbe12a53a5076abe580b232c6cd431fa5fe/.github/workflows/format-check.yml#L4-L9
+
+https://github.com/nasa/tblCRCTool/blob/86c54bbe12a53a5076abe580b232c6cd431fa5fe/.github/workflows/static-analysis.yml#L4-L9
+
+https://github.com/nasa/tblCRCTool/blob/86c54bbe12a53a5076abe580b232c6cd431fa5fe/.github/workflows/codeql-build.yml#L3-L8
+
+**System observed on:**
+GitHub
+
+**Additional context**
+Should also add check-for-duplicates job to workflows after relaing the branch requirement on the push trigger
+
+","duplicate, continuous-integration",https://github.com/nasa/tblCRCTool/issues/55
+"Typos in documentation, print statements, and comments","**Is your feature request related to a problem? Please describe.**
+Found multiple typos throughout the codebase
+
+**Describe the solution you'd like**
+Correct grammar and spelling errors
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Retroactive issue for #53 
+",,https://github.com/nasa/tblCRCTool/issues/54
+"Fix #54, Correct minor text typos","**Describe the contribution**
+Fixed 2 minor text typos.
+  
+- Fix #54
+
+**Testing performed**
+None.
+
+**Expected behavior changes**
+None (minor text changes that do not interact with any max lengths etc.). Code execution is unaffected.
+
+**System(s) tested on**
+n/a
+
+**Additional context**
+n/a
+
+**Code contributions**
+n/a",community,https://github.com/nasa/tblCRCTool/pull/53
+tblCRCTool Integration candidate: 2021-06-22,"## Context
+
+Part of <https://github.com/nasa/cfs/issues/270>
+
+## Authors
+
+@jphickey 
+@ArielSAdamsNASA 
+
+## Description
+
+### PR #51 
+
+Fix #50, add printf conversion casts
+
+Cast ssize_t to long and uint32 to unsigned long for printf.
+This matches the %d and %lX conversions, respectively.
+
+
+### PR #49
+
+Fix #48, Implement Coding Standard in CodeQL",,https://github.com/nasa/tblCRCTool/pull/52
+"Fix #50, add printf conversion casts","**Describe the contribution**
+Cast ssize_t to long and uint32 to unsigned long for printf.  This matches the %d and %lX conversions, respectively.
+
+Fixes #50
+
+**Testing performed**
+Build tblCRCtool as normal, ensure no errors
+
+**Expected behavior changes**
+Should now build successfully if `ssize_t` and `long` are not the same type.
+
+**System(s) tested on**
+Ubuntu
+
+**Additional context**
+Should be tested with RPI4 toolchain that originally had the error
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.
+","CCB:Approved, CCB:FastTrack",https://github.com/nasa/tblCRCTool/pull/51
+RPI4 compile error,"Hi, I'm trying to compile the cFS on a Raspberry PI 4. I've followed the instructions [here](http://alanstechnotes.blogspot.com/2018/11/how-to-compile-core-flight-system-on.html?m=1), to modify the system processor from i686 to arm for cmake. (The other edits seemed deprecated). 
+
+When compiling, I get the following error:
+
+```Scanning dependencies of target cfe_ts_crc
+[ 85%] Building C object tools/tblCRCTool/CMakeFiles/cfe_ts_crc.dir/cfe_ts_crc.c.o
+/home/pi/src/cFS/tools/tblCRCTool/cfe_ts_crc.c: In function ‘main’:
+/home/pi/src/cFS/tools/tblCRCTool/cfe_ts_crc.c:156:77: error: format ‘%ld’ expects argument of type ‘long int’, but argument 3 has type ‘ssize_t’ {aka ‘int’} [-Werror=format=]
+     printf(""\nTable File Name:            %s\nTable Size:                 %ld Bytes\nExpected TS Validation CRC: ""
+                                                                           ~~^
+                                                                           %d
+/home/pi/src/cFS/tools/tblCRCTool/cfe_ts_crc.c:158:21:
+            argv[1], fileSize, fileCRC);
+                     ~~~~~~~~
+cc1: all warnings being treated as errors
+make[7]: *** [tools/tblCRCTool/CMakeFiles/cfe_ts_crc.dir/build.make:63: tools/tblCRCTool/CMakeFiles/cfe_ts_crc.dir/cfe_ts_crc.c.o] Error 1
+make[6]: *** [CMakeFiles/Makefile2:622: tools/tblCRCTool/CMakeFiles/cfe_ts_crc.dir/all] Error 2
+make[5]: *** [Makefile:141: all] Error 2
+make[4]: *** [CMakeFiles/mission-install.dir/build.make:57: CMakeFiles/mission-install] Error 2
+make[3]: *** [CMakeFiles/Makefile2:297: CMakeFiles/mission-install.dir/all] Error 2
+make[2]: *** [CMakeFiles/Makefile2:304: CMakeFiles/mission-install.dir/rule] Error 2
+make[1]: *** [Makefile:227: mission-install] Error 2
+make: *** [Makefile:122: install] Error 2
+```
+
+Are there other edit(s) I need to make to a cmake file to get cFS to compile on the RPI4? Thanks!
+",,https://github.com/nasa/tblCRCTool/issues/50
+"Fix #48, Implement Coding Standard in CodeQL","**Describe the contribution**
+Fix #48 
+Added the duplicate jobs action to avoid duplicate jobs from running. Added a separate job for coding standard queries. Created two configuration files, one for default queries and security queries and another for jpl rules. Removed push on main branch so when users push code to their forked repos, the workflow runs. Added main branch to pull request, so CodeQL runs on pull request made in the main branch. This is the same logic used in the cFS bundle repo. 
+
+**Testing performed**
+Testing done on cFE forked repository, ArielSAdamsNASA/cFE which used the same files, but with different configuration paths.
+
+Jobs were failing when the entire path of the configuration file were not used. Have to use nasa/cFE/.github/codeql/config-name@branch-name. The branch must be included in the path. 
+
+The CodeQL analysis workflow will fail for this PR since it is calling for a configuration file in main the main branch. It will not work until the configuration files are merged into main. 
+
+In the screenshot is the same workflow as in this pull request, but the configuration path is changed to the forked repo and tested branch. 
+
+![image](https://user-images.githubusercontent.com/69638935/119024913-36fa2580-b969-11eb-9aac-ede0002804a0.png)
+
+**Expected behavior changes**
+There should be one job for security queries and one job for JPL and MISRA queries. 
+
+**Describe alternatives you've considered**
+Can allow all branches to run CodeQL for pull requests as seen in cFE and PSP instead of just the main branch like cFS. 
+
+**Third party code**
+Skip duplicate workflows license: https://github.com/fkirc/skip-duplicate-actions/blob/master/LICENSE
+
+CodeQL license: https://github.com/github/codeql-action/blob/main/LICENSE
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","CCB:Approved, continuous-integration",https://github.com/nasa/tblCRCTool/pull/49
+Implement Coding Standard Rules in CodeQL,"**Is your feature request related to a problem? Please describe.**
+CodeQL does not use JPL rules, which is used in the upcoming coding standard. 
+
+**Describe the solution you'd like**
+Implement JPL rules for CodeQL. Continue using the security queries, but keep them separate from the JPL results. Can use two different workflows, one for the coding standard and one for the security queries. 
+
+**Describe alternatives you've considered**
+Might be able to use one workflow, as long as the results can be easily identified as a coding standard issue or security issue. 
+
+**Additional context**
+JPL queries are found here: https://github.com/github/codeql/tree/main/cpp/ql/src/JPL_C
+
+**Requester Info**
+Ariel Adams, ASRC Federal ",continuous-integration,https://github.com/nasa/tblCRCTool/issues/48
+"Fix #46, Add Contributing Guide","**Describe the contribution**
+Fix #46
+Added a contributing guide that links to the main cFS contributing guide. 
+
+**Expected behavior changes**
+Users should be able to view the contributing guide contents easily from the tblCRCTool repo. 
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","CCB:FastTrack, docs",https://github.com/nasa/tblCRCTool/pull/47
+Add Contributing Guide ,"**Is your feature request related to a problem? Please describe.**
+Add a contributing guide for the tblCRCTool repo. 
+
+**Describe the solution you'd like**
+Create a contributing guide markdown file. In the guide, add a link to the cFS contributing guide. 
+
+**Requester Info**
+Ariel Adams, ASRC Federal
+",docs,https://github.com/nasa/tblCRCTool/issues/46
+Integration candidate: 2021-03-05,"**Describe the contribution**
+PR #44 
+PR #42
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+See PRs
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@zanzaben @ArielSAdamsNASA ",,https://github.com/nasa/tblCRCTool/pull/45
+"Fix #43, Add Testing Tools to the Security Policy","**Describe the contribution**
+Fix #73
+Updated the Security Policy to include the type of testing done for elf2cfetbl under a new section titled ""Testing"". Provided a disclaimer that under the Apache license, liability is not provided. 
+
+Added that security reports should be emailed. 
+
+**Expected behavior changes**
+Users should now be aware of the type of testing elf2cfetbl undergoes. 
+
+**Additional context**
+References: 
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/phpMussel/phpMussel/security/policy
+https://github.com/timberio/vector/security/policy
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal 
+","CCB:FastTrack, docs",https://github.com/nasa/tblCRCTool/pull/44
+Add Testing Tools to the Security Policy,"**Is your feature request related to a problem? Please describe.**
+Users are unaware of how cFS/tblCRCTool is tested. By providing this information, transparency is provided to the community which promotes trust. 
+
+**Describe the solution you'd like**
+The security policy should inform users what tools are being used to test cFS/tblCRCTool while being cautious of liability issues. To do so, we can state explicitly that our software does not provide liability under the Apache license. The security policy should inform users that they may view the LGTM results. The policy would state that the alerts from LGTM may not be accurate, since they cannot be dismissed.  
+
+Add that security report should be emailed. 
+
+**Additional context**
+References: https://github.com/thanos-io/thanos/security/policy
+
+**Requester Info**
+Ariel Adams, ASRC Federal 
+",docs,https://github.com/nasa/tblCRCTool/issues/43
+"Fix #36 #38 #40 #41, Overhaul tbl CRC","**Describe the contribution**
+Fixes #36 
+Fixes #38 
+Fixes #40 
+Fixes #41
+All these issues were starting to overlap with each other too much so I made them all one file. This should clean up all the issues with the tblCRCTool 
+
+**Testing performed**
+Build and run unit test
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+Replaces #37 and #39
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Alex Campbell GSFC",CCB:FastTrack,https://github.com/nasa/tblCRCTool/pull/42
+Incorrect EOF check,"**Describe the bug**
+The end-of-file test in this tool is incorrect:
+
+https://github.com/nasa/tblCRCTool/blob/b02864ba56b12e00ab152225e3e8f9d6c039d48c/cfe_ts_crc.c#L139
+
+POSIX says that `read()` returns 0 at EOF.  Returning a size less than the requested size (but more than 0) does not mean EOF.
+
+**To Reproduce**
+A mainly pedantic issue, this check as it is will probably work on regular files, but it might fail of someone tries to make this work on a pipe or something like that.
+
+**Expected behavior**
+Should check if `read()` returned 0, not 100.
+
+**System observed on:**
+Code review
+
+**Additional Context**
+While we are at it we should change the hardcoded `100` to be `sizeof(buffer)` too.
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/tblCRCTool/issues/41
+Report error and use exit(1) for errors and exit(0) for success,"**Is your feature request related to a problem? Please describe.**
+Reporting same exit code for error and success, doesn't include error information (strerror)
+
+General pattern supports scripting/failure reporting.
+
+**Describe the solution you'd like**
+exit(0) for success, exit(1) for errors, use strerror when reporting for all error cases
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+#39 discussion
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/tblCRCTool/issues/40
+"Fix #38, Handle lseek error.","**Describe the contribution**
+Fixes #38 
+Checks if lseek returns an error and reports it. 
+
+Fixes #40
+Use exit(1)
+
+**Testing performed**
+Build and run unit test
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Alex Campbell GSFC",,https://github.com/nasa/tblCRCTool/pull/39
+Check for and report lseek failures,"**Is your feature request related to a problem? Please describe.**
+lseek errors not checked:
+https://github.com/nasa/tblCRCTool/blob/b02864ba56b12e00ab152225e3e8f9d6c039d48c/cfe_ts_crc.c#L130-L131
+
+**Describe the solution you'd like**
+Should explicitly report if lseek fails, could indicate a file shorter than the FS header length (very useful to know!)
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Static analysis warning
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/tblCRCTool/issues/38
+"Fix #36, handle read failure","**Describe the contribution**
+Fixes #36
+Handles case where read returns an error 
+
+**Testing performed**
+Build and run unit test
+
+**Expected behavior changes**
+No impact to behavior
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Alex Campbell GSFC",,https://github.com/nasa/tblCRCTool/pull/37
+read failures are not handled,"**Is your feature request related to a problem? Please describe.**
+There's a coercion alters value static analysis warning on for readSize:
+https://github.com/nasa/tblCRCTool/blob/b02864ba56b12e00ab152225e3e8f9d6c039d48c/cfe_ts_crc.c#L136-L137
+
+**Describe the solution you'd like**
+Handle an error from read
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+Static analysis warning
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+",enhancement,https://github.com/nasa/tblCRCTool/issues/36
+tblCRCTool Integration candidate: 2021-02-02,"**Describe the contribution**
+Fix #19, Changed full word help option '-help' to '--help'
+Fix #31, Add static analysis and format check
+Fix #33, Add CodeQL analysis to workflow
+
+**Testing performed**
+See <https://github.com/nasa/cfs/pull/182/checks>
+
+**Expected behavior changes**
+PR #24 - Changes CLI ""help"" option to use two dashes: `--help`
+
+PR #32 - Adds static analysis and format check to continuous integration workflow. Adds workflow status badges to ReadMe.
+
+PR #34 - Adds CodeQL Analysis to continuous integration workflow. 
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of <https://github.com/nasa/cfs/pull/182/>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@skliper 
+@martintc ",,https://github.com/nasa/tblCRCTool/pull/35
+"Fix #33, Add CodeQL analysis to workflow","**Describe the contribution**
+Fix #33 - adds CodeQL analysis
+
+Differences from bundle - just builds tblCRCTool, has timeout
+
+**Testing performed**
+Ran on fork
+
+**Expected behavior changes**
+Adds Code QL analysis on push to main and pull requests (to main)
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:FastTrack, continuous-integration",https://github.com/nasa/tblCRCTool/pull/34
+Add CodeQL analysis to workflow,"**Is your feature request related to a problem? Please describe.**
+CodeQL analysis not implemented in submodules
+
+**Describe the solution you'd like**
+Add so alerts are generated on pull requests to submodules
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+CodeQL is run at the bundle (nasa/cFS) level, but link to code in submodules doesn't work.
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, security, continuous-integration",https://github.com/nasa/tblCRCTool/issues/33
+"Fix #31, Add static analysis and format check","**Describe the contribution**
+Fix #31 - adds static analysis and format check into github workflow, includes badges in readme
+
+**Testing performed**
+CI
+
+**Expected behavior changes**
+Basic CI works again
+
+**System(s) tested on**
+CI
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","CCB:FastTrack, continuous-integration",https://github.com/nasa/tblCRCTool/pull/32
+CI updates - add static analysis and format in workflow,"**Is your feature request related to a problem? Please describe.**
+Travis-CI not transitioned to github actions
+
+**Describe the solution you'd like**
+Transition CI
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC
+","enhancement, continuous-integration",https://github.com/nasa/tblCRCTool/issues/31
+"Fix #20, Replace LRO reference with algorithm details","**Describe the contribution**
+Fix #20 - comments change only, removed LRO references and added algorithm details from nasa/cFE#1094
+
+**Testing performed**
+None, comments only
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+N/A
+
+**Additional context**
+nasa/cFE#1094
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:FastTrack,https://github.com/nasa/tblCRCTool/pull/30
+tblcrctool Integration candidate: 2021-01-19,"**Describe the contribution**
+
+Fix #15, Remove unimplemented crc cases
+Fix #27, Create Security Policy
+
+**Testing performed**
+See https://github.com/nasa/cFS/pull/177/checks
+
+**Expected behavior changes**
+
+PR #28 - Documentation: Add `Security.md` with instructions on reporting vulnerabilities
+
+PR #26 - Removes unimplemented CRC cases to eliminate static analysis warnings
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of https://github.com/nasa/cFS/pull/177/checks
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@ArielSAdamsNASA 
+@skliper ",,https://github.com/nasa/tblCRCTool/pull/29
+"Fix #27, Create Security Policy","**Describe the contribution**
+Fix #27 
+Created a draft of a security policy markdown file for tblCRCTool. The purpose of a security policy is to inform users on how to submit bugs or vulnerabilities. It is ideal to include a section for supported versions.
+
+**Additional context**
+Optional sections that may be included:
+
+- What to expect security-wise such as what type of testing is done
+- Address privacy concerns
+- Supported versions
+- License
+- Known vulnerabilities
+
+References to Public Security Policies:
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/minhealthnz/nzcovidtracer-app/security/policy
+https://github.com/odoo/odoo/security/policy
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Ariel Adams, ASRC Federal","CCB:FastTrack, security, docs",https://github.com/nasa/tblCRCTool/pull/28
+Implement a Security Policy,"**Describe the bug**
+Create a security policy for users on how to report security vulnerabilities.
+
+**Expected behavior**
+The security policy should instruct users on how to report security vulnerabilities and provide them additional contact information for questions and concerns.
+
+**Additional context**
+Additional sections that may be included:
+- What to expect security-wise such as what type of testing is done
+- Address privacy concerns
+- Supported versions
+- License
+- Known vulnerabilities
+
+References to Public Security Policies:
+https://github.com/thanos-io/thanos/security/policy
+https://github.com/minhealthnz/nzcovidtracer-app/security/policy
+https://github.com/odoo/odoo/security/policy
+
+**Reporter Info**
+Ariel Adams, ASRC Federal","security, docs",https://github.com/nasa/tblCRCTool/issues/27
+"Fix #15, Remove unimplemented crc cases","**Describe the contribution**
+Fix #15 - removes unimplemented cases.  Add them if needed when implemented.
+
+**Testing performed**
+Build and checked tool results against sample app table runtime checksum
+
+**Expected behavior changes**
+None, just eliminates static analysis warnings
+
+**System(s) tested on**
+ - Hardware: cFS Dev Server
+ - OS: Ubuntu 18.04
+ - Versions: Bundle main + this change
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC",CCB:FastTrack,https://github.com/nasa/tblCRCTool/pull/26
+tblCRCTool Integration Candidate: 2020-11-24,"**Describe the contribution**
+Fix #3, use sizeof() for header sizes.
+
+HOTFIX, Set REVISION to 99 and update baseline
+
+**Testing performed**
+See events for ""github actions test"" at https://github.com/astrogeco/cFS/actions
+
+**Expected behavior changes**
+
+PR #23 - Use `sizeof()` instead of a hard coded value for the table file header size to keep this tool in sync if the size of the cFE file or table header should ever change. 
+
+**System(s) tested on**
+Ubuntu 18.04
+
+**Additional context**
+Part of <https://github.com/nasa/cFS/pull/158>
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+@jphickey ",,https://github.com/nasa/tblCRCTool/pull/25
+"Fix #19, Change full word help option '-help' to '--help'","**Describe the contribution**
+Fix #19 
+
+Change the command line argument to '--help' instead of '-help' as per issue #19 
+
+**Testing performed**
+Compiled with GCC-9 and clang, no compile errors and behavior remains the same.
+
+**Expected behavior changes**
+Only behavior change is the program expects --help instead of -help
+
+**System(s) tested on**
+ - Hardware: Macbook Pro 2015
+ - OS: Mac OS 10.15.7
+- OS: Ubuntu 20.04 (in vm)
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Todd Martin, personal
+","CCB:FastTrack, community",https://github.com/nasa/tblCRCTool/pull/24
+"Fix #3, use sizeof() for header sizes.","**Describe the contribution**
+`sizeof()` will keep this tool in sync if the size of the CFE file or table header should ever change.
+
+Fixes #3 
+
+**Testing performed**
+Run the tool and confirm that `skipSize` is unchanged in practice (still 116).
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Ubuntu 20.04
+
+**Additional context**
+This does implicitly restrict this tool to the CFE build environment where these headers (common_types.h, cfe_fs_extern_typedefs,h, and cfe_tbl_extern_typedefs.h) are available.  As a result this will no longer be buildable as a fully standalone/external tool.  Based on https://github.com/nasa/tblCRCTool/issues/3#issuecomment-530856962 this is intended/acceptable but I figured it was worth noting again.
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Joseph Hickey, Vantage Systems, Inc.",,https://github.com/nasa/tblCRCTool/pull/23
+"Close #4 and #21, add version.h and include buildnumber and baseline","**Describe the contribution**
+Close #4 
+Close #21 
+
+**Testing performed**
+Bundle test - https://github.com/astrogeco/cFS/runs/972139876
+
+**Expected behavior changes**
+On execution, tblcrc tool now reports its version when sent the `-help` command
+```
+# ./cfe_ts_crc -help 
+ cFE TS CRC calculator (tblCRCtool) 
+ DEVELOPMENT BUILD 
+ v1.1.0+dev8 
+ Last Offical Release: tblCRCtool v3.1.0
+
+Usage: cfe_ts_crc [filename]
+
+```
+
+**System(s) tested on**
+Augmented [GCC Docker Image](https://github.com/docker-library/gcc/blob/36c1ff6d7b44428b35fa8b61787c76b225d8184a/10/Dockerfile)
+
+**Additional context**
+None
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Gerardo E. Cruz-Ortiz",,https://github.com/nasa/tblCRCTool/pull/22
+Report version and add include Build name and Build number ,"**Is your feature request related to a problem? Please describe.**
+ Need a better way to describe versions during development. 
+Currently the tool does not report its version when compiled.
+
+**Describe the solution you'd like**
+Create a version file (see #4) and use the template in sample_app and other ""version.h"" files throughout the framework.
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Gerardo E. Cruz-Ortiz, NASA-GSFC
+",enhancement,https://github.com/nasa/tblCRCTool/issues/21
+Remove references to LRO,"**Describe the bug**
+Need to clean up multiple references to LRO heritage in source code
+
+**To Reproduce**
+See source code; ctrl-f lro shouls find multile occurences.
+
+**Expected behavior**
+No references to specific missions.
+
+**Code snips**
+```
+/*
+**  This program calculates the CRC of a given file using the same
+**  algorithm as the LRO spacecraft cFE Table Services flight software uses.
+*/
+
+/*
+**             Function Prologue
+**
+** Function: CFE_ES_CalculateCRC  (taken directly from lro-cfe-4.2.1 delivery - 2/4/09)
+**
+** Purpose:  Perform a CRC calculation on a range of memory.
+**
+*/
+
+```
+
+**System observed on:**
+Source code
+
+**Additional context**
+None
+
+**Reporter Info**
+Gerardo E. Cruz-Ortiz, NASA-GSFC
+","bug, docs",https://github.com/nasa/tblCRCTool/issues/20
+Fix input options handling dashes,"**Describe the bug**
+The ""help"" option is triggered by `-help` which only uses one dash. Full-word options should use double dashes.
+
+**To Reproduce**
+See code
+
+```
+if ((argc != 2) || (strncmp(argv[1], ""-help"", 100) == 0))
+    {
+        printf(""\ncFE TS CRC calculator: \%s\n"", CFE_TS_CRC_VERSION_STRING);
+        printf(""\nUsage: cfe_ts_crc [filename]\n"");
+        exit(0);
+    }
+```
+
+**Expected behavior**
+Use `--help` instead
+
+**Code snips**
+If applicable, add references to the software.
+
+**System observed on:**
+Source code
+
+**Additional context**
+None
+
+**Reporter Info**
+Gerardo E. Cruz-Ortiz, NASA-GSFC",enhancement,https://github.com/nasa/tblCRCTool/issues/19
+Integration Candidate: 2020-05-20,"**Describe the contribution**
+Fix #16 
+
+**Testing performed**
+See PR #17 
+Bundle CI - https://travis-ci.com/github/nasa/cFS/builds/168822512
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+Ubuntu:Bionic
+
+**Additional context**
+Part of nasa/cfs#91
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman, NASA-GSFC",,https://github.com/nasa/tblCRCTool/pull/18
+"Fix #16, Apply standard code style"," **Describe the contribution**
+Whitespace changes only.
+Fix #16
+
+**Testing performed**
+CI - TBD
+
+**Expected behavior changes**
+None
+
+**System(s) tested on**
+ - Hardware: CI
+ - OS: Ubuntu 18.04
+ - Versions: Bundle w/ all whitespace change commits
+
+**Additional context**
+Note - not enforcing, just a single cleanup since there's no pending activity in this repo.
+
+**Third party code**
+None
+
+**Contributor Info - All information REQUIRED for consideration of pull request**
+Jacob Hageman - NASA/GSFC","enhancement, CCB:FastTrack",https://github.com/nasa/tblCRCTool/pull/17
+Apply standard code style,"**Is your feature request related to a problem? Please describe.**
+Inconstant style
+
+**Describe the solution you'd like**
+See https://github.com/nasa/ci_lab/pull/30 and https://github.com/nasa/ci_lab/pull/28
+
+**Describe alternatives you've considered**
+N/A
+
+**Additional context**
+N/A
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC","enhancement, good first issue",https://github.com/nasa/tblCRCTool/issues/16
+Recommended lgtm issues,"**Is your feature request related to a problem? Please describe.**
+Recommended issue from lgtm:
+cfe_ts_crc.c:
+```
+switch(TypeCRC)
+--
+114 | {
+115 | /*       case CFE_ES_CRC_32:                                                    */
+116 | /*            CFE_ES_WriteToSysLog(""CFE ES Calculate CRC32 not Implemented\n""); */
+117 | /*            break;                                                            */
+118 |  
+119 | case CFE_ES_CRC_16:
+120 | Crc    =  (int16 )( 0xFFFF & InputCRC );
+121 | BufPtr = (uint8 *)DataPtr;
+122 |  
+123 | for ( i = 0 ; i < DataLength ; i++,  BufPtr++)
+124 | {
+125 | Index = ( ( Crc ^ *BufPtr) & 0x00FF);
+126 | Crc = ( (Crc >> 8 ) & 0x00FF) ^ CrcTable[Index];
+127 | }
+128 | break;
+129 |  
+130 | /*       case CFE_ES_CRC_8:                                                    */
+131 | /*            CFE_ES_WriteToSysLog(""CFE ES Calculate CRC8 not Implemented\n""); */
+132 | /*            break;                                                           */
+133 |  
+134 | default:
+135 | break;
+136 | }
+  | This switch statement should either handle more cases, or be rewritten as an if statement.
+
+
+{
+--
+115 | /*       case CFE_ES_CRC_32:                                                    */
+116 | /*            CFE_ES_WriteToSysLog(""CFE ES Calculate CRC32 not Implemented\n""); */
+  | This comment appears to contain commented-out code
+117 | /*            break;                                                            */
+  | This comment appears to contain commented-out code
+
+
+
+/*       case CFE_ES_CRC_8:                                                    */
+--
+131 | /*            CFE_ES_WriteToSysLog(""CFE ES Calculate CRC8 not Implemented\n""); */
+  | This comment appears to contain commented-out code
+132 | /*            break;                                                           */
+  | This comment appears to contain commented-out code
+
+
+
+```
+
+**Requester Info**
+Anh Van, NASA Goddard
+",bug,https://github.com/nasa/tblCRCTool/issues/15
+"Fix #13, Release Prep","**Describe the contribution**
+Fix #12
+ - Updated README
+ - removed custom license document
+ - Updated copyright release version cFE 6.6 -> 6.7
+
+**Testing performed**
+1. Standard build, unit test and execute
+
+**Expected behavior changes**
+ - No impact to behavior
+
+**System(s) tested on:**
+ - Hardware: cFS Dev Server 2
+ - OS: Ubuntu 18.04
+ - Versions: cFE 6.7.0 related versions and OSAL 5.0.0
+
+**Contributor Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/tblCRCTool/pull/14
+Release Prep,"**Is your feature request related to a problem? Please describe.**
+Updates for release:
+- Updated README
+- removed custom license document
+- Updated copyright release version cFE 6.6 -> 6.7
+
+**Requester Info**
+Jacob Hageman - NASA/GSFC",enhancement,https://github.com/nasa/tblCRCTool/issues/13
+Integration candidate 20190916,"**Describe the contribution**
+Merge of CCB 20190904 approved commits.
+Fixes #1, fixes #2, fixes #10 
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Checked out http://github.com/nasa/cFS rc-6.7.0 and followed setup instructions
+2. Followed standard build instructions
+3. Executed cfe_ts_crc from build/exe/host with no input, observed:
+```
+cFE TS CRC calculator for LRO files.
+Usage: cfe_ts_crc [filename]
+```
+4. Executed cfe_ts_crc on random file observed:
+```
+Table File Name:            cmdUtil
+Table Size:                 25684 Bytes
+Expected TS Validation CRC: 0xFFFFC2E8
+```
+
+**Expected behavior changes**
+- No impact to behavior from this change other than now builds as part of cmake
+
+**System(s) tested on:**
+- cFS Development Server
+- OS: Ubuntu/Linux 4.4.0-146-generic
+- Versions: bundle release candidate 6.7 with this branch
+
+**Additional context**
+None
+
+**Contributor Info**
+Jacob Hageman/NASA
+
+**Community contributors**
+CLA on file",,https://github.com/nasa/tblCRCTool/pull/12
+Add a CMakeLists.txt file for the tblCRCTool,"**Describe the contribution**
+This allows it to be tied into the main CFE mission build
+and correctly reference the same header files as the FSW does.
+
+Fixes #10
+
+**Testing performed**
+Built a CFE mission per the default/sample scripts
+
+**Expected behavior changes**
+cfe_ts_crc executable is now present in the ""host"" directory after install
+
+**System(s) tested on:**
+Ubuntu 18.04 (64-bit)
+
+**Contributor Info**
+Joseph Hickey, Vantage Systems, Inc.
+",invalid,https://github.com/nasa/tblCRCTool/pull/11
+tblCRCTool needs a CMakeLists.txt file implemented,"**Describe the bug**
+This tool is not built like the rest of them, still using a one-off Makefile.
+
+**To Reproduce**
+Build CFE using the recommended CMake practice.  This tool is not built.  The user must then manually build the tool within the source directory.
+
+**Expected behavior**
+The tool should be built as part of the overall mission build and installed to the ""host"" directory.
+
+**System observed on:**
+Ubuntu 18.04 (64-bit)
+
+**Reporter Info**
+Joseph Hickey, Vantage Systems, Inc.
+",,https://github.com/nasa/tblCRCTool/issues/10
+Gitignore cfe_ts_crc,"**Is your feature request related to a problem? Please describe.**
+Executable shows up as untracked file
+
+**Describe the solution you'd like**
+Add cfe_ts_crc to .gitignore
+
+**Describe alternatives you've considered**
+None
+
+**Additional context**
+None
+
+**Requester Info**
+Jacob Hageman/NASA GSFC",invalid,https://github.com/nasa/tblCRCTool/issues/9
+Integration Candidate 20190906,"**Describe the contribution**
+Merge of CCB 20190904 approved commits.
+Fixes #1, fixes #2 
+
+**Testing performed**
+Steps taken to test the contribution:
+1. Checked out http://github.com/nasa/cFS rc-6.7.0 and followed setup instructions
+2. Followed standard build instructions
+3. Make in tblCRCTool directory (no build warnings observed)
+4. Executed cfe_ts_crc with no input, observed:
+```
+cFE TS CRC calculator for LRO files.
+Usage: cfe_ts_crc [filename]
+```
+4. Executed cfe_ts_crc on random file (grabbed Makefile from the last test run and confirmed checksums matched), observed:
+```
+Table File Name:            Makefile_tmp
+Table Size:                 634 Bytes
+Expected TS Validation CRC: 0xFFFFBC12
+```
+See additional testing in comments below
+
+**Expected behavior changes**
+- No impact to behavior from this change
+
+**System(s) tested on:**
+- cFS Development Server
+- OS: Ubuntu/Linux 4.4.0-146-generic
+- Versions: bundle release candidate 6.7 with this branch
+
+**Additional context**
+None
+
+**Contributor Info**
+Jacob Hageman/NASA
+
+**Community contributors**
+CLA on file",invalid,https://github.com/nasa/tblCRCTool/pull/8
+"Fix #3, hardcode table file header size","Pass size of CFE Table Headers to skipSize:
+CFE_TBL_File_Hdr_t 
+CFE_FS_Header_t",invalid,https://github.com/nasa/tblCRCTool/pull/7
+"Fix #2, Build Warning","include stdlib.h was fixed by pull request ""Table CRC Tool Fails To Close File Descriptor, # 1""
+",invalid,https://github.com/nasa/tblCRCTool/pull/6
+"Fix #1, Table CRC Tool Fails To Close File Descriptor",add stdlib.h and unistd.h to fix warning. ,invalid,https://github.com/nasa/tblCRCTool/pull/5
+"Create version header file, update to x.x.90, report on execution",,enhancement,https://github.com/nasa/tblCRCTool/issues/4
+tblCRCTool hardcodes table file header size,Maintenance issue with hardcoded header size in tblCRCTool,enhancement,https://github.com/nasa/tblCRCTool/issues/3
+tblCRCTool build warnings,"The tblCRCTool had build warnings (using CentOS 6). Easy fix.
+Adding 
+
+    #include <stdlib.h>
+
+fixed it.
+Also the Makefile has the wrong include directory (should be ""-I."") and it breaks if make clean is already run (need ""rm -f"").","bug, good first issue",https://github.com/nasa/tblCRCTool/issues/2
+Table CRC Tool Fails to Close File Descriptor,"Analysis of the 27b VPU FSW code revealed that there is a potential leak of an allocated resource in the file cfe_ts_crc.c. The resource ""fd"" is opened but never closed before the function returns.
+
+VpuTopProject/cfs/CFE/tools/tblCRCTool/cfe_ts_crc.c
+143 /* open the input file if possible */
+-->144 fd = open( argv[1], O_RDONLY );
+145 if ( fd < 0 )
+146 {
+147 printf(""\ncfe_ts_crc error: can't open input file!\n"");
+148 exit(0);
+149 }
+150 /* seek past the number of bytes requested */
+151 lseek( fd, skipSize, SEEK_SET );
+152 
+153 /* read the input file 100 bytes at a time */
+154 while ( done == 0 )
+155 {
+156 readSize = read(fd, buffer, 100);
+157 fileCRC = CFE_ES_CalculateCRC(buffer, readSize, fileCRC, CFE_ES_CRC_16);
+158 fileSize += readSize;
+159 if (readSize != 100) done=1; 
+160 }
+161 /* print the size/CRC results */
+162 printf(""\nTable File Name: %s\nTable Size: %d Bytes\nExpected TS Validation CRC: 0x%08X\n\n"", argv[1], fileSize, fileCRC);
+163
+164 return(fileCRC);
+165 }","bug, good first issue",https://github.com/nasa/tblCRCTool/issues/1
